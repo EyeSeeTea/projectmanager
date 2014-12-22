@@ -1,0 +1,23 @@
+{
+	"version":"0.1",
+	"name":"Option Manager MSF",
+	"description":"Option Manager MSF",
+	"launch_path":"index.html",
+	"icons":{"16":null,
+	"48":null,
+	"128":"img/icons/icon.png"
+	},
+	"developer":{
+	"url":"",
+	"name":"Helder Castrillon",
+	"company":"Hisp Colombia",
+	"email":"heldersoft@gmail.com"
+	},
+	"installs_allowed_from":null,
+	"default_locale":"en",
+	"activities": {
+	  "dhis": {
+	  "href": "*"
+		}
+	}
+}

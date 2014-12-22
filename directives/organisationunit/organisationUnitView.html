@@ -1,0 +1,21 @@
+<div class="dropdown" ng-controller="d2DrowdownOrganisationUnitController">
+ <div class="dropdown">
+	  <label> Unidad organizativa</label>
+	  <br>
+	  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+	    {{organisationUnitName?organisationUnitName:'Seleccione unidad'}}
+	    <span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
+		   <li ng-repeat="data in ListOrganisationunit.organisationUnits">
+			   <a  ng-click='selectOrganisationUnit(data)'>{{data.name}}</a>
+		   </li>
+	   </ul>
+	</div>
+	
+	<!-- Etiquetas de prueba se pueden borrar -->
+		<span> Uid selected is {{organisationUnitUid}} </span>
+		<input type="text" class="form-control" id="txtUID" ng-enter="" ng-model="organisationUnitUid" disabled placeholder="UID" />
+	<!-- ----- -->
+</div>
+
