@@ -1,4 +1,4 @@
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api']);
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate']);
 
 appManagerMSF.config(function($routeProvider) {
  
@@ -20,3 +20,24 @@ appManagerMSF.config(function($routeProvider) {
 	  });   
 
 	});
+
+appManagerMSF.config(function ($translateProvider) {
+  
+	  $translateProvider.useStaticFilesLoader({
+          prefix: '/languages/',
+          suffix: '.json'
+      });
+	  
+	  $translateProvider.registerAvailableLanguageKeys(
+			    ['es', 'en'],
+			    {
+			        'en*': 'en',
+			        'es*': 'es',
+			        '*': 'en' // must be last!
+			    }
+			);
+	  
+	  $translateProvider.fallbackLanguage(['en']);
+	  $translateProvider.determinePreferredLanguage();
+	  
+});

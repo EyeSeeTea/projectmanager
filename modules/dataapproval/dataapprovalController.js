@@ -1,3 +1,4 @@
-appManagerMSF.controller('dataapprovalController', ["$scope",function($scope) {
-	$scope.title='Data approval';
+appManagerMSF.controller('dataapprovalController', ["$scope",'$filter', function($scope, $filter) {
+	var $translate = $filter('translate');
+    $scope.title = $translate('DATA_APPROVAL'); 
 }]);

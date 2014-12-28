@@ -1,3 +1,4 @@
-appManagerMSF.controller('metadataimportController', ["$scope",function($scope) {
-
+appManagerMSF.controller('metadataimportController', ["$scope",'$filter', function($scope, $filter) {
+		var $translate = $filter('translate');
+	
 }]);
