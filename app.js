@@ -24,7 +24,7 @@ appManagerMSF.config(function($routeProvider) {
 appManagerMSF.config(function ($translateProvider) {
   
 	  $translateProvider.useStaticFilesLoader({
-          prefix: '/languages/',
+          prefix: 'languages/',
           suffix: '.json'
       });
 	  

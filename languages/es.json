@@ -1,5 +1,10 @@
 {
 	"DATA_APPROVAL": "Confirmacion",
 	"METADATA_IMPORT": "Importacion de metadatos",
-	"METADATA_EXPORT": "Exportacion de metadatos"
+	"METADATA_EXPORT": "Exportacion de metadatos",
+	"DATASET":"Formulario",
+	"DATASET_LIST":"Seleccione un formulario",
+	"ORGANISATIONUNIT":"Proyecto",
+	"ORGANISATIONUNIT_LIST":"Seleccione un proyecto"
+	
 }

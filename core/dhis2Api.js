@@ -33,7 +33,7 @@ Dhis2Api.factory("GetOptionSet",['$resource','commonvariable', function ($resour
 }]);
 
 Dhis2Api.factory("GetDatasetDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url+"dataSets?filter=approveData:eq:true", 
+	return $resource( commonvariable.url+"dataSets?filter=approveData%3Aeq%3Atrue", 
    {}, 
   { get: { method: "GET"} });
 }]);

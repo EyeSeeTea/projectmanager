@@ -1,6 +1,11 @@
 {
 	"DATA_APPROVAL": "Data approval",
 	"METADATA_IMPORT": "Metadata import",
-	"METADATA_EXPORT": "Metadata export"
+	"METADATA_EXPORT": "Metadata export",
+	"DATASET":"Data Set",
+	"DATASET_LIST":"Select a Data Set",
+	"ORGANISATIONUNIT":"Project",
+	"ORGANISATIONUNIT_LIST":"Select a project"
+	
 
 }
