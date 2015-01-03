@@ -1,0 +1,16 @@
+<div class="dropdown" ng-controller="d2DrowdowndatasetController">
+ <div class="dropdown">
+	  <label>{{DATASET}}</label>
+	  <br>
+	  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+	    {{DatasetName?DatasetName:''}}
+	    <span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
+		   <li ng-repeat="data in ListDataset.dataSets">
+			   <a  ng-click='selectDataset(data)'>{{data.name}}</a>
+		   </li>
+	   </ul>
+	</div>
+</div>
+
