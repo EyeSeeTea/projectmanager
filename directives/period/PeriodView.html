@@ -1,16 +1,52 @@
-<div class="dropdown" ng-controller="d2DrowdownPeriodController">
- <div class="dropdown">
-	  <label> Periodo</label>
+<div class="dropdown" ng-controller="d2DropDownPeriodController">
+	<div class="row">
+
+		<div class="col-md-4">
+
+			<label> Tipo de periodo</label><br>
+			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
+				{{mes.name?mes.name: 'Seleccione Mes'}}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
+				<li ng-repeat="mes in Meses">
+					<a  ng-click='MesSeleccionado(Meses)'>{{mes.name}}</a>
+				</li>
+			</ul>
+		</div>
+
+
+<div class="col-md-4">
+
+	  <label> Mes</label><br>
 	  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-	    {{periodName?periodName:'Seleccione el periodo'}}
+		  {{mes.name?mes.name: 'Seleccione Mes'}}
 	    <span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
-		   <li ng-repeat="data in ListPeriod.periods">
-			   <a  ng-click='selectPeriod(data)'>{{data.name}}</a>
-		   </li>
-	   </ul>
-	</div>
-	
+		  <li ng-repeat="mes in Meses">
+			  <a  ng-click='MesSeleccionado(Meses)'>{{mes.name}}</a>
+		  </li>
+	  </ul>
 </div>
+		<div class="col-md-4">
+
+		<label> Año</label><br>
+		<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="true">
+			{{Ano?Ano:'Seleccionar Año'}}
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
+			<li ng-repeat="Ano in Anios">
+				<a  ng-click='AnoSeleccionado(Ano)'>{{Ano}}</a>
+			</li>
+		</ul>
+		<br>
+
+
+		</div>
+	</div>
+</div>
+
+
 
