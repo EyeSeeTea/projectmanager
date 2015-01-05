@@ -1,9 +1,9 @@
 <div class="dropdown" ng-controller="d2DrowdownOrganisationUnitController">
  <div class="dropdown">
-	  <label> {{ORGANISATIONUNIT}}</label>
+	  <label> {{'ORGANISATIONUNIT' | translate}}</label>
 	  <br>
 	  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-	    {{organisationUnitName?organisationUnitName:ORGANISATIONUNIT_LIST}}
+	    {{organisationUnitName?organisationUnitName:'ORGANISATIONUNIT_LIST' | translate}}
 	    <span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
