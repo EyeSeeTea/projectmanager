@@ -24,11 +24,11 @@
 <body ng-app="Dhis2Api" >
 
 <div class='container-fluid' ng-controller="TypeaheadCtrl">
-
+<datepicker ng-model="dt" min-mode="year" datepicker-mode="'year'"></datepicker>
   <h4>Asynchronous results</h4>
     <pre>Model: {{asyncSelected | json}}</pre>
-    <input type="text" ng-model="asyncSelected" typeahead-template-url="template.html" placeholder="Locations loaded via $http" typeahead="ou.name for ou in findOrganisationunit($viewValue)" typeahead-loading="loadingLocations" class="form-control">
-    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+    <input type="text" ng-model="asyncSelected" typeahead-template-url="template.html" placeholder="Escribe aque el nombre del proyecto" typeahead="ou as ou.name for ou in findOrganisationunit($viewValue)" typeahead-min-length="1" typeahead-loading="loadingrefresh" class="form-control">
+    <i ng-show="loadingrefresh" class="glyphicon glyphicon-refresh"></i>
 </div>
 
 </body>

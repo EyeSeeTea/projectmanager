@@ -22,8 +22,10 @@ Dhis2Api.factory("commonvariable", function () {
 
 Dhis2Api.factory("GetOrganisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnits", 
-   {}, 
-  { get: { method: "GET"} });
+   {
+		fields:'name,id,level,parent'
+   }, 
+  { ByName: { method: "GET"} });
 }]);
 
 Dhis2Api.factory("GetOptionSet",['$resource','commonvariable', function ($resource,commonvariable) {
@@ -33,7 +35,8 @@ Dhis2Api.factory("GetOptionSet",['$resource','commonvariable', function ($resour
 }]);
 
 Dhis2Api.factory("GetDatasetDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url+"dataSets?filter=approveData%3Aeq%3Atrue", 
-   {}, 
+	return $resource( commonvariable.url+"dataSets", 
+   {filter:'approveData:eq:true'}, 
   { get: { method: "GET"} });
 }]);
+

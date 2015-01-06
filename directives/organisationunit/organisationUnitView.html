@@ -1,16 +1,7 @@
-<div class="dropdown" ng-controller="d2DrowdownOrganisationUnitController">
- <div class="dropdown">
-	  <label> {{'ORGANISATIONUNIT' | translate}}</label>
+<div  ng-controller="d2DropdownOrganisationUnitController">
+  <label>{{ 'ORGANISATIONUNIT' | translate }}</label>
 	  <br>
-	  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-	    {{organisationUnitName?organisationUnitName:'ORGANISATIONUNIT_LIST' | translate}}
-	    <span class="caret"></span>
-	  </button>
-	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
-		   <li ng-repeat="data in ListOrganisationunit.organisationUnits">
-			   <a  ng-click='selectOrganisationUnit(data)'>{{data.name}}</a>
-		   </li>
-	   </ul>
-	</div>
+  <input type="text" ng-model="asyncSelected" typeahead-template-url="directives/organisationunit/template.html" placeholder="Escribe el nombre del proyecto" typeahead="ou as ou.name for ou in findOrganisationunitbyName($viewValue)" typeahead-min-length="1" typeahead-loading="loadingrefresh" class="form-control">
+    <i ng-show="loadingrefresh" class="glyphicon glyphicon-refresh"></i>
 </div>
 

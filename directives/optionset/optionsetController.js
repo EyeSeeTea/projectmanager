@@ -4,7 +4,7 @@ Dhis2Api.directive('d2Optionset', function(){
 		templateUrl: 'directives/optionset/optionsetView.html'
 	}
 	}); 
-Dhis2Api.controller("d2DrowdownOptionSetController", ['$scope','$http', 'GetOptionSet',function ($scope, $http, GetOptionSet) {
+Dhis2Api.controller("d2DropdownOptionSetController", ['$scope','$http', 'GetOptionSet',function ($scope, $http, GetOptionSet) {
 		$scope.ListOptionset = GetOptionSet.get();
 		$scope.selectoptionset = function(osSelected){
 			$scope.optionsetName=osSelected.name;

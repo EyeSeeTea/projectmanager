@@ -34,7 +34,11 @@ $scope.selectOu = function(ouselected){
 
 Dhis2Api.controller('TypeaheadCtrl', ['$scope','$http','commonvariable','findOrganisationunitbyName',function($scope,$http,commonvariable, findOrganisationunitbyName) {
 
- 
+		$scope.today = function() {
+		    $scope.dt = new Date();
+		  };
+		  $scope.today();
+	
 	/*$scope.findOrganisationunit1 = function(val) {
 			  return findOrganisationunitbyName.get().then(function(response){
 	      return response.organisationUnits;
