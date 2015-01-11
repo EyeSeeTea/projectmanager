@@ -5,6 +5,9 @@
 	"DATASET":"Formulario",
 	"DATASET_LIST":"Seleccione un formulario",
 	"ORGANISATIONUNIT":"Proyecto",
-	"ORGANISATIONUNIT_LIST":"Seleccione un proyecto"
+	"ORGANISATIONUNIT_LIST":"Seleccione un proyecto",
+	"DATA_IMPORT": "Importación de datos",
+	"DATA_EXPORT": "Exportación de datos",
+	"ANALYTICS": "Actualización de datos"
 	
 }

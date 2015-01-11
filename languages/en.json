@@ -5,7 +5,9 @@
 	"DATASET":"Data Set",
 	"DATASET_LIST":"Select a Data Set",
 	"ORGANISATIONUNIT":"Project",
-	"ORGANISATIONUNIT_LIST":"Select a project"
-	
+	"ORGANISATIONUNIT_LIST":"Select a project",
+	"DATA_IMPORT": "Data import",
+	"DATA_EXPORT": "Data export",
+	"ANALYTICS": "Refresh data"
 
 }
