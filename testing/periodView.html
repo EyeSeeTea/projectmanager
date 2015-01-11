@@ -14,8 +14,21 @@
 		</div>
 	</div>
 
+	<!--<div class="col-md-4">
+    <span class="dropdown" dropdown on-toggle="tipoperiodoseleccionado(tipoperiodo)">
+      <a href class="dropdown-toggle" dropdown-toggle>
+		  Click me for a dropdown, yo!
+	  </a>
+      <ul class="dropdown-menu">
+		  <li ng-repeat="tipoperiodo in tiposperiodo">
+			  <a href>{{tipoperiodo.name}}</a>
+		  </li>
+	  </ul>
+    </span>
+	</div>-->
 
 	<div class="row">
+
 	<div class="col-md-4" ng-show="'day'==periodtypemode">
 		Seleccione el día:
 		<div id="dt">
@@ -25,7 +38,7 @@
 					   ng-model="day" is-open="opened"
 					   min-date="minDate"
 					   max-date="maxDate"
-					   datepicker-options="{minMode: 'day', language:'ES'}"
+					   datepicker-options="{minMode: 'day'}"
 					   datepicker-mode="'day'"
 					   date-disabled="disabled(date, mode)"
 					   ng-required="true"
@@ -109,11 +122,73 @@
 					<button type="button" class="btn btn-default "
 							ng-click="semanadelano(semana)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
+
 			</p>
 		</div>
+
 	</div>
+
 </div>
+
+		<!--<div class="col-md-4" ng-show=" '{{tipoperiodseleccionado.periodtypename}}' == 'dt' ">
+		<datepicker ng-model="mes"    datepicker-mode="'month'"
+					min-mode="month"  min-date="minDate"
+					show-weeks="false" class="well well-sm"></datepicker>
+		</div>
+
+		<div class="col-md-4" ng-show="'pp' == 'dt'">
+			<datepicker ng-model="year"    datepicker-mode="'year'"
+						min-mode="year"  min-date="minDate"
+						show-weeks="false" class="well well-sm"></datepicker>
+		</div>
+
+		<div class="col-md-4" ng-show="'dt' == 'dt'">
+			<datepicker ng-model="dtdia"    datepicker-mode="'day'" min-date="minDate"
+						show-weeks="false" class="well well-sm"></datepicker>
+		</div>
+
+		<div class="col-md-4" ng-show="'dt' == 'dt'">
+			<datepicker ng-model="dtsemana"    datepicker-mode="'day'"
+						min-mode="day"  min-date="minDate" start-date="1"
+						show-weeks="true" class="well well-sm"></datepicker>
+		</div>-->
 </div>
+
+
+
+
+	<!--El datapicker-mode funciona con tipoperiodo[2].mode-->
+	<!--<div class="row">
+
+		<div class="col-md-6">
+
+
+			<div id="datepick">
+				<p class="input-group">
+					<input type="text" class="form-control"
+						   datepicker-popup="{{periodtypeformat}}"
+						   ng-model="dt" is-open="opened"
+						   min-date="minDate"
+						   max-date="maxDate"
+						   datepicker-options="dateOptions"
+						   datepicker-mode="'month'"
+						   date-disabled="disabled(date, mode)"
+						   ng-required="true"
+						   close-text="Close" />
+				<span class="input-group-btn">
+                <button type="button" class="btn btn-default"
+						ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+				</p>
+
+			</div>
+
+
+		</div>
+	</div>-->
+
+
+
 </div>
 
 
