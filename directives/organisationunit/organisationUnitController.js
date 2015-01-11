@@ -11,5 +11,9 @@ Dhis2Api.controller("d2DropdownOrganisationUnitController", ['$scope','GetOrgani
 				//console.log(response.organisationUnits);
 				return response.organisationUnits;
 			 })};
+	$scope.onchangeou = function(organisationUnitSelected){
+			 $scope.OUSelect=organisationUnitSelected;
+			 console.log($scope.OUSelect);
+			};
 
 }]);

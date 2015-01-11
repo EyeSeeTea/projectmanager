@@ -1,4 +1,16 @@
+
 <h1>{{title}}</h1>
-<d2-dropdowndataset></d2-dropdowndataset>
+<d2-dropdowndataset></d2-dropdowndataset> 
 <d2-dropdownperiod></d2-dropdownperiod>
 <d2-dropdownorganisationunit></d2-dropdownorganisationunit>
+<div class="row">
+	<div class="col-md-12">
+		<button class="btn btn-default" ng-click="SelectOU(organisationUnitSelected)" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
+		<button class="btn btn-default" type="submit">{{ 'DATA_APPROVAL_CANCEL' | translate }}</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+	<pre>Model2: {{organisationUnitSelected | json}}</pre>
+	</div>
+</div>

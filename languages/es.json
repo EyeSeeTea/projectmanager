@@ -1,10 +1,14 @@
 {
 	"DATA_APPROVAL": "Confirmacion",
+	"DATA_APPROVAL_GET": "Obtener Datos",
+	"DATA_APPROVAL_CANCEL": "Cancelar",
 	"METADATA_IMPORT": "Importacion de metadatos",
 	"METADATA_EXPORT": "Exportacion de metadatos",
 	"DATASET":"Formulario",
 	"DATASET_LIST":"Seleccione un formulario",
 	"ORGANISATIONUNIT":"Proyecto",
-	"ORGANISATIONUNIT_LIST":"Seleccione un proyecto"
-	
+	"ORGANISATIONUNIT_FIND":"Seleccione un proyecto",
+	"DATA_IMPORT": "Importación de datos",
+	"DATA_EXPORT": "Exportación de datos",
+	"ANALYTICS": "Actualización de datos"
 }
