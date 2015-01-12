@@ -10,6 +10,7 @@
 	"ORGANISATIONUNIT_FIND":"Select a project",
 	"DATA_IMPORT": "Data import",
 	"DATA_EXPORT": "Data export",
-	"ANALYTICS": "Refresh data"
+	"ANALYTICS": "Refresh data",
+	"APPROVAL_STATE": "State"
 
 }

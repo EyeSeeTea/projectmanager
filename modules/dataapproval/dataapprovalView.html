@@ -5,12 +5,14 @@
 <d2-dropdownorganisationunit></d2-dropdownorganisationunit>
 <div class="row">
 	<div class="col-md-12">
-		<button class="btn btn-default" ng-click="SelectOU(organisationUnitSelected)" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
+		<button class="btn btn-default" ng-click="GetValueOfDataSet()" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
 		<button class="btn btn-default" type="submit">{{ 'DATA_APPROVAL_CANCEL' | translate }}</button>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
-	<pre>Model2: {{organisationUnitSelected | json}}</pre>
+	<p class="bg-warning">{{ 'APPROVAL_STATE' | translate }} : {{Approvalstate | json}}</p>
+	<h2>Formulario </h2>
+	<div ng-bind-html="DatasetValue"></div>
 	</div>
 </div>

@@ -4,16 +4,15 @@ Dhis2Api.directive('d2Dropdownorganisationunit', function(){
 		templateUrl: 'directives/organisationunit/organisationUnitView.html'
 	}
 	}); 
-Dhis2Api.controller("d2DropdownOrganisationUnitController", ['$scope','GetOrganisationunit', function ($scope,GetOrganisationunit) {
+Dhis2Api.controller("d2DropdownOrganisationUnitController", ['$scope','Organisationunit',"commonvariable", function ($scope,Organisationunit,commonvariable) {
 	$scope.findOrganisationunitbyName = function(nameOu) {
-			return GetOrganisationunit.ByName({filter:'name:like:'+nameOu})
+			return Organisationunit.get({filter:'name:like:'+nameOu})
 			.$promise.then(function(response){
 				//console.log(response.organisationUnits);
 				return response.organisationUnits;
 			 })};
-	$scope.onchangeou = function(organisationUnitSelected){
-			 $scope.OUSelect=organisationUnitSelected;
-			 console.log($scope.OUSelect);
-			};
+	$scope.onSelect = function ($item, $model, $label) {
+			commonvariable.OrganisationUnit = $item;
+		   };
 
 }]);

@@ -1,5 +1,5 @@
 <script type="text/ng-template" id="directives/organisationunit/template.html">
-   <a tabindex="-1" ng-click="onchangeou(organisationUnitSelected)">
+   <a>
 		<h6 bind-html-unsafe="match.label | typeaheadHighlight:query"></h6>
 	<button type="button" class="btn btn-info btn-xs" disabled="disabled">Nivel: {{match.model.level}}</button>	  
 <button type="button" class="btn btn-default btn-xs" disabled="disabled">Proyecto padre:{{match.model.parent.name}}</button>
