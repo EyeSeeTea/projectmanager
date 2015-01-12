@@ -14,6 +14,19 @@ appManagerMSF.config(function($routeProvider) {
 		  	templateUrl: "modules/metadataexport/metadataexportView.html",
 		  		 controller: "metadataexportController"
 		  });
+		  
+	  $routeProvider.when('/analytics', {
+		    templateUrl: "modules/analytics/analyticsView.html",
+		    controller: "analyticsController"
+		  });
+	  $routeProvider.when('/dataimport', {
+		  	templateUrl: "modules/dataimport/dataimportView.html",
+		  	controller: "dataimportController"
+		  });
+	  $routeProvider.when('/dataexport', {
+		  	templateUrl: "modules/dataexport/dataexportView.html",
+		  		 controller: "dataexportController"
+		  });		  
 	
 	  $routeProvider.otherwise({
 	        redirectTo: '/'

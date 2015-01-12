@@ -35,6 +35,21 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
 	];
 
 
+	$scope.Meses= [
+		{name:"Enero",value:1},
+		{name:"Febrero",value:2},
+		{name:"Marzo",value:3}
+	];
+
+	$scope.Anios=[];
+	for (var i= 1900; i<=2020; i++){
+		$scope.Anios.push(i);
+	}
+
+	$scope.weeks=[];
+	for (var j= 1; j<=52; j++){
+		$scope.weeks.push('W'+j);
+	}
 
 	$scope.tipoPeriodoSeleccionado = function(ptSelected){
 		$scope.periodtypename=ptSelected.name;
