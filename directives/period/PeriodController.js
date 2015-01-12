@@ -3,7 +3,7 @@
 Dhis2Api.directive('d2Dropdownperiod', function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/period/periodView.html'
+		templateUrl: 'directives/period/PeriodView.html'
 	}
 });
 
