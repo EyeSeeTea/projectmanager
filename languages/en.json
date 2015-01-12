@@ -9,10 +9,12 @@
 	"ORGANISATIONUNIT":"Project",
 	"ORGANISATIONUNIT_FIND":"Select a project",
 	"DATA_IMPORT": "Data import",
+	"IMPORT": "Import",
 	"DATA_EXPORT": "Data export",
 	"ANALYTICS": "Refresh data",
 	"ANALYTICS_MESSAGGE": "Analytics tables update",
 	"ANALYTICS_BUTTON": "Analytics update",
+	"SELECT_FILE": "Select file",
 	"APPROVAL_STATE": "State"
 
 }
