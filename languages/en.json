@@ -1,0 +1,15 @@
+{
+	"DATA_APPROVAL": "Data approval",
+	"DATA_APPROVAL_GET": "Get data",
+	"DATA_APPROVAL_CANCEL": "Cancel",
+	"METADATA_IMPORT": "Metadata import",
+	"METADATA_EXPORT": "Metadata export",
+	"DATASET":"Data Set",
+	"DATASET_LIST":"Select a Data Set",
+	"ORGANISATIONUNIT":"Project",
+	"ORGANISATIONUNIT_FIND":"Select a project",
+	"DATA_IMPORT": "Data import",
+	"DATA_EXPORT": "Data export",
+	"ANALYTICS": "Refresh data"
+
+}
