@@ -11,5 +11,7 @@
 	"DATA_IMPORT": "Importación de datos",
 	"DATA_EXPORT": "Exportación de datos",
 	"ANALYTICS": "Actualización de datos",
+	"ANALYTICS_MESSAGGE": "Actualizar datos para el análisis",
+	"ANALYTICS_BUTTON": "Actualizar datos",
 	"APPROVAL_STATE": "Estado"
 }
