@@ -71,3 +71,9 @@ Dhis2Api.factory("AnaliticsDAppr",['$resource','commonvariable', function ($reso
   { get: { method: "GET"} });
 }]);
 
+Dhis2Api.factory("DataSetsUID",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataSets.json", 
+	{fields:'id'},
+  { get: { method: "GET"} });
+}]);
+

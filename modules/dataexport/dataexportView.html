@@ -1,1 +1,14 @@
 <h2>{{ 'DATA_EXPORT' | translate }}</h2>
+
+<form role="form">
+	<div class="row">
+	<div class="col-md-6">
+		<label for="file_name"> {{ 'FILE_NAME' | translate }} </label>
+		<input type="text" class="form-control" id="file_name"/>
+	</div>
+	</div>
+	<br/>
+	<div class="form_group">
+		<button type="button" ng-click="dataexport()" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
+	</div>
+</form>

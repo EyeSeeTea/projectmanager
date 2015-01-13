@@ -11,6 +11,8 @@
 	"DATA_IMPORT": "Data import",
 	"IMPORT": "Import",
 	"DATA_EXPORT": "Data export",
+	"EXPORT": "Export",
+	"FILE_NAME": "File name",
 	"ANALYTICS": "Refresh data",
 	"ANALYTICS_MESSAGGE": "Analytics tables update",
 	"ANALYTICS_BUTTON": "Analytics update",
