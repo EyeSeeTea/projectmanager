@@ -77,3 +77,9 @@ Dhis2Api.factory("DataSetsUID",['$resource','commonvariable', function ($resourc
   { get: { method: "GET"} });
 }]);
 
+Dhis2Api.factory("MetaDataExport",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"metadata.json", 
+	{},
+  { get: { method: "GET"} });
+}]);
+

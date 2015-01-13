@@ -1,7 +1,7 @@
 {
 	"version":"0.1",
-	"name":"Option Manager MSF",
-	"description":"Option Manager MSF",
+	"name":"Project Manager",
+	"description":"Project Manager",
 	"launch_path":"index.html",
 	"icons":{"16":null,
 	"48":null,
