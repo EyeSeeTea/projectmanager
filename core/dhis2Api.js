@@ -39,6 +39,12 @@ Dhis2Api.factory("OptionSet",['$resource','commonvariable', function ($resource,
   { get: { method: "GET"} });
 }]);
 
+Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"resourceTables/analytics", 
+   {}, 
+  { post: { method: "POST"} });
+}]);
+
 Dhis2Api.factory("DatasetDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataSets", 
    {filter:'approveData:eq:true', 
