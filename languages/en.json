@@ -15,6 +15,7 @@
 	"ANALYTICS_MESSAGGE": "Analytics tables update",
 	"ANALYTICS_BUTTON": "Analytics update",
 	"SELECT_FILE": "Select file",
-	"APPROVAL_STATE": "State"
+	"APPROVAL_STATE": "State",
+	"TITLE_APPS":"MSF-OCBA Health Information System"
 
 }

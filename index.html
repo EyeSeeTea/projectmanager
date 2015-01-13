@@ -24,6 +24,13 @@
 <link rel="stylesheet" href="include/bootstrap-3.3.1-dist/css/bootstrap.min.css">
 <script src="include/bootstrap-3.3.1-dist/js/ui-bootstrap-tpls-0.12.0.min.js" type="text/javascript"></script>
 
+<!-- Dhis menu -->
+<link type="text/css" rel="stylesheet" href="../../dhis/dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
+<link type="text/css" rel="stylesheet" media="screen" href="../../dhis/dhis-web-commons/css/menu.css">
+<script type="text/javascript" src="../../dhis/dhis-web-commons/javascripts/dhis2/dhis2.translate.js"></script>
+ <script type="text/javascript" src="../../dhis/dhis-web-commons/javascripts/dhis2/dhis2.menu.js"></script>
+ <script type="text/javascript" src="../../dhis/dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js"></script>
+ 
 <!-- principal Script-->
 <script src="core/dhis2Api.js" type="text/javascript"> </script>
 <script src="app.js" type="text/javascript"> </script>
@@ -34,21 +41,23 @@
 <script src="modules/analytics/analyticsController.js" type="text/javascript"> </script>
 <script src="modules/dataexport/dataexportController.js" type="text/javascript"></script>
 <script src="modules/dataimport/dataimportController.js" type="text/javascript"></script>
+
 <!--Directives-->
+<script src="directives/header/headerController.js" type="text/javascript"></script>
 <script src="directives/menu/menuController.js" type="text/javascript"> </script>
 <script src="directives/organisationunit/organisationUnitController.js" type="text/javascript"></script>
 <script src="directives/dataset/dataSetController.js" type="text/javascript"></script>
 <script src="directives/period/PeriodController.js" type="text/javascript"></script>
-
 </head>
 <body >
-<div class="col-md-2"><img src="img/Logo.jpg" class="img-responsive"/></div>
-<div class="col-md-10">
-	<div class="jumbotron"> Texto de cabecera</div>
-</div>
-
-<div class="row">
-	<div class="col-md-2"><d2-menu></d2-menu></div>  <!-- directive that load the vertical menu -->
+<d2-header></d2-header>
+<script>
+   window.dhis2 = window.dhis2 || {};
+   dhis2.settings = dhis2.settings || {};
+   dhis2.settings.baseUrl = 'dhis';
+</script>
+ <div class="row">
+	<div class="col-md-2"><d2-secondarymenu></d2-secondarymenu></div>  <!-- directive that load the vertical menu -->
 	<div class="col-md-10"><div ng-view></div></div>
 </div>
 
