@@ -1,4 +1,4 @@
-appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","AnaliticsDAppr", function($scope, $filter,commonvariable,DataApprovalsState,AnaliticsDAppr) {
+appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","AnaliticsDAppr","DataSetForm", function($scope, $filter,commonvariable,DataApprovalsState,AnaliticsDAppr,DataSetForm) {
 	var $translate = $filter('translate');
     $scope.title = $translate('DATA_APPROVAL'); 
     $scope.GetValueOfDataSet=function(){
@@ -9,8 +9,21 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
     		   LstDataElement= LstDataElement+ Dataelements[k].id+(k<Dataelements.length-1?";":"");
     		}
     	var StateForApproval = DataApprovalsState.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id});
-    	$scope.Approvalstate=StateForApproval;
-    	//$scope.DatasetValue=AnaliticsDAppr.get({dimension:'dx:'+LstDataElement,dimension:'pe:'+commonvariable.Period,dimension:'ou:'+commonvariable.OrganisationUnit.id});
+    	StateForApproval.$promise.then(function(data) {
+    		$scope.Approvalstate=data.state;
+    	});
+    
+    	var formdata=DataSetForm.get();
+    	formdata.$promise.then(function(data) {
+    		//$scope.DatasetValue=data;
+    		console.log(data);
+    	});
+//    	var paramAnalitics={dimension1:'dimension=dx:'+LstDataElement,dimension2:'dimension=pe:'+commonvariable.Period,dimension3:'dimension=ou:'+commonvariable.OrganisationUnit.id};
+//    	var datasetValue=AnaliticsDAppr.get(paramAnalitics);
+//    	datasetValue.$promise.then(function(data) {
+//    		//$scope.DatasetValue=data;
+//    		console.log(data);
+//    	});
     }
     
     
