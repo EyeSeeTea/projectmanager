@@ -5,8 +5,6 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 		$scope.dataexport=function(){
 			var result=DataSetsUID.get();
 			
-			for (var i in result.dataSets)
-				alert("Do Something");
 		
 		}
 }]);
