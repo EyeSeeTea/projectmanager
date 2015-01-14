@@ -18,5 +18,6 @@
 	"ANALYTICS_BUTTON": "Actualizar datos",
 	"SELECT_FILE": "Seleccionar archivo",
 	"APPROVAL_STATE": "Estado",
-	"TITLE_APPS":"MSF-OCBA Health Information System"
+	"TITLE_APPS":"MSF-OCBA Health Information System",
+	"IN_PROGRESS": "CARGARNDO"
 }

@@ -2,11 +2,17 @@
 
 <form ng-submit="submit()" ng-controller="metadataexportController">
 	<div class="row">
-	<div class="col-md-6">
-		<label for="file_name"> {{ 'FILE_NAME' | translate }} </label>
-		<input type="text" class="form-control" ng-model="file_name" name="file_name" id="file_name"/>
+		<div class="col-md-6">
+			<label for="file_name"> {{ 'FILE_NAME' | translate }} </label>
+			<input type="text" class="form-control" ng-model="file_name" name="file_name" id="file_name"/>
+		</div>
 	</div>
-	</div>
+	<br/>
+	<div class="row">
+		<div class="col-md-6">
+			<progressbar ng-show="progressbarDisplayed" class="progress-striped active" value="100" type="info">{{ 'IN_PROGRESS' | translate }}</progressbar>
+		</div>
+	</div>	
 	<br/>
 	<div class="form_group">
 		<input type="submit" id="submit" class="btn btn-primary" value="{{ 'EXPORT' | translate }}"/>
