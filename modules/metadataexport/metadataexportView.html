@@ -1,6 +1,6 @@
 <h2>{{ 'METADATA_EXPORT' | translate }}</h2>
 
-<form role="form">
+<form ng-submit="submit()" ng-controller="metadataexportController">
 	<div class="row">
 	<div class="col-md-6">
 		<label for="file_name"> {{ 'FILE_NAME' | translate }} </label>
@@ -9,6 +9,6 @@
 	</div>
 	<br/>
 	<div class="form_group">
-		<button type="button" ng-click="metadataexport()" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
+		<input type="submit" class="btn btn-primary" value="{{ 'EXPORT' | translate }}"/>
 	</div>
 </form>
