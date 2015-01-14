@@ -28,9 +28,9 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
     $scope.tipoperiodo = {};
 	$scope.tiposperiodo= [
 		{name:"Diario",formato:'yyyyMMdd',modo:"day"},
-		{name:"Semanal",formato:'yyyyMMdd',modo:"week"},
+		{name:"Semanal",formato:'yyyyWww',modo:"week"},
 		{name:"Mensual",formato:'yyyyMM',modo:"month"},
-		{name:"Semestral",formato:'S',modo:"sixmonth"},
+		{name:"Semestral",formato:'yyyySS',modo:"sixmonth"},
 		{name:"Anual",formato:'yyyy',modo:"year"}
 	];
 
@@ -49,6 +49,10 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 
 	$scope.AnoSeleccionado = function(anoSelected){
 		$scope.ano=anoSelected;
+	};
+
+	$scope.semestreSeleccionado = function(anoSelected){
+		$scope.semestre=anoSelected;
 	};
 
 	$scope.semanaSeleccionada = function(weSelected,$event){
@@ -77,6 +81,9 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 				commonvariable.Period=$scope.ano.toString()+$scope.mes.toString();
 				break;
 			case "year":
+				commonvariable.Period=$scope.ano.toString();
+				break;
+			case "sixmonth":
 				commonvariable.Period=$scope.ano.toString();
 				break;
 			default :
@@ -214,6 +221,11 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 		// cambiada a gusto y conveniencia del lector
 	};
 ///////////////////////////////////////
-
+	$scope.semestral=[];
+	for (var i=2010; i<=2030; i++){
+		for (var j= 1; j<=2; j++){
+			$scope.semestral.push(i+'S'+j);
+	}
+	};
 
 }]);

@@ -96,7 +96,7 @@
 
 <div class="row">
 	<div class="col-md-4" ng-show="'week'==periodtypemode">
-		Seleccione la semana:
+		Seleccione la semana:{{$scope.semanas}}
 		<div id="ww">
 			<p class="input-group">
 				<input type="text" class="form-control"
@@ -118,6 +118,22 @@
 		</div>
 	</div>
 </div>
+
+	<div class="row">
+		<div class="col-md-4" ng-show="'sixmonth'==periodtypemode">
+			 Seleccione Semestre:<br>
+			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true" onscroll="true">
+				{{semestre?semestre: 'Seleccione semestre'}}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
+				<li ng-repeat="semestre in semestral">
+					<a  ng-click='semestreSeleccionado(semestre)'>{{semestre}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
 </div>
 </div>
 
