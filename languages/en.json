@@ -19,6 +19,7 @@
 	"SELECT_FILE": "Select file",
 	"APPROVAL_STATE": "State",
 	"TITLE_APPS": "MSF-OCBA Health Information System",
-	"IN_PROGRESS": "IN PROGRESS"
+	"IN_PROGRESS": "IN PROGRESS",
+	"VALIDATION_FILE_NAME": "Please, fill in the file name"
 
 }

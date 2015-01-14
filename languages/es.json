@@ -19,5 +19,6 @@
 	"SELECT_FILE": "Seleccionar archivo",
 	"APPROVAL_STATE": "Estado",
 	"TITLE_APPS":"MSF-OCBA Health Information System",
-	"IN_PROGRESS": "CARGARNDO"
+	"IN_PROGRESS": "CARGANDO",
+	"VALIDATION_FILE_NAME": "Por favor, rellene el nombre de fichero"
 }
