@@ -15,7 +15,7 @@ Dhis2Api.factory("commonvariable", function () {
 	var Vari={
 			url:"http://localhost:8080/dhis/api/",
 			OrganisationUnit:"",
-			Period:"2014",
+			Period:"",
 			DataSet:""
 			};
 			

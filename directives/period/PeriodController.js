@@ -8,7 +8,7 @@ Dhis2Api.directive('d2Dropdownperiod', function(){
 });
 
 
-Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
+Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",function ($scope,commonvariable) {
 
 
 	$scope.disabled = undefined;
@@ -27,18 +27,18 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
 	};
     $scope.tipoperiodo = {};
 	$scope.tiposperiodo= [
-		{name:"Diario",format:'yyyyMMdd',modo:"day"},
-		{name:"Semanal",format:'yyyyMMdd',modo:"week"},
-		{name:"Mensual",format:'yyyyMM',modo:"month"},
-		{name:"Semestral",format:'S',modo:"sixmonth"},
-		{name:"Anual",format:'yyyy',modo:"year"}
+		{name:"Diario",formato:'yyyyMMdd',modo:"day"},
+		{name:"Semanal",formato:'yyyyMMdd',modo:"week"},
+		{name:"Mensual",formato:'yyyyMM',modo:"month"},
+		{name:"Semestral",formato:'S',modo:"sixmonth"},
+		{name:"Anual",formato:'yyyy',modo:"year"}
 	];
 
 
 
 	$scope.tipoPeriodoSeleccionado = function(ptSelected){
 		$scope.periodtypename=ptSelected.name;
-		$scope.periodtypeformat=ptSelected.format;
+		$scope.periodtypeformat=ptSelected.formato;
 		$scope.periodtypemode=ptSelected.modo;
 
 	};
@@ -47,8 +47,8 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
 		$scope.monthname=mesSelected.name;
 	};
 
-	$scope.AnoSeleccionado = function(anSelected){
-		$scope.ano=anSelected;
+	$scope.AnoSeleccionado = function(anoSelected){
+		$scope.ano=anoSelected;
 	};
 
 	$scope.semanaSeleccionada = function(weSelected,$event){
@@ -59,6 +59,35 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
 
 		console.log($scope.week)
 	};
+
+
+	$scope.asignarFecha=function(modelo){
+		$scope.dia=modelo.getDate('dd');
+		$scope.ano=modelo.getFullYear('yyyy');
+		$scope.mes=modelo.getMonth('MM');
+
+		switch ($scope.periodtypemode){
+			case "day":
+			commonvariable.Period=$scope.ano.toString()+$scope.mes.toString()+$scope.dia.toString();
+				break;
+			case "week":
+				commonvariable.Period=$scope.ano.toString()+$scope.semanadelano(modelo);
+				break;
+			case "month":
+				commonvariable.Period=$scope.ano.toString()+$scope.mes.toString();
+				break;
+			case "year":
+				commonvariable.Period=$scope.ano.toString();
+				break;
+			default :
+				break;
+
+		} ;
+		console.log(commonvariable.Period);
+
+
+	};
+
 
 //Calendar functions
 	$scope.today = function() {
@@ -85,6 +114,7 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
 		$event.preventDefault();
 		$event.stopPropagation();
 		$scope.opened = true;
+
 
 	};
 
@@ -178,8 +208,8 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
 		// Por pura estetica establecemos que si el año es menor de 10, aumente
 		// un 0 por delante, esto para aquellos que ingresen formato de fecha
 		// corto dd/mm/yy
-
-		alert('W'+$scope.semanas);
+		return 'W'+$scope.semanas;
+		//alert('W'+$scope.semanas);
 		// Con esta sentencia arrojamos el resultado. Esta ultima linea puede ser
 		// cambiada a gusto y conveniencia del lector
 	};

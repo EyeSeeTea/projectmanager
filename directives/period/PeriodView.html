@@ -29,13 +29,17 @@
 					   datepicker-mode="'day'"
 					   date-disabled="disabled(date, mode)"
 					   ng-required="true"
+					   ng-model-format="yyyMMdd"
+					   ng-change="asignarFecha(day)"
 					   close-text="Close" />
 				<span class="input-group-btn">
                 <button type="button" class="btn btn-default "
 						ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
 			</p>
+
 		</div>
+
 	</div>
 		</div>
 
@@ -54,6 +58,7 @@
                                datepicker-mode="'month'"
                                date-disabled="disabled(date, mode)"
                                ng-required="true"
+							   ng-change="asignarFecha(month)"
                                close-text="Close" />
                     <span class="input-group-btn">
                     <button type="button" class="btn btn-default "
@@ -78,6 +83,7 @@
                                    datepicker-mode="'year'"
                                    date-disabled="disabled(date, mode)"
                                    ng-required="true"
+								   ng-change="asignarFecha(year)"
                                    close-text="Close" />
                         <span class="input-group-btn">
                         <button type="button" class="btn btn-default "
@@ -102,12 +108,11 @@
 					   datepicker-mode="'day'"
 					   date-disabled="disabled(date, mode)"
 					   ng-required="true"
+					   ng-change="asignarFecha(day)"
 					   close-text="Close" />
 				<span class="input-group-btn">
                 <button type="button" class="btn btn-default "
 						ng-click="semanaSeleccionada(semana,$event)"><i class="glyphicon glyphicon-calendar"></i></button>
-					<button type="button" class="btn btn-default "
-							ng-click="semanadelano(semana)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
 			</p>
 		</div>
