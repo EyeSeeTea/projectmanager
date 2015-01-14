@@ -61,10 +61,10 @@ Dhis2Api.factory("DataApprovalsState",['$resource','commonvariable', function ($
 }]);
 
 Dhis2Api.factory("AnaliticsDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url+"analytics.html", 
-	{dimension:'@dx',
-	dimension:'@pe',
-	dimension:'@ou',
+	return $resource( commonvariable.url+"analytics.json?:dimension1&:dimension2&:dimension3", 
+	{dimension1:'@dx',
+	dimension2:'@pe',
+	dimension3:'@ou',
 	tableLayout:'true',
 	rows:'dx',
 	columns:'pe;ou'},
@@ -81,5 +81,10 @@ Dhis2Api.factory("MetaDataExport",['$resource','commonvariable', function ($reso
 	return $resource( commonvariable.url+"metadata.json", 
 	{},
   { get: { method: "GET"} });
+}]);
+Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( "http://localhost:8080/dhis/dhis-web-reporting/generateDataSetReport.action?ds=QG2u1H57sj3&pe=2014&ou=maJjc7i6P7E", 
+	{},
+  { get: { method: "GET",isArray:true} });
 }]);
 
