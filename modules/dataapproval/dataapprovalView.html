@@ -11,8 +11,9 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
+	<p></p>
 	<p class="bg-warning">{{ 'APPROVAL_STATE' | translate }} : {{Approvalstate | json}}</p>
-	<h2>Formulario </h2>
-	<div ng-bind-html="DatasetValue"></div>
+	 <div ng-bind-html="DatasetValue | to_trusted""></div> 
 	</div>
+
 </div>

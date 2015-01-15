@@ -14,6 +14,7 @@ Dhis2Api.factory("commonvariable", function () {
      
 	var Vari={
 			url:"http://localhost:8080/dhis/api/",
+			urlbase:"http://localhost:8080/dhis/",
 			OrganisationUnit:"",
 			Period:"",
 			DataSet:""
@@ -83,8 +84,14 @@ Dhis2Api.factory("MetaDataExport",['$resource','commonvariable', function ($reso
   { get: { method: "GET"} });
 }]);
 Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( "http://localhost:8080/dhis/dhis-web-reporting/generateDataSetReport.action?ds=QG2u1H57sj3&pe=2014&ou=maJjc7i6P7E", 
-	{},
-  { get: { method: "GET",isArray:true} });
+	return $resource( commonvariable.urlbase+"dhis-web-reporting/generateDataSetReport.action", 
+	{ds:'@id',
+	 pe:'@pe',
+	 ou:'@ou'},
+  { get: { method: "GET", transformResponse: function (response) {
+      return {codeHtml: response};
+  		}
+      }
+	});
 }]);
 

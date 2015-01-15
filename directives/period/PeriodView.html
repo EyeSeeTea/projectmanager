@@ -17,7 +17,7 @@
 
 	<div class="row">
 	<div class="col-md-4" ng-show="'day'==periodtypemode">
-		Seleccione el día:
+		<label>Seleccione el día:</label>
 		<div id="dt">
 			<p class="input-group">
 				<input type="text" class="form-control"
@@ -46,7 +46,7 @@
 
         <div class="row">
             <div class="col-md-4" ng-show="'month'==periodtypemode">
-				Seleccione el mes:
+				<label>Seleccione el mes:</label>
                 <div id="mensual">
                     <p class="input-group">
                         <input type="text" class="form-control"
@@ -71,7 +71,7 @@
 
             <div class="row">
                 <div class="col-md-4" ng-show="'year'==periodtypemode">
-                    Seleccione el Año:
+                    <label>Seleccione el Año:</label>
                     <div id="anual">
                         <p class="input-group">
                             <input type="text" class="form-control"
@@ -96,7 +96,7 @@
 
 <div class="row">
 	<div class="col-md-4" ng-show="'week'==periodtypemode">
-		Seleccione la semana:{{$scope.semanas}}
+		<label>Seleccione la semana:{{$scope.semanas}}</label>
 		<div id="ww">
 			<p class="input-group">
 				<input type="text" class="form-control"
@@ -121,7 +121,7 @@
 
 	<div class="row">
 		<div class="col-md-4" ng-show="'sixmonth'==periodtypemode">
-			 Seleccione Semestre:<br>
+			 <label>Seleccione Semestre: </label><br>
 			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true" onscroll="true">
 				{{semestre?semestre: 'Seleccione semestre'}}
 				<span class="caret"></span>
