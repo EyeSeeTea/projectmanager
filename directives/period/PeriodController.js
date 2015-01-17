@@ -61,7 +61,6 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 		$scope.opened = true;
 		$scope.week=weSelected;
 
-		console.log($scope.week)
 	};
 
 
@@ -72,7 +71,8 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 
 		switch ($scope.periodtypemode){
 			case "day":
-			commonvariable.Period=$scope.ano.toString()+$scope.mes.toString()+$scope.dia.toString();
+			//commonvariable.Period=$scope.ano.toString()+$scope.mes.toString()+$scope.dia.toString();
+				commonvariable.Period=modelo.getItem();
 				break;
 			case "week":
 				commonvariable.Period=$scope.ano.toString()+$scope.semanadelano(modelo);

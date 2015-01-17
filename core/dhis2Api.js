@@ -11,7 +11,7 @@ var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
 
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
-     
+
 	var Vari={
 			url:"http://localhost:8080/dhis/api/",
 			urlbase:"http://localhost:8080/dhis/",
@@ -19,10 +19,22 @@ Dhis2Api.factory("commonvariable", function () {
 			Period:"",
 			DataSet:""
 			};
-			
+
    return Vari; 
 });
 
+Dhis2Api.factory("userAuthorization", ['$resource','commonvariable',function($resource,commonvariable) {
+	return $resource(commonvariable.url + "me/authorization/:menuoption",
+		{
+			menuoption:'@menuoption'
+		},
+		{ get: { method: "GET", transformResponse: function (response) {
+			return {status: response};
+		}
+		}
+		});
+
+}]);
 
 Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnits", 

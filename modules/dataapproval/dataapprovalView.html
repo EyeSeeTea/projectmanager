@@ -1,4 +1,5 @@
-
+<div class="bg-danger" ng-hide="{{autorization}}">NO TIENE PERMISOS PARA ACCEDER A ESTE MÓDULO </div>
+<div ng-show="{{autorization}}">
 <h2>{{title}}</h2>
 <d2-dropdowndataset></d2-dropdowndataset> 
 <d2-dropdownperiod></d2-dropdownperiod>
@@ -13,7 +14,8 @@
 	<div class="col-md-12">
 	<p></p>
 	<p class="bg-warning">{{ 'APPROVAL_STATE' | translate }} : {{Approvalstate | json}}</p>
-	 <div ng-bind-html="DatasetValue | to_trusted""></div> 
+	 <div ng-bind-html="DatasetValue | to_trusted"></div>
 	</div>
 
+</div>
 </div>

@@ -3,7 +3,12 @@ appManagerMSF.filter('to_trusted', ['$sce', function($sce){
             return $sce.trustAsHtml(codeHtml);
         };
     }]);
-appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","DataSetForm", function($scope, $filter,commonvariable,DataApprovalsState,DataSetForm) {
+appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","DataSetForm", "userAuthorization", function($scope, $filter,commonvariable,DataApprovalsState,DataSetForm,userAuthorization) {
+	var authorization =userAuthorization.get({menuoption:"F_APPROVE_DATA"});
+	authorization.$promise.then(function(data) {
+		$scope.authorization=data.status;
+	});
+	console.log(authorization);
 	var $translate = $filter('translate');
     $scope.title = $translate('DATA_APPROVAL'); 
      $scope.GetValueOfDataSet=function(){
