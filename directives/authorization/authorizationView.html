@@ -1,0 +1,16 @@
+<div class="dropdown" ng-controller="d2AuthorizationController">
+  <script type="text/ng-template" id="myModalContent.html">
+  <div class="modal-header">      
+	<div class="alert alert-danger" role="alert">
+  	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  	<span class="sr-only">Error:</span>
+ 		{{'ACCESS_TITLE' | translate }}
+	</div>
+     </div>
+        <div class="modal-body">
+            {{'ACCESS_DESC' | translate }}
+        <div class="modal-footer">
+            <a class="btn btn-danger" href="#/" ng-click="cancel()">{{'ACCESS_BUTTON' | translate }}</a>
+        </div>
+    </script>
+</div>
