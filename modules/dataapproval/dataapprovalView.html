@@ -1,19 +1,42 @@
 <d2-authorization menuoption="F_APPROVE_DATA"></d2-authorization>
 <h2>{{title}}</h2>
-<d2-dropdowndataset></d2-dropdowndataset> 
-<d2-dropdownperiod></d2-dropdownperiod>
-<d2-dropdownorganisationunit></d2-dropdownorganisationunit>
+<div class="panel panel-default col-md-6">
+
 <div class="row">
-	<div class="col-md-12">
-		<button class="btn btn-primary" ng-click="GetValueOfDataSet()" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
-		<button class="btn btn-default" type="submit">{{ 'DATA_APPROVAL_CANCEL' | translate }}</button>
+	<div class="col-md-2 pull-right">
+	<button type="button" class="btn btn-default"ng-model="collapsed" ng-click="collapsed=!collapsed">
+  <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+</button>
 	</div>
 </div>
+<div class="row" ng-hide="collapsed">
+	<div class="col-md-12">
+		<d2-dropdowndataset></d2-dropdowndataset> 
+		<d2-dropdownperiod></d2-dropdownperiod>
+		<div class="row">
+			<div class="col-md-12">
+				<d2-dropdownorganisationunit></d2-dropdownorganisationunit>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-primary" ng-click="GetValueOfDataSet()" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
+				<button class="btn btn-default" type="submit">{{ 'DATA_APPROVAL_CANCEL' | translate }}</button>
+			</div>
+		</div>
+		<br>
+	</div>
+</div>
+</div>
+<br>
+<div class="row" ng-show="statusappr">
+	<div class="col-md-6">
+	 	<div class="alert alert-info" role="alert">{{ 'APPROVAL_STATE' | translate }} : {{Approval.state | translate}}</div>
+	</div>
+	</div>
 <div class="row">
 	<div class="col-md-12">
-	<p></p>
-	<p class="bg-warning">{{ 'APPROVAL_STATE' | translate }} : {{Approvalstate | json}}</p>
-	 <div ng-bind-html="DatasetValue | to_trusted"></div>
+		<div ng-bind-html="DatasetValue | to_trusted"></div>
 	</div>
-
 </div>

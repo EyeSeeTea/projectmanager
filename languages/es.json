@@ -23,6 +23,7 @@
 	"VALIDATION_FILE_NAME": "Por favor, rellene el nombre de fichero",
 	"ACCESS_TITLE":"Error de Acceso",
 	"ACCESS_DESC":"No tienes acceso a este modulo. Si requieres acceso por favor comunicate con el administrador del sistema",
-	"ACCESS_BUTTON":"Regresar"
+	"ACCESS_BUTTON":"Regresar",
+	"UNAPPROVED_ABOVE": "Listo para aprobación a un nivel superior"
 	
 }

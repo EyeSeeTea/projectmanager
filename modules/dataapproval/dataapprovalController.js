@@ -15,14 +15,16 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
     		}
     	var StateForApproval = DataApprovalsState.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id});
     	StateForApproval.$promise.then(function(data) {
-    		$scope.Approvalstate=data.state;
+    		$scope.Approval=data;
     	});
     
-    	var datasetValue=DataSetForm.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id}); 
-    	datasetValue.$promise.then(function(data) {
-    		var result=data.codeHtml;
-    		$scope.DatasetValue=result.replace('id="shareForm"','id="shareForm" style="display:none" ');    		  		
-    	});
+    	if($scope.Approval.mayReadData){
+	    	var datasetValue=DataSetForm.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id}); 
+	    	datasetValue.$promise.then(function(data) {
+	    		var result=data.codeHtml;
+	    		$scope.DatasetValue=result.replace('id="shareForm"','id="shareForm" style="display:none" ');    		  		
+	    	});
+    	}
     }
     
     
