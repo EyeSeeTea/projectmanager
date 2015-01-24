@@ -49,7 +49,8 @@ Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($re
 Dhis2Api.factory("OrganisationunitLevel",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnitLevels", 
    {
-		fields:'name,id,level'
+		fields:'name,id,level',
+		pageSize:10
    }, 
   { get: { method: "GET"} });
 }]);
