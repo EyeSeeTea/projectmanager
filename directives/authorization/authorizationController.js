@@ -8,7 +8,6 @@ Dhis2Api.directive('d2Authorization', function(){
 	}
 	}); 
 Dhis2Api.controller("d2AuthorizationController", ['$scope',"userAuthorization",'$modal',function ($scope,userAuthorization, $modal) {
-	 console.log($scope.menuoption);
 	var authorization =userAuthorization.get({menuoption:$scope.menuoption});
 	authorization.$promise.then(function(data) {
 		if(data.status=="false")

@@ -22,7 +22,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<button class="btn btn-primary" ng-click="GetValueOfDataSet()" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
-				<button class="btn btn-default" type="submit">{{ 'DATA_APPROVAL_CANCEL' | translate }}</button>
+				<button class="btn btn-default" ng-click="Clearform()" type="submit">{{ 'DATA_APPROVAL_CANCEL' | translate }}</button>
 			</div>
 		</div>
 		<br>
@@ -33,8 +33,9 @@
 <div class="row" ng-show="statusappr">
 	<div class="col-md-6">
 	 	<div class="alert alert-info" role="alert">{{ 'APPROVAL_STATE' | translate }} : {{Approval.state | translate}}</div>
+		<button class="btn btn-default" type="submit" ng-show="readyappr" >{{ 'DATA_APPROVAL_APPROVAL' | translate }}</button>
 	</div>
-	</div>
+</div>
 <div class="row">
 	<div class="col-md-12">
 		<div ng-bind-html="DatasetValue | to_trusted"></div>

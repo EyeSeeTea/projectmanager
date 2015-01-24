@@ -24,6 +24,8 @@
 	"ACCESS_TITLE":"Access Error",
 	"ACCESS_DESC":"You don't have access to this module. If you require access please comunicate with the system administrator",
 	"ACCESS_BUTTON":"Return",
-	"UNAPPROVED_ABOVE": "Listo para aprobación a un nivel superior"
+	"UNAPPROVED_ABOVE": "Ready for approval at a higher level",
+	"UNAPPROVED_READY" : "Ready for approval",
+	"DATA_APPROVAL_APPROVAL" : "Approve"
 
 }

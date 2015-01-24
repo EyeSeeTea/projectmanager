@@ -6,6 +6,9 @@ appManagerMSF.filter('to_trusted', ['$sce', function($sce){
 appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","DataSetForm", function($scope, $filter,commonvariable,DataApprovalsState,DataSetForm) {
 	var $translate = $filter('translate');
     $scope.title = $translate('DATA_APPROVAL'); 
+    $scope.Clearform=function(){
+    	window.location.reload();  	
+    }
      $scope.GetValueOfDataSet=function(){
     	var Dataelements=commonvariable.DataSet.dataElements;
 
@@ -24,7 +27,10 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 	    		var result=data.codeHtml;
 	    		$scope.DatasetValue=result.replace('id="shareForm"','id="shareForm" style="display:none" ');    		  		
 	    	});
+	    	$scope.statusappr=true;
+	    	$scope.readyappr=($scope.DatasetValue.status=="UNAPPROVED_READY"?true:false);
     	}
+    	
     }
     
     
