@@ -46,9 +46,11 @@ Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($re
   { get: { method: "GET"} });
 }]);
 
-Dhis2Api.factory("OptionSet",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url+"optionSets", 
-   {}, 
+Dhis2Api.factory("OrganisationunitLevel",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"organisationUnitLevels", 
+   {
+		fields:'name,id,level'
+   }, 
   { get: { method: "GET"} });
 }]);
 
@@ -61,7 +63,7 @@ Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,
 Dhis2Api.factory("DatasetDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataSets", 
    {filter:'approveData:eq:true', 
-   fields:'id,name,dataElements'},
+   fields:'id,name,dataElements,periodType'},
   { get: { method: "GET"} });
 }]);
 
@@ -95,6 +97,7 @@ Dhis2Api.factory("MetaDataExport",['$resource','commonvariable', function ($reso
 	{},
   { get: { method: "GET"} });
 }]);
+
 Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.urlbase+"dhis-web-reporting/generateDataSetReport.action", 
 	{ds:'@id',

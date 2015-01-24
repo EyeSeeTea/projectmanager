@@ -1,7 +1,8 @@
 <div  ng-controller="d2DropdownOrganisationUnitController">
   <label>{{ 'ORGANISATIONUNIT' | translate }}</label>
 	  <br>
-  <input type="text" ng-model="organisationUnitSelected" typeahead-template-url="directives/organisationunit/template.html" placeholder="{{'ORGANISATIONUNIT_FIND' | translate }}" typeahead="ou as ou.name for ou in findOrganisationunitbyName($viewValue)" typeahead-min-length="1"  typeahead-loading="loadingrefresh" class="form-control" typeahead-on-select="onSelect($item, $model, $label)">
+  <input type="text" ng-model="organisationUnitSelected" typeahead-template-url="directives/organisationunit/template.html" placeholder="{{'ORGANISATIONUNIT_FIND' | translate }}" typeahead="ou as ou.name for ou in findOrganisationunitbyName($viewValue)" typeahead-min-length="2"  typeahead-loading="loadingrefresh" class="form-control" typeahead-on-select="onSelect($item, $model, $label)">
     <i ng-show="loadingrefresh" class="glyphicon glyphicon-refresh"></i>
+</div>
 </div>
 

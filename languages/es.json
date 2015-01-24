@@ -24,6 +24,8 @@
 	"ACCESS_TITLE":"Error de Acceso",
 	"ACCESS_DESC":"No tienes acceso a este modulo. Si requieres acceso por favor comunicate con el administrador del sistema",
 	"ACCESS_BUTTON":"Regresar",
-	"UNAPPROVED_ABOVE": "Listo para aprobación a un nivel superior"
+	"UNAPPROVED_ABOVE": "Listo para aprobación a un nivel superior",
+	"UNAPPROVED_READY" : "listo para aprobación",
+	"DATA_APPROVAL_APPROVAL" : "Aprobar"
 	
 }
