@@ -20,7 +20,8 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
     
     	var datasetValue=DataSetForm.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id}); 
     	datasetValue.$promise.then(function(data) {
-    		$scope.DatasetValue=data.codeHtml;
+    		var result=data.codeHtml;
+    		$scope.DatasetValue=result.replace('id="shareForm"','id="shareForm" style="display:none" ');    		  		
     	});
     }
     
