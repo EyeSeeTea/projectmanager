@@ -26,6 +26,8 @@
 	"ACCESS_BUTTON":"Return",
 	"UNAPPROVED_ABOVE": "Ready for approval at a higher level",
 	"UNAPPROVED_READY" : "Ready for approval",
-	"DATA_APPROVAL_APPROVAL" : "Approve"
+	"DATA_APPROVAL_APPROVAL" : "Approve",
+	"APPROVED_HERE":"Approved",
+	"DATA_APPROVAL_UNAPPROVAL":"Unapprove"
 
 }

@@ -1,14 +1,13 @@
 <d2-authorization menuoption="F_APPROVE_DATA"></d2-authorization>
-<h2>{{title}}</h2>
-<div class="panel panel-default col-md-6">
-
 <div class="row">
-	<div class="col-md-2 pull-right">
-	<button type="button" class="btn btn-default"ng-model="collapsed" ng-click="collapsed=!collapsed">
+<div class="container col-md-10">
+<div class="panel panel-default">
+<div class="panel-heading"><strong>{{'DATA_APPROVAL' | translate}}</strong>
+	<button type="button" class="btn btn-default pull-right" ng-model="collapsed" ng-click="collapsed=!collapsed">
   <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
 </button>
 	</div>
-</div>
+  <div class="panel-body">
 <div class="row" ng-hide="collapsed">
 	<div class="col-md-12">
 		<d2-dropdowndataset></d2-dropdowndataset> 
@@ -29,15 +28,25 @@
 	</div>
 </div>
 </div>
-<br>
-<div class="row" ng-show="statusappr">
-	<div class="col-md-6">
-	 	<div class="alert alert-info" role="alert">{{ 'APPROVAL_STATE' | translate }} : {{Approval.state | translate}}</div>
-		<button class="btn btn-default" type="submit" ng-show="readyappr" >{{ 'DATA_APPROVAL_APPROVAL' | translate }}</button>
-	</div>
 </div>
+</div>
+</div>
+<br>
+
+<div class="row">
+<div class="container col-md-10">
+	<div class="row" ng-show="DatasetValue==undefined?false:true">
+		 	<div class="alert alert-info" role="alert">{{ 'APPROVAL_STATE' | translate }} : {{Approval.state | translate}}
+				<button class="btn btn-primary" ng-click="PostChangeStatusdapproval()"  type="submit" ng-show="Approval.mayApprove" >{{ 'DATA_APPROVAL_APPROVAL' | translate }}</button>
+				<button class="btn btn-primary" ng-click="RemoveChangeStatusdapproval()" type="submit" ng-show="Approval.mayUnapprove" >{{ 'DATA_APPROVAL_UNAPPROVAL' | translate }}</button>
+				<button class="btn btn-primary" ng-click="" type="submit" ng-show="Approval.mayAccept" >{{ 'DATA_APPROVAL_ACCEPT' | translate }}</button>
+				<button class="btn btn-primary" ng-click="" type="submit" ng-show="Approval.mayUnaccept" >{{ 'DATA_APPROVAL_UNACCEPT' | translate }}</button>
+			</div>
+	</div>
 <div class="row">
 	<div class="col-md-12">
 		<div ng-bind-html="DatasetValue | to_trusted"></div>
 	</div>
+</div>
+</div>
 </div>

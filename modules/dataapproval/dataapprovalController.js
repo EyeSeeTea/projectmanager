@@ -5,33 +5,35 @@ appManagerMSF.filter('to_trusted', ['$sce', function($sce){
     }]);
 appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","DataSetForm", function($scope, $filter,commonvariable,DataApprovalsState,DataSetForm) {
 	var $translate = $filter('translate');
-    $scope.title = $translate('DATA_APPROVAL'); 
     $scope.Clearform=function(){
     	window.location.reload();  	
     }
      $scope.GetValueOfDataSet=function(){
-    	var Dataelements=commonvariable.DataSet.dataElements;
-
-    	var LstDataElement="";
-    	for(var k in  Dataelements) {
-    		   LstDataElement= LstDataElement+ Dataelements[k].id+(k<Dataelements.length-1?";":"");
-    		}
-    	var StateForApproval = DataApprovalsState.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id});
+      	var StateForApproval = DataApprovalsState.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id});
     	StateForApproval.$promise.then(function(data) {
     		$scope.Approval=data;
+ 	    	if($scope.Approval.mayReadData){
+		    	var datasetValue=DataSetForm.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id}); 
+		    	datasetValue.$promise.then(function(data) {
+		    		var result=data.codeHtml;
+		    		$scope.DatasetValue=result.replace('id="shareForm"','id="shareForm" style="display:none" ');    		  		
+		    	});
+	    	}
+	    	if($scope.Approval.mayApprove){
+	    		$scope.approve=true; 		
+	    	}
+	    	$scope.collapsed=true;
     	});
-    
-    	if($scope.Approval.mayReadData){
-	    	var datasetValue=DataSetForm.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id}); 
-	    	datasetValue.$promise.then(function(data) {
-	    		var result=data.codeHtml;
-	    		$scope.DatasetValue=result.replace('id="shareForm"','id="shareForm" style="display:none" ');    		  		
-	    	});
-	    	$scope.statusappr=true;
-	    	$scope.readyappr=($scope.DatasetValue.status=="UNAPPROVED_READY"?true:false);
-    	}
-    	
     }
-    
-    
+     $scope.PostChangeStatusdapproval=function(){
+    	 DataApprovalsState.post({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id});
+    	 $scope.GetValueOfDataSet();
+     }
+     
+     $scope.RemoveChangeStatusdapproval=function(){
+    	 DataApprovalsState.remove({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id});
+    	  $scope.GetValueOfDataSet();
+     }
+     $scope.verif   
 }]);
+
