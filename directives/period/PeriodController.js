@@ -27,11 +27,14 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 	};
     $scope.tipoperiodo = {};
 	$scope.tiposperiodo= [
-		{name:"Diario",formato:'yyyyMMdd',modo:"day"},
-		{name:"Semanal",formato:'yyyyWww',modo:"week"},
-		{name:"Mensual",formato:'yyyyMM',modo:"month"},
-		{name:"Semestral",formato:'yyyySS',modo:"sixmonth"},
-		{name:"Anual",formato:'yyyy',modo:"year"}
+		{name:"Diario",formato:'yyyyMMdd',modo:"day", periodtypeid:1},
+		{name:"Semanal",formato:'yyyyWww',modo:"week", periodtypeid:2},
+		{name:"Mensual",formato:'yyyyMM',modo:"month", periodtypeid:3},
+		{name:"Semestral",formato:'yyyySS',modo:"sixmonth", periodtypeid:4},
+		{name:"Anual",formato:'yyyy',modo:"year", periodtypeid:5},
+		{name:"Anio financiero Abril",formato:'yyyyApril',modo:"financialApril", periodtypeid:6},
+		{name:"Anio financiero Julio",formato:'yyyyJuly',modo:"financialJuly", periodtypeid:7},
+		{name:"Anio financiero Octubre",formato:'yyyyOct',modo:"financialOct", periodtypeid:8}
 	];
 
 
@@ -53,6 +56,28 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 
 	$scope.semestreSeleccionado = function(anoSelected){
 		$scope.semestre=anoSelected;
+		commonvariable.Period=$scope.semestre;
+	};
+
+	$scope.periodoFinanciero = function(peSelected){
+
+		switch (peSelected.type) {
+			case "April":
+				$scope.financialPeriodApril = peSelected.anio + 'April';
+				commonvariable.Period = $scope.financialPeriod;
+				break;
+			case "July":
+				$scope.financialPeriodJuly = peSelected.anio + 'July';
+				commonvariable.Period = $scope.financialPeriod;
+				break;
+			case "Oct":
+				$scope.financialPeriodOct = peSelected.anio + 'Oct';
+				commonvariable.Period = $scope.financialPeriod;
+				break;
+			default :
+				break;
+		};
+		console.log(commonvariable.Period);
 	};
 
 	$scope.semanaSeleccionada = function(weSelected,$event){
@@ -193,7 +218,7 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 		// Restamos ambas fechas y obtenemos una marca de tiempo
 		$scope.semanas   =  Math.floor(lapso/1000/60/60/24/7);
 		// Dividimos la marca de tiempo para obtener el numero de semanas
-
+		$scope.semanas = $scope.semanas+1;
 		if (dia_pri == 1) {
 			$scope.semanas++;
 		};
@@ -202,7 +227,7 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 		// año anterior
 
 		if ($scope.semanas == 0) {
-			$scope.semanas=52;
+			$scope.semanas=1;
 			ano--;
 		};
 		// Establecemos que si el resultado de semanas es 0 lo cambie a 52 y
@@ -215,6 +240,9 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 		// Por pura estetica establecemos que si el año es menor de 10, aumente
 		// un 0 por delante, esto para aquellos que ingresen formato de fecha
 		// corto dd/mm/yy
+		if ($scope.semanas < 10) {
+			$scope.semanas = '0'+$scope.semanas;
+		};
 		return 'W'+$scope.semanas;
 		//alert('W'+$scope.semanas);
 		// Con esta sentencia arrojamos el resultado. Esta ultima linea puede ser
@@ -222,10 +250,19 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 	};
 ///////////////////////////////////////
 	$scope.semestral=[];
-	for (var i=2010; i<=2030; i++){
+	for (var i=2010; i<=2020; i++){
 		for (var j= 1; j<=2; j++){
 			$scope.semestral.push(i+'S'+j);
 	}
 	};
-
+//////////////////////////////////////
+//	Financial periods
+	$scope.financialApril=[];
+	$scope.financialJuly=[];
+	$scope.financialOct=[];
+	for (var i=2010; i<=2020; i++){
+		$scope.financialApril.push({description:('April ' + (i-1)+' March ' + i), anio:(i-1), type:'April'});
+		$scope.financialJuly.push({description:('July ' + (i-1) +' June ' + i), anio:(i-1), type:'July'});
+		$scope.financialOct.push({description:('October ' + (i-1)+' September ' + i),anio:(i-1), type:'Oct'});
+	}
 }]);
