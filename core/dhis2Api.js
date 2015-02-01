@@ -73,7 +73,10 @@ Dhis2Api.factory("DataApprovalsState",['$resource','commonvariable', function ($
 	{ds:'@id',
 	pe:'@pe',
 	ou:'@ou'},
-  { get: { method: "GET"} });
+  { get: { method: "GET"},
+	post: { method: "POST"},
+	remove: {method:'DELETE'}
+  });
 }]);
 
 Dhis2Api.factory("AnaliticsDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
