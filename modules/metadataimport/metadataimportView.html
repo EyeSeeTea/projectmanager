@@ -1,13 +1,24 @@
 <h2>{{ 'METADATA_IMPORT' | translate }}</h2>
-<form role="form">
+
+<form name="form">
 	<div class="row">
-	<div class="col-md-6">
-		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-		<input type="file" class="form-control" id="file_search"/>
+		<div class="col-md-6">
+			<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
+			<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" accept="*.json" required=""/>
+		</div>
+		<div ng-show="form.$submitted">
+	      <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>
+	    </div>
 	</div>
-	</div>
+  
+	<br/>
+		<div class="row">
+		<div class="col-md-6">
+			<progressbar ng-show="progressbarDisplayed" class="progress-striped active" value="100" type="info">{{ 'IN_PROGRESS' | translate }}</progressbar>
+		</div>
+	</div>	
 	<br/>
 	<div class="form_group">
-		<button type="submit" class="btn btn-primary">{{ 'IMPORT' | translate }}</button>
+		<button class="btn btn-primary"  ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
 	</div>
 </form>
