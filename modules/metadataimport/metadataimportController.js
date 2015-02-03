@@ -1,4 +1,4 @@
-appManagerMSF.controller('metadataimportController', ["$scope", '$upload', '$filter', "commonvariable", "MetaDataImport", function($scope, $upload, $filter, commonvariable, MetaDataImport) {
+appManagerMSF.controller('metadataimportController', ["$scope", '$upload', '$filter', "commonvariable", function($scope, $upload, $filter, commonvariable) {
 		var $translate = $filter('translate');
 		
 		$scope.progressbarDisplayed = false;
