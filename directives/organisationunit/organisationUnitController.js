@@ -10,7 +10,6 @@ Dhis2Api.controller("d2DropdownOrganisationUnitController", ['$scope','Organisat
 		$scope.OrganisationunitLevels=response.organisationUnitLevels;
 		console.log()
 	});
-	$scope.prueba="es una prueba";
 	$scope.findOrganisationunitbyName = function(nameOu) {
 			return Organisationunit.get({filter:'name:startsWith:'+nameOu})
 			.$promise.then(function(response){
