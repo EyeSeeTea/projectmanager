@@ -118,26 +118,49 @@ Dhis2Api.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items
 			  $scope.treeOrganisationUnitList = data.organisationUnits;
 		 });
 		 
-		    $scope.update = function(id, data) {
-				var listOu = $scope.treeOrganisationUnitList;
+		    $scope.update1 = function(id, data) {
+				var listOu = $scope.treeOrganisationUnitList[0].children;
 
 				for (var i = 0; i < listOu.length; i++) {
 					if (listOu[i].id === id) {
-						listOu[i] = data;
+						listOu[i]=data;
 						break;
 					}
 				}
 				$scope.treeOrganisationUnitList=listOu;
 			}
 		 
+		     $scope.update = function (json, valorOrig, valorDest)		{
+		    	 var type;
+		    	 var resultado;
+		    	 for (var i=0; i<json.length;i++){
+		    		 type = typeof json[i].children;
+		    	 		if (type=="undefined"){
+		    				resultado = true;
+		    			 	if (json[i].id==valorOrig){
+		    			 		json[i].children = valorDest;
+		    			 	}
+		    			}
+		    			else{
+		    				if (json[i].id==valorOrig){
+		    					json[i].children = valorDest;
+		    				}
+		    				resultado = $scope.update(json[i].children, valorOrig, valorDest);
+		    			}
+		    		}
+
+		    	 return json;
+		    	 }
+		    
 		  $scope.$watch(
                     function($scope) {
                     	if($scope.OrganisationUnit.currentNode && $scope.currentid!=$scope.OrganisationUnit.currentNode.id){
 								$scope.currentid=$scope.OrganisationUnit.currentNode.id;
 								TreeOrganisationunit.get({uid:$scope.OrganisationUnit.currentNode.id})
 								.$promise.then(function(data){
-									 $scope.update($scope.OrganisationUnit.currentNode.id,data.organisationUnits) 									  
-								 });
+									$scope.treeOrganisationUnitList=$scope.update($scope.treeOrganisationUnitList, $scope.OrganisationUnit.currentNode.id,data.children) 									  
+							    	 console.log($scope.treeOrganisationUnitList);
+								});
 							}
                     }
                 );
