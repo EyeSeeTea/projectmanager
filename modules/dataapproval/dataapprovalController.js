@@ -61,10 +61,10 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 		    		 $scope.GetValueOfDataSet();
 		    		 break;
 		    	 case 2:
-		    		 $scope.openModal({tittle:$translate('APPROVAL_VALIDATION_TITTLE') ,description:$translate('APPROVAL_VALIDATION_DESC'),op:option});
+		    		 $scope.openModal({tittle:$translate('APPROVAL_VALIDATION_TITLE') ,description:$translate('APPROVAL_VALIDATION_DESC'),op:option});
 		    		 break;
 		    	 case 3: 
-		    		 $scope.openModal({tittle:$translate('UNAPPROVAL_VALIDATION_TITTLE') ,description:$translate('UNAPPROVAL_VALIDATION_DESC'),op:option});
+		    		 $scope.openModal({tittle:$translate('UNAPPROVAL_VALIDATION_TITLE') ,description:$translate('UNAPPROVAL_VALIDATION_DESC'),op:option});
 		    		 break;		    		 
 		    	 } 
 		 	}

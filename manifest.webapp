@@ -9,15 +9,15 @@
 	},
 	"developer":{
 	"url":"",
-	"name":"Helder Castrillon",
-	"company":"Hisp Colombia",
+	"name":"Helder Castrillon, Marko Garcia, Adrian Quintana, Jose Garcia",
+	"company":"Hisp Colombia - EyeSeeTea Ltd.",
 	"email":"heldersoft@gmail.com"
 	},
 	"installs_allowed_from":null,
 	"default_locale":"en",
 	"activities": {
 	  "dhis": {
-	  "href": "*"
+	  "href": "../../dhis"
 		}
 	}
 }
