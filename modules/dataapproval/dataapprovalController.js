@@ -45,11 +45,11 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
      $scope.VarValidation=function(dataSet,Period,OrganisationUnit){
     	 $scope.msjValidation=1;
     	 if(!dataSet)
-    		 	$scope.msjValidation="Seleccione un formulario";
+    		 	$scope.msjValidation= $translate('APPROVAL_VALIDATION_FORM'); 
     	 if(!Period)
- 		 		$scope.msjValidation=(($scope.msjValidation!=1)?$scope.msjValidation+" ,":"")+" Seleccione un Periodo";
+ 		 		$scope.msjValidation=(($scope.msjValidation!=1)?$scope.msjValidation+" ,":"")+ $translate('APPROVAL_VALIDATION_PERIOD');
     	 if(!OrganisationUnit)
-  		 		$scope.msjValidation=(($scope.msjValidation!=1)?$scope.msjValidation+" ,":"")+" Seleccione un Proyecto";
+  		 		$scope.msjValidation=(($scope.msjValidation!=1)?$scope.msjValidation+" ,":"")+ $translate('APPROVAL_VALIDATION_OU');
       	 
      }
      
@@ -61,10 +61,10 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 		    		 $scope.GetValueOfDataSet();
 		    		 break;
 		    	 case 2:
-		    		 $scope.openModal({tittle:"Aprobar datos",description:"Esta seguro que desea aprobar los datos",op:option});
+		    		 $scope.openModal({tittle:$translate('APPROVAL_VALIDATION_TITTLE') ,description:$translate('APPROVAL_VALIDATION_DESC'),op:option});
 		    		 break;
 		    	 case 3: 
-		    		 $scope.openModal({tittle:"Desaprobar datos",description:"Esta seguro que desea desaprobar los datos",op:option});
+		    		 $scope.openModal({tittle:$translate('UNAPPROVAL_VALIDATION_TITTLE') ,description:$translate('UNAPPROVAL_VALIDATION_DESC'),op:option});
 		    		 break;		    		 
 		    	 } 
 		 	}
@@ -101,14 +101,4 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 	 
 }]);
 
-appManagerMSF.controller('ModalConfirmCtrl', function ($scope, $modalInstance,information) {
-	$scope.information=information;
-	  $scope.ok = function () {
-	    $modalInstance.close($scope.information.op);
-	  };
-
-	  $scope.cancel = function () {
-	    $modalInstance.dismiss('cancel');
-	  };
-	});
 

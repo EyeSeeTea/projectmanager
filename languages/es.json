@@ -28,6 +28,16 @@
 	"UNAPPROVED_READY" : "listo para aprobación",
 	"DATA_APPROVAL_APPROVAL" : "Aprobar",
 	"APPROVED_HERE":"Aprobado",
-	"DATA_APPROVAL_UNAPPROVAL":"Desaprobar"
+	"DATA_APPROVAL_UNAPPROVAL":"Desaprobar",
+	"YES":"Si",
+	"NO":"No",
+	"APPROVAL_VALIDATION_FORM":"Seleccione un formulario",
+	"APPROVAL_VALIDATION_PERIOD":"Seleccione un periodo",
+	"APPROVAL_VALIDATION_OU":"Seleccione un proyecto",
+	"APPROVAL_VALIDATION_TITTLE":"Aprobar",
+	"APPROVAL_VALIDATION_DESC":"¿Está seguro que desea aprobar los datos del formulario?",
+	"UNAPPROVAL_VALIDATION_TITTLE":"desaprobar",
+	"UNAPPROVAL_VALIDATION_DESC":"¿Está seguro que desea desaprobar los datos del formulario?"
+	
 	
 }
