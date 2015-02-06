@@ -1,0 +1,23 @@
+{
+	"version":"0.1",
+	"name":"Project Manager",
+	"description":"Project Manager",
+	"launch_path":"index.html",
+	"icons":{"16":null,
+	"48":null,
+	"128":"img/icons/icon.png"
+	},
+	"developer":{
+	"url":"",
+	"name":"Helder Castrillon, Marko Garcia, Adrian Quintana, Jose Garcia",
+	"company":"Hisp Colombia - EyeSeeTea Ltd.",
+	"email":"heldersoft@gmail.com, josemp10@gmail.com"
+	},
+	"installs_allowed_from":null,
+	"default_locale":"en",
+	"activities": {
+	  "dhis": {
+	  "href": "*"
+		}
+	}
+}
