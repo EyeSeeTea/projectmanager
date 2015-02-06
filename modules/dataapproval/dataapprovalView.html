@@ -1,13 +1,16 @@
 <d2-authorization menuoption="F_APPROVE_DATA"></d2-authorization>
-<div class="row">
-<div class="container col-md-10">
-<div class="panel panel-default">
-<div class="panel-heading"><strong>{{'DATA_APPROVAL' | translate}}</strong>
-	<button type="button" class="btn btn-default pull-right" ng-model="collapsed" ng-click="collapsed=!collapsed">
-  <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-</button>
-	</div>
-  <div class="panel-body">
+<div ng-show="selected">Selection from a modal: {{ selected }}</div>
+
+<h2>{{'DATA_APPROVAL' | translate}}</h2>
+
+  
+  <div class="row" ng-show="msjValidation!=1">
+  		<div class="col-md-12">
+			<d2-messages type="danger" textmessage="{{msjValidation}}"></d2-messages>
+  		</div>
+  </div>
+  
+  
 <div class="row" ng-hide="collapsed">
 	<div class="col-md-12">
 		<d2-dropdowndataset></d2-dropdowndataset> 
@@ -20,25 +23,23 @@
 		<br>
 		<div class="row">
 			<div class="col-md-12">
-				<button class="btn btn-primary" ng-click="GetValueOfDataSet()" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
+				<button class="btn btn-primary" ng-click="executeoption(1)" type="submit">{{ 'DATA_APPROVAL_GET' | translate }}</button>
 				<button class="btn btn-default" ng-click="Clearform()" type="submit">{{ 'DATA_APPROVAL_CANCEL' | translate }}</button>
 			</div>
 		</div>
 		<br>
 	</div>
 </div>
-</div>
-</div>
-</div>
-</div>
+
 <br>
 
 <div class="row">
 <div class="container col-md-10">
+	<progressbar  ng-show="DatasetValue==undefined && progressbarDisplayed==true?true:false"  class="progress-striped active" value="100" type="info">{{ 'IN_PROGRESS' | translate }}</progressbar>
 	<div class="row" ng-show="DatasetValue==undefined?false:true">
 		 	<div class="alert alert-info" role="alert">{{ 'APPROVAL_STATE' | translate }} : {{Approval.state | translate}}
-				<button class="btn btn-primary" ng-click="PostChangeStatusdapproval()"  type="submit" ng-show="Approval.mayApprove" >{{ 'DATA_APPROVAL_APPROVAL' | translate }}</button>
-				<button class="btn btn-primary" ng-click="RemoveChangeStatusdapproval()" type="submit" ng-show="Approval.mayUnapprove" >{{ 'DATA_APPROVAL_UNAPPROVAL' | translate }}</button>
+				<button class="btn btn-primary" ng-click="executeoption(2)"  type="submit" ng-show="Approval.mayApprove" >{{ 'DATA_APPROVAL_APPROVAL' | translate }}</button>
+				<button class="btn btn-primary" ng-click="executeoption(3)" type="submit" ng-show="Approval.mayUnapprove" >{{ 'DATA_APPROVAL_UNAPPROVAL' | translate }}</button>
 				<button class="btn btn-primary" ng-click="" type="submit" ng-show="Approval.mayAccept" >{{ 'DATA_APPROVAL_ACCEPT' | translate }}</button>
 				<button class="btn btn-primary" ng-click="" type="submit" ng-show="Approval.mayUnaccept" >{{ 'DATA_APPROVAL_UNACCEPT' | translate }}</button>
 			</div>
@@ -50,3 +51,4 @@
 </div>
 </div>
 </div>
+<d2-modaldialogbox></d2-modaldialogbox>

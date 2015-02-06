@@ -21,6 +21,7 @@
 	"TITLE_APPS": "MSF-OCBA Health Information System",
 	"IN_PROGRESS": "IN PROGRESS",
 	"VALIDATION_FILE_NAME": "Please, fill in the file name",
+	"VALIDATION_FILE": "Please, select a file",
 	"ACCESS_TITLE":"Access Error",
 	"ACCESS_DESC":"You don't have access to this module. If you require access please comunicate with the system administrator",
 	"ACCESS_BUTTON":"Return",
@@ -28,6 +29,15 @@
 	"UNAPPROVED_READY" : "Ready for approval",
 	"DATA_APPROVAL_APPROVAL" : "Approve",
 	"APPROVED_HERE":"Approved",
-	"DATA_APPROVAL_UNAPPROVAL":"Unapprove"
+	"DATA_APPROVAL_UNAPPROVAL":"Unapprove",
+	"YES":"Yes",
+	"NO":"No",
+	"APPROVAL_VALIDATION_FORM":"Select a form",
+	"APPROVAL_VALIDATION_PERIOD":"Select a period",
+	"APPROVAL_VALIDATION_OU":"Select a project",
+	"APPROVAL_VALIDATION_TITLE":"Approve",
+	"APPROVAL_VALIDATION_DESC":"Are you sure you want to approve this data set?",
+	"UNAPPROVAL_VALIDATION_TITLE":"Unapprove",
+	"UNAPPROVAL_VALIDATION_DESC":"Are you sure you want to unapprove this data set?"
 
 }

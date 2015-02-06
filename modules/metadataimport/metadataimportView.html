@@ -1,24 +1,44 @@
 <h2>{{ 'METADATA_IMPORT' | translate }}</h2>
 
-<form name="form">
-	<div class="row">
-		<div class="col-md-6">
-			<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-			<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" accept="*.json" required=""/>
-		</div>
-		<div ng-show="form.$submitted">
-	      <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>
-	    </div>
+<div class="row" ng-show="msjValidation!=1">
+  	<div class="col-md-12">
+		<d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
 	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
+		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" accept="*.json" required=""/>
+	</div>
+</div>
   
 	<br/>
-		<div class="row">
-		<div class="col-md-6">
-			<progressbar ng-show="progressbarDisplayed" class="progress-striped active" value="100" type="info">{{ 'IN_PROGRESS' | translate }}</progressbar>
-		</div>
-	</div>	
-	<br/>
-	<div class="form_group">
-		<button class="btn btn-primary"  ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
-	</div>
-</form>
+<d2-progressBar></d2-progressBar>
+<br/>
+<div class="form_group">
+	<button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
+</div>
+<br/>
+<div id="summary" ng-show="summaryDisplayed">
+	<h3>Import Summary</h3>
+	
+	<h4>Import Count</h4>
+	<div id="importCount"></div>
+	
+	<h4>Type Summary</h4>
+	<table id="typeSummary">
+	    <thead>
+	    <tr>
+	        <td>Type</td>
+	        <td>Imported</td>
+	        <td>Updated</td>
+	        <td>Ignored</td>
+	    </tr>
+	    </thead>
+	    <tbody>
+	            
+	              
+	      </tbody>
+     </table>
+</div>

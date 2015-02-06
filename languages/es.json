@@ -21,6 +21,7 @@
 	"TITLE_APPS":"MSF-OCBA Health Information System",
 	"IN_PROGRESS": "CARGANDO",
 	"VALIDATION_FILE_NAME": "Por favor, rellene el nombre de fichero",
+	"VALIDATION_FILE": "Please, seleccione un fichero",
 	"ACCESS_TITLE":"Error de Acceso",
 	"ACCESS_DESC":"No tienes acceso a este modulo. Si requieres acceso por favor comunicate con el administrador del sistema",
 	"ACCESS_BUTTON":"Regresar",
@@ -28,6 +29,16 @@
 	"UNAPPROVED_READY" : "listo para aprobación",
 	"DATA_APPROVAL_APPROVAL" : "Aprobar",
 	"APPROVED_HERE":"Aprobado",
-	"DATA_APPROVAL_UNAPPROVAL":"Desaprobar"
+	"DATA_APPROVAL_UNAPPROVAL":"Desaprobar",
+	"YES":"Si",
+	"NO":"No",
+	"APPROVAL_VALIDATION_FORM":"Seleccione un formulario",
+	"APPROVAL_VALIDATION_PERIOD":"Seleccione un periodo",
+	"APPROVAL_VALIDATION_OU":"Seleccione un proyecto",
+	"APPROVAL_VALIDATION_TITLE":"Aprobar",
+	"APPROVAL_VALIDATION_DESC":"¿Está seguro que desea aprobar los datos del formulario?",
+	"UNAPPROVAL_VALIDATION_TITLE":"desaprobar",
+	"UNAPPROVAL_VALIDATION_DESC":"¿Está seguro que desea desaprobar los datos del formulario?"
+	
 	
 }

@@ -1,4 +1,4 @@
-var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'ui.bootstrap']);
+var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'ui.bootstrap','angularTreeview']);
 
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
@@ -13,6 +13,14 @@ Dhis2Api.factory("commonvariable", function () {
 Dhis2Api.factory("GetOrganisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource(commonvariable.url+"organisationUnits", 
    {}, 
+  { get: { method: "GET"} });
+}]);
+Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource(commonvariable.url+"organisationUnits/:uid", 
+   {
+	uid:'@uid',
+    fields:'name,id,children[name,id]'
+   }, 
   { get: { method: "GET"} });
 }]);
 
@@ -102,3 +110,57 @@ Dhis2Api.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items
 	    $modalInstance.dismiss('cancel');
 	  };
 	});
+	
+	Dhis2Api.controller('TreeCtrl', function ($scope,TreeOrganisationunit) {
+		 $scope.currentid="";
+		 TreeOrganisationunit.get({filter:'level:eq:1'})
+		 .$promise.then(function(data){
+			  $scope.treeOrganisationUnitList = data.organisationUnits;
+		 });
+		 
+		    $scope.update1 = function(id, data) {
+				var listOu = $scope.treeOrganisationUnitList[0].children;
+
+				for (var i = 0; i < listOu.length; i++) {
+					if (listOu[i].id === id) {
+						listOu[i]=data;
+						break;
+					}
+				}
+				$scope.treeOrganisationUnitList=listOu;
+			}
+		 
+		     $scope.update = function (json, valorOrig, valorDest)		{
+		    	 var type;
+		    	 var resultado;
+		    	 for (var i=0; i<json.length;i++){
+		    		 type = typeof json[i].children;
+		    	 		if (type=="undefined"){
+		    				resultado = true;
+		    			 	if (json[i].id==valorOrig){
+		    			 		json[i].children = valorDest;
+		    			 	}
+		    			}
+		    			else{
+		    				if (json[i].id==valorOrig){
+		    					json[i].children = valorDest;
+		    				}
+		    				resultado = $scope.update(json[i].children, valorOrig, valorDest);
+		    			}
+		    		}
+
+		    	 return json;
+		    	 }
+		    
+		  $scope.$watch(
+                    function(OrganisationUnit) {
+                    	if($scope.OrganisationUnit.currentNode && $scope.currentid!=$scope.OrganisationUnit.currentNode.id && typeof($scope.OrganisationUnit.currentNode.children)=="undefined"){
+								$scope.currentid=$scope.OrganisationUnit.currentNode.id;
+								TreeOrganisationunit.get({uid:$scope.OrganisationUnit.currentNode.id})
+								.$promise.then(function(data){
+									$scope.treeOrganisationUnitList=$scope.update($scope.treeOrganisationUnitList, $scope.OrganisationUnit.currentNode.id,data.children) 									  
+								});
+							}
+                    }
+                );
+	 });
