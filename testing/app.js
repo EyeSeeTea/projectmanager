@@ -152,10 +152,12 @@ Dhis2Api.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items
 		    	 return json;
 		    	 }
 		    
+		     
 		  $scope.$watch(
                     function(OrganisationUnit) {
-                    	if($scope.OrganisationUnit.currentNode && $scope.currentid!=$scope.OrganisationUnit.currentNode.id && typeof($scope.OrganisationUnit.currentNode.children)=="undefined"){
-								$scope.currentid=$scope.OrganisationUnit.currentNode.id;
+                    	   	if($scope.OrganisationUnit.currentNode && $scope.currentid!=$scope.OrganisationUnit.currentNode.id && typeof($scope.OrganisationUnit.currentNode.children)=="undefined"){
+                    	   		console.log($scope.OrganisationUnit.multiSelectNode);
+                    	   		$scope.currentid=$scope.OrganisationUnit.currentNode.id;
 								TreeOrganisationunit.get({uid:$scope.OrganisationUnit.currentNode.id})
 								.$promise.then(function(data){
 									$scope.treeOrganisationUnitList=$scope.update($scope.treeOrganisationUnitList, $scope.OrganisationUnit.currentNode.id,data.children) 									  

@@ -16,6 +16,7 @@ Dhis2Api.factory("commonvariable", function () {
 			url:"http://localhost:8080/dhis/api/",
 			urlbase:"http://localhost:8080/dhis/",
 			OrganisationUnit:"",
+			OrganisationUnitList:[],
 			Period:"",
 			DataSet:""
 			};
@@ -34,6 +35,15 @@ Dhis2Api.factory("userAuthorization", ['$resource','commonvariable',function($re
 		}
 		});
 
+}]);
+
+Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource(commonvariable.url+"organisationUnits/:uid", 
+   {
+	uid:'@uid',
+    fields:'name,id,children[name,id]'
+   }, 
+  { get: { method: "GET"} });
 }]);
 
 Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
