@@ -88,11 +88,9 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 	      switch(selectedOption){
 	    	 case 2:
 	    		 $scope.PostChangeStatusdapproval();
-	    		 console.log(selectedOption);
 	    		 break;
 	    	 case 3: 
 	    		 $scope.RemoveChangeStatusdapproval();
-	    		 console.log(selectedOption);
 	    		 break;		    		 
 	    	 } 
 	      

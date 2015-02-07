@@ -80,7 +80,7 @@ Dhis2Api.factory("DatasetDAppr",['$resource','commonvariable', function ($resour
 
 Dhis2Api.factory("DataApprovalsState",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataApprovals", 
-	{ds:'@id',
+	{ds:'@ds',
 	pe:'@pe',
 	ou:'@ou'},
   { get: { method: "GET"},
