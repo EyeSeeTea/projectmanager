@@ -3,8 +3,12 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 		
 
 		$scope.dataexport=function(){
-			var result=DataSetsUID.get();
 			
-		
+			var texto=$filter('date')($scope.start_date,'yyyy-MM-dd');
+			
+			alert(texto);
+			
+			var result=DataSetsUID.get();					
 		}
+
 }]);

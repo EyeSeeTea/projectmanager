@@ -12,6 +12,8 @@
 	"IMPORT": "Import",
 	"DATA_EXPORT": "Data export",
 	"EXPORT": "Export",
+	"EXPORT_INIT_DATE": "Start date",
+	"EXPORT_END_DATE": "End date",
 	"FILE_NAME": "File name",
 	"ANALYTICS": "Refresh data",
 	"ANALYTICS_MESSAGGE": "Analytics tables update",

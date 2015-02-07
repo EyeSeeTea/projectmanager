@@ -13,6 +13,8 @@
 	"DATA_EXPORT": "Exportar datos",
 	"FILE_NAME": "Nombre del fichero",
 	"EXPORT": "Exportar",
+	"EXPORT_INIT_DATE": "Fecha de inicio",
+	"EXPORT_END_DATE": "Fecha de fin",
 	"ANALYTICS": "Actualizar analíticas",
 	"ANALYTICS_MESSAGGE": "Actualizar datos para el análisis",
 	"ANALYTICS_BUTTON": "Actualizar datos",

@@ -8,7 +8,19 @@
 	</div>
 	</div>
 	<br/>
-	<div class="form_group">
-		<button type="button" ng-click="dataexport()" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
+	<div class="row">
+	<div class="col-md-3">
+		<label for="start_date">{{'EXPORT_INIT_DATE' | translate}}</label>
+		<input type="date" class="form-control" name="start_date" ng_model="start_date" />
 	</div>
+	<div class="col-md-3">
+		<label for="start_date">{{'EXPORT_END_DATE' | translate}}</label>
+		<input type="date" class="form-control" name="end_date" ng_model="end_date" />
+	</div>
+	</div>
+	<br/>
+	<div class="form_group">	
+		<button type="button" ng-click="dataexport()" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>						
+	</div>
+	
 </form>
