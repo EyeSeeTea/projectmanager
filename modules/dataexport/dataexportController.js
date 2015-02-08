@@ -4,11 +4,18 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 
 		$scope.dataexport=function(){
 			
-			var texto=$filter('date')($scope.start_date,'yyyy-MM-dd');
+			var fecha_inicio=$filter('date')($scope.start_date,'yyyy-MM-dd');
+			var fecha_fin=$filter('date')($scope.end_date,'yyyy-MM-dd');
 			
-			alert(texto);
+			var orgUnit=commonvariable.OrganisationUnit;
 			
-			var result=DataSetsUID.get();					
+			console.log(fecha_inicio);
+			console.log(fecha_fin);
+			console.log(orgUnit);
+			
+			var result=DataSetsUID.get();	
+			
+			console.log(result);
 		}
 
 }]);
