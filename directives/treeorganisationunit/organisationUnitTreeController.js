@@ -3,7 +3,8 @@ Dhis2Api.directive('d2Treeorganisationunit', function(){
 		restrict: 'E',
 		templateUrl: 'directives/treeorganisationunit/organisationUnitTreeView.html',
 		scope: {
-		      treetype: '@'
+		      treetype: '@',
+		      size:'@'
 		    }
 	}
 	}); 
