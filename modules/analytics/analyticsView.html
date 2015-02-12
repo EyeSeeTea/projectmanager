@@ -1,3 +1,21 @@
 <h2>{{ 'ANALYTICS' | translate }}</h2>
-<p class="text-primary"> {{ 'ANALYTICS_MESSAGGE' | translate }}</p>
-<button type="button" ng-click="analisis()" class="btn btn-primary">{{ 'ANALYTICS_BUTTON' | translate }}</button>
+
+	<br/>
+		<d2-progressBar></d2-progressBar>	
+	<div class="form_group">
+		<button type="button" ng-click="analytics()" class="btn btn-primary">{{ 'ANALYTICS_BUTTON' | translate }}</button>
+	</div>	
+
+
+<div id="summary" ng-show="summaryDisplayed">
+	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
+	
+	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
+		<col width="40%">
+		<col>
+		<tbody>
+		
+		</tbody>
+	</table>
+<div>
+	

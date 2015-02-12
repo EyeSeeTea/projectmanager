@@ -29,11 +29,7 @@ Dhis2Api.factory("userAuthorization", ['$resource','commonvariable',function($re
 		{
 			menuoption:'@menuoption'
 		},
-		{ get: { method: "GET", transformResponse: function (response) {
-			return {status: response};
-		}
-		}
-		});
+		{ get: { method: "GET", transformResponse: function (response) {return {status: response};}	}});
 
 }]);
 
@@ -69,6 +65,12 @@ Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,
 	return $resource( commonvariable.url+"resourceTables/analytics", 
    {}, 
   { post: { method: "POST"} });
+}]);
+
+Dhis2Api.factory("DataMart",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"system/tasks/DATAMART", 
+   {lastId:'@lastId'}, 
+  { get: { method: "GET"} });
 }]);
 
 Dhis2Api.factory("DatasetDAppr",['$resource','commonvariable', function ($resource,commonvariable) {

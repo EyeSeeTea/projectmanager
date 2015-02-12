@@ -52,5 +52,6 @@ appManagerMSF.config(function ($translateProvider) {
 	  
 	  $translateProvider.fallbackLanguage(['en']);
 	  $translateProvider.determinePreferredLanguage();
+	  //$translateProvider.use('es');
 	  
 });
