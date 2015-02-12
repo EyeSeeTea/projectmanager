@@ -4,7 +4,7 @@
 	<div class="row">
 	<div class="col-md-6">
 		<label for="file_name"> {{ 'FILE_NAME' | translate }} </label>
-		<input type="text" class="form-control" id="file_name"/>
+		<input type="text" class="form-control" name="file_name" ng_model="file_name"/>
 	</div>
 	</div>
 	<br/>
@@ -19,7 +19,9 @@
 	</div>
 	</div>
 	<br/>
-	<d2-treeorganisationunit treetype="single"></d2-treeorganisationunit>
+	<d2-treeorganisationunit treetype="multiple" size='300px'></d2-treeorganisationunit>
+	<br/>
+	<d2-progressBar></d2-progressBar>
 	<br/>
 	<div class="form_group">	
 		<button type="button" ng-click="dataexport()" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>						

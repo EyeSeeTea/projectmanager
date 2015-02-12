@@ -1,16 +1,38 @@
 appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvariable", "DataSetsUID", "DataExport", function($scope, $filter, commonvariable, DataSetsUID, DataExport) {
 		var $translate = $filter('translate');
 		
+		$scope.progressbarDisplayed = false;
+		
+		function RESTUtil() {}
 
+		RESTUtil.requestGetData = function( url, successFunc, failFunc ) 
+		{
+				return $.ajax({
+					type: "GET",
+					dataType: "json",
+					url: url,
+					async: true,
+					success: successFunc,
+					error: failFunc
+				});
+		}
+		
 		$scope.dataexport=function(){
+		{
 			
+			$scope.progressbarDisplayed = true;
+			
+			var api_url="../dhis/api/dataValueSets.json?";
+
 			var fecha_inicio=$filter('date')($scope.start_date,'yyyy-MM-dd');
 			var fecha_fin=$filter('date')($scope.end_date,'yyyy-MM-dd');
+
+			var orgUnits=commonvariable.OrganisationUnitList;
+			var result=DataSetsUID.get();
+			var fileName = $scope.file_name;
 			
-			var orgUnit=commonvariable.OrganisationUnit;
+			var orgUnits_filter="";
 			
-			var result=DataSetsUID.get();	
-						
 			result.$promise.then(function(data) {
 				
 				var datasets=data.dataSets;			
@@ -19,23 +41,38 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 				{
 					var dataset_filter="";
 					
-					dataset_filter=datasets[0].id;
+					for (var i=0;i<datasets.length;i++)
+						dataset_filter = dataset_filter+"dataSet="+datasets[i].id+"&";					
+
+					$.each(orgUnits, function(index,value){
+						orgUnits_filter=orgUnits_filter+"&orgUnit="+value.id;
+					});					
 					
-					for (var i=1;i<datasets.length;i++)
-						dataset_filter = dataset_filter+"&dataSet="+datasets[i].id;
+					api_url=api_url+dataset_filter+"startDate="+fecha_inicio+"&endDate="+fecha_fin + 
+						orgUnits_filter+"&children=true";
 					
-					var children_orgunits="true";
 					
-					//Aqui empieza el problema
+					RESTUtil.requestGetData (api_url,
+							
+					function(data){
+						var file = new Blob([JSON.stringify(data)], { type: 'application/json' });
+						
+						$scope.progressbarDisplayed = false;
+						
+			            saveAs(file, fileName + '.json');
+					});
+										
 					
-					var dataValues=DataExport.get({dataSet:encodeURIComponent(dataset_filter),startDate:fecha_inicio,
-						endDate:fecha_fin,orgUnit:orgUnit.id,children:children_orgunits});
-					
-					console.log(dataset_filter);
-					console.log(dataValues);
 				}
 				
+
+				
 			});
+			
+			
+			
+		}
 		}
 
-}]);
+
+		}]);

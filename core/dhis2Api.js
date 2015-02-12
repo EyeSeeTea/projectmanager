@@ -110,8 +110,7 @@ Dhis2Api.factory("DataSetsUID",['$resource','commonvariable', function ($resourc
 
 Dhis2Api.factory("DataExport",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataValueSets.json", 
-	{dataSet:'@dataSet',
-	 startDate:'@startDate',
+	{startDate:'@startDate',
      endDate:'@endDate',
      orgUnit:'@orgUnit',
 	 children:'@children'},
