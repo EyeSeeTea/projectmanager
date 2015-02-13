@@ -22,7 +22,7 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 			
 			$scope.progressbarDisplayed = true;
 			
-			var api_url="https://localhost:8080/dhis/api/dataValueSets.json?";
+			var api_url=commonvariable.url+"/dataValueSets.json?";
 
 			var fecha_inicio=$filter('date')($scope.start_date,'yyyy-MM-dd');
 			var fecha_fin=$filter('date')($scope.end_date,'yyyy-MM-dd');
