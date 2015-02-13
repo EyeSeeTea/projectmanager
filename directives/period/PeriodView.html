@@ -13,15 +13,15 @@
 	<div class="row">
 
 		<div class="col-md-6">
-			<label> Tipo de periodo {{commonvariable.periodTypeCode}}</label><br>
+			<label> {{ 'PERIOD_TYPE' | translate }}</label><br>
 
 			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
-				{{periodtypename?periodtypename: 'Seleccione Periodo'}}
+				{{periodtypename?periodtypename: 'PERIOD_TYPE_SELECT' | translate }}
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCountry">
 				<li ng-repeat="periodo in tiposperiodo"
-					ng-if="periodo.periodtypeid>=1">
+					ng-if="periodo.periodtypeid>=periodDataSetType">
 					<a  ng-click='tipoPeriodoSeleccionado(periodo)'>{{periodo.name}}</a>
 				</li>
 			</ul>
@@ -30,8 +30,8 @@
 
 
 	<div class="row">
-	<div class="col-md-6" ng-show="'day'==periodtypemode">
-		<label>Seleccione el día:</label>
+	<div class="col-md-6" ng-show="'1'==periodtypeid">
+		<label>{{ 'PERIOD_SELECT_DAY' | translate }}</label>
 		<div id="dt">
 			<p class="input-group">
 				<input type="text" class="form-control"
@@ -39,7 +39,7 @@
 					   ng-model="day" is-open="opened"
 					   min-date="minDate"
 					   max-date="maxDate"
-					   datepicker-options="{minMode: 'day', language:'ES'}"
+					   datepicker-options="{minMode: 'day', showWeeks:'false'}"
 					   datepicker-mode="'day'"
 					   date-disabled="disabled(date, mode)"
 					   ng-required="true"
@@ -59,8 +59,8 @@
 
 
         <div class="row">
-            <div class="col-md-6" ng-show="'month'==periodtypemode">
-				<label>Seleccione el mes:</label>
+            <div class="col-md-6" ng-show="'3'==periodtypeid">
+				<label>{{ 'PERIOD_SELECT_MONTH' | translate }}</label>
                 <div id="mensual">
                     <p class="input-group">
                         <input type="text" class="form-control"
@@ -84,8 +84,8 @@
         </div>
 
             <div class="row">
-                <div class="col-md-6" ng-show="'year'==periodtypemode">
-                    <label>Seleccione el Año:</label>
+                <div class="col-md-6" ng-show="'5'==periodtypeid">
+                    <label>{{ 'PERIOD_SELECT_YEAR' | translate }}</label>
                     <div id="anual">
                         <p class="input-group">
                             <input type="text" class="form-control"
@@ -109,8 +109,8 @@
             </div>
 
 <div class="row">
-	<div class="col-md-6" ng-show="'week'==periodtypemode">
-		<label>Seleccione la semana:{{$scope.semanas}}</label>
+	<div class="col-md-6" ng-show="'2'==periodtypeid">
+		<label>{{ 'PERIOD_SELECT_WEEK' | translate }}</label>
 		<div id="ww">
 			<p class="input-group">
 				<input type="text" class="form-control"
@@ -134,10 +134,10 @@
 </div>
 
 	<div class="row">
-		<div class="col-md-6" ng-show="'sixmonth'==periodtypemode">
-			 <label>Seleccione Semestre: </label><br>
+		<div class="col-md-6" ng-show="'4'==periodtypeid">
+			 <label>{{ 'PERIOD_SELECT_SEMESTRAL' | translate }} </label><br>
 			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true" onscroll="true">
-				{{semestre?semestre: 'Seleccione semestre'}}
+				{{semestre?semestre: 'PERIOD_SELECT_SEMESTRAL' | translate }}
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownCountry">
@@ -149,10 +149,10 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-6" ng-show="'financialApril'==periodtypemode">
-			<label>Seleccione periodo financiero: </label><br>
+		<div class="col-md-6" ng-show="'6'==periodtypeid">
+			<label>{{ 'PERIOD_SELECT_FINANCIAL_APRIL' | translate }} </label><br>
 			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" onscroll="true">
-				{{financialPeriodApril?financialPeriodApril: 'Seleccione periodo'}}
+				{{financialPeriodApril?financialPeriodApril: 'PERIOD_SELECT_FINANCIAL_APRIL' | translate }}
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownCountry">
@@ -164,10 +164,10 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-6" ng-show="'financialJuly'==periodtypemode">
-			<label>Seleccione periodo financiero: </label><br>
+		<div class="col-md-6" ng-show="'7'==periodtypeid">
+			<label>{{ 'PERIOD_SELECT_FINANCIAL_JULY' | translate }} </label><br>
 			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="true" onscroll="true">
-				{{financialPeriodJuly?financialPeriodJuly: 'Seleccione periodo'}}
+				{{financialPeriodJuly?financialPeriodJuly: 'PERIOD_SELECT_FINANCIAL_JULY' | translate}}
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownCountry">
@@ -179,10 +179,10 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-6" ng-show="'financialOct'==periodtypemode">
-			<label>Seleccione periodo financiero: </label><br>
+		<div class="col-md-6" ng-show="'8'==periodtypeid">
+			<label>{{ 'PERIOD_SELECT_FINANCIAL_OCTOBER' | translate }} </label><br>
 			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-expanded="true" onscroll="true">
-				{{financialPeriodOct?financialPeriodOct: 'Seleccione periodo'}}
+				{{financialPeriodOct?financialPeriodOct: 'PERIOD_SELECT_FINANCIAL_OCTOBER' | translate}}
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownCountry">

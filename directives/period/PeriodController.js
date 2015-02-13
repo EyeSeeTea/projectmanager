@@ -8,8 +8,8 @@ Dhis2Api.directive('d2Dropdownperiod', function(){
 });
 
 
-Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",function ($scope,commonvariable) {
-
+Dhis2Api.controller("d2DropDownPeriodController", ['$scope','$filter','commonvariable',function ($scope,$filter,commonvariable) {
+var $translate = $filter('translate');
 
 	$scope.disabled = undefined;
 
@@ -27,23 +27,35 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 	};
     $scope.tipoperiodo = {};
 	$scope.tiposperiodo= [
-		{name:"Diario",formato:'yyyyMMdd',modo:"day", periodtypeid:1},
-		{name:"Semanal",formato:'yyyyWww',modo:"week", periodtypeid:2},
-		{name:"Mensual",formato:'yyyyMM',modo:"month", periodtypeid:3},
-		{name:"Semestral",formato:'yyyySS',modo:"sixmonth", periodtypeid:4},
-		{name:"Anual",formato:'yyyy',modo:"year", periodtypeid:5},
-		{name:"Anio financiero Abril",formato:'yyyyApril',modo:"financialApril", periodtypeid:6},
-		{name:"Anio financiero Julio",formato:'yyyyJuly',modo:"financialJuly", periodtypeid:7},
-		{name:"Anio financiero Octubre",formato:'yyyyOct',modo:"financialOct", periodtypeid:8}
+		{name:$translate('PERIOD_DAILY'),formato:'yyyyMMdd',modo:"Daily", periodtypeid:1},
+		{name:$translate('PERIOD_WEEKLY'),formato:'yyyyWww',modo:"Weekly", periodtypeid:2},
+		{name:$translate('PERIOD_MONTHLY'),formato:'yyyyMM',modo:"Monthly", periodtypeid:3},
+		{name:$translate('PERIOD_SEMESTRAL'),formato:'yyyySS',modo:"SixMonthly", periodtypeid:4},
+		{name:$translate('PERIOD_YEAR'),formato:'yyyy',modo:"Yearly", periodtypeid:5},
+		{name:$translate('PERIOD_FINANCIAL_APRIL'),formato:'yyyyApril',modo:"FinancialApril", periodtypeid:6},
+		{name:$translate('PERIOD_FINANCIAL_JULY'),formato:'yyyyJuly',modo:"FinancialJuly", periodtypeid:7},
+		{name:$translate('PERIOD_FINANCIAL_OCTOBER'),formato:'yyyyOct',modo:"FinancialOct", periodtypeid:8}
 	];
 
-
-
+	////
+	$scope.periodDataSetType=1;
+	$scope.$watch(
+	        function($scope) {
+	        	for(var idx=0;idx<8;idx++){
+	        		if($scope.tiposperiodo[idx].modo==commonvariable.DataSet.periodType){
+	        			$scope.periodDataSetType=$scope.tiposperiodo[idx].periodtypeid;
+	        			idx=9;
+	        		}
+	        		
+	        	}
+	         });
+	
+	////
 	$scope.tipoPeriodoSeleccionado = function(ptSelected){
 		$scope.periodtypename=ptSelected.name;
 		$scope.periodtypeformat=ptSelected.formato;
 		$scope.periodtypemode=ptSelected.modo;
-
+		$scope.periodtypeid=ptSelected.periodtypeid;
 	};
 
 	$scope.mesSeleccionado = function(mesSelected){
@@ -64,20 +76,19 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 		switch (peSelected.type) {
 			case "April":
 				$scope.financialPeriodApril = peSelected.anio + 'April';
-				commonvariable.Period = $scope.financialPeriod;
+				commonvariable.Period = $scope.financialPeriodApril;
 				break;
 			case "July":
 				$scope.financialPeriodJuly = peSelected.anio + 'July';
-				commonvariable.Period = $scope.financialPeriod;
+				commonvariable.Period = $scope.financialPeriodJuly;
 				break;
 			case "Oct":
 				$scope.financialPeriodOct = peSelected.anio + 'Oct';
-				commonvariable.Period = $scope.financialPeriod;
+				commonvariable.Period = $scope.financialPeriodOct;
 				break;
 			default :
 				break;
 		};
-		console.log(commonvariable.Period);
 	};
 
 	$scope.semanaSeleccionada = function(weSelected,$event){
@@ -95,20 +106,31 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',"commonvariable",fun
 		$scope.mes=modelo.getMonth('MM');
 
 		switch ($scope.periodtypemode){
-			case "day":
-			//commonvariable.Period=$scope.ano.toString()+$scope.mes.toString()+$scope.dia.toString();
-				commonvariable.Period=modelo.getItem();
+			case "Daily":
+				 var nmes=($scope.mes)*1+1
+				 if ($scope.mes < 10) 
+	                   	$scope.mes = '0'+nmes;
+	                else
+	                	$scope.mes = nmes;
+				if ($scope.dia < 10)                   
+                	$scope.dia = '0'+$scope.dia;
+				commonvariable.Period=$scope.ano.toString()+$scope.mes.toString()+$scope.dia.toString();
 				break;
-			case "week":
+			case "Weekly":
 				commonvariable.Period=$scope.ano.toString()+$scope.semanadelano(modelo);
 				break;
-			case "month":
-				commonvariable.Period=$scope.ano.toString()+$scope.mes.toString();
+			case "Monthly":
+				 var nmes=($scope.mes)*1+1
+                if ($scope.mes < 10) 
+                   	$scope.mes = '0'+nmes;
+                else
+                	$scope.mes = nmes;
+                commonvariable.Period=$scope.ano.toString()+$scope.mes.toString();
 				break;
-			case "year":
+			case "Yearly":
 				commonvariable.Period=$scope.ano.toString();
 				break;
-			case "sixmonth":
+			case "SixMonthly":
 				commonvariable.Period=$scope.ano.toString();
 				break;
 			default :

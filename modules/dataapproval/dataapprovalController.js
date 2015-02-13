@@ -54,7 +54,7 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
      }
      
 	 $scope.executeoption=function(option){
-		 $scope.VarValidation(commonvariable.DataSet.id,commonvariable.Period,commonvariable.OrganisationUnit.id);
+		 $scope.VarValidation(commonvariable.DataSet,commonvariable.Period,commonvariable.OrganisationUnit);
 		 	if($scope.msjValidation==1){
 			 	switch(option){
 		    	 case 1: 

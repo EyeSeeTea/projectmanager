@@ -10,11 +10,6 @@
 	"ORGANISATIONUNIT_FIND":"Seleccione un proyecto",
 	"DATA_IMPORT": "Importar datos",
 	"IMPORT": "Importar",
-	"IMPORT_SUMMARY": "Resumen del proceso de importación",
-	"IMPORT_COUNT": "Datos de la importación",
-	"CONFLICTS": "Conflicto",
-	"ELEMENT": "Elementos",
-	"DESCRIPTION": "Descripción",
 	"DATA_EXPORT": "Exportar datos",
 	"FILE_NAME": "Nombre del fichero",
 	"EXPORT": "Exportar",
@@ -45,7 +40,23 @@
 	"APPROVAL_VALIDATION_TITLE":"Aprobar",
 	"APPROVAL_VALIDATION_DESC":"¿Está seguro que desea aprobar los datos del formulario?",
 	"UNAPPROVAL_VALIDATION_TITLE":"desaprobar",
-	"UNAPPROVAL_VALIDATION_DESC":"¿Está seguro que desea desaprobar los datos del formulario?"
-	
-	
+	"UNAPPROVAL_VALIDATION_DESC":"¿Está seguro que desea desaprobar los datos del formulario?",
+	"PERIOD_DAILY":"Diario",
+	"PERIOD_WEEKLY":"Semanal",
+	"PERIOD_MONTHLY":"Mensual",
+	"PERIOD_SEMESTRAL":"Semestral",
+	"PERIOD_YEAR":"Anual",
+	"PERIOD_FINANCIAL_APRIL":"Financiero Abril",
+	"PERIOD_FINANCIAL_JULY":"Financiero Julio",
+	"PERIOD_FINANCIAL_OCTOBER":"Financiero Octubre",
+	"PERIOD_TYPE":"Tipo de periodo",
+	"PERIOD_TYPE_SELECT":"Seleccione un tipo de periodo",
+	"PERIOD_SELECT_DAY":"Seleccione un día",
+	"PERIOD_SELECT_WEEK":"Seleccioen una semana",
+	"PERIOD_SELECT_MONTH":"Seleccione un mes",
+	"PERIOD_SELECT_SEMESTRAL":"Seleccione un semestre",
+	"PERIOD_SELECT_YEAR":"seleccione un año",
+	"PERIOD_SELECT_FINANCIAL_APRIL":"Seleccione un periodo financiero (Abril)",
+	"PERIOD_SELECT_FINANCIAL_JULY":"Seleccione un periodo financiero (Julio)",
+	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Seleccione un periodo financiero (Octubre)"
 }

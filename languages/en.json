@@ -10,11 +10,6 @@
 	"ORGANISATIONUNIT_FIND": "Select a project",
 	"DATA_IMPORT": "Data import",
 	"IMPORT": "Import",
-	"IMPORT_SUMMARY": "Import Summary",
-	"IMPORT_COUNT": "Import Count",
-	"CONFLICTS": "Conflicts",
-	"ELEMENT": "Element",
-	"DESCRIPTION": "Description",
 	"DATA_EXPORT": "Data export",
 	"EXPORT": "Export",
 	"EXPORT_INIT_DATE": "Start date",
@@ -46,5 +41,23 @@
 	"APPROVAL_VALIDATION_DESC":"Are you sure you want to approve this data set?",
 	"UNAPPROVAL_VALIDATION_TITLE":"Unapprove",
 	"UNAPPROVAL_VALIDATION_DESC":"Are you sure you want to unapprove this data set?"
-
+	"PERIOD_DAILY":"Daily",
+	"PERIOD_WEEKLY":"Weekly",
+	"PERIOD_MONTHLY":"Monthly",
+	"PERIOD_SEMESTRAL":"Semestral",
+	"PERIOD_YEAR":"Yearly",
+	"PERIOD_FINANCIAL_APRIL":"Financial April",
+	"PERIOD_FINANCIAL_JULY":"Financial July",
+	"PERIOD_FINANCIAL_OCTOBER":"Financial October",
+	"PERIOD_TYPE":"Period type",
+	"PERIOD_TYPE_SELECT":"Select a period type",
+	"PERIOD_SELECT_DAY":"Select a day",
+	"PERIOD_SELECT_WEEK":"Select a week",
+	"PERIOD_SELECT_MONTH":"Select a month",
+	"PERIOD_SELECT_SEMESTRAL":"Select a semester",
+	"PERIOD_SELECT_YEAR":"Select a year",
+	"PERIOD_SELECT_FINANCIAL_APRIL":"Select a financial period (April)",
+	"PERIOD_SELECT_FINANCIAL_JULY":"Select a financial period (July)",
+	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Select a financial period (October)"
+	
 }
