@@ -22,7 +22,7 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 			
 			$scope.progressbarDisplayed = true;
 			
-			var api_url="../dhis/api/dataValueSets.json?";
+			var api_url="http://localhost:8080/dhis/api/dataValueSets.json?";
 
 			var fecha_inicio=$filter('date')($scope.start_date,'yyyy-MM-dd');
 			var fecha_fin=$filter('date')($scope.end_date,'yyyy-MM-dd');
@@ -55,11 +55,11 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 					RESTUtil.requestGetData (api_url,
 							
 					function(data){
-						var file = new Blob([JSON.stringify(data)], { type: 'application/json' });
-						
-						$scope.progressbarDisplayed = false;
+						var file = new Blob([JSON.stringify(data)], { type: 'application/json' });												
 						
 			            saveAs(file, fileName + '.json');
+			            
+			            $scope.progressbarDisplayed = false;
 					});
 										
 					
