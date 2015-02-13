@@ -40,7 +40,7 @@
 	"APPROVAL_VALIDATION_TITLE":"Approve",
 	"APPROVAL_VALIDATION_DESC":"Are you sure you want to approve this data set?",
 	"UNAPPROVAL_VALIDATION_TITLE":"Unapprove",
-	"UNAPPROVAL_VALIDATION_DESC":"Are you sure you want to unapprove this data set?"
+	"UNAPPROVAL_VALIDATION_DESC":"Are you sure you want to unapprove this data set?",
 	"PERIOD_DAILY":"Daily",
 	"PERIOD_WEEKLY":"Weekly",
 	"PERIOD_MONTHLY":"Monthly",
