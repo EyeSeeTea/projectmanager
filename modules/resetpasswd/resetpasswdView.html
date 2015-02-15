@@ -1,0 +1,29 @@
+<h2>{{ 'RESET_PASSWD' | translate }}</h2>
+
+<form role="form">
+	<div class="row">
+	<div class="col-md-6">
+		<label for="file_name"> {{ 'ROLE_1' | translate }} </label>
+		<input type="text" class="form-control" name="role1" ng_model="role1"/>
+	</div>
+	</div>
+	<br/>
+	<div class="row">
+	<div class="col-md-6">
+		<label for="file_name"> {{ 'ROLE_2' | translate }} </label>
+		<input type="text" class="form-control" name="role2" ng_model="role2"/>
+	</div>
+	</div>
+	<br/>
+	<div class="row">
+	<div class="col-md-6">
+		<label for="file_name"> {{ 'ROLE_3' | translate }} </label>
+		<input type="text" class="form-control" name="role3" ng_model="role3"/>
+	</div>
+	</div>
+	<br/>
+	<div class="form_group">	
+		<button type="button" ng-click="resetpass()" class="btn btn-primary">{{ 'RESET_BUTTON' | translate }}</button>						
+	</div>
+	
+</form>

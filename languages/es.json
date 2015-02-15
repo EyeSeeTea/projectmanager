@@ -58,5 +58,10 @@
 	"PERIOD_SELECT_YEAR":"seleccione un año",
 	"PERIOD_SELECT_FINANCIAL_APRIL":"Seleccione un periodo financiero (Abril)",
 	"PERIOD_SELECT_FINANCIAL_JULY":"Seleccione un periodo financiero (Julio)",
-	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Seleccione un periodo financiero (Octubre)"
+	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Seleccione un periodo financiero (Octubre)",
+	"RESET_PASSWD":"Resetear passwords",
+	"ROLE_1":"Role 1",
+	"ROLE_2":"Role 2",
+	"ROLE_3":"Role 3",
+	"RESET_BUTTON":"Resetear"
 }

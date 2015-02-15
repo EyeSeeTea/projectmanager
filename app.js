@@ -26,7 +26,12 @@ appManagerMSF.config(function($routeProvider) {
 	  $routeProvider.when('/dataexport', {
 		  	templateUrl: "modules/dataexport/dataexportView.html",
 		  		 controller: "dataexportController"
-		  });		  
+		  });
+	  
+	  $routeProvider.when('/resetpasswd', {
+		  	templateUrl: "modules/resetpasswd/resetpasswdView.html",
+		  		 controller: "resetpasswdController"
+		  });
 	
 	  $routeProvider.otherwise({
 	        redirectTo: '/'
