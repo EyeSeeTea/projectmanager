@@ -63,5 +63,7 @@
 	"ROLE_1":"Role 1",
 	"ROLE_2":"Role 2",
 	"ROLE_3":"Role 3",
-	"RESET_BUTTON":"Resetear"
+	"RESET_BUTTON":"Resetear",
+	"APPROVAL_SHOW":"Mostrar formulario",
+	"APPROVAL_HIDE":"Ocultar formulario"
 }

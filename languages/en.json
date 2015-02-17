@@ -63,5 +63,7 @@
 	"ROLE_1":"ROLE 1",
 	"ROLE_2":"ROLE 2",
 	"ROLE_3":"ROLE 3",
-	"RESET_BUTTON":"Reset"
+	"RESET_BUTTON":"Reset",
+	"APPROVAL_SHOW":"Show form",
+	"APPROVAL_HIDE":"Hide form"
 }
