@@ -18,6 +18,7 @@
 	"APPROVAL_VALIDATION_OU":"Seleccione un proyecto",
 	"APPROVAL_VALIDATION_TITLE":"Aprobar",
 	"APPROVAL_VALIDATION_DESC":"¿Está seguro que desea aprobar los datos del formulario?",
+	"APPROVAL_VALIDATION_DATA": "Verifique que el período no es menor que la fecha de creación del formulario, o que el formulario tiene relación con el proyecto.",
 	"UNAPPROVAL_VALIDATION_TITLE":"desaprobar",
 	"UNAPPROVAL_VALIDATION_DESC":"¿Está seguro que desea desaprobar los datos del formulario?",
 	"UNAPPROVED_ABOVE": "Listo para aprobación a un nivel superior",

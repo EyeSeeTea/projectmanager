@@ -101,6 +101,8 @@ var $translate = $filter('translate');
 
 
 	$scope.asignarFecha=function(modelo){
+		if(modelo==undefined)
+			return 0;
 		$scope.dia=modelo.getDate('dd');
 		$scope.ano=modelo.getFullYear('yyyy');
 		$scope.mes=modelo.getMonth('MM');
@@ -137,9 +139,6 @@ var $translate = $filter('translate');
 				break;
 
 		} ;
-		console.log(commonvariable.Period);
-
-
 	};
 
 

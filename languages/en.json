@@ -18,6 +18,7 @@
 	"APPROVAL_VALIDATION_OU":"Select a project",
 	"APPROVAL_VALIDATION_TITLE":"Approve",
 	"APPROVAL_VALIDATION_DESC":"Are you sure you want to approve this data set?",
+	"APPROVAL_VALIDATION_DATA": "Verify that the period is not less than creation date of Data set, or that the Data Set has relationship with the project.",
 	"UNAPPROVAL_VALIDATION_TITLE":"Unapprove",
 	"UNAPPROVAL_VALIDATION_DESC":"Are you sure you want to unapprove this data set?",
 	"UNAPPROVED_ABOVE": "Ready for approval at a higher level",

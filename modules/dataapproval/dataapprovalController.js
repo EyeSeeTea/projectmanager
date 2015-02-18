@@ -27,6 +27,16 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 	    	}
 	    	$scope.collapsed=true;
 	    	$scope.progressbarDisplayed=true;
+    	}).catch(function(e){
+    		console.log(e);
+    		$scope.msjValidation=$translate('APPROVAL_VALIDATION_DATA')+" ("+e.statusText+")";
+	    	var datasetValue=DataSetForm.get({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id}); 
+	    	datasetValue.$promise.then(function(data) {
+	    		var result=data.codeHtml;
+	    		$scope.DatasetValue=result.replace('id="shareForm"','id="shareForm" style="display:none" ');  
+	    	});
+	    	$scope.collapsed=true;
+	    	$scope.progressbarDisplayed=true;
     	});
     }
     
