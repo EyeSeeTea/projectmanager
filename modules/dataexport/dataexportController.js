@@ -17,8 +17,8 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 				});
 		}
 		
-		$scope.dataexport=function(){
-		{
+		$scope.submit=function(){
+		{			
 			
 			$scope.progressbarDisplayed = true;
 			
@@ -56,16 +56,14 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 							
 					function(data){
 						var file = new Blob([JSON.stringify(data)], { type: 'application/json' });												
-						
+												
 			            saveAs(file, fileName + '.json');
 			            
-			            $scope.progressbarDisplayed = false;
+			            
 					});
 										
-					
 				}
 				
-
 				
 			});
 			
