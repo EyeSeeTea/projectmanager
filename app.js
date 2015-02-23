@@ -39,7 +39,7 @@ appManagerMSF.config(function($routeProvider) {
 
 	});
 
-appManagerMSF.config(function ($translateProvider) {
+appManagerMSF.config(function ($translateProvider, urlApi) {
   
 	  $translateProvider.useStaticFilesLoader({
           prefix: 'languages/',
@@ -56,7 +56,16 @@ appManagerMSF.config(function ($translateProvider) {
 			);
 	  
 	  $translateProvider.fallbackLanguage(['en']);
-	  $translateProvider.determinePreferredLanguage();
-	  //$translateProvider.use('es');
+
+	  jQuery.ajax({ url: urlApi + 'userSettings/keyUiLocale/', contentType: 'text/plain', method: 'GET', dataType: 'text', async: false}).success(function (uiLocale) {
+		  if (uiLocale == ''){
+			  $translateProvider.determinePreferredLanguage();
+		  }
+		  else{
+			  $translateProvider.use(uiLocale);
+		  }
+      }).fail(function () {
+    	  $translateProvider.determinePreferredLanguage();
+	  });
 	  
 });

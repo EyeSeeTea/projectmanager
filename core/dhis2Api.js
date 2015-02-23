@@ -9,12 +9,14 @@
  * */
 var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
 
+var urlApi = "http://localhost:8080/dhis/api/";
+var urlBase = "http://localhost:8080/dhis/";
+
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
-
 	var Vari={
-			url:"http://localhost:8080/dhis/api/",
-			urlbase:"http://localhost:8080/dhis/",
+			url: urlApi,
+			urlbase: urlBase,
 			OrganisationUnit:"",
 			OrganisationUnitList:[],
 			Period:"",
@@ -23,6 +25,8 @@ Dhis2Api.factory("commonvariable", function () {
 
    return Vari; 
 });
+
+Dhis2Api.constant("urlApi", urlApi);
 
 Dhis2Api.factory("userAuthorization", ['$resource','commonvariable',function($resource,commonvariable) {
 	return $resource(commonvariable.url + "me/authorization/:menuoption",
@@ -134,4 +138,6 @@ Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resourc
       }
 	});
 }]);
+
+
 
