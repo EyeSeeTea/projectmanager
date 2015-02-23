@@ -4,8 +4,8 @@
 	"description":"Project Manager",
 	"launch_path":"index.html",
 	"icons":{"16":null,
-	"48":null,
-	"128":"img/icons/icon.png"
+	"48":"img/icons/Logo_48.jpg",
+	"128":null
 	},
 	"developer":{
 	"url":"",
