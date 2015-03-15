@@ -36,7 +36,8 @@
 	"_______________ Meta data ":" Import and Export_____________",
 	"METADATA_IMPORT": "Importar metadatos",
 	"METADATA_EXPORT": "Exportar metadatos",
-	
+	"METADATA_EXPORT_ZIP":"Comprimido?",
+		
 	"_______________ Data ":" Import and Export_____________",
 	"DATA_IMPORT": "Importar datos",
 	"IMPORT": "Importar",
@@ -44,6 +45,7 @@
 	"EXPORT": "Exportar",
 	"EXPORT_INIT_DATE": "Fecha de inicio",
 	"EXPORT_END_DATE": "Fecha de fin",
+	"DATA_EXPORT_ZIP":"Comprimido?",
 	
 	"_______________ Analytics ":" _____________",
 	"ANALYTICS": "Actualizar analíticas",

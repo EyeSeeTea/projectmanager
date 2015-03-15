@@ -12,7 +12,7 @@
 	"VALIDATION_END_DATE": "Please, fill in an end date",
 	
 	"_______________ Data ":" Approval_____________",
-	"DATA_APPROVAL": "Data approval",
+	"DATA_APPROVAL": "Validate Data",
 	"DATA_APPROVAL_GET": "Get data",
 	"DATA_APPROVAL_CANCEL": "Cancel",
 	"APPROVAL_VALIDATION_FORM":"Select a form",
@@ -28,13 +28,14 @@
 	"DATA_APPROVAL_APPROVAL" : "Approve",
 	"APPROVED_HERE":"Approved",
 	"DATA_APPROVAL_UNAPPROVAL":"Unapprove",
-	"APPROVAL_SHOW":"Show form",
+	"APPROVAL_SHOW":"Show selection menu",
 	"APPROVAL_HIDE":"Hide form",
 	"APPROVAL_STATE": "State",
 	
 	"_______________ Meta data ":" Import and Export_____________",
 	"METADATA_IMPORT": "Metadata import",
-	"METADATA_EXPORT": "Metadata export",
+	"METADATA_EXPORT": "Export Project/Dictionary",
+	"METADATA_EXPORT_ZIP":"Compressed?",
 	
 	"_______________ Data ":" Import and Export_____________",
 	"DATA_IMPORT": "Data import",
@@ -43,11 +44,12 @@
 	"EXPORT": "Export",
 	"EXPORT_INIT_DATE": "Start date",
 	"EXPORT_END_DATE": "End date",
-
+	"DATA_EXPORT_ZIP":"Compressed?",
+	
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Refresh data",
 	"ANALYTICS_MESSAGGE": "Analytics tables update",
-	"ANALYTICS_BUTTON": "Analytics update",
+	"ANALYTICS_BUTTON": "Refresh",
 	
 	"_______________ Reset":" password_____________",
 	"RESET_PASSWD":"Reset password users",

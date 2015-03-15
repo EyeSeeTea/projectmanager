@@ -127,6 +127,11 @@ Dhis2Api.factory("MetaDataExport",['$resource','commonvariable', function ($reso
   { get: { method: "GET"} });
 }]);
 
+Dhis2Api.factory("MetaDataExportZip",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"metadata.json.zip", 
+	{},
+  { get: { method: "GET"} });
+}]);
 Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.urlbase+"dhis-web-reporting/generateDataSetReport.action", 
 	{ds:'@id',
