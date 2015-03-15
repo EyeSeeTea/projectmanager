@@ -21,17 +21,29 @@
 	<div class="row">
 	<div class="col-md-3">
 		<label for="start_date">{{'EXPORT_INIT_DATE' | translate}}</label>
-		<input type="date" class="form-control" name="start_date" ng_model="start_date" required="" />
+	     <p class="input-group">
+            <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="start_date" is-open="openedstart" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="openstart($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
 	</div>
 	<div class="col-md-3">
 		<label for="end_date">{{'EXPORT_END_DATE' | translate}}</label>
-		<input type="date" class="form-control" name="end_date" ng_model="end_date" required="" date-validate/>
+	     <p class="input-group">
+            <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="end_date" is-open="openedend" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="openend($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
 	</div>
 	</div>
 	<br/>
 	<d2-treeorganisationunit  treetype="multiple" size='300px'></d2-treeorganisationunit>
 	<br/>
+	<div ng-show="progressbarDisplayed">
 	<d2-progressBar></d2-progressBar>
+	</div>
 	<br/>
 	<div class="form_group">	
 		<button type="submit" id="submit" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>						

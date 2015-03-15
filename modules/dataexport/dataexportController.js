@@ -1,6 +1,29 @@
-appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvariable", "DataSetsUID", "DataExport", function($scope, $filter, commonvariable, DataSetsUID, DataExport) {
+appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvariable", "DataSetsUID", "DataExport",'$timeout', function($scope, $filter, commonvariable, DataSetsUID, DataExport,$timeout) {
 		var $translate = $filter('translate');
 		
+		//new component for datepiker helder
+		  $scope.today = function() {
+			    $scope.dt = new Date();
+			  };
+			  $scope.today();
+
+			  $scope.clear = function () {
+			    $scope.dt = null;
+			  };
+			  
+		  $scope.openstart = function($event) {
+			    $event.preventDefault();
+			    $event.stopPropagation();
+
+			    $scope.openedstart = true;
+			  };
+		$scope.openend = function($event) {
+				    $event.preventDefault();
+				    $event.stopPropagation();
+
+				    $scope.openedend = true;
+				  };				  
+		///////////////////////////////////7		  
 		$scope.progressbarDisplayed = false;
 		
 		function RESTUtil() {}
@@ -16,7 +39,9 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 					error: failFunc
 				});
 		}
-		
+		function updateprocess() {
+			$scope.progressbarDisplayed = false;
+		}
 		$scope.submit=function(){
 		{			
 			
@@ -34,7 +59,6 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 			var orgUnits_filter="";
 			
 			result.$promise.then(function(data) {
-				
 				var datasets=data.dataSets;			
 								
 				if (datasets.length>0)
@@ -56,10 +80,8 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 							
 					function(data){
 						var file = new Blob([JSON.stringify(data)], { type: 'application/json' });												
-												
-			            saveAs(file, fileName + '.json');
-			            
-			            
+						saveAs(file, fileName + '.json');
+						$timeout(updateprocess, 5);
 					});
 										
 				}
