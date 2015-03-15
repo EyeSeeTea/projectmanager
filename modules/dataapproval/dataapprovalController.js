@@ -3,7 +3,7 @@ appManagerMSF.filter('to_trusted', ['$sce', function($sce){
             return $sce.trustAsHtml(codeHtml);
         };
     }]);
-appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","DataSetForm", "$modal", function($scope, $filter,commonvariable,DataApprovalsState,DataSetForm,$modal) {
+appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonvariable","DataApprovalsState","DataSetForm", "$modal","DataApprovalsAccept", function($scope, $filter,commonvariable,DataApprovalsState,DataSetForm,$modal,DataApprovalsAccept) {
 	var $translate = $filter('translate');
 	 $scope.msjValidation=1;
 	$scope.Clearform=function(){
@@ -63,6 +63,20 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 	    	}); 
       }
     
+     $scope.PostChangeStatusAccept=function(){
+    	 DataApprovalsAccept.post({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id})
+    	 .$promise.then(function() {
+    		 $scope.GetValueOfDataSet();    		  		
+	    	});
+     }
+     
+     $scope.RemoveChangeStatusAccept=function(){
+    	 DataApprovalsAccept.remove({ds:commonvariable.DataSet.id,pe:commonvariable.Period,ou:commonvariable.OrganisationUnit.id})
+    	 .$promise.then(function() {
+    		 $scope.GetValueOfDataSet();    		  		
+	    	}); 
+      }
+     
      $scope.VarValidation=function(dataSet,Period,OrganisationUnit){
     	 $scope.msjValidation=1;
     	 if(!dataSet)
@@ -86,7 +100,13 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 		    		 break;
 		    	 case 3: 
 		    		 $scope.openModal({tittle:$translate('UNAPPROVAL_VALIDATION_TITLE') ,description:$translate('UNAPPROVAL_VALIDATION_DESC'),op:option});
-		    		 break;		    		 
+		    		 break;
+		    	 case 4: 
+		    		 $scope.openModal({tittle:$translate('APPROVAL_ACCEPT_TITLE') ,description:$translate('APPROVAL_ACCEPT_DESC'),op:option});
+		    		 break;
+		    	 case 5: 
+		    		 $scope.openModal({tittle:$translate('APPROVAL_UNACCEPT_TITLE') ,description:$translate('APPROVAL_UNACCEPT_DESC'),op:option});
+		    		 break;
 		    	 } 
 		 	}
 	    	 
@@ -112,7 +132,13 @@ appManagerMSF.controller('dataapprovalController', ["$scope",'$filter',"commonva
 	    		 break;
 	    	 case 3: 
 	    		 $scope.RemoveChangeStatusdapproval();
-	    		 break;		    		 
+	    		 break;
+	    	 case 4: 
+	    		 $scope.PostChangeStatusAccept();
+	    		 break;
+	    	 case 5: 
+	    		 $scope.RemoveChangeStatusAccept();
+	    		 break;
 	    	 } 
 	      
 	    });

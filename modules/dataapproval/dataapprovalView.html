@@ -42,10 +42,10 @@
 	<progressbar  ng-show="DatasetValue==undefined && progressbarDisplayed==true?true:false"  class="progress-striped active" value="100" type="info">{{ 'IN_PROGRESS' | translate }}</progressbar>
 	<div class="row" ng-show="DatasetValue==undefined?false:true">
 		 	<div class="alert alert-info" role="alert">{{ 'APPROVAL_STATE' | translate }} : {{Approval.state | translate}}
-				<button class="btn btn-primary" ng-click="executeoption(2)"  type="submit" ng-show="Approval.mayApprove" >{{ 'DATA_APPROVAL_APPROVAL' | translate }}</button>
+				<button class="btn btn-primary" ng-click="executeoption(2)"  type="submit" ng-show="Approval.mayApprove && !Approval.mayAccept && !Approval.mayUnaccept" >{{ 'DATA_APPROVAL_APPROVAL' | translate }}</button>
 				<button class="btn btn-primary" ng-click="executeoption(3)" type="submit" ng-show="Approval.mayUnapprove" >{{ 'DATA_APPROVAL_UNAPPROVAL' | translate }}</button>
-				<button class="btn btn-primary" ng-click="" type="submit" ng-show="Approval.mayAccept" >{{ 'DATA_APPROVAL_ACCEPT' | translate }}</button>
-				<button class="btn btn-primary" ng-click="" type="submit" ng-show="Approval.mayUnaccept" >{{ 'DATA_APPROVAL_UNACCEPT' | translate }}</button>
+				<button class="btn btn-primary" ng-click="executeoption(4)" type="submit" ng-show="Approval.mayAccept" >{{ 'DATA_APPROVAL_ACCEPT' | translate }}</button>
+				<button class="btn btn-primary" ng-click="executeoption(5)" type="submit" ng-show="Approval.mayUnaccept" >{{ 'DATA_APPROVAL_UNACCEPT' | translate }}</button>
 			</div>
 	</div>
 <div class="row">

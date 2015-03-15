@@ -31,6 +31,13 @@
 	"APPROVAL_SHOW":"Show selection menu",
 	"APPROVAL_HIDE":"Hide form",
 	"APPROVAL_STATE": "State",
+	"DATA_APPROVAL_ACCEPT":"Accept",
+	"DATA_APPROVAL_UNACCEPT":"Unaccept",
+	"APPROVAL_ACCEPT_TITLE":"Accept",
+	"APPROVAL_ACCEPT_DESC":"Are you sure you want to accept this data set?",
+	"APPROVAL_UNACCEPT_TITLE":"Unaccpet",
+	"APPROVAL_UNACCEPT_DESC":"Are you sure you want to unaccept this data set?",
+	 "ACCEPTED_HERE":"Approved and accepted",
 	
 	"_______________ Meta data ":" Import and Export_____________",
 	"METADATA_IMPORT": "Metadata import",

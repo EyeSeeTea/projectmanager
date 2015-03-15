@@ -32,6 +32,13 @@
 	"APPROVAL_SHOW":"Mostrar formulario",
 	"APPROVAL_HIDE":"Ocultar formulario",
 	"APPROVAL_STATE": "Estado",
+	"DATA_APPROVAL_ACCEPT":"Aceptar",
+	"DATA_APPROVAL_UNACCEPT":"desaceptar",
+	"APPROVAL_ACCEPT_TITLE":"Aceptar",
+	"APPROVAL_ACCEPT_DESC":"¿Está seguro que desea aceptar los datos del formulario?",
+	"APPROVAL_UNACCEPT_TITLE":"desaceptar",
+	"APPROVAL_UNACCEPT_DESC":"¿Está seguro que desea desaceptar los datos del formulario?",
+	"ACCEPTED_HERE":"Aprobado y aceptado",
 	
 	"_______________ Meta data ":" Import and Export_____________",
 	"METADATA_IMPORT": "Importar metadatos",

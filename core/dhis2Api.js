@@ -95,6 +95,15 @@ Dhis2Api.factory("DataApprovalsState",['$resource','commonvariable', function ($
   });
 }]);
 
+Dhis2Api.factory("DataApprovalsAccept",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataAcceptances", 
+	{ds:'@ds',
+	pe:'@pe',
+	ou:'@ou'},
+  { post: { method: "POST"},
+	remove: {method:'DELETE'}
+  });
+}]);
 Dhis2Api.factory("AnaliticsDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"analytics.json?:dimension1&:dimension2&:dimension3", 
 	{dimension1:'@dx',
