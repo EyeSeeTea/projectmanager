@@ -24,8 +24,10 @@ appManagerMSF.controller('metadataexportController', ["$scope",'$filter', "MetaD
 			$scope.progressbarDisplayed = false;
 			
 			if($scope.zipped){
-				var file = new Blob([data], { type: "application/zip" });												
-				saveAs(file, fileName + '.json.zip');
+				var zip = new JSZip();
+				zip.file(fileName + '.json', JSON.stringify(data));
+				var content = zip.generate({type:"blob"});
+				saveAs(content, fileName + '.json.zip');
 			}
 			else{
 				var file = new Blob([JSON.stringify(data)], { type: 'application/json' });												
