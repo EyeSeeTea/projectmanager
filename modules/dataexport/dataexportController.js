@@ -54,7 +54,17 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 
 			var orgUnits=commonvariable.OrganisationUnitList;
 			var result=DataSetsUID.get();
-			var fileName = $scope.file_name;
+			
+			
+			
+			//include current date in the file name, Helder
+			var today = new Date();
+			var dd = (today.getDate()<10?'0'+today.getDate():today.getDate());
+			var mm = (today.getMonth()<9?'0'+(today.getMonth()+1):today.getMonth());
+			var yyyy = today.getFullYear();
+
+			//////
+			var fileName =  $scope.file_name+"_"+yyyy+mm+dd;
 			
 			var orgUnits_filter="";
 			
@@ -79,13 +89,21 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 					RESTUtil.requestGetData (api_url,
 							
 					function(data){
-						var file = new Blob([JSON.stringify(data)], { type: 'application/json' });												
-						saveAs(file, fileName + '.json');
+						
+						if($scope.zipped){
+							var zip = new JSZip();
+							zip.file(fileName + '.json', JSON.stringify(data));
+							var content = zip.generate({type:"blob"});
+							saveAs(content, fileName + '.json.zip');
+						}
+						else{
+							var file = new Blob([JSON.stringify(data)], { type: 'application/json' });												
+							saveAs(file, fileName + '.json');
+						}
 						$timeout(updateprocess, 5);
 					});
 										
 				}
-				
 				
 			});
 			

@@ -6,11 +6,7 @@ appManagerMSF.controller('metadataexportController', ["$scope",'$filter', "MetaD
 	$scope.submit=function(){
 		//Show progress bar 
 		$scope.progressbarDisplayed = true;
-		
-		if($scope.zipped)
-			var result = MetaDataExportZip.get();
-		else
-			var result = MetaDataExport.get();
+		var result = MetaDataExport.get();
 		//include current date in the file name, Helder
 		var today = new Date();
 		var dd = (today.getDate()<10?'0'+today.getDate():today.getDate());
