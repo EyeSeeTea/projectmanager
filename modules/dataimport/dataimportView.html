@@ -9,7 +9,7 @@
 <div class="row">
 	<div class="col-md-6">
 		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" accept="*.json" required=""/>
+		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" required=""/>
 	</div>
 	<div ng-show="form.$submitted">
       <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>

@@ -40,7 +40,7 @@
 	 "ACCEPTED_HERE":"Approved and accepted",
 	
 	"_______________ Meta data ":" Import and Export_____________",
-	"METADATA_IMPORT": "Metadata import",
+	"METADATA_IMPORT": "Import Project/Dictionary",
 	"METADATA_EXPORT": "Export Project/Dictionary",
 	"METADATA_EXPORT_ZIP":"Compressed?",
 	

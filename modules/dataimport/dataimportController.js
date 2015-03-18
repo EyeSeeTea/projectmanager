@@ -5,6 +5,10 @@ appManagerMSF.controller('dataimportController', ["$scope", '$upload', '$filter'
 		$scope.msjValidation = 1;
 		
 		var $file;//single file 
+		
+		var compress = false;
+		var fileContent;		
+		
 	    $scope.sendFiles= function(){
 	    	
 	    	$scope.VarValidation();
@@ -12,13 +16,29 @@ appManagerMSF.controller('dataimportController', ["$scope", '$upload', '$filter'
 	    	if ($scope.msjValidation == 1){
 		    	$scope.progressbarDisplayed = true;
 		    	
+		    	if ($scope.getExtension($file.name)=="zip") compress=true;
+		    	
+		    	
 		    	var fileReader = new FileReader();
 		        fileReader.readAsArrayBuffer($file);
 		        fileReader.onload = function(e) {
+		        	
+		        	fileContent = e.target.result;
+		        	
+		        	if (compress) {
+		        		
+		        		var zip = new JSZip(e.target.result);
+						
+						$.each(zip.files, function (index, zipEntry) {
+						
+							fileContent = zip.file(zipEntry.name).asArrayBuffer();
+						});
+		        	}		        	
+		        	
 		            $upload.http({
 		                url: commonvariable.url+"dataValueSets",
 		                headers: {'Content-Type': 'application/json'},
-		                data: e.target.result
+		                data: fileContent
 		            }).progress(function(ev) {
 		            	console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
 		            }).success(function(data) {
@@ -45,6 +65,11 @@ appManagerMSF.controller('dataimportController', ["$scope", '$upload', '$filter'
 	    		$scope.msjValidation = 1;
 	    	}
 	    };
+	    
+		$scope.getExtension = function(filename) {
+				var parts = filename.split('.');
+				return parts[parts.length - 1];
+		};
 	    	
 	    $scope.onFileSelect = function ($files) {
             for (var i = 0; i < $files.length; i++) {
