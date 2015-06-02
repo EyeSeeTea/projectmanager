@@ -47,10 +47,11 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
       });
 	  
 	  $translateProvider.registerAvailableLanguageKeys(
-			    ['es', 'en'],
+			    ['es', 'fr', 'en'],
 			    {
 			        'en*': 'en',
 			        'es*': 'es',
+					'fr*': 'fr',
 			        '*': 'en' // must be last!
 			    }
 			);
