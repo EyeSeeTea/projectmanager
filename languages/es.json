@@ -10,7 +10,8 @@
 	"VALIDATION_FILE": "Please, seleccione un fichero",
 	"VALIDATION_START_DATE": "Por favor, introduzca la fecha de inicio",
 	"VALIDATION_END_DATE": "Por favor, introduzca la fecha de fin",
-
+	"TITLE_CAPITAL": "Capital",
+	"TITLE_PROJECT": "Proyecto",
 	
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Confirmación",
