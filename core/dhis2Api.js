@@ -37,6 +37,13 @@ Dhis2Api.factory("userAuthorization", ['$resource','commonvariable',function($re
 
 }]);
 
+Dhis2Api.factory("meUser", ['$resource','commonvariable',function($resource,commonvariable) {
+	return $resource(commonvariable.url + "me",
+		{},
+		{ get: { method: "GET"} });
+
+}]);
+
 Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource(commonvariable.url+"organisationUnits/:uid", 
    {
