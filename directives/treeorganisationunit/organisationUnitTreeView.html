@@ -4,7 +4,7 @@
 
 <div class="row">
 <div class="col-md-5">
-<div class="panel panel-default">
+<div class="panel panel-default" ng-hide="loadingTree">
   <div class="panel-heading">
 		<div style="height: {{size}}; overflow-y:scroll; background-color:#FFFFFF; ">
 			<!-- tree angulas Js -->
@@ -19,7 +19,11 @@
 			</div>
 		</div>
 	</div>
-	</div>
+</div>
+<div class="panel panel-default" ng-show="loadingTree">
+	<progressbar class="progress-striped active" value="100" type="info">{{ 'ORGANISATIONUNIT_LOADING' | translate }}</progressbar>
+<div>
+
 </div>
 </div>
 </div>

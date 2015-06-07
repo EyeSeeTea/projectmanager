@@ -10,7 +10,7 @@ Dhis2Api.directive('d2Treeorganisationunit', function(){
 	}); 
 Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrganisationunit',"commonvariable","meUser", function ($scope,$q,TreeOrganisationunit,commonvariable,meUser) {
 	$scope.currentid="";
-    
+     $scope.loadingTree=true;
     
     ///query me api for get OU asigned to user
     meUser.get()
@@ -18,11 +18,19 @@ Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrga
 
         $scope.InitialTree=[];
         $scope.treeOrganisationUnitList=[];
-         angular.forEach(data.organisationUnits, function(value,key){
-                TreeOrganisationunit.get({uid:value.id})
+        var kvalue=0;
+        var numOU=0;
+        angular.forEach(data.organisationUnits, function(value,key){
+            kvalue++;
+            numOU=data.organisationUnits.length;
+            TreeOrganisationunit.get({uid:value.id})
                      .$promise.then(function(data){
                         $scope.treeOrganisationUnitList.push(data);
-                     });
+                        console.log(kvalue+" , "+numOU)
+                        if(kvalue==numOU){
+                            $scope.loadingTree=false;
+                     }
+             });
 
          });
         //callBackAsync afer finish forecah

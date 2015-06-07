@@ -74,6 +74,7 @@
 	"_______________ Directive ":" OrganisationUnit+tree_____________",
 	"ORGANISATIONUNIT":"Proyecto",
 	"ORGANISATIONUNIT_FIND":"Seleccione un proyecto",
+	"ORGANISATIONUNIT_LOADING":"Cargando proyectos por favor espere un momento..",
 	
 	"_______________ Directive ":" Access_____________",
 	"ACCESS_TITLE":"Error de Acceso",
