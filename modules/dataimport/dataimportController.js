@@ -1,4 +1,4 @@
-appManagerMSF.controller('dataimportController', ["$scope", '$upload', '$filter', "commonvariable", function($scope, $upload, $filter, commonvariable) {
+appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart) {
 		var $translate = $filter('translate');
 		
 		$scope.progressbarDisplayed = false;
@@ -44,10 +44,33 @@ appManagerMSF.controller('dataimportController', ["$scope", '$upload', '$filter'
 		            }).success(function(data) {
 		            	console.log(data);
 		            	
-		            	$scope.progressbarDisplayed = false;
+		            	Analytics.post();
+		            	
+		            	var inputParameters = {};
+		        		var previousMessage = "";		            	
+		        		checkStatus = $interval(function() {
+		        			var result = DataMart.query(inputParameters);
+		        			 result.$promise.then(function(data_datamart) {
+		        	    		console.log(data_datamart);
+		        	    		var dataElement = data_datamart[0];
+		        	    		if (dataElement != undefined){
+		        		    		inputParameters = {lastId: dataElement.uid};
+		        		    		if (dataElement.completed == true){
+		        	    				$interval.cancel(checkStatus);
+		        	    				$scope.progressbarDisplayed = false;
+		        	    			}
+		        		    		if (previousMessage != dataElement.message){
+		        		    			$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
+		        		    			previousMessage = dataElement.message;
+		        			 		}
+		        	    		}
+		        	    	});
+		                  }, 200);		
+		            	
+		            	//$scope.progressbarDisplayed = false;
 		            	$scope.generateSummary(data);
 		            	$scope.summaryDisplayed = true;
-	
+		            		
 		            	console.log("File upload SUCCESS");
 		            }).error(function(data) {
 		            	console.log("File upload FAILED");//error
