@@ -54,6 +54,11 @@
 	"EXPORT_INIT_DATE": "Start date",
 	"EXPORT_END_DATE": "End date",
 	"DATA_EXPORT_ZIP":"Compressed?",
+	"IMPORT_SUMMARY":"IMPORT SUMMARY",
+	"IMPORT_COUNT":"Import Count",
+	"CONFLICTS":"Conflicts",
+	"ELEMENT":"Element",
+	"DESCRIPTION":"Description",
 	
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Refresh data",

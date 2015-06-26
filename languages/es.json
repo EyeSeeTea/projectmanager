@@ -54,6 +54,11 @@
 	"EXPORT_INIT_DATE": "Fecha de inicio",
 	"EXPORT_END_DATE": "Fecha de fin",
 	"DATA_EXPORT_ZIP":"Comprimido?",
+	"IMPORT_SUMMARY":"RESUMEN DE LA IMPORTACIÓN",
+	"IMPORT_COUNT":"Recuento de la importación",
+	"CONFLICTS":"Conflictos",
+	"ELEMENT":"Elemento",
+	"DESCRIPTION":"Descripción",
 	
 	"_______________ Analytics ":" _____________",
 	"ANALYTICS": "Actualizar analíticas",
