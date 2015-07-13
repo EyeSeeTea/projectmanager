@@ -168,3 +168,9 @@ Dhis2Api.factory("DataSetEntryForm",['$resource','commonvariable', function ($re
 		}
 	});
 }]);
+
+Dhis2Api.factory("DataElementGroupsUID",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataElementGroups.json?fields=id&paging=false", 
+	{},
+  { get: { method: "GET"} });
+}]);

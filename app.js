@@ -32,6 +32,11 @@ appManagerMSF.config(function($routeProvider) {
 		  	templateUrl: "modules/resetpasswd/resetpasswdView.html",
 		  		 controller: "resetpasswdController"
 		  });
+	  
+	  $routeProvider.when('/availabledata', {
+		  	templateUrl: "modules/availabledata/availabledataView.html",
+		  		 controller: "availabledataController"
+		  });
 	
 	  $routeProvider.otherwise({
 	        redirectTo: '/'

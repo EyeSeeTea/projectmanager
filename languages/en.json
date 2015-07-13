@@ -78,6 +78,9 @@
 	"ROLE_3":"Field User ",
 	"RESET_BUTTON":"Reset",
 	
+	"_______________ Available":" data_____________",
+	"AVAILABLE_DATA":"Available Data",
+	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",
 	"DATASET_LIST": "Select a Data Set",
