@@ -1,0 +1,37 @@
+.level1 {
+	text-indent: 0em;
+	background-color: #CCE6FF;
+}
+
+.level2 {
+	text-indent: 1em;
+	background-color: #D6EBFF;
+}
+
+.level3 {
+	text-indent: 2em;
+	background-color: #E0F0FF;
+}
+
+.level4 {
+	text-indent: 3em;
+	background-color: #EBF5FF;
+}
+
+.level5 {
+	text-indent: 4em;
+	background-color: #F5FAFF;
+}
+
+.level6 {
+	text-indent: 5em;
+	background-color: #FFFFFF;
+}
+
+tr:hover {
+    cursor: pointer;
+}
+
+th.orgunit {
+	width: 40%;
+}

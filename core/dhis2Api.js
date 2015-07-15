@@ -60,7 +60,10 @@ Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($re
 		pageSize:'10',
 		page:1
    }, 
-  { get: { method: "GET"} });
+  { get: { method: "GET"},
+	getOU: {method: "GET",
+			url: commonvariable.url+"organisationUnits/:uid",
+			params: {uid: '@uid'} } });
 }]);
 
 Dhis2Api.factory("OrganisationunitLevel",['$resource','commonvariable', function ($resource,commonvariable) {
