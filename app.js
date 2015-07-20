@@ -1,4 +1,4 @@
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview']);
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','door3.css']);
 
 appManagerMSF.config(function($routeProvider) {
  
@@ -35,7 +35,8 @@ appManagerMSF.config(function($routeProvider) {
 	  
 	  $routeProvider.when('/availabledata', {
 		  	templateUrl: "modules/availabledata/availabledataView.html",
-		  		 controller: "availabledataController"
+		  		 controller: "availabledataController",
+		  		 css: "modules/availabledata/availabledataCss.css"
 		  });
 	
 	  $routeProvider.otherwise({

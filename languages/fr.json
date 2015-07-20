@@ -78,6 +78,10 @@
 	"ROLE_3":"Field User ",
 	"RESET_BUTTON":"Réinitialiser",
 	
+	"_______________ Available":" data_____________",
+	"AVAILABLE_DATA":"Données disponibles",
+	"ORGANISATIONUNIT_LABEL": "Unité d'organisation",
+	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Ensemble de données",
 	"DATASET_LIST": "Sélectionner un ensemble de données",

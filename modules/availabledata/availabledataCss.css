@@ -1,31 +1,29 @@
 .level1 {
-	text-indent: 0em;
-	background-color: #CCE6FF;
+	background-color: #D26868;
 }
 
 .level2 {
-	text-indent: 1em;
-	background-color: #D6EBFF;
+	background-color: #E19A9A;
 }
 
 .level3 {
-	text-indent: 2em;
-	background-color: #E0F0FF;
+	background-color: #E8B3B3;
 }
 
 .level4 {
-	text-indent: 3em;
-	background-color: #EBF5FF;
+	background-color: #F0CDCD;
 }
 
 .level5 {
-	text-indent: 4em;
-	background-color: #F5FAFF;
+	background-color: #F8E6E6;
 }
 
 .level6 {
-	text-indent: 5em;
 	background-color: #FFFFFF;
+}
+
+.glyphicon {
+  font-size: 0.8em;
 }
 
 tr:hover {

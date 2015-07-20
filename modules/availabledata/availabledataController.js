@@ -3,49 +3,46 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
                                                      function($scope, $q, $http, $parse, $animate, commonvariable, DataElementGroupsUID, 
                                                     		 Organisationunit, OrganisationunitLevel, meUser) {
 	
-	// WARNING: Currently we are assuming that users are assigned to only one dataViewOrgUnit (not several)
-	var currentUser = meUser.get().$promise;
-	
 	// Some important variables
 	var values = {};
-	var dataViewOrgUnitId;
+	var dataViewOrgUnit;
+	var maxLevel;
 	
 	// Initialize visibility of table and progressBar
 	$scope.tableDisplayed = false;
 	$scope.progressbarDisplayed = true;
 	
-	currentUser.then(function(userInfo){
+	// WARNING: Currently we are assuming that users are assigned to only one dataViewOrgUnit (not several)
+	meUser.get().$promise.then(function(userInfo){
 		
 		// Assuming users are assigned to only one orgunit for dataView
-		dataViewOrgUnitId = userInfo.dataViewOrganisationUnits[0].id;
+		var dataViewOrgUnitId = userInfo.dataViewOrganisationUnits[0].id;
 		
 		// Define promises
-		var dataViewOrgUnit = Organisationunit.getOU({uid:dataViewOrgUnitId}).$promise;
-		var deGroups = DataElementGroupsUID.get().$promise;
-		var ouLevels = OrganisationunitLevel.get().$promise;
+		var dataViewOrgUnitPromise = Organisationunit.get({filter: 'id:eq:' + dataViewOrgUnitId}).$promise;
+		var deGroupsPromise = DataElementGroupsUID.get().$promise;
+		var ouLevelsPromise = OrganisationunitLevel.get().$promise;
 		
-		$q.all([deGroups, dataViewOrgUnit, ouLevels])
+		$q.all([deGroupsPromise, dataViewOrgUnitPromise, ouLevelsPromise])
 		.then(function(data){
 		
 			var avData_url = commonvariable.url + "analytics.json";
 
 			// Get all dataElementGroups
 			//TODO Check that deg exist.
-			var degUids = data[0].dataElementGroups;
 			avData_url = avData_url + "?filter=dx:";
 			
-			for(var i = 0; i < degUids.length; i++){
-				avData_url = avData_url + "DE_GROUP-" + degUids[i].id + ";";
-			}
-			
+			angular.forEach(data[0].dataElementGroups, function(group){
+				avData_url = avData_url + "DE_GROUP-" + group.id + ";";
+			});
 
 			// Get current user dataViewOrganisationUnits
-			var dataViewOrgUnits = data[1].dataViewOrganisationUnits;
-			avData_url = avData_url + "&dimension=ou:" + data[1].id;
+			dataViewOrgUnit = data[1].organisationUnits[0];
+			avData_url = avData_url + "&dimension=ou:" + dataViewOrgUnit.id;
 			
 			// Get maximum level in the system
-			var maxLevel = getMaxLevel(data[2].organisationUnitLevels);
-			for(var i = data[1].level + 1; i <= maxLevel; i++){
+			maxLevel = getMaxLevel(data[2].organisationUnitLevels);
+			for(var i = dataViewOrgUnit.level + 1; i <= maxLevel; i++){
 				avData_url = avData_url + ";LEVEL-" + i;
 			}
 					
@@ -55,38 +52,43 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 			// Get data
 			$http.get(avData_url).
 				success(function(data){
-					console.log(data);
 					
-					// Refactor periods
+					// Create array of periods
 					var periods = [];
-					for(var i = 0; i < data.metaData.pe.length; i++){
-						var period = {};
-						period.id = data.metaData.pe[i];
-						period.name = data.metaData.names[data.metaData.pe[i]];
-						periods.push(period);
-					}
+					angular.forEach(data.metaData.pe, function(pe){
+						periods.push({
+							id: pe,
+							name: data.metaData.names[pe]
+						})
+					});
 					
-					// Refactor orgunits
+					// Create array of orgunits
 					var orgunits = [];
-					for(var i = 0; i < data.metaData.ou.length; i++){
-						var orgunit = {};
-						orgunit.id = data.metaData.ou[i];
-						orgunit.name = data.metaData.names[orgunit.id];
+					angular.forEach(data.metaData.ou, function(ou){
 						
-						var ouComplete = data.metaData.ouHierarchy[orgunit.id];
-						var tokens = ouComplete.split("/");
-						tokens.shift();
+						//Create full name with real names
+						var parents = data.metaData.ouHierarchy[ou].split("/");
+						parents.shift();
 						var fullName = "";
-						for(var j = 0; j < tokens.length; j++){
-							fullName = fullName + "/" + data.metaData.names[tokens[j]];
-						}
-						fullName = fullName + "/" + data.metaData.names[data.metaData.ou[i]];
-						orgunit.fullName = fullName;
-						orgunit.parents = tokens.join(" && ");
-						// It is a relative level, not absolute
-						orgunit.level = tokens.length;
-						orgunits.push(orgunit);
-					}
+						angular.forEach(parents, function(parent){
+							fullName = fullName + "/" + data.metaData.names[parent].replace(" ","_");
+						});
+						fullName = fullName + "/" + data.metaData.names[ou].replace(" ","_");
+						
+						var level = dataViewOrgUnit.level + parents.length;
+
+						// Push the new orgunit
+						orgunits.push({
+							id: ou,
+							name: data.metaData.names[ou],
+							fullName: fullName,
+							parents: parents.join(" && "),
+							relativeLevel: parents.length,
+							level: level,
+							isLastLevel: (level === maxLevel)
+						});					
+						
+					});
 					
 					// Assign periods and orgunits to view
 					$scope.periods = periods;
@@ -100,8 +102,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 						}
 						
 						// Make visible orgunits under dataViewOrgunit
-						var showChildren = $parse(dataViewOrgUnitId);
-						showChildren.assign($scope, true);
+						$parse(dataViewOrgUnitId).assign($scope, true);
 						
 						// Hide progressBar and show table
 						$scope.tableDisplayed = true;
@@ -125,18 +126,21 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 		
 		// Check current state of parameter
 		if(showChildren($scope) === true){
-			showChildren.assign($scope, false);			
+			showChildren.assign($scope, false);
 		} else {
 			showChildren.assign($scope, true);			
 		}
+		
+		// Toggle between plus and minus icons
+		$("#ou_" + orgunitUID).find("span").toggleClass("glyphicon-plus glyphicon-minus ");
 	}
 	
 	var getMaxLevel = function(levels){
-		var level = 1;
-		for(var i = 0; i < levels.length; i++){
-			if(levels[i].level > level) {level = levels[i].level};
-		}
-		return level;
+		var max = 1;
+		angular.forEach(levels, function(level){
+			if(level.level > max) {max = level.level};
+		});
+		return max;
 	}
 	
 }]);
