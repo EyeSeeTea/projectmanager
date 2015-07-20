@@ -3,7 +3,7 @@
 <table class="table table-bordered table-condensed table-hover" ng-show="tableDisplayed">
 	<thead>
 		<tr>
-			<th class="orgunit">Orgunit</th>
+			<th class="orgunit">{{ 'ORGANISATIONUNIT_LABEL' | translate}}</th>
 			<th ng-repeat="pe in periods">{{ pe.name }}</th>
 		</tr>
 	</thead>
