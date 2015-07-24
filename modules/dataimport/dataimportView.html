@@ -19,8 +19,11 @@
 	<br/>
 <d2-progressBar></d2-progressBar>
 <br/>
-<div class="form_group">
-	<button class="btn btn-primary"  ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
+<div class="row">
+	<div class="form_group">
+		<button class="btn btn-primary"  ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
+		<button class="btn btn-primary"  ng-click='previewFiles()'>{{ 'PREVIEW' | translate }}</button>
+	</div>
 </div>
 <br/>
 <div id="summary" ng-show="summaryDisplayed">
@@ -56,3 +59,5 @@
 		</tbody>
 	</table>
 </div>
+
+<d2-dataimportpreview ng-if="previewDataImport" import-file="dataFile" is-compress="isCompress"></d2-dataimportpreview>

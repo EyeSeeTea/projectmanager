@@ -59,6 +59,12 @@
 	"CONFLICTS":"Conflits",
 	"ELEMENT":"Élément",
 	"DESCRIPTION":"Description",
+	"PREVIEW":"Previsualiser",
+	"HEALTH_FACILITY":"Établissement de santé",
+	"SERVICE":"Service",
+	"PERIOD":"Période",
+	"DATAVALUE_HISTORY":"Historique de la valeur",
+	"CLOSE":"Fermer",
 	
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Actualiser les données",

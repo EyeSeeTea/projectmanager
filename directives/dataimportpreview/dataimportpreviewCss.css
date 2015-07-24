@@ -1,0 +1,19 @@
+.list-group-item {
+	padding: 2px 15px;
+}
+
+.list-group-item:hover, .nav-pills > li:hover {
+	cursor: pointer;
+}
+
+.panel-heading {
+	padding: 4px 15px;
+}
+
+.panel {
+	margin-bottom: 5px;
+}
+
+.entryfield:hover {
+	cursor: zoom-in;
+}

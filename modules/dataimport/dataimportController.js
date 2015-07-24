@@ -7,9 +7,11 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		var $file;//single file 
 		
 		var compress = false;
-		var fileContent;		
+		var fileContent;
 		
 	    $scope.sendFiles= function(){
+	    	
+	    	$scope.previewDataImport = false;
 	    	
 	    	$scope.VarValidation();
 	    	
@@ -78,7 +80,22 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		        };
 	    	};    
 	    };
-	    
+		
+	    $scope.previewFiles= function(){
+	    	
+	    	$scope.VarValidation();
+	    	
+	    	if ($scope.msjValidation == 1){
+		    	
+		    	if ($scope.getExtension($file.name)=="zip") $scope.isCompress = true;
+		    	
+		    	$scope.dataFile = $file;
+		    	$scope.previewDataImport = true;
+		    	
+		    	return;
+	    	};    
+	    };
+
 	    $scope.VarValidation= function() {
 	    	console.log($file);
 	    	if ($file == undefined){

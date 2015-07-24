@@ -7,7 +7,7 @@
  * It is the persistence in the FrontEnd
  * 
  * */
-var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
+var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
 var urlApi = "/dhis/api/";
 var urlBase = "/dhis/";
@@ -160,5 +160,11 @@ Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resourc
 	});
 }]);
 
-
-
+Dhis2Api.factory("DataSetEntryForm",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.urlbase+"dhis-web-dataentry/loadForm.action", 
+		{ dataSetId:'@dataSetId' },
+		{ get: { method: "GET", transformResponse: function (response) {
+			return {codeHtml: response};}
+		}
+	});
+}]);
