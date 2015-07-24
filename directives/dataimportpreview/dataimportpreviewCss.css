@@ -17,3 +17,7 @@
 .entryfield:hover {
 	cursor: zoom-in;
 }
+
+.entryfield, .sectionTable th {
+	text-align: center;
+}
