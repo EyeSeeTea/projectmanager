@@ -87,7 +87,18 @@ Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm'
 	
 	$scope.fillDatavalues = function(){
 		angular.forEach($scope.datavalues, function(datavalue){
-			$("#" + datavalue.dataElementId + "-" + datavalue.categoryOptionId + "-val").val(datavalue.value);			
+			var valueCell = $("#" + datavalue.dataElementId + "-" + datavalue.categoryOptionId + "-val");
+			
+			// Check if the dataelement cell exists
+			if( valueCell.length == 1 ){
+				if (valueCell.val().length > 0){
+					valueCell.val( parseFloat( valueCell.val() ) + parseFloat( datavalue.value ) );
+				} else {
+					valueCell.val( datavalue.value );
+				}
+			} else {
+				// TODO Manage not present dataelements
+			}
 		});
 	};
 	
