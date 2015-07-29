@@ -59,6 +59,8 @@
 	"CONFLICTS":"Conflictos",
 	"ELEMENT":"Elemento",
 	"DESCRIPTION":"Descripción",
+	"CONFIRM_IMPORT_TITLE": "¿Está seguro de querer importar este fichero?",
+	"CONFIRM_IMPORT_BODY": "Importante: la importación el fichero implica la validación de los datos.",
 	"PREVIEW":"Vista previa",
 	"HEALTH_FACILITY":"Establecimiento de salud",
 	"SERVICE":"Servicio",

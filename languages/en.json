@@ -59,6 +59,8 @@
 	"CONFLICTS":"Conflicts",
 	"ELEMENT":"Element",
 	"DESCRIPTION":"Description",
+	"CONFIRM_IMPORT_TITLE": "Are you sure you want to import this file?",
+	"CONFIRM_IMPORT_BODY": "Important: import the file implies the validation of the data.",
 	"PREVIEW":"Preview",
 	"HEALTH_FACILITY":"Health Facility",
 	"SERVICE":"Service",
