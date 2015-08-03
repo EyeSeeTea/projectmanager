@@ -1,0 +1,35 @@
+.level1 {
+	background-color: #D26868;
+}
+
+.level2 {
+	background-color: #E19A9A;
+}
+
+.level3 {
+	background-color: #E8B3B3;
+}
+
+.level4 {
+	background-color: #F0CDCD;
+}
+
+.level5 {
+	background-color: #F8E6E6;
+}
+
+.level6 {
+	background-color: #FFFFFF;
+}
+
+.glyphicon {
+  font-size: 0.8em;
+}
+
+tr:hover {
+    cursor: pointer;
+}
+
+th.orgunit {
+	width: 40%;
+}
