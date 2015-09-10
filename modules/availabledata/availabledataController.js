@@ -28,6 +28,8 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 		
 			var avData_url = commonvariable.url + "analytics.json";
 
+			// If no dx dimension is provided, it takes all dataelements in the system
+			/**
 			// Get all dataElementGroups
 			//TODO Check that deg exist.
 			avData_url = avData_url + "?filter=dx:";
@@ -35,10 +37,11 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 			angular.forEach(data[0].dataElementGroups, function(group){
 				avData_url = avData_url + "DE_GROUP-" + group.id + ";";
 			});
+			*/
 
 			// Get current user dataViewOrganisationUnits
 			dataViewOrgUnit = data[1].organisationUnits[0];
-			avData_url = avData_url + "&dimension=ou:" + dataViewOrgUnit.id;
+			avData_url = avData_url + "?dimension=ou:" + dataViewOrgUnit.id;
 			
 			// Get maximum level in the system
 			maxLevel = getMaxLevel(data[2].organisationUnitLevels);
@@ -46,7 +49,11 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 				avData_url = avData_url + ";LEVEL-" + i;
 			}
 					
+			// Add the period parameter: last 6 months
 			avData_url = avData_url + "&dimension=pe:LAST_6_MONTHS";
+			// Add the aggregation type: count
+			avData_url = avData_url + "&aggregationType=COUNT";
+			// Show complete hierarchy
 			avData_url = avData_url + "&hierarchyMeta=true&displayProperty=NAME";
 			
 			// Get data
@@ -95,10 +102,15 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 					$scope.orgunits = orgunits;
 					
 					// Print data in table when table is ready
+					// Data.rows contains an array of values. Each value is an array with this structure:
+					// 0. Organization unit id
+					// 1. Period (for example 201501)
+					// 2. Value
 					values = data.rows;
 					$scope.$on('onRepeatLast', function(scope, element, attrs){
 						for(var i = 0; i < values.length; i++){
-							$("." + values[i][0] + "." + values[i][1]).html("X");
+							$("." + values[i][0] + "." + values[i][1])
+								.html("X <small>(" + Math.round(values[i][2]) + ")</small>");
 						}
 						
 						// Make visible orgunits under dataViewOrgunit
