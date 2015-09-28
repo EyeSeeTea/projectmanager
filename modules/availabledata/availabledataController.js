@@ -73,9 +73,24 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 					var orgunits = [];
 					angular.forEach(data.metaData.ou, function(ou){
 						
+						var parentsString = data.metaData.ouHierarchy[ou];
+						
+						// Check hierarchy integrity
+						if(!parentsString.startsWith("/" + dataViewOrgUnit.id)){
+							// If dataViewOrgUnit is not included, add parent hierarchy at the beginning
+							if( !parentsString.includes(dataViewOrgUnit.id)){
+								var parent = parentsString.split("/")[1];
+								parentsString = data.metaData.ouHierarchy[parent] + parentsString;
+							}
+							
+							// If hierarchy is longer than needed, cut from dataViewOrgUnit.id
+							parentsString = parentsString.substring( parentsString.indexOf("/" + dataViewOrgUnit.id));
+						}
+						
 						//Create full name with real names
-						var parents = data.metaData.ouHierarchy[ou].split("/");
+						var parents = parentsString.split("/");
 						parents.shift();
+												
 						var fullName = "";
 						angular.forEach(parents, function(parent){
 							fullName = fullName + "/" + data.metaData.names[parent].replace(" ","_");
