@@ -3,124 +3,163 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
                                                      function($scope, $q, $http, $parse, $animate, commonvariable, DataElementGroupsUID, 
                                                     		 Organisationunit, OrganisationunitLevel, meUser) {
 	
-	// Some important variables
-	var values = {};
-	var dataViewOrgUnit;
+	// Some common variables
+	var values = [];
 	var maxLevel;
 	
 	// Initialize visibility of table and progressBar
 	$scope.tableDisplayed = false;
 	$scope.progressbarDisplayed = true;
 	
-	// WARNING: Currently we are assuming that users are assigned to only one dataViewOrgUnit (not several)
-	meUser.get().$promise.then(function(userInfo){
-		
-		// Assuming users are assigned to only one orgunit for dataView
-		var dataViewOrgUnitId = userInfo.dataViewOrganisationUnits[0].id;
-		
-		// Define promises
-		var dataViewOrgUnitPromise = Organisationunit.get({filter: 'id:eq:' + dataViewOrgUnitId}).$promise;
-		var deGroupsPromise = DataElementGroupsUID.get().$promise;
-		var ouLevelsPromise = OrganisationunitLevel.get().$promise;
-		
-		$q.all([deGroupsPromise, dataViewOrgUnitPromise, ouLevelsPromise])
-		.then(function(data){
-		
-			var avData_url = commonvariable.url + "analytics.json";
+	// Definition of inital promises
+	var meUserPromise = meUser.get().$promise;
+	var ouLevelsPromise = OrganisationunitLevel.get().$promise;
+	
+	$q.all([meUserPromise, ouLevelsPromise])
+	.then(function(data){
 
-			// Get all dataElementGroups
-			//TODO Check that deg exist.
-			avData_url = avData_url + "?filter=dx:";
+		// Save array of dataView organisation units
+		var dataViewOrgUnits = data[0].dataViewOrganisationUnits;
+		
+		// Save max level in the the system
+		maxLevel = getMaxLevel(data[1].organisationUnitLevels);
+		
+		// Create array of orgunits
+		var orgunits = [];
+		
+		var k = dataViewOrgUnits.length;
+		var currentOu = 0;
+		angular.forEach(dataViewOrgUnits, function(preDataViewOrgUnit){
 			
-			angular.forEach(data[0].dataElementGroups, function(group){
-				avData_url = avData_url + "DE_GROUP-" + group.id + ";";
-			});
+			var dataViewOrgUnitPromise = Organisationunit.get({filter: 'id:eq:' + preDataViewOrgUnit.id}).$promise;
+			
+			dataViewOrgUnitPromise.then(function(data){
+				
+				// We can assume that filtering by ID only returns one result
+				var dataViewOrgUnit = data.organisationUnits[0];
 
-			// Get current user dataViewOrganisationUnits
-			dataViewOrgUnit = data[1].organisationUnits[0];
-			avData_url = avData_url + "&dimension=ou:" + dataViewOrgUnit.id;
-			
-			// Get maximum level in the system
-			maxLevel = getMaxLevel(data[2].organisationUnitLevels);
-			for(var i = dataViewOrgUnit.level + 1; i <= maxLevel; i++){
-				avData_url = avData_url + ";LEVEL-" + i;
-			}
-					
-			avData_url = avData_url + "&dimension=pe:LAST_6_MONTHS";
-			avData_url = avData_url + "&hierarchyMeta=true&displayProperty=NAME";
-			
-			// Get data
-			$http.get(avData_url).
-				success(function(data){
-					
-					// Create array of periods
-					var periods = [];
-					angular.forEach(data.metaData.pe, function(pe){
-						periods.push({
-							id: pe,
-							name: data.metaData.names[pe]
-						})
-					});
-					
-					// Create array of orgunits
-					var orgunits = [];
-					angular.forEach(data.metaData.ou, function(ou){
+				// Construction of analytics query
+				var avData_url = commonvariable.url + "analytics.json";
+				avData_url = avData_url + "?dimension=ou:" + dataViewOrgUnit.id;
+				
+				// Include all levels below dataViewOrgUnit				
+				for(var i = dataViewOrgUnit.level; i <= maxLevel; i++){
+					avData_url = avData_url + ";LEVEL-" + i;
+				}
 						
-						//Create full name with real names
-						var parents = data.metaData.ouHierarchy[ou].split("/");
-						parents.shift();
-						var fullName = "";
-						angular.forEach(parents, function(parent){
-							fullName = fullName + "/" + data.metaData.names[parent].replace(" ","_");
+				// Add the period parameter: last 6 months
+				avData_url = avData_url + "&dimension=pe:LAST_6_MONTHS";
+				// Add the aggregation type: count
+				avData_url = avData_url + "&aggregationType=COUNT";
+				// Show complete hierarchy
+				avData_url = avData_url + "&hierarchyMeta=true&displayProperty=NAME";
+				
+				// Get data
+				$http.get(avData_url).
+					success(function(data){
+						
+						// Create array of periods
+						var periods = [];
+						angular.forEach(data.metaData.pe, function(pe){
+							periods.push({
+								id: pe,
+								name: data.metaData.names[pe]
+							})
+						});		
+											
+						// Process organisation units
+						angular.forEach(data.metaData.ou, function(ou){
+							
+							var parentsString = data.metaData.ouHierarchy[ou];
+							
+							// Check hierarchy integrity
+							if(ou == dataViewOrgUnit.id){
+								parentsString = "";
+							}
+							else if(!parentsString.startsWith("/" + dataViewOrgUnit.id)){
+								// If dataViewOrgUnit is not included, add parent hierarchy at the beginning
+								if( !parentsString.includes(dataViewOrgUnit.id)){
+									var parent = parentsString.split("/")[1];
+									parentsString = data.metaData.ouHierarchy[parent] + parentsString;
+								}
+								
+								// If hierarchy is longer than needed, cut from dataViewOrgUnit.id
+								parentsString = parentsString.substring( parentsString.indexOf("/" + dataViewOrgUnit.id));
+							}
+							
+							//Create full name with real names
+							var parents = parentsString.split("/");
+							parents.shift();
+													
+							var fullName = "";
+							angular.forEach(parents, function(parent){
+								fullName = fullName + "/" + data.metaData.names[parent].replace(" ","_");
+							});
+							fullName = fullName + "/" + data.metaData.names[ou].replace(" ","_");
+							
+							var level = dataViewOrgUnit.level + parents.length;
+
+							// Push the new orgunit
+							orgunits.push({
+								id: ou,
+								name: data.metaData.names[ou],
+								fullName: fullName,
+								parents: parents.join(" && "),
+								relativeLevel: parents.length,
+								level: level,
+								isLastLevel: (level === maxLevel)
+							});					
+							
 						});
-						fullName = fullName + "/" + data.metaData.names[ou].replace(" ","_");
 						
-						var level = dataViewOrgUnit.level + parents.length;
-
-						// Push the new orgunit
-						orgunits.push({
-							id: ou,
-							name: data.metaData.names[ou],
-							fullName: fullName,
-							parents: parents.join(" && "),
-							relativeLevel: parents.length,
-							level: level,
-							isLastLevel: (level === maxLevel)
-						});					
-						
-					});
-					
-					// Assign periods and orgunits to view
-					$scope.periods = periods;
-					$scope.orgunits = orgunits;
-					
-					// Print data in table when table is ready
-					values = data.rows;
-					$scope.$on('onRepeatLast', function(scope, element, attrs){
-						for(var i = 0; i < values.length; i++){
-							$("." + values[i][0] + "." + values[i][1]).html("X");
+						// Store values in "values" variable
+						for(var i = 0; i < data.rows.length; i++){
+							values.push(data.rows[i]);
 						}
 						
 						// Make visible orgunits under dataViewOrgunit
-						$parse(dataViewOrgUnitId).assign($scope, true);
+						$parse(dataViewOrgUnit.id).assign($scope, true);
 						
-						// Hide progressBar and show table
-						$scope.tableDisplayed = true;
+						// If last orgunit, start table displaying
+						currentOu++;
+						if(currentOu == k){
+							// Assign periods and orgunits to view
+							$scope.periods = periods;
+							$scope.orgunits = orgunits;
+							
+							// Print data in table when table is ready
+							// Data.rows contains an array of values. Each value is an array with this structure:
+							// 0. Organization unit id
+							// 1. Period (for example 201501)
+							// 2. Value
+							$scope.$on('onRepeatLast', function(scope, element, attrs){
+								for(var i = 0; i < values.length; i++){
+									$("." + values[i][0] + "." + values[i][1])
+										.html("X <small>(" + Math.round(values[i][2]) + ")</small>");
+								}
+																
+								// Hide progressBar and show table
+								$scope.tableDisplayed = true;
+								$scope.progressbarDisplayed = false;
+								
+								// Refresh scope
+								$scope.$apply();
+							});
+							
+						}
+						
+					}).
+					error(function(data){
+						// TODO Handle error
 						$scope.progressbarDisplayed = false;
-						
-						// Refresh scope
-						$scope.$apply();
 					});
-					
-				}).
-				error(function(data){
-					// TODO Handle error
-					$scope.progressbarDisplayed = false;
-				});
+
+				
+			});
 		});
-		
+	
 	});
-		
+			
 	$scope.clickOrgunit = function(orgunitUID){
 		var showChildren = $parse(orgunitUID);
 		

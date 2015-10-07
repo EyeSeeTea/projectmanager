@@ -8,10 +8,11 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="ou in orgunits | orderBy:'fullName'"	ng-show="{{ ou.parents }}"
+		<tr ng-repeat="ou in orgunits | orderBy:'fullName'"	ng-show="{{ ou.relativeLevel == 0 || (ou.parents) }}"
 		ng-click="!ou.isLastLevel && clickOrgunit(ou.id)" on-last-repeat>
-			<td id="ou_{{ou.id}}" class="level{{ ou.level }}" style="text-indent: {{ou.relativeLevel - 1}}em">
-				<span class="glyphicon {{ou.isLastLevel ? 'glyphicon-chevron-right' : 'glyphicon-plus'}}" aria-hidden="true"></span>
+			<td id="ou_{{ou.id}}" class="level{{ ou.level }}" style="text-indent: {{ou.relativeLevel}}em">
+				<span class="glyphicon {{ou.isLastLevel ? 'glyphicon-chevron-right' : 
+								(ou.relativeLevel == 0 ? 'glyphicon-minus' : 'glyphicon-plus') }}" aria-hidden="true"></span>
 				{{ ou.name }}
 			</td>
 			<td ng-repeat="pe in periods" class="{{ ou.id }} {{ pe.id }}" title="{{ou.name}} - {{pe.name}}"></td>
