@@ -7,78 +7,102 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		var $file;//single file 
 		
 		var compress = false;
-		var fileContent;		
+		var fileContent;
+		
+		$scope.showImportDialog = function(){
+			
+			$scope.VarValidation();
+			
+			if ($scope.msjValidation == 1){
+				$("#importConfirmation").modal();
+			}
+		};
 		
 	    $scope.sendFiles= function(){
+	    	
+	    	$scope.previewDataImport = false;
+	    	$("#importConfirmation").modal("hide");
+	    		    	
+	    	$scope.progressbarDisplayed = true;
+	    	
+	    	if ($scope.getExtension($file.name)=="zip") compress=true;
+	    	
+	    	
+	    	var fileReader = new FileReader();
+	        fileReader.readAsArrayBuffer($file);
+	        fileReader.onload = function(e) {
+	        	
+	        	fileContent = e.target.result;
+	        	
+	        	if (compress) {
+	        		
+	        		var zip = new JSZip(e.target.result);
+					
+					$.each(zip.files, function (index, zipEntry) {
+					
+						fileContent = zip.file(zipEntry.name).asArrayBuffer();
+					});
+	        	}		        	
+	        	
+	            $upload.http({
+	                url: commonvariable.url+"dataValueSets",
+	                headers: {'Content-Type': 'application/json'},
+	                data: fileContent
+	            }).progress(function(ev) {
+	            	console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
+	            }).success(function(data) {
+	            	console.log(data);
+	            	
+	            	Analytics.post();
+	            	
+	            	var inputParameters = {};
+	        		var previousMessage = "";		            	
+	        		checkStatus = $interval(function() {
+	        			var result = DataMart.query(inputParameters);
+	        			 result.$promise.then(function(data_datamart) {
+	        	    		console.log(data_datamart);
+	        	    		var dataElement = data_datamart[0];
+	        	    		if (dataElement != undefined){
+	        		    		inputParameters = {lastId: dataElement.uid};
+	        		    		if (dataElement.completed == true){
+	        	    				$interval.cancel(checkStatus);
+	        	    				$scope.progressbarDisplayed = false;
+	        	    			}
+	        		    		if (previousMessage != dataElement.message){
+	        		    			$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
+	        		    			previousMessage = dataElement.message;
+	        			 		}
+	        	    		}
+	        	    	});
+	                  }, 200);		
+	            	
+	            	//$scope.progressbarDisplayed = false;
+	            	$scope.generateSummary(data);
+	            	$scope.summaryDisplayed = true;
+	            		
+	            	console.log("File upload SUCCESS");
+	            }).error(function(data) {
+	            	console.log("File upload FAILED");//error
+	            });
+	        };
+
+	    };
+		
+	    $scope.previewFiles= function(){
 	    	
 	    	$scope.VarValidation();
 	    	
 	    	if ($scope.msjValidation == 1){
-		    	$scope.progressbarDisplayed = true;
 		    	
-		    	if ($scope.getExtension($file.name)=="zip") compress=true;
+		    	if ($scope.getExtension($file.name)=="zip") $scope.isCompress = true;
 		    	
+		    	$scope.dataFile = $file;
+		    	$scope.previewDataImport = true;
 		    	
-		    	var fileReader = new FileReader();
-		        fileReader.readAsArrayBuffer($file);
-		        fileReader.onload = function(e) {
-		        	
-		        	fileContent = e.target.result;
-		        	
-		        	if (compress) {
-		        		
-		        		var zip = new JSZip(e.target.result);
-						
-						$.each(zip.files, function (index, zipEntry) {
-						
-							fileContent = zip.file(zipEntry.name).asArrayBuffer();
-						});
-		        	}		        	
-		        	
-		            $upload.http({
-		                url: commonvariable.url+"dataValueSets",
-		                headers: {'Content-Type': 'application/json'},
-		                data: fileContent
-		            }).progress(function(ev) {
-		            	console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
-		            }).success(function(data) {
-		            	console.log(data);
-		            	
-		            	Analytics.post();
-		            	
-		            	var inputParameters = {};
-		        		var previousMessage = "";		            	
-		        		checkStatus = $interval(function() {
-		        			var result = DataMart.query(inputParameters);
-		        			 result.$promise.then(function(data_datamart) {
-		        	    		console.log(data_datamart);
-		        	    		var dataElement = data_datamart[0];
-		        	    		if (dataElement != undefined){
-		        		    		inputParameters = {lastId: dataElement.uid};
-		        		    		if (dataElement.completed == true){
-		        	    				$interval.cancel(checkStatus);
-		        	    				$scope.progressbarDisplayed = false;
-		        	    			}
-		        		    		if (previousMessage != dataElement.message){
-		        		    			$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
-		        		    			previousMessage = dataElement.message;
-		        			 		}
-		        	    		}
-		        	    	});
-		                  }, 200);		
-		            	
-		            	//$scope.progressbarDisplayed = false;
-		            	$scope.generateSummary(data);
-		            	$scope.summaryDisplayed = true;
-		            		
-		            	console.log("File upload SUCCESS");
-		            }).error(function(data) {
-		            	console.log("File upload FAILED");//error
-		            });
-		        };
+		    	return;
 	    	};    
 	    };
-	    
+
 	    $scope.VarValidation= function() {
 	    	console.log($file);
 	    	if ($file == undefined){
