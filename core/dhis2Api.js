@@ -9,8 +9,28 @@
  * */
 var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
-var urlApi = "/dhis/api/";
-var urlBase = "/dhis/";
+var urlBase = $.parseJSON( $.ajax({
+	type: "GET",
+	dataType: "json",
+	url: 'manifest.webapp',
+	async: false
+}).responseText).activities.dhis.href + '/';
+
+var urlApi = urlBase + '/api/';
+
+//Auxiliary variable to parse the url
+var urlAuxLink = document.createElement('a');
+urlAuxLink.href = urlBase;
+
+//Delete initial and final slash
+var auxBaseUrl = urlAuxLink.pathname;
+if (auxBaseUrl.startsWith("/")) auxBaseUrl = auxBaseUrl.substring(1);
+if (auxBaseUrl.endsWith("/")) auxBaseUrl = auxBaseUrl.substring(0, auxBaseUrl.length - 1);
+
+//Dhis related variables
+window.dhis2 = window.dhis2 || {};
+dhis2.settings = dhis2.settings || {};
+dhis2.settings.baseUrl = auxBaseUrl;
 
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
