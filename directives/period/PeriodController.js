@@ -11,6 +11,66 @@ Dhis2Api.directive('d2Dropdownperiod', function(){
 Dhis2Api.controller("d2DropDownPeriodController", ['$scope','$filter','commonvariable',function ($scope,$filter,commonvariable) {
 var $translate = $filter('translate');
 
+	////////////////////
+
+	$scope.formData = {};
+	$scope.data = {};
+
+	$scope.dateOptions = {
+		formatYear: 'yy',
+		startingDay: 1,
+		showWeeks:'false'
+	};
+	$scope.ok = function(){
+		alert(show);
+	};
+
+	$scope.$watch('formData.dueDate',function(dateVal){
+		var weekYear = getWeekNumber(dateVal);
+		var year = weekYear[0];
+		var week = weekYear[1];
+
+		if(angular.isDefined(week) && angular.isDefined(year)){
+			var startDate = getStartDateOfWeek(week, year);
+		}
+		var weekPeriod = getStartDateOfWeek(week, year);
+		if(weekPeriod[0] != 'NaN/NaN/NaN' && weekPeriod[1] != 'NaN/NaN/NaN'){
+			$scope.formData.dueDate = 'W' + week + ' ' + weekPeriod[0] + " to "+ weekPeriod[1];
+			commonvariable.Period=year + 'W' + week;
+			console.log(commonvariable.Period);
+			//$scope.semanas=week;
+		}
+
+
+	});
+
+	function getStartDateOfWeek(w, y) {
+		var simple = new Date(y, 0, 1 + (w - 1) * 7);
+		var dow = simple.getDay();
+		var ISOweekStart = simple;
+		if (dow <= 4)
+			ISOweekStart.setDate(simple.getDate() - simple.getDay());
+		else
+			ISOweekStart.setDate(simple.getDate() + 7 - simple.getDay());
+
+		var ISOweekEnd = new Date(ISOweekStart);
+		ISOweekEnd.setDate(ISOweekEnd.getDate() + 6);
+
+		ISOweekStart = (ISOweekStart.getDate()+1)+'/'+(ISOweekStart.getMonth()+1)+'/'+ISOweekStart.getFullYear();
+		ISOweekEnd = (ISOweekEnd.getDate()+1)+'/'+(ISOweekEnd.getMonth()+1)+'/'+ISOweekEnd.getFullYear();
+		return [ISOweekStart, ISOweekEnd];
+	}
+
+	function getWeekNumber(d) {
+		d = new Date(+d);
+		d.setHours(0,0,0);
+		d.setDate(d.getDate() + 4 - (d.getDay()||7));
+		var yearStart = new Date(d.getFullYear(),0,1);
+		var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+		return [d.getFullYear(), weekNo];
+	}
+
+//////////////////////////
 	$scope.disabled = undefined;
 
 	$scope.enable = function() {
@@ -172,103 +232,10 @@ var $translate = $filter('translate');
 	};
 
 
-	$scope.dateOptions = {
-		formatYear: "yyyy",
-		startingDay: 1,
-		minMode: "day"
-	};
-
-
-
 	$scope.minDate = $scope.minDate ? null : new Date();
 	$scope.maxDate = new Date("12/31/2023");
 
-////////------Función devolver semana
-	// A esta funcion se le pasa el parametro en formato fecha
-// dd/mm/yyyy o dd-mm-yyyy ambos son aceptados
 
-	$scope.semanadelano =function (fecha){
-		var dia=0;
-		var mes=0;
-		var ano=0;
-
-		dia=fecha.getDate();
-		mes=fecha.getMonth();
-		ano=fecha.getYear();
-		$scope.const  =  [2,1,7,6,5,4,3];
-		// Constantes para el calculo del primer dia de la primera semana del año
-
-	//	if (fecha.match(/\//)){
-	//		fecha   =  fecha.replace(/\//g,"-",fecha);
-	//	};
-		// Con lo anterior permitimos que la fecha pasada a la funcion este
-		// separada por "/" al remplazarlas por "-" mediante .replace y el uso
-		// de expresiones regulares
-
-	//	fecha  =  fecha.split("-");
-		// Partimos la fecha en trozos para obtener dia, mes y año por separado
-
-
-
-
-	//	dia    =  eval(fecha[0]);
-	//	mes    =  eval(fecha[1]);
-	//	ano       =  eval(fecha[2]);
-	//	if (mes!=0) {
-	//		mes--;
-	//	};
-		// Convertimos el mes a formato javascript 0=enero
-
-		var dia_pri=0;
-		var tiempo0=0;
-		var tiempo1=0;
-		var lapso=0;
-		dia_pri   =  new Date(ano,0,1);
-		dia_pri   =  dia_pri.getDay();
-		// Obtenemos el dia de la semana del 1 de enero
-		dia_pri   =  eval($scope.const[dia_pri]);
-		// Obtenemos el valor de la constante correspondiente al día
-		tiempo0   =  new Date(ano,0,dia_pri);
-		// Establecemos la fecha del primer dia de la semana del año
-		dia       =  (dia+dia_pri);
-		// Sumamos el valor de la constante a la fecha ingresada para mantener
-		// los lapsos de tiempo
-		tiempo1   =  new Date(ano,mes,dia);
-		// Obtenemos la fecha con la que operaremos
-		lapso     =  (tiempo1 - tiempo0)
-		// Restamos ambas fechas y obtenemos una marca de tiempo
-		$scope.semanas   =  Math.floor(lapso/1000/60/60/24/7);
-		// Dividimos la marca de tiempo para obtener el numero de semanas
-		$scope.semanas = $scope.semanas+1;
-		if (dia_pri == 1) {
-			$scope.semanas++;
-		};
-		// Si el 1 de enero es lunes le sumamos 1 a la semana caso contrarios el
-		// calculo nos daria 0 y nos presentaria la semana como semana 52 del
-		// año anterior
-
-		if ($scope.semanas == 0) {
-			$scope.semanas=1;
-			ano--;
-		};
-		// Establecemos que si el resultado de semanas es 0 lo cambie a 52 y
-		// reste 1 al año esto funciona para todos los años en donde el 1 de
-		// Enero no es Lunes
-
-		if (ano < 10) {
-			ano = '0'+ano;
-		};
-		// Por pura estetica establecemos que si el año es menor de 10, aumente
-		// un 0 por delante, esto para aquellos que ingresen formato de fecha
-		// corto dd/mm/yy
-		if ($scope.semanas < 10) {
-			$scope.semanas = '0'+$scope.semanas;
-		};
-		return 'W'+$scope.semanas;
-		//alert('W'+$scope.semanas);
-		// Con esta sentencia arrojamos el resultado. Esta ultima linea puede ser
-		// cambiada a gusto y conveniencia del lector
-	};
 ///////////////////////////////////////
 	$scope.semestral=[];
 	for (var i=2010; i<=2020; i++){
