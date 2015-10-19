@@ -180,3 +180,14 @@ Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commo
 	  put: {method: "PUT"}});
 }]);
 
+Dhis2Api.factory("FilterResource",  ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	
+	return $resource(commonvariable.url + ":resource",
+			{
+			resource:'@resource',
+			filter:'@filter'
+			},
+			{get: {method: "GET"}});
+		
+}]);
+
