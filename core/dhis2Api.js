@@ -170,7 +170,7 @@ return $resource( commonvariable.url+"userRoles/:idrole",
 { get: { method: "GET"} });
 }]);
 
-Dhis2Api.factory("getUser",['$resource','commonvariable', function ($resource,commonvariable) {
+Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"users/:iduser", 
 	{
 		idrole:'iduser',
