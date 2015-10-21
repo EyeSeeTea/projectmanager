@@ -7,6 +7,7 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
 	$scope.countUsers = 0;
 	var totalUsers = 0;
 	
+	
 	function resetPassword(uidrole, newpasswd) {
 		
 		UsersByUserRole.get({idrole:uidrole}).$promise.then(function(data){
@@ -45,33 +46,43 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
 		$scope.countUsers = 0;
 		totalUsers = 0;
 		
-		$scope.progressbarDisplayed = true;		
+		$scope.progressbarDisplayed = true;	
+		$scope.showresult = false;	
 		
-		FilterResource.get({resource:'userRoles', filter:'name:eq:MedCo'}).$promise.then(function(data){
-			if (data.userRoles.length>0)
-				resetPassword(data.userRoles[0].id, $scope.role1);
-		});
+		if ($scope.role1 != undefined && $scope.role1!='') {
 		
-		FilterResource.get({resource:'userRoles', filter:'name:eq:MTL'}).$promise.then(function(data){
-			if (data.userRoles.length>0)
-				resetPassword(data.userRoles[0].id, $scope.role2);
-		});
+			FilterResource.get({resource:'userRoles', filter:'name:eq:MedCo'}).$promise.then(function(data){
+				if (data.userRoles.length>0)
+					resetPassword(data.userRoles[0].id, $scope.role1);
+			});
+		}
 		
-		FilterResource.get({resource:'userRoles', filter:'name:eq:Field User'}).$promise.then(function(data){
-			if (data.userRoles.length>0)
-				resetPassword(data.userRoles[0].id, $scope.role3);
+		if ($scope.role2 != undefined && $scope.role2!='') {		
+		
+			FilterResource.get({resource:'userRoles', filter:'name:eq:MTL'}).$promise.then(function(data){
+				if (data.userRoles.length>0)
+					resetPassword(data.userRoles[0].id, $scope.role2);
+			});
+		}
+		
+		if ($scope.role3 != undefined && $scope.role3!='') {
+		
+			FilterResource.get({resource:'userRoles', filter:'name:eq:Field User'}).$promise.then(function(data){
+				if (data.userRoles.length>0)
+					resetPassword(data.userRoles[0].id, $scope.role3);
 				
-		});
-		
-		
+			});		
+		}
 		
 	}	
 	
 	$scope.$watch(
 			function($scope) {
 				if(totalUsers!=0){
-					if (totalUsers == $scope.countUsers)
+					if (totalUsers == $scope.countUsers) {
 						$scope.progressbarDisplayed = false;
+						$scope.showresult=true;						
+					}
 			}
 			});
 	
