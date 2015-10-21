@@ -168,6 +168,7 @@ Dhis2Api.factory("MetaDataExportZip",['$resource','commonvariable', function ($r
 	{},
   { get: { method: "GET"} });
 }]);
+
 Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.urlbase+"dhis-web-reporting/generateDataSetReport.action", 
 	{ds:'@id',
@@ -189,6 +190,38 @@ Dhis2Api.factory("DataSetEntryForm",['$resource','commonvariable', function ($re
 	});
 }]);
 
+Dhis2Api.factory("UsersByUserRole",['$resource','commonvariable', function ($resource,commonvariable) {
+return $resource( commonvariable.url+"userRoles/:idrole", 
+{
+	idrole:'idrole',
+	fields: 'id, name, users'
+},
+{ get: { method: "GET"} });
+}]);
+
+
+
+
+Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"users/:iduser", 
+	{
+		idrole:'iduser',
+		fields: ':all,userCredentials[name,code,created,userRoles]'
+	},
+	{ get: { method: "GET"},
+	  put: {method: "PUT"}});
+}]);
+
+Dhis2Api.factory("FilterResource",  ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	
+	return $resource(commonvariable.url + ":resource",
+			{
+			resource:'@resource',
+			filter:'@filter'
+			},
+			{get: {method: "GET"}});
+		
+}]);
 Dhis2Api.factory("DataElementGroupsUID",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataElementGroups.json?fields=id&paging=false", 
 	{},

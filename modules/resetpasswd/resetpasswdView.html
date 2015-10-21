@@ -22,8 +22,17 @@
 	</div>
 	</div>
 	<br/>
+	<div class="row" ng-show="showresult">
+	
+		{{'MESSAGE_RESET' | translate}} {{countUsers}}
+	
+	</div>
+	<br/>
+	<d2-progressBar></d2-progressBar>
+	<br/>
 	<div class="form_group">	
 		<button type="button" ng-click="resetpass()" class="btn btn-primary">{{ 'RESET_BUTTON' | translate }}</button>						
 	</div>
+	
 	
 </form>

@@ -78,7 +78,8 @@
 	"ROLE_1":"MedCo",
 	"ROLE_2":"MTL",
 	"ROLE_3":"Field User ",
-	"RESET_BUTTON":"Reset",
+	"RESET_BUTTON":"Reset Passwords",
+	"MESSAGE_RESET":"Users with password updated: ",
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",

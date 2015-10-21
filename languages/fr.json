@@ -79,6 +79,7 @@
 	"ROLE_2":"MTL",
 	"ROLE_3":"Field User ",
 	"RESET_BUTTON":"Réinitialiser",
+	"MESSAGE_RESET":"Users with password updated: ",
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Données disponibles",
