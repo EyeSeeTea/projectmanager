@@ -59,6 +59,14 @@
 	"CONFLICTS":"Conflicts",
 	"ELEMENT":"Element",
 	"DESCRIPTION":"Description",
+	"CONFIRM_IMPORT_TITLE": "Are you sure you want to import this file?",
+	"CONFIRM_IMPORT_BODY": "Important: import the file implies the validation of the data.",
+	"PREVIEW":"Preview",
+	"HEALTH_FACILITY":"Health Facility",
+	"SERVICE":"Service",
+	"PERIOD":"Period",
+	"DATAVALUE_HISTORY":"Data Value History",
+	"CLOSE":"Close",
 	
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Refresh data",
@@ -72,6 +80,10 @@
 	"ROLE_3":"Field User ",
 	"RESET_BUTTON":"Reset Passwords",
 	"MESSAGE_RESET":"Users with password updated: ",
+	
+	"_______________ Available":" data_____________",
+	"AVAILABLE_DATA":"Available Data",
+	"ORGANISATIONUNIT_LABEL": "Organisation Unit",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",

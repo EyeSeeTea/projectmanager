@@ -7,10 +7,30 @@
  * It is the persistence in the FrontEnd
  * 
  * */
-var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
+var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
-var urlApi = "/dhis/api/";
-var urlBase = "/dhis/";
+var urlBase = $.parseJSON( $.ajax({
+	type: "GET",
+	dataType: "json",
+	url: 'manifest.webapp',
+	async: false
+}).responseText).activities.dhis.href + '/';
+
+var urlApi = urlBase + '/api/';
+
+//Auxiliary variable to parse the url
+var urlAuxLink = document.createElement('a');
+urlAuxLink.href = urlBase;
+
+//Delete initial and final slash
+var auxBaseUrl = urlAuxLink.pathname;
+if (auxBaseUrl.startsWith("/")) auxBaseUrl = auxBaseUrl.substring(1);
+if (auxBaseUrl.endsWith("/")) auxBaseUrl = auxBaseUrl.substring(0, auxBaseUrl.length - 1);
+
+//Dhis related variables
+window.dhis2 = window.dhis2 || {};
+dhis2.settings = dhis2.settings || {};
+dhis2.settings.baseUrl = auxBaseUrl;
 
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
@@ -161,6 +181,15 @@ Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resourc
 	});
 }]);
 
+Dhis2Api.factory("DataSetEntryForm",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.urlbase+"dhis-web-dataentry/loadForm.action", 
+		{ dataSetId:'@dataSetId' },
+		{ get: { method: "GET", transformResponse: function (response) {
+			return {codeHtml: response};}
+		}
+	});
+}]);
+
 Dhis2Api.factory("UsersByUserRole",['$resource','commonvariable', function ($resource,commonvariable) {
 return $resource( commonvariable.url+"userRoles/:idrole", 
 {
@@ -169,6 +198,9 @@ return $resource( commonvariable.url+"userRoles/:idrole",
 },
 { get: { method: "GET"} });
 }]);
+
+
+
 
 Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"users/:iduser", 
@@ -190,4 +222,8 @@ Dhis2Api.factory("FilterResource",  ['$resource', 'commonvariable', function ($r
 			{get: {method: "GET"}});
 		
 }]);
-
+Dhis2Api.factory("DataElementGroupsUID",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataElementGroups.json?fields=id&paging=false", 
+	{},
+  { get: { method: "GET"} });
+}]);

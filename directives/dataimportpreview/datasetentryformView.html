@@ -1,0 +1,37 @@
+<div ng-controller='d2DatasetEntryFormController'>
+
+	<d2-progressBar></d2-progressBar>
+	
+	<div ng-show="datasetsReady">
+		<ul class="nav nav-pills">
+			<li ng-repeat="dataset in datasets" ng-class="{active: selectedDataset == dataset.id}">
+				<a ng-click="clickDataset(dataset.id)">{{ dataset.name }}</a>
+			</li>
+		</ul>
+		
+		<br/>
+
+		<div class="panel panel-default" ng-repeat="dataset in datasets" ng-show="selectedDataset == dataset.id">
+			<div id="{{ dataset.id }}"></div>
+		</div>
+
+		<!-- Show datavalue history -->
+		<div class="modal" id="dataValueHistory" role="dialog">
+			<div class="modal-dialog">
+		    
+			   	<div class="modal-content">
+			   		<div class="modal-header">
+						<h4 class="modal-title">{{ 'DATAVALUE_HISTORY' | translate }}</h4>
+			    	</div>
+			  		<div class="modal-body">
+			  			<img ng-src="{{ datahistory }}" />
+			  		</div>
+			  		<div class="modal-footer">
+			  			<button type="button" class="btn btn-default" ng-click="hideHistory()">{{ 'CLOSE' | translate }}</button>
+			  		</div>
+			  	</div>
+		  	</div>
+		</div>
+		
+	</div>
+</div>

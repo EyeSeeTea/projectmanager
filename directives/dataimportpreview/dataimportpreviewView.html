@@ -1,0 +1,45 @@
+<div ng-controller='d2DataimportpreviewController'>
+
+	<d2-progressBar></d2-progressBar>
+	
+	<div class="row" ng-show="importLoaded">
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel panel-heading">{{ 'HEALTH_FACILITY' | translate }}</div>
+				<ul class="list-group">
+		    		<a id="{{ siteId }}" class="list-group-item" ng-class="{active: siteSelected == siteId}" 
+		    				ng-repeat="(siteId, site) in dataimportdata" ng-click="clickSite(siteId)">
+		    			{{ site.name }}	
+		    		</a>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel panel-heading">{{ 'SERVICE' | translate }}</div>
+				<ul class="list-group">
+		    		<a id="{{ serviceId }}" class="list-group-item" ng-class="{active: serviceSelected == serviceId}" 
+		    				ng-repeat="(serviceId, service) in services" ng-click="clickService(serviceId)">
+		    			{{ service.name }}	
+		    		</a>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="panel panel-default">
+				<div class="panel panel-heading">{{ 'PERIOD' | translate }}</div>
+				<ul class="list-group">
+		    		<a id="{{ periodId}}" class="list-group-item" ng-class="{active: periodSelected == periodId}" 
+		    				ng-repeat="(periodId, period) in periods | orderBy:'periodId'" ng-click="clickPeriod(periodId)">
+		    			{{ periodId | d2FormatPeriod }}
+		    		</a>
+				</ul>
+			</div>		
+		</div>
+	</div>
+	
+	<d2-dataset-entry-form ng-repeat="(periodId, period) in periods" ng-if="periodId == periodSelected" 
+		period-id="periodSelected" datavalues="datavalues" datasets="datasets" orgunit="serviceSelected">
+	</d2-d2-dataset-entry-form>
+
+</div>
