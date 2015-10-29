@@ -30,7 +30,12 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 			  $scope.clear = function () {
 			    $scope.dt = null;
 			  };
-			  
+	
+		// Select Monday as starting day of the week
+		$scope.dateOptions = {
+				"starting-day": 1,
+		}
+		
 		  $scope.openstart = function($event) {
 			    $event.preventDefault();
 			    $event.stopPropagation();
