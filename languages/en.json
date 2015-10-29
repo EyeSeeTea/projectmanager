@@ -1,3 +1,5 @@
+
+
 {
 	"_______________ Common ":" for APPS_____________",
 	"TITLE_APPS": "MSF-OCBA Health Information System",
@@ -17,7 +19,7 @@
 	"DATA_APPROVAL": "Validate Data",
 	"DATA_APPROVAL_GET": "Get data",
 	"DATA_APPROVAL_CANCEL": "Cancel",
-	"APPROVAL_VALIDATION_FORM":"Select a form",
+	"APPROVAL_VALIDATION_FORM":"Select a form",/
 	"APPROVAL_VALIDATION_PERIOD":"Select a period",
 	"APPROVAL_VALIDATION_OU":"Select a project",
 	"APPROVAL_VALIDATION_TITLE":"Approve",
