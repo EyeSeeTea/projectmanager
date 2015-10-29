@@ -69,6 +69,7 @@
 	"PERIOD":"Period",
 	"DATAVALUE_HISTORY":"Data Value History",
 	"CLOSE":"Close",
+	"EMPTY_IMPORT_FILE": "The file contains no values",
 	
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Refresh data",

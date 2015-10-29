@@ -32,8 +32,9 @@ Dhis2Api.directive('d2Dataimportpreview', function(){
 });
 
 Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationunit", function($scope, Organisationunit){
-	
+		
 	$scope.progressbarDisplayed = true;
+	$scope.msjEmptyFile = false;
 	
 	// Read import file
 	var compress = false;
@@ -61,6 +62,12 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
     	
     	var dataValues = JSON.parse(fileContent).dataValues;
     	var data = {};
+    	
+    	if (dataValues == undefined){
+    		$scope.msjEmptyFile = true;
+    		$scope.progressbarDisplayed = false;
+    		return;
+    	}
     	
     	angular.forEach(dataValues, function(dataValue){
     		var value = {
@@ -105,8 +112,8 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
     		});
     	});    	
     };
-	
-	$scope.clickSite = function(siteId){
+    
+    $scope.clickSite = function(siteId){
 		$scope.siteSelected = siteId;
 		$scope.services = $scope.dataimportdata[siteId].children;
 		$scope.periods = null;

@@ -67,6 +67,7 @@
 	"PERIOD":"Periodo",
 	"DATAVALUE_HISTORY":"Histórico del valor",
 	"CLOSE":"Cerrar",
+	"EMPTY_IMPORT_FILE":"El fichero no contiene valores",
 	
 	"_______________ Analytics ":" _____________",
 	"ANALYTICS": "Actualizar analíticas",

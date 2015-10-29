@@ -22,6 +22,12 @@
 
 	<d2-progressBar></d2-progressBar>
 	
+	<div class="row" ng-show="msjEmptyFile">
+	  	<div class="col-md-12">
+			<d2-messages type="danger" textmessage="{{ 'EMPTY_IMPORT_FILE' | translate }}"></d2-messages>
+		</div>
+	</div>
+	
 	<div class="row" ng-show="importLoaded">
 		<div class="col-md-4">
 			<div class="panel panel-default">
