@@ -17,7 +17,7 @@
 	"default_locale":"en",
 	"activities": {
 	  "dhis": {
-	  "href": "../dhis"
+	  "href": "*"
 		}
 	}
 }
