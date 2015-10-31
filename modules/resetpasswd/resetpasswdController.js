@@ -78,7 +78,7 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
 		
 		if ($scope.role2 != undefined && $scope.role2!='') {		
 		
-			FilterResource.get({resource:'userRoles', filter:'name:eq:MTL'}).$promise.then(function(data){
+			FilterResource.get({resource:'userRoles', filter:'name:eq:Medical Focal Point'}).$promise.then(function(data){
 				if (data.userRoles.length>0)
 					resetPassword(data.userRoles[0].id, $scope.role2);
 			});
