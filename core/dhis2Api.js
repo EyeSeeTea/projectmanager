@@ -42,11 +42,14 @@ window.dhis2 = window.dhis2 || {};
 dhis2.settings = dhis2.settings || {};
 dhis2.settings.baseUrl = auxBaseUrl;
 
+var isOnline = urlBase.indexOf("hmisocba.msf.es") >= 0;
+
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
 	var Vari={
 			url: urlApi,
 			urlbase: urlBase,
+			isOnline: isOnline,
 			OrganisationUnit:"",
 			OrganisationUnitList:[],
 			Period:"",
