@@ -88,9 +88,8 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
     	var kvalue = 0;
     	var num = Object.keys(data).length;
     	angular.forEach(data, function(value, serviceId){
-    		Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent,dataSets[id,name]'})
-    				.$promise.then(function(service){
-    					
+    		Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent,dataSets[id,name,code]'}).$promise.then(function(service){
+
     			var parent = service.organisationUnits[0].parent;
     			if (healthCenters[parent.id] === undefined ){
     				healthCenters[parent.id] = {children:{}};
@@ -98,14 +97,15 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
     			if (healthCenters[parent.id].name === undefined ){
     				healthCenters[parent.id].name = parent.name;
     			}
-    			value.dataSets = service.organisationUnits[0].dataSets; 
+
+				var dataSets = filterDatasets(service.organisationUnits[0].dataSets);
+    			value.dataSets = dataSets;
     			healthCenters[parent.id]['children'][serviceId] = value;
     			healthCenters[parent.id]['children'][serviceId].name = service.organisationUnits[0].name;
     			
     			kvalue++;
     			if ( kvalue==num ){
         			$scope.dataimportdata = healthCenters;
-        			console.log(healthCenters);
         			$scope.importLoaded = true;
         			$scope.progressbarDisplayed = false;
     			}
@@ -124,13 +124,43 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 		$scope.serviceSelected = serviceId;
 		$scope.periods = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].periods;
 		$scope.periodSelected = null;
-	}
+	};
 	
 	$scope.clickPeriod = function(periodId){
 		$scope.datasets = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].dataSets;
 		$scope.datavalues = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].periods[periodId];
 		$scope.periodSelected = periodId;
-	}
+	};
+
+	var filterDatasets = function(dataSetsArray){
+		dataSetsArray.sort(function(DSa, DSb){
+			return DSa.code.localeCompare(DSb.code);
+		});
+
+		// We will remove array items, so loop in reverse to not be affected by reindexing
+		var previousCode = '';
+		for( var i = dataSetsArray.length -1; i >= 0; i--){
+			var currentCode = dataSetsArray[i].code;
+			if(trimCodeLevel(currentCode) === trimCodeLevel(previousCode)){
+				dataSetsArray.splice(i, 1);
+			}
+			previousCode = currentCode;
+		}
+		return dataSetsArray;
+	};
+
+	// Delete level information, if present
+	var trimCodeLevel = function(code){
+		if(code === undefined || code.length === 0){
+			return '';
+		} else {
+			var lastChar = code.charAt(code.length - 1);
+			if(!isNaN(parseInt(lastChar))){
+				return code.substring(0, code.length - 2);
+			}
+			return code;
+		}
+	};
 	
 }]);
 
