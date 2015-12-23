@@ -161,14 +161,13 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 					   $('#importCount').append(data[dataGroup][dataElement]+ " " + dataElement + "<br>");
 				   }
 			   }
-
-
-/*       		else if (dataGroup == 'conflicts') {
-       			for (var dataElementIndex in data[dataGroup]){
-       				var dataElement = data[dataGroup][dataElementIndex];
-       				$('#typeSummary tbody').append('<tr><td>' + dataElement.object + '</td><td>' + dataElement.value + '</td></tr>');
-       			}
-				}*/
+			   else if (dataGroup == 'conflicts') {
+				   $scope.conflicts = true;
+				   for (var dataElementIndex in data[dataGroup]){
+					   var dataElement = data[dataGroup][dataElementIndex];
+					   $('#typeSummary tbody').append('<tr><td>' + dataElement.object + '</td><td>' + dataElement.value + '</td></tr>');
+				   }
+			   }
 		   }
        };
 	

@@ -70,6 +70,7 @@
 	"DATAVALUE_HISTORY":"Data Value History",
 	"CLOSE":"Close",
 	"EMPTY_IMPORT_FILE": "The file contains no values",
+  	"DETAILS": "Details",
 	
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Refresh data",
