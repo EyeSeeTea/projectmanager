@@ -154,20 +154,22 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
        };
        
        $scope.generateSummary = function(data){
+		   var gt218 = commonvariable.version > "2.18";
     	   for (var dataGroup in data){
-       		if (dataGroup == 'dataValueCount'){
-           		for (var dataElement in data[dataGroup]){
-           			$('#importCount').append(data[dataGroup][dataElement]+ " " + dataElement + "<br>");
-           		}
-       		}
+			   if ((dataGroup == 'dataValueCount' && !gt218) || (dataGroup == 'importCount' && gt218)){
+				   for (var dataElement in data[dataGroup]){
+					   $('#importCount').append(data[dataGroup][dataElement]+ " " + dataElement + "<br>");
+				   }
+			   }
+
+
 /*       		else if (dataGroup == 'conflicts') {
        			for (var dataElementIndex in data[dataGroup]){
        				var dataElement = data[dataGroup][dataElementIndex];
        				$('#typeSummary tbody').append('<tr><td>' + dataElement.object + '</td><td>' + dataElement.value + '</td></tr>');
        			}
 				}*/
-       		
-       	}
+		   }
        };
 	
 }]);
