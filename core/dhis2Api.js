@@ -19,13 +19,7 @@
 	   
 var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
-var urlBase = $.parseJSON( $.ajax({
-	type: "GET",
-	dataType: "json",
-	url: 'manifest.webapp',
-	async: false
-}).responseText).activities.dhis.href + '/';
-
+var urlBase = window.location.href.split('api/apps/')[0] + '/';
 var urlApi = urlBase + '/api/';
 
 //Auxiliary variable to parse the url
@@ -42,11 +36,21 @@ window.dhis2 = window.dhis2 || {};
 dhis2.settings = dhis2.settings || {};
 dhis2.settings.baseUrl = auxBaseUrl;
 
+var isOnline = urlBase.indexOf("hmisocba.msf.es") >= 0;
+
+// Get and save DHIS version
+var version = "";
+$.ajax({ url: urlApi + "system/info", dataType: "json", async: "false", method: "GET" }).success( function (info) {
+	version = info.version;
+})
+
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
 	var Vari={
 			url: urlApi,
 			urlbase: urlBase,
+			isOnline: isOnline,
+			version: version,
 			OrganisationUnit:"",
 			OrganisationUnitList:[],
 			Period:"",
@@ -109,9 +113,16 @@ Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,
 }]);
 
 Dhis2Api.factory("DataMart",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url+"system/tasks/DATAMART", 
-   {lastId:'@lastId'}, 
+	var datamartUrl = commonvariable.url;
+	if (commonvariable.version > "2.18"){
+		datamartUrl = datamartUrl + "system/tasks/ANALYTICSTABLE_UPDATE";
+	} else {
+		datamartUrl = datamartUrl + "system/tasks/DATAMART";
+	}
+	return $resource( datamartUrl,
+   {lastId:'@lastId'},
   { get: { method: "GET"} });
+
 }]);
 
 Dhis2Api.factory("DatasetDAppr",['$resource','commonvariable', function ($resource,commonvariable) {

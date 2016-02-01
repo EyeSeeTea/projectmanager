@@ -44,7 +44,11 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	    		    	
 	    	$scope.progressbarDisplayed = true;
 	    	
-	    	if ($scope.getExtension($file.name)=="zip") compress=true;
+	    	if ($scope.getExtension($file.name)=="zip") {
+	    		compress=true;
+	    	} else {
+	    		compress=false;
+	    	}
 	    	
 	    	
 	    	var fileReader = new FileReader();
@@ -113,7 +117,11 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	    	
 	    	if ($scope.msjValidation == 1){
 		    	
-		    	if ($scope.getExtension($file.name)=="zip") $scope.isCompress = true;
+		    	if ($scope.getExtension($file.name)=="zip") {
+		    		$scope.isCompress = true;
+		    	} else {
+		    		$scope.isCompress = false;
+		    	}
 		    	
 		    	$scope.dataFile = $file;
 		    	$scope.previewDataImport = true;
@@ -142,23 +150,25 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
                 $file = $files[i];//set a single file
                 $scope.msjValidation = 1;
             }
+            $scope.previewDataImport = false;
        };
        
        $scope.generateSummary = function(data){
+		   var gt218 = commonvariable.version > "2.18";
     	   for (var dataGroup in data){
-       		if (dataGroup == 'dataValueCount'){
-           		for (var dataElement in data[dataGroup]){
-           			$('#importCount').append(data[dataGroup][dataElement]+ " " + dataElement + "<br>");
-           		}
-       		}
-/*       		else if (dataGroup == 'conflicts') {
-       			for (var dataElementIndex in data[dataGroup]){
-       				var dataElement = data[dataGroup][dataElementIndex];
-       				$('#typeSummary tbody').append('<tr><td>' + dataElement.object + '</td><td>' + dataElement.value + '</td></tr>');
-       			}
-				}*/
-       		
-       	}
+			   if ((dataGroup == 'dataValueCount' && !gt218) || (dataGroup == 'importCount' && gt218)){
+				   for (var dataElement in data[dataGroup]){
+					   $('#importCount').append(data[dataGroup][dataElement]+ " " + dataElement + "<br>");
+				   }
+			   }
+			   else if (dataGroup == 'conflicts') {
+				   $scope.conflicts = true;
+				   for (var dataElementIndex in data[dataGroup]){
+					   var dataElement = data[dataGroup][dataElementIndex];
+					   $('#typeSummary tbody').append('<tr><td>' + dataElement.object + '</td><td>' + dataElement.value + '</td></tr>');
+				   }
+			   }
+		   }
        };
 	
 }]);

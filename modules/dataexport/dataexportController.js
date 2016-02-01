@@ -20,7 +20,10 @@
 
 appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvariable", "DataSetsUID", "DataExport",'$timeout', function($scope, $filter, commonvariable, DataSetsUID, DataExport,$timeout) {
 		var $translate = $filter('translate');
-		
+
+		// Set "zipped" to true by default
+		$scope.zipped = true;
+
 		//new component for datepiker helder
 		  $scope.today = function() {
 			    $scope.dt = new Date();
@@ -30,7 +33,12 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 			  $scope.clear = function () {
 			    $scope.dt = null;
 			  };
-			  
+	
+		// Select Monday as starting day of the week
+		$scope.dateOptions = {
+				"starting-day": 1,
+		}
+		
 		  $scope.openstart = function($event) {
 			    $event.preventDefault();
 			    $event.stopPropagation();

@@ -98,7 +98,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 							}
 							else if(!parentsString.startsWith("/" + dataViewOrgUnit.id)){
 								// If dataViewOrgUnit is not included, add parent hierarchy at the beginning
-								if( !parentsString.includes(dataViewOrgUnit.id)){
+								if( parentsString.indexOf(dataViewOrgUnit.id) === -1 ){
 									var parent = parentsString.split("/")[1];
 									parentsString = data.metaData.ouHierarchy[parent] + parentsString;
 								}

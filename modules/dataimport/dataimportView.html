@@ -50,18 +50,24 @@
 	
 	<h4>{{ 'IMPORT_COUNT' | translate }}</h4>
 	<div id="importCount"></div>
-	
-	<h4>{{ 'CONFLICTS' | translate }}</h4>
-	<table id="typeSummary">
-	    <thead>
-	    <tr>
-	        <td>{{ 'ELEMENT' | translate }}</td>
-	        <td>{{ 'DESCRIPTION' | translate }}</td>
-	    </tr>
-	    </thead>
-	    <tbody>
-	      </tbody>
-     </table>
+
+	<div ng-show="conflicts">
+		<h4>{{ 'CONFLICTS' | translate }}</h4>
+		<div>
+			<button class="btn btn-primary btn-xs" ng-class="{true: 'active'}[showConflicts]"
+					ng-click="showConflicts = !showConflicts">{{ 'DETAILS' | translate}}</button>
+		</div>
+		<table id="typeSummary" ng-show="showConflicts">
+			<thead>
+			<tr>
+				<td>{{ 'ELEMENT' | translate }}</td>
+				<td>{{ 'DESCRIPTION' | translate }}</td>
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
 
 </div>
 

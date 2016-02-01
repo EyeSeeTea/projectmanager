@@ -22,6 +22,9 @@
 Dhis2Api.directive('d2Secondarymenu', function(){
 return{
 	restrict: 'E',
-	templateUrl: 'directives/menu/menuView.html'
+	templateUrl: 'directives/menu/menuView.html',
+	controller: function($scope, commonvariable){
+		$scope.isOnline = commonvariable.isOnline;
+	}
 }
 })
