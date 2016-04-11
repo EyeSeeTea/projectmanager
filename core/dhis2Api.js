@@ -248,3 +248,12 @@ Dhis2Api.factory("DataElementGroupsUID",['$resource','commonvariable', function 
 	{},
   { get: { method: "GET"} });
 }]);
+
+Dhis2Api.factory("DataStore",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataStore/:namespace/:key",
+		{
+			namespace:'namespace',
+			key:'key'
+		},
+		{ put: { method: "PUT"} });
+}]);
