@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart) {
+appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "meUser", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, meUser) {
 		var $translate = $filter('translate');
 		
 		$scope.progressbarDisplayed = false;
@@ -97,11 +97,12 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	        			 		}
 	        	    		}
 	        	    	});
-	                  }, 200);		
+	                  }, 200);
 	            	
 	            	//$scope.progressbarDisplayed = false;
 	            	$scope.generateSummary(data);
 	            	$scope.summaryDisplayed = true;
+					logDataimport($file.name, data);
 	            		
 	            	console.log("File upload SUCCESS");
 	            }).error(function(data) {
@@ -170,5 +171,21 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 			   }
 		   }
        };
+
+	var logDataimport = function(filename, data){
+		var namespace = "dataimportlog";
+		meUser.get({fields: "userCredentials[code],organisationUnits[id]"}).$promise
+			.then(function(me){
+				var dataimportLog = {
+					timestamp: new Date().getTime(),
+					username: me.userCredentials.code,
+					filename: filename,
+					status: data.status,
+					importCount: data.importCount,
+					conflicts: data.conflicts
+				};
+				DataStoreService.updateNamespaceKeyArray(namespace, me.organisationUnits[0].id, dataimportLog);
+			})
+	};
 	
 }]);
