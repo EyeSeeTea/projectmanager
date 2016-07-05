@@ -89,6 +89,7 @@
 
  	"_______________ HMIS":"Adoption_______________",
   	"HMIS_ADOPTION": "Adopción del HMIS",
+	"SHOW_LAST_MONTHS": "Mostrar los últimos meses",
 
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET":"Formulario",

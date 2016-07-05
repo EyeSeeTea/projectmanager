@@ -91,6 +91,7 @@
 
   	"_______________ HMIS":"Adoption_______________",
   	"HMIS_ADOPTION": "HMIS Adoption",
+	"SHOW_LAST_MONTHS": "Show last months",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",
