@@ -86,6 +86,9 @@
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Données disponibles",
 	"ORGANISATIONUNIT_LABEL": "Unité d'organisation",
+
+	"_______________ HMIS":"Adoption_______________",
+	"HMIS_ADOPTION": "Adoption de l'HMIS",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Ensemble de données",
