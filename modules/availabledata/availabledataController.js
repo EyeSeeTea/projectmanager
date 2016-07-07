@@ -231,9 +231,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 			};
 
 			DataStoreService.updateCurrentUserSettings("availableData", periodSetting)
-				.then(function() {
-					console.log("settings updated");
-				});
+				.then(function() {});
 
 			loadTable();
 		};
