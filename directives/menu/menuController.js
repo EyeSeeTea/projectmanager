@@ -20,11 +20,22 @@
 
 
 Dhis2Api.directive('d2Secondarymenu', function(){
-return{
-	restrict: 'E',
-	templateUrl: 'directives/menu/menuView.html',
-	controller: function($scope, commonvariable){
-		$scope.isOnline = commonvariable.isOnline;
+	return{
+		restrict: 'E',
+		templateUrl: 'directives/menu/menuView.html',
+		controller: ['$scope', 'commonvariable', 'meUser', function($scope, commonvariable, meUser){
+
+			$scope.isOnline = commonvariable.isOnline;
+
+			// Check if current user is in Administrator group
+			$scope.isAdministrator = false;
+			meUser.get().$promise.then(function(me) {
+				angular.forEach(me.userGroups, function(userGroup){
+					if(userGroup.name === 'Administrators'){
+						$scope.isAdministrator = true;
+					}
+				})
+			});
+		}]
 	}
-}
-})
+});

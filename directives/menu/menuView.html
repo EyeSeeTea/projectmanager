@@ -32,5 +32,5 @@
     <li ng-if="!isOnline"><a href="#/analytics">{{ 'ANALYTICS' | translate }}</a></li>
     <li><a href="#/availabledata">{{ 'AVAILABLE_DATA' | translate }}</a></li>
     <li ng-if="!isOnline"><a href="#/resetpasswd">{{ 'RESET_PASSWD' | translate }}</a></li>
-    <li><a href="#/hmisadoption">{{'HMIS_ADOPTION' | translate}}</a></li>
+    <li ng-if="isAdministrator"><a href="#/hmisadoption">{{'HMIS_ADOPTION' | translate}}</a></li>
 </ul>
