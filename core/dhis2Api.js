@@ -272,3 +272,12 @@ Dhis2Api.factory("SqlViewData",['$resource', 'commonvariable', function($resourc
 	return $resource( commonvariable.url + "sqlViews/:viewId/data.json",
 		{viewId:'viewId'});
 }]);
+
+Dhis2Api.factory("OrganisationUnitGroupSet",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"organisationUnitGroupSets/:groupsetid",
+		{groupsetid: '@groupsetid'});
+}]);
+
+Dhis2Api.factory("OrganisationUnitGroup",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"organisationUnitGroups" );
+}]);
