@@ -17,7 +17,6 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-
 .level1 {
 	background-color: #D26868;
 }
@@ -43,13 +42,57 @@
 }
 
 .glyphicon {
-  font-size: 0.8em;
+	font-size: 0.8em;
 }
 
 tr:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 th.orgunit {
 	width: 40%;
+}
+
+.children-loading-icon {
+	-webkit-animation: rotation infinite linear 0.5s;
+	-moz-animation: rotation infinite linear 0.5s;
+	-o-animation: rotation infinite linear 0.5s;
+	animation: rotation infinite linear 0.5s;
+	text-indent: 0;
+}
+
+@-webkit-keyframes rotation {
+	0% {
+		-webkit-transform:rotate(0deg);
+	}
+	100% {
+		-webkit-transform:rotate(360deg);
+	}
+}
+
+@-moz-keyframes rotation {
+	0% {
+		-moz-transform:rotate(0deg);
+	}
+	100% {
+		-moz-transform:rotate(360deg);
+	}
+}
+
+@-o-keyframes rotation {
+	0% {
+		-o-transform:rotate(0deg);
+	}
+	100% {
+		-o-transform:rotate(360deg);
+	}
+}
+
+@keyframes rotation {
+	0% {
+		transform:rotate(0deg);
+	}
+	100% {
+		transform:rotate(360deg);
+	}
 }

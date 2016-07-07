@@ -1,214 +1,244 @@
+/*
+ Copyright (c) 2015.
 
-/* 
-   Copyright (c) 2015.
- 
-   This file is part of Project Manager.
- 
-   Project Manager is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
- 
-   Project Manager is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+ This file is part of Project Manager.
+
+ Project Manager is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Project Manager is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$parse", "$animate", "commonvariable", 
-                                                     "DataElementGroupsUID", "Organisationunit", "OrganisationunitLevel", "meUser", 
-                                                     function($scope, $q, $http, $parse, $animate, commonvariable, DataElementGroupsUID, 
-                                                    		 Organisationunit, OrganisationunitLevel, meUser) {
-	
-	// Some common variables
-	var values = [];
-	var maxLevel;
-	
-	// Initialize visibility of table and progressBar
-	$scope.tableDisplayed = false;
-	$scope.progressbarDisplayed = true;
-	
-	// Definition of inital promises
-	var meUserPromise = meUser.get().$promise;
-	var ouLevelsPromise = OrganisationunitLevel.get().$promise;
-	
-	$q.all([meUserPromise, ouLevelsPromise])
-	.then(function(data){
+appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$parse", "commonvariable",
+	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "meUser", "DataStoreService", "AnalyticsService",
+	function($scope, $q, $http, $parse, commonvariable, Organisationunit,
+			 OrganisationUnitGroupSet, OrgunitGroupSetService, meUser, DataStoreService, AnalyticsService) {
 
-		// Save array of dataView organisation units
-		var dataViewOrgUnits = data[0].dataViewOrganisationUnits;
-		
-		// Save max level in the the system
-		maxLevel = getMaxLevel(data[1].organisationUnitLevels);
-		
-		// Create array of orgunits
-		var orgunits = [];
-		
-		var k = dataViewOrgUnits.length;
-		var currentOu = 0;
-		angular.forEach(dataViewOrgUnits, function(preDataViewOrgUnit){
-			
-			var dataViewOrgUnitPromise = Organisationunit.get({filter: 'id:eq:' + preDataViewOrgUnit.id}).$promise;
-			
-			dataViewOrgUnitPromise.then(function(data){
-				
-				// We can assume that filtering by ID only returns one result
-				var dataViewOrgUnit = data.organisationUnits[0];
+		$scope.availablePeriods = [
+			{id: "LAST_3_MONTHS", name: 3},
+			{id: "LAST_6_MONTHS", name: 6},
+			{id: "LAST_12_MONTHS", name: 12}
+		];
+		$scope.selectedPeriod = {
+			id: "LAST_6_MONTHS"
+		};
 
-				// Construction of analytics query
-				var avData_url = commonvariable.url + "analytics.json";
-				avData_url = avData_url + "?dimension=ou:" + dataViewOrgUnit.id;
-				
-				// Include all levels below dataViewOrgUnit				
-				for(var i = dataViewOrgUnit.level; i <= maxLevel; i++){
-					avData_url = avData_url + ";LEVEL-" + i;
-				}
-						
-				// Add the period parameter: last 6 months
-				avData_url = avData_url + "&dimension=pe:LAST_6_MONTHS";
-				// Add the aggregation type: count
-				avData_url = avData_url + "&aggregationType=COUNT";
-				// Show complete hierarchy
-				avData_url = avData_url + "&hierarchyMeta=true&displayProperty=NAME";
-				
-				// Get data
-				$http.get(avData_url).
-					success(function(data){
-						
-						// Create array of periods
-						var periods = [];
-						angular.forEach(data.metaData.pe, function(pe){
-							periods.push({
-								id: pe,
-								name: data.metaData.names[pe]
-							})
-						});		
-											
-						// Process organisation units
-						angular.forEach(data.metaData.ou, function(ou){
-							
-							var parentsString = data.metaData.ouHierarchy[ou];
-							
-							// Check hierarchy integrity
-							if(ou == dataViewOrgUnit.id){
-								parentsString = "";
-							}
-							else if(!parentsString.startsWith("/" + dataViewOrgUnit.id)){
-								// If dataViewOrgUnit is not included, add parent hierarchy at the beginning
-								if( parentsString.indexOf(dataViewOrgUnit.id) === -1 ){
-									var parent = parentsString.split("/")[1];
-									parentsString = data.metaData.ouHierarchy[parent] + parentsString;
-								}
-								
-								// If hierarchy is longer than needed, cut from dataViewOrgUnit.id
-								parentsString = parentsString.substring( parentsString.indexOf("/" + dataViewOrgUnit.id));
-							}
-							
-							//Create full name with real names
-							var parents = parentsString.split("/");
-							parents.shift();
-													
-							var fullName = "";
-							angular.forEach(parents, function(parent){
-								fullName = fullName + "/" + data.metaData.names[parent].replace(" ","_");
-							});
-							fullName = fullName + "/" + data.metaData.names[ou].replace(" ","_");
-							
-							var level = dataViewOrgUnit.level + parents.length;
+		$scope.availableFilters = [
+			{id:"BtFXTpKRl6n", name: "1. Health Service"}
+		];
 
-							// Push the new orgunit
-							orgunits.push({
-								id: ou,
-								name: data.metaData.names[ou],
-								fullName: fullName,
-								parents: parents.join(" && "),
-								relativeLevel: parents.length,
-								level: level,
-								isLastLevel: (level === maxLevel)
-							});					
-							
-						});
-						
-						// Store values in "values" variable
-						for(var i = 0; i < data.rows.length; i++){
-							values.push(data.rows[i]);
-						}
-						
-						// Make visible orgunits under dataViewOrgunit
-						$parse(dataViewOrgUnit.id).assign($scope, true);
-						
-						// If last orgunit, start table displaying
-						currentOu++;
-						if(currentOu == k){
-							// Assign periods and orgunits to view
-							$scope.periods = periods;
-							$scope.orgunits = orgunits;
-							
-							// Print data in table when table is ready
-							// Data.rows contains an array of values. Each value is an array with this structure:
-							// 0. Organization unit id
-							// 1. Period (for example 201501)
-							// 2. Value
-							$scope.$on('onRepeatLast', function(scope, element, attrs){
-								for(var i = 0; i < values.length; i++){
-									$("." + values[i][0] + "." + values[i][1])
-										.html("X <small>(" + Math.round(values[i][2]) + ")</small>");
-								}
-																
-								// Hide progressBar and show table
+		var selectedFilters = {};
+
+		var orgunitsInfo = {};
+
+		var loadUserSettings = function() {
+			return DataStoreService.getCurrentUserSettings().then(function(userSettings) {
+					if(userSettings.availableData.period != null)
+						$scope.selectedPeriod = userSettings.availableData.period;
+					if(userSettings.availableData.filters != null)
+						selectedFilters = userSettings.availableData.filters;
+				},
+				function(error){
+					console.log("There are not settings for current user");
+				});
+		};
+
+		var loadFilters = function(){
+			return OrgunitGroupSetService.getOrgunitGroupSets($scope.availableFilters)
+				.then(function(filters){
+					$scope.availableFilters = filters;
+					// Preselect filters
+					angular.forEach($scope.availableFilters, function(filter){
+						filter.selected = selectedFilters[filter.id];
+					});
+				});
+		};
+
+		var loadTable = function(){
+
+			// Initialize common variables
+			$scope.tableRows = [];
+			orgunitsInfo = {};
+
+			// Initialize visibility of table and progressBar
+			$scope.tableDisplayed = false;
+			$scope.progressbarDisplayed = true;
+
+			// Definition of meUser promise
+			var meUserPromise = meUser.get({fields: 'dataViewOrganisationUnits[id,level,children[id,level,children]]'}).$promise;
+
+			meUserPromise.then(function(meUser){
+				var dataViewOrgUnits = meUser.dataViewOrganisationUnits;
+
+				var k = dataViewOrgUnits.length;
+				var currentOu = 0;
+				angular.forEach(dataViewOrgUnits, function(dataViewOrgUnit){
+					var parentPromise = AnalyticsService.queryAvailableData(dataViewOrgUnit, $scope.selectedPeriod, selectedFilters);
+					var childrenPromise = AnalyticsService.queryAvailableData(dataViewOrgUnit.children, $scope.selectedPeriod, selectedFilters);
+
+					// Add orgunits to orgunitsInfo. That info will be required later.
+					orgunitsInfo[dataViewOrgUnit.id] = dataViewOrgUnit;
+					$.map(dataViewOrgUnit.children, function(child){orgunitsInfo[child.id] = child;});
+
+					$q.all([parentPromise, childrenPromise])
+						.then(function(analyticsData){
+							var parentResult = analyticsData[0];
+							var childrenResult = analyticsData[1];
+
+							// Generate public period array. It is required for other functions
+							regenerateScopePeriodArray(parentResult);
+
+							var parentRows = AnalyticsService.formatAnalyticsResult(parentResult, orgunitsInfo, []);
+							var childrenRows = AnalyticsService.formatAnalyticsResult(childrenResult, orgunitsInfo, [dataViewOrgUnit.id]);
+							$scope.tableRows = $scope.tableRows.concat(parentRows).concat(childrenRows);
+
+							// Make visible orgunits under dataViewOrgunit
+							orgunitsInfo[dataViewOrgUnit.id].clicked = true;
+
+							// Check if last dataViewOrgunit
+							if(k === ++currentOu){
 								$scope.tableDisplayed = true;
 								$scope.progressbarDisplayed = false;
-								
-								// Refresh scope
-								$scope.$apply();
-							});
-							
-						}
-						
-					}).
-					error(function(data){
-						// TODO Handle error
-						$scope.progressbarDisplayed = false;
+							}
+						});
+				});
+			});
+		};
+
+		var regenerateScopePeriodArray = function (analyticsResponse) {
+			$scope.periods = [];
+			angular.forEach(analyticsResponse.metaData.pe, function(pe){
+				$scope.periods.push({
+					id: pe,
+					name: analyticsResponse.metaData.names[pe]
+				})
+			});
+		};
+
+		$scope.isClicked = function(orgunitIds){
+			var clicked = true;
+			$.each(orgunitIds, function(index, orgunitId){
+				if(!orgunitsInfo[orgunitId].clicked === true){
+					clicked = false;
+				}
+			});
+			return clicked;
+		};
+
+		$scope.clickOrgunit = function(orgunit){
+			if(orgunitsInfo[orgunit.id].clicked){
+				orgunitsInfo[orgunit.id].clicked = false;
+			} else {
+				orgunitsInfo[orgunit.id].clicked = true;
+				if(!childrenLoaded(orgunit.id)){
+					loadChildren(orgunit);
+				}
+			}
+		};
+
+		var loadChildren = function(orgunit) {
+			// Add a loading icon and save the reference
+			var loadingIcon = addLoadingIcon(orgunit.id);
+
+			var childrenInfo = Organisationunit.get({
+				paging: false,
+				fields: "id,name,level,children",
+				filter: "id:in:[" + orgunitsInfo[orgunit.id].children.map(function(child){return child.id;}).join(",") + "]"
+			}).$promise;
+
+			var childrenQuery = AnalyticsService.queryAvailableData(orgunitsInfo[orgunit.id].children, $scope.selectedPeriod,
+				selectedFilters);
+
+			$q.all([childrenInfo, childrenQuery])
+				.then(function(data){
+					var childrenInfo = data[0].organisationUnits;
+					// Add children information to orgunitsInfo
+					$.map(childrenInfo, function(child){
+						orgunitsInfo[child.id] = child;
 					});
 
-				
-			});
-		});
-	
-	});
-			
-	$scope.clickOrgunit = function(orgunitUID){
-		var showChildren = $parse(orgunitUID);
-		
-		// Check current state of parameter
-		if(showChildren($scope) === true){
-			showChildren.assign($scope, false);
-		} else {
-			showChildren.assign($scope, true);			
-		}
-		
-		// Toggle between plus and minus icons
-		$("#ou_" + orgunitUID).find("span").toggleClass("glyphicon-plus glyphicon-minus ");
-	}
-	
-	var getMaxLevel = function(levels){
-		var max = 1;
-		angular.forEach(levels, function(level){
-			if(level.level > max) {max = level.level};
-		});
-		return max;
-	}
-	
-}]);
+					// Add analytics information to table
+					var childrenResult = data[1];
+					var childrenHierarchy = orgunit.parents.slice(0);
+					childrenHierarchy.push(orgunit.id);
+					var childrenRows = AnalyticsService.formatAnalyticsResult(childrenResult, orgunitsInfo, childrenHierarchy);
+					$scope.tableRows = $scope.tableRows.concat(childrenRows);
 
-// Directive to emit an event when a repeat process is in the last item
-Dhis2Api.directive('onLastRepeat', function(){
-	return function(scope, element, attrs) {
-        if (scope.$last) setTimeout(function(){
-            scope.$emit('onRepeatLast', element, attrs);
-        }, 1);
-    };
-});
+				})
+				.finally(function(){
+					// Once finished, remove loadingIcon
+					loadingIcon.remove();
+				});
+		};
+
+		var childrenLoaded = function(orgunitId){
+			var children = orgunitsInfo[orgunitId].children;
+			for(var i = 0; i < children.length; i++){
+				if(orgunitsInfo[children[i].id] != undefined) {
+					return true;
+				}
+			}
+			return false;
+		};
+
+		var addLoadingIcon = function(orgunitId){
+			var orgunitRow = $("#ou_" + orgunitId);
+			orgunitRow.append("<span class='children-loading-icon glyphicon glyphicon-repeat'></span>");
+			return (orgunitRow.find(".children-loading-icon"));
+		};
+
+		$scope.modifyFilter = function(filter){
+			var filterSetting = {};
+			if(filter.selected === undefined){
+				delete selectedFilters[filter.id];
+			} else {
+				// Update filter information
+				selectedFilters[filter.id] = filter.selected;
+			}
+
+			/*
+			filterSetting = {
+				"key": "filters",
+				"value": selectedFilters
+			};
+
+			DataStoreService.updateCurrentUserSettings("availableData", filterSetting)
+				.then(function () {
+					console.log("settings updated");
+				});
+			**/
+
+			loadTable();
+		};
+
+		$scope.modifyPeriod = function(period){
+			$scope.selectedPeriod = {
+				id: period.id,
+				name: period.name
+			};
+
+			var periodSetting = {
+				"key": "period",
+				"value": $scope.selectedPeriod
+			};
+
+			DataStoreService.updateCurrentUserSettings("availableData", periodSetting)
+				.then(function() {
+					console.log("settings updated");
+				});
+
+			loadTable();
+		};
+
+		// Initialize table
+		loadUserSettings().then(loadFilters).then(loadTable);
+	}
+]);
