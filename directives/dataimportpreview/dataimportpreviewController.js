@@ -88,7 +88,7 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
     	var kvalue = 0;
     	var num = Object.keys(data).length;
     	angular.forEach(data, function(value, serviceId){
-    		Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent,dataSets[id,name,code]'}).$promise.then(function(service){
+    		Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent,dataSets[id,name,code,periodType]'}).$promise.then(function(service){
 
     			var parent = service.organisationUnits[0].parent;
     			if (healthCenters[parent.id] === undefined ){
