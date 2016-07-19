@@ -77,6 +77,7 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
     		};
     		if(data[dataValue.orgUnit] === undefined ){
     			data[dataValue.orgUnit] = {periods:{}};
+				data[dataValue.orgUnit].id = dataValue.orgUnit;
     		}
     		if(data[dataValue.orgUnit]['periods'][dataValue.period] === undefined){
     			data[dataValue.orgUnit]['periods'][dataValue.period] = [];
@@ -93,13 +94,11 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
     			var parent = service.organisationUnits[0].parent;
     			if (healthCenters[parent.id] === undefined ){
     				healthCenters[parent.id] = {children:{}};
-    			}
-    			if (healthCenters[parent.id].name === undefined ){
-    				healthCenters[parent.id].name = parent.name;
+					healthCenters[parent.id].id = parent.id;
+					healthCenters[parent.id].name = parent.name;
     			}
 
-				var dataSets = filterDatasets(service.organisationUnits[0].dataSets);
-    			value.dataSets = dataSets;
+    			value.dataSets = filterDatasets(service.organisationUnits[0].dataSets);
     			healthCenters[parent.id]['children'][serviceId] = value;
     			healthCenters[parent.id]['children'][serviceId].name = service.organisationUnits[0].name;
     			
