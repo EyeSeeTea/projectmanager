@@ -29,7 +29,7 @@ urlAuxLink.href = urlBase;
 //Delete initial and final slash
 var auxBaseUrl = urlAuxLink.pathname;
 if (auxBaseUrl.startsWith("/")) auxBaseUrl = auxBaseUrl.substring(1);
-if (auxBaseUrl.endsWith("/")) auxBaseUrl = auxBaseUrl.substring(0, auxBaseUrl.length - 1);
+if (auxBaseUrl.endsWith("/")) auxBaseUrl = auxBaseUrl.substring(0, auxBaseUrl.length - 2);
 
 //Dhis related variables
 window.dhis2 = window.dhis2 || {};
@@ -163,6 +163,11 @@ Dhis2Api.factory("AnaliticsDAppr",['$resource','commonvariable', function ($reso
   { get: { method: "GET"} });
 }]);
 
+Dhis2Api.factory("AnalyticsEngine",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"analytics.json",
+		{});
+}]);
+
 Dhis2Api.factory("DataSetsUID",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataSets.json?fields=id&paging=false", 
 	{},
@@ -256,4 +261,23 @@ Dhis2Api.factory("DataStore",['$resource','commonvariable', function ($resource,
 			key:'key'
 		},
 		{ put: { method: "PUT"} });
+}]);
+
+Dhis2Api.factory("SqlView",['$resource', 'commonvariable', function($resource, commonvariable) {
+	return $resource( commonvariable.url + "sqlViews/:viewId",
+		{viewId:'@id'}, {post: {method: "POST"}});
+}]);
+
+Dhis2Api.factory("SqlViewData",['$resource', 'commonvariable', function($resource, commonvariable) {
+	return $resource( commonvariable.url + "sqlViews/:viewId/data.json",
+		{viewId:'viewId'});
+}]);
+
+Dhis2Api.factory("OrganisationUnitGroupSet",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"organisationUnitGroupSets/:groupsetid",
+		{groupsetid: '@groupsetid'});
+}]);
+
+Dhis2Api.factory("OrganisationUnitGroup",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"organisationUnitGroups" );
 }]);

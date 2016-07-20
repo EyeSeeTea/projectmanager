@@ -87,7 +87,12 @@
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",
+	"NUMBER_OF_MONTHS": "Number of months",
 	"ORGANISATIONUNIT_LABEL": "Organisation Unit",
+
+  	"_______________ HMIS":"Adoption_______________",
+  	"HMIS_ADOPTION": "HMIS Adoption",
+	"SHOW_LAST_MONTHS": "Show last months",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",

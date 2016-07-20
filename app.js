@@ -22,48 +22,49 @@ var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pasca
 
 appManagerMSF.config(function($routeProvider) {
  
-	  $routeProvider.when('/dataapproval', {
-		    templateUrl: "modules/dataapproval/dataapprovalView.html",
-		    controller: "dataapprovalController"
-		  });
-	  $routeProvider.when('/metadataimport', {
-		  	templateUrl: "modules/metadataimport/metadataimportView.html",
-		  	controller: "metadataimportController"
-		  });
-	  $routeProvider.when('/metadataexport', {
-		  	templateUrl: "modules/metadataexport/metadataexportView.html",
-		  		 controller: "metadataexportController"
-		  });
-		  
-	  $routeProvider.when('/analytics', {
-		    templateUrl: "modules/analytics/analyticsView.html",
-		    controller: "analyticsController"
-		  });
-	  $routeProvider.when('/dataimport', {
-		  	templateUrl: "modules/dataimport/dataimportView.html",
-		  	controller: "dataimportController"
-		  });
-	  $routeProvider.when('/dataexport', {
-		  	templateUrl: "modules/dataexport/dataexportView.html",
-		  		 controller: "dataexportController"
-		  });
-	  
-	  $routeProvider.when('/resetpasswd', {
-		  	templateUrl: "modules/resetpasswd/resetpasswdView.html",
-		  		 controller: "resetpasswdController"
-		  });
-	  
-	  $routeProvider.when('/availabledata', {
-		  	templateUrl: "modules/availabledata/availabledataView.html",
-		  		 controller: "availabledataController",
-		  		 css: "modules/availabledata/availabledataCss.css"
-		  });
-	
-	  $routeProvider.otherwise({
-	        redirectTo: '/'
-	  });   
-
+	$routeProvider.when('/dataapproval', {
+		templateUrl: "modules/dataapproval/dataapprovalView.html",
+		controller: "dataapprovalController"
 	});
+	$routeProvider.when('/metadataimport', {
+		templateUrl: "modules/metadataimport/metadataimportView.html",
+		controller: "metadataimportController"
+	});
+	$routeProvider.when('/metadataexport', {
+		templateUrl: "modules/metadataexport/metadataexportView.html",
+			 controller: "metadataexportController"
+	});
+	$routeProvider.when('/analytics', {
+		templateUrl: "modules/analytics/analyticsView.html",
+		controller: "analyticsController"
+	});
+	$routeProvider.when('/dataimport', {
+		templateUrl: "modules/dataimport/dataimportView.html",
+		controller: "dataimportController"
+	});
+	$routeProvider.when('/dataexport', {
+		templateUrl: "modules/dataexport/dataexportView.html",
+		controller: "dataexportController"
+	});
+	$routeProvider.when('/resetpasswd', {
+		templateUrl: "modules/resetpasswd/resetpasswdView.html",
+		controller: "resetpasswdController"
+	});
+	$routeProvider.when('/availabledata', {
+		templateUrl: "modules/availabledata/availabledataView.html",
+		controller: "availabledataController",
+		css: "modules/availabledata/availabledataCss.css"
+	});
+	$routeProvider.when('/hmisadoption', {
+		templateUrl: "modules/hmisadoption/hmisadoptionView.html",
+		controller: "hmisadoptionController",
+		css: "modules/hmisadoption/hmisadoptionCss.css"
+	});
+	$routeProvider.otherwise({
+		redirectTo: '/'
+	});
+
+});
 
 appManagerMSF.config(function ($translateProvider, urlApi) {
   

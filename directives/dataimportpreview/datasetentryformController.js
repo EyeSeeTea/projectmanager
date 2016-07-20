@@ -32,11 +32,13 @@ Dhis2Api.directive('d2DatasetEntryForm', function(){
 	};
 });
 
-Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm', 'commonvariable', function($scope, DataSetEntryForm, commonvariable){
+Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm', 'commonvariable', 'DataImportService', 
+	function($scope, DataSetEntryForm, commonvariable, DataImportService){
 	
-	var init = function(){
+	function init(){
 		$scope.clickDataset(null);
-		
+
+		$scope.datasets = filterDatasetByPeriod( $scope.datasets, $scope.periodId );
 		
 		var dsNum = $scope.datasets.length;
 		var dsCount = 0;
@@ -67,6 +69,13 @@ Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm'
 				});
 			});
 		}
+	}
+
+	function filterDatasetByPeriod( datasets, periodId ){
+		var periodType = DataImportService.getPeriodType( periodId );
+		return datasets.filter( function( dataset ){
+			return dataset.periodType === periodType;
+		});
 	}
 
 	$scope.formatDatasets = function(){
