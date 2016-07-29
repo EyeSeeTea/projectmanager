@@ -43,6 +43,7 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	    	$("#importConfirmation").modal("hide");
 	    		    	
 	    	$scope.progressbarDisplayed = true;
+			$scope.importFailed = false;
 	    	
 	    	compress = getExtension($file.name) == "zip";
 	    	
@@ -92,13 +93,15 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	        	    	});
 	                  }, 200);
 	            	
-	            	//$scope.progressbarDisplayed = false;
 	            	$scope.generateSummary(data);
 	            	$scope.summaryDisplayed = true;
 					logDataimport($file.name, JSON.parse(fileContentJSON).dataValues, data);
 	            		
 	            	console.log("File upload SUCCESS");
 	            }).error(function(data) {
+					$scope.progressbarDisplayed = false;
+					$scope.importFailed = true;
+
 	            	console.log("File upload FAILED");//error
 	            });
 	        };
@@ -118,7 +121,7 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 
 	    function varValidation() {
 	    	console.log($file);
-			$scope.undefinedFile = ($file == undefined); 
+			$scope.undefinedFile = ($file == undefined);
 	    }
 	
 		function getExtension(filename) {
@@ -130,6 +133,7 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
             for (var i = 0; i < $files.length; i++) {
                 $file = $files[i];//set a single file
                 $scope.undefinedFile = false;
+				$scope.importFailed = false;
             }
             $scope.previewDataImport = false;
        };

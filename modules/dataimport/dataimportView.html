@@ -36,7 +36,15 @@
 </div>
   
 	<br/>
+
 <d2-progressBar></d2-progressBar>
+
+<div class="row" ng-show="importFailed">
+	<div class="col-md-12">
+		<d2-messages type="danger" textmessage="{{ 'IMPORT_FAILED' | translate }}"></d2-messages>
+	</div>
+</div>
+
 <br/>
 <div class="row">
 	<div class="form_group">
