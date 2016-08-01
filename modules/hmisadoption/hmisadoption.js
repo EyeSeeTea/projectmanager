@@ -122,8 +122,12 @@ appManagerMSF.controller('hmisadoptionController', ['$scope', '$parse', 'sqlServ
             }
             orgunits[id].data[period][storedby] = parseInt(value);
         });
-        // Convert into an array
+        // Compute percentage and convert into an array
         var result = $.map(orgunits, function(value, index){
+            angular.forEach(value.data, function(period){
+                period.percentage = Math.round( 100 * period.others / (period.others + period.pentaho) );
+                period.percentageRound10 = Math.round(period.percentage / 10) * 10;
+            });
             return [value];
         });
         return result;
@@ -238,6 +242,8 @@ appManagerMSF.controller('hmisadoptionController', ['$scope', '$parse', 'sqlServ
             })
         }
     };
+
+    $scope.isNumber = isFinite;
 
     $scope.loadTable();
 

@@ -27,8 +27,8 @@
         ng-show="{{ orgunit.relativeLevel == 0 || (orgunit.parents) }}">
         <td class="level{{ orgunit.level }} col-md-4" style="text-indent: {{orgunit.relativeLevel}}em">{{orgunit.name}}</td>
         <td ng-repeat="period in orgunit.data" title="users: {{period.others}} || migration: {{period.pentaho}}"
-            style="background-color: rgb({{255 - (255 * period.others / (period.others + period.pentaho)) | number: 0}}, 255,0)">
-            {{100 * period.others / (period.others + period.pentaho) | number: 0}} %</td>
+            class="percentage{{ period.percentageRound10 }}">
+            <span ng-if="isNumber(period.percentage)">{{period.percentage}} %</span></td>
     </tr>
     </tbody>
 </table>
