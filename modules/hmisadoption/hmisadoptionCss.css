@@ -36,6 +36,40 @@
     background-color: #FFFFFF;
 }
 
+.percentage0 {
+    background-color: #FFFFBF;
+}
+.percentage10 {
+    background-color: #D1EAA8;
+}
+.percentage20 {
+    background-color: #D1EAA8;
+}
+.percentage30 {
+    background-color: #BAE09D;
+}
+.percentage40 {
+    background-color: #A3D592;
+}
+.percentage50 {
+    background-color: #8CCB87;
+}
+.percentage60 {
+    background-color: #75C17C;
+}
+.percentage70 {
+    background-color: #5EB671;
+}
+.percentage80 {
+    background-color: #47AC66;
+}
+.percentage90 {
+    background-color: #30A25B;
+}
+.percentage100 {
+    background-color: #1A9850;
+}
+
 .glyphicon {
     font-size: 0.8em;
 }
