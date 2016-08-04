@@ -18,10 +18,9 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "meUser", "DataImportService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, meUser, DataImportService) {
-		var $translate = $filter('translate');
 		
 		$scope.progressbarDisplayed = false;
-		$scope.msjValidation = 1;
+		$scope.undefinedFile = false;
 		
 		var $file;//single file 
 		
@@ -31,9 +30,9 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		
 		$scope.showImportDialog = function(){
 			
-			$scope.VarValidation();
+			varValidation();
 			
-			if ($scope.msjValidation == 1){
+			if (!$scope.undefinedFile){
 				$("#importConfirmation").modal();
 			}
 		};
@@ -44,18 +43,14 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	    	$("#importConfirmation").modal("hide");
 	    		    	
 	    	$scope.progressbarDisplayed = true;
+			$scope.importFailed = false;
 	    	
-	    	if ($scope.getExtension($file.name)=="zip") {
-	    		compress=true;
-	    	} else {
-	    		compress=false;
-	    	}
-	    	
+	    	compress = getExtension($file.name) == "zip";
 	    	
 	    	var fileReader = new FileReader();
 	        fileReader.readAsArrayBuffer($file);
 	        fileReader.onload = function(e) {
-	        	
+
 	        	fileContent = e.target.result;
 	        	
 	        	if (compress) {
@@ -63,8 +58,6 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	        		var zip = new JSZip(e.target.result);
 					
 					$.each(zip.files, function (index, zipEntry) {
-					
-						fileContent = zip.file(zipEntry.name).asArrayBuffer();
 						fileContentJSON = zip.file(zipEntry.name).asText();
 					});
 	        	}		        	
@@ -76,8 +69,7 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	            }).progress(function(ev) {
 	            	console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
 	            }).success(function(data) {
-	            	console.log(data);
-	            	
+
 	            	Analytics.post();
 	            	
 	            	var inputParameters = {};
@@ -101,13 +93,15 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	        	    	});
 	                  }, 200);
 	            	
-	            	//$scope.progressbarDisplayed = false;
 	            	$scope.generateSummary(data);
 	            	$scope.summaryDisplayed = true;
 					logDataimport($file.name, JSON.parse(fileContentJSON).dataValues, data);
 	            		
 	            	console.log("File upload SUCCESS");
 	            }).error(function(data) {
+					$scope.progressbarDisplayed = false;
+					$scope.importFailed = true;
+
 	            	console.log("File upload FAILED");//error
 	            });
 	        };
@@ -116,42 +110,30 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		
 	    $scope.previewFiles= function(){
 	    	
-	    	$scope.VarValidation();
+	    	varValidation();
 	    	
-	    	if ($scope.msjValidation == 1){
-		    	
-		    	if ($scope.getExtension($file.name)=="zip") {
-		    		$scope.isCompress = true;
-		    	} else {
-		    		$scope.isCompress = false;
-		    	}
-		    	
+	    	if (!$scope.undefinedFile){
+				$scope.isCompress = getExtension($file.name) == "zip";
 		    	$scope.dataFile = $file;
 		    	$scope.previewDataImport = true;
-		    	
-		    	return;
-	    	};    
+			}
 	    };
 
-	    $scope.VarValidation= function() {
+	    function varValidation() {
 	    	console.log($file);
-	    	if ($file == undefined){
-	    		$scope.msjValidation = 0;
-	    	}
-	    	else{
-	    		$scope.msjValidation = 1;
-	    	}
-	    };
-	    
-		$scope.getExtension = function(filename) {
-				var parts = filename.split('.');
-				return parts[parts.length - 1];
-		};
+			$scope.undefinedFile = ($file == undefined);
+	    }
+	
+		function getExtension(filename) {
+			var parts = filename.split('.');
+			return parts[parts.length - 1];
+		}
 	    	
 	    $scope.onFileSelect = function ($files) {
             for (var i = 0; i < $files.length; i++) {
                 $file = $files[i];//set a single file
-                $scope.msjValidation = 1;
+                $scope.undefinedFile = false;
+				$scope.importFailed = false;
             }
             $scope.previewDataImport = false;
        };

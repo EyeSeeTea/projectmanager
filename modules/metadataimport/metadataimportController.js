@@ -18,10 +18,9 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 appManagerMSF.controller('metadataimportController', ["$scope", '$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart) {
-		var $translate = $filter('translate');
 		
 		$scope.progressbarDisplayed = false;
-		$scope.msjValidation = 1;
+		$scope.undefinedFile = false;
 		
 		var $file;//single file
 		
@@ -32,7 +31,7 @@ appManagerMSF.controller('metadataimportController', ["$scope", '$interval', '$u
 	    	
 	    	$scope.VarValidation();
 	    	
-	    	if ($scope.msjValidation == 1){
+	    	if (!$scope.undefinedFile){
 		    	$scope.progressbarDisplayed = true;
 		    	
 		    	if ($scope.getExtension($file.name)=="zip") compress=true;
@@ -102,19 +101,14 @@ appManagerMSF.controller('metadataimportController', ["$scope", '$interval', '$u
 	    };
 	    
 	    $scope.VarValidation= function() {
-	    	console.log($file);
-	    	if ($file == undefined){
-	    		$scope.msjValidation = 0;
-	    	}
-	    	else{
-	    		$scope.msjValidation = 1;
-	    	}
-	    };
+			console.log($file);
+			$scope.undefinedFile = ($file == undefined);
+		};
 	    	
 	    $scope.onFileSelect = function ($files) {
             for (var i = 0; i < $files.length; i++) {
                 $file = $files[i];//set a single file
-                $scope.msjValidation = 1;
+                $scope.undefinedFile = false;
             }
        };
        

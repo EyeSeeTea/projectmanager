@@ -56,6 +56,7 @@
 	"DATA_EXPORT_ZIP":"Comprimido?",
 	"IMPORT_SUMMARY":"RESUMEN DE LA IMPORTACIÓN",
 	"IMPORT_COUNT":"Recuento de la importación",
+	"IMPORT_FAILED":"La importación de datos ha fallado",
 	"CONFLICTS":"Conflictos",
 	"ELEMENT":"Elemento",
 	"DESCRIPTION":"Descripción",
