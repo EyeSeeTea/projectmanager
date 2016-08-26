@@ -19,7 +19,7 @@
 	   
 var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
-var urlBase = window.location.href.split('api/apps/')[0] + '/';
+var urlBase = window.location.href.split('/api/apps/')[0];
 var urlApi = urlBase + '/api/';
 
 //Auxiliary variable to parse the url
@@ -36,13 +36,13 @@ window.dhis2 = window.dhis2 || {};
 dhis2.settings = dhis2.settings || {};
 dhis2.settings.baseUrl = auxBaseUrl;
 
-var isOnline = urlBase.indexOf("hmisocba.msf.es") >= 0;
+var isOnline = urlBase.indexOf("//hmisocba.msf.es") >= 0;
 
 // Get and save DHIS version
 var version = "";
 $.ajax({ url: urlApi + "system/info", dataType: "json", async: "false", method: "GET" }).success( function (info) {
 	version = info.version;
-})
+});
 
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
