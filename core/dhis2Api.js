@@ -19,8 +19,8 @@
 	   
 var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
-var urlBase = window.location.href.split('/api/apps/')[0];
-var urlApi = urlBase + '/api/';
+var urlBase = window.location.href.split('api/apps/')[0];
+var urlApi = urlBase + 'api/';
 
 //Auxiliary variable to parse the url
 var urlAuxLink = document.createElement('a');
