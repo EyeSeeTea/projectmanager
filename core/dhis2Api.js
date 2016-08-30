@@ -29,7 +29,7 @@ urlAuxLink.href = urlBase;
 //Delete initial and final slash
 var auxBaseUrl = urlAuxLink.pathname;
 if (auxBaseUrl.startsWith("/")) auxBaseUrl = auxBaseUrl.substring(1);
-if (auxBaseUrl.endsWith("/")) auxBaseUrl = auxBaseUrl.substring(0, auxBaseUrl.length - 2);
+if (auxBaseUrl.endsWith("/")) auxBaseUrl = auxBaseUrl.substring(0, auxBaseUrl.length - 1);
 
 //Dhis related variables
 window.dhis2 = window.dhis2 || {};
