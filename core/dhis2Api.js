@@ -19,8 +19,11 @@
 	   
 var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
+// Specify the target api version of DHIS2
+var apiVersion = 24;
+
 var urlBase = window.location.href.split('api/apps/')[0];
-var urlApi = urlBase + 'api/';
+var urlApi = urlBase + 'api/' + apiVersion + "/";
 
 //Auxiliary variable to parse the url
 var urlAuxLink = document.createElement('a');
