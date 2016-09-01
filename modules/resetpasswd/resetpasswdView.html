@@ -30,7 +30,7 @@
 		<div class="col-md-12 row">
             <div class="col-md-5">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Users</div>
+                    <div class="panel-heading">{{ 'USERS' | translate }}</div>
                     <ul class="list-group user-list">
                         <li ng-repeat="user in projectUsers | orderBy:'userCredentials.username'"
                             class="list-group-item" ng-click="user.selected = !user.selected">
@@ -42,7 +42,7 @@
                 </div>
             </div>
 			<div class="col-md-5">
-				<h3> New password </h3>
+				<h3>{{ 'NEW_PASSWORD' | translate }}</h3>
 				<input type="text" class="form-control" ng-model="password.new"/>
 				<br/>
 				<div class="form_group">

@@ -6,6 +6,7 @@
 	"SELECT_FILE": "Seleccionar archivo",
 	"IN_PROGRESS": "CARGANDO",
 	"FILE_NAME": "Nombre del fichero",
+	"USERS": "Usuarios",
 	"VALIDATION_FILE_NAME": "Por favor, rellene el nombre de fichero",
 	"VALIDATION_FILE": "Please, seleccione un fichero",
 	"VALIDATION_START_DATE": "Por favor, introduzca la fecha de inicio",
@@ -77,13 +78,14 @@
 	"ANALYTICS_BUTTON": "Actualizar datos",
 	
 	"_______________ Reset":" password_____________",
-	"RESET_PASSWD":"Resetear passwords",
+	"RESET_PASSWD":"Resetear contraseñas",
 	"ROLE_1":"MedCo",
 	"ROLE_2":"MTL",
 	"ROLE_3":"Field User ",
-	"RESET_BUTTON":"Resetear Passwords",
-	"MESSAGE_RESET":"Usuarios con la password actualizada: ",
-		
+	"RESET_BUTTON":"Resetear Contraseñas",
+	"MESSAGE_RESET":"Usuarios con la contraseña actualizada: ",
+	"NEW_PASSWORD": "Nueva contraseña",
+
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Datos disponibles",
 	"NUMBER_OF_MONTHS": "Número de meses",
