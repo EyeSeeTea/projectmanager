@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "meUser", "DataImportService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, meUser, DataImportService) {
+appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService) {
 		
 		$scope.progressbarDisplayed = false;
 		$scope.undefinedFile = false;
@@ -158,19 +158,18 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 
 	var logDataimport = function(filename, rawData, data){
 		var namespace = "dataimportlog";
-		meUser.get({fields: "userCredentials[code],organisationUnits[id]"}).$promise
-			.then(function(me){
-				var dataimportLog = {
-					timestamp: new Date().getTime(),
-					username: me.userCredentials.code,
-					filename: filename,
-					status: data.status,
-					importCount: data.importCount,
-					conflicts: data.conflicts,
-					data: DataImportService.getFormattedSummary(rawData)
-				};
-				DataStoreService.updateNamespaceKeyArray(namespace, me.organisationUnits[0].id, dataimportLog);
-			})
+		UserService.getCurrentUser().then(function(me){
+			var dataimportLog = {
+				timestamp: new Date().getTime(),
+				username: me.userCredentials.username,
+				filename: filename,
+				status: data.status,
+				importCount: data.importCount,
+				conflicts: data.conflicts,
+				data: DataImportService.getFormattedSummary(rawData)
+			};
+			DataStoreService.updateNamespaceKeyArray(namespace, me.organisationUnits[0].id, dataimportLog);
+		})
 	};
 	
 }]);

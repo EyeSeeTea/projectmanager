@@ -28,13 +28,12 @@ Dhis2Api.directive('d2Treeorganisationunit', function(){
 		    }
 	}
 	}); 
-Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrganisationunit',"commonvariable","meUser", function ($scope,$q,TreeOrganisationunit,commonvariable,meUser) {
+Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrganisationunit',"commonvariable","UserService", function ($scope,$q,TreeOrganisationunit,commonvariable,UserService) {
 	$scope.currentid="";
      $scope.loadingTree=true;
     
     ///query me api for get OU asigned to user
-    meUser.get()
-     .$promise.then(function(data){
+	UserService.getCurrentUser().then(function(data){
 
         $scope.InitialTree=[];
         $scope.treeOrganisationUnitList=[];

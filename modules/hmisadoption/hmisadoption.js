@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('hmisadoptionController', ['$scope', '$parse', 'sqlService', 'meUser', 'Organisationunit', function($scope, $parse, sqlService, meUser, Organisationunit) {
+appManagerMSF.controller('hmisadoptionController', ['$scope', '$parse', 'sqlService', 'UserService', 'Organisationunit', function($scope, $parse, sqlService, UserService, Organisationunit) {
 
     $scope.periods = [];
     $scope.tableRows = [];
@@ -40,7 +40,7 @@ appManagerMSF.controller('hmisadoptionController', ['$scope', '$parse', 'sqlServ
         rootLevel = null;
 
         // First of all, get user orgunits
-        meUser.get().$promise.then(function(user) {
+        UserService.getCurrentUser().then(function(user) {
             dataViewOrgunits = user.dataViewOrganisationUnits;
 
             var dataViewOrgunitNum = dataViewOrgunits.length;

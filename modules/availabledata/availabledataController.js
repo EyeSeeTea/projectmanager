@@ -18,9 +18,9 @@
 
 
 appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$parse", "commonvariable",
-	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "meUser", "DataStoreService", "AnalyticsService",
+	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "DataStoreService", "AnalyticsService",
 	function($scope, $q, $http, $parse, commonvariable, Organisationunit,
-			 OrganisationUnitGroupSet, OrgunitGroupSetService, meUser, DataStoreService, AnalyticsService) {
+			 OrganisationUnitGroupSet, OrgunitGroupSetService, UserService, DataStoreService, AnalyticsService) {
 
 		$scope.availablePeriods = [
 			{id: "LAST_3_MONTHS", name: 3},
@@ -71,12 +71,9 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 			// Initialize visibility of table and progressBar
 			$scope.tableDisplayed = false;
 			$scope.progressbarDisplayed = true;
-
-			// Definition of meUser promise
-			var meUserPromise = meUser.get({fields: 'dataViewOrganisationUnits[id,level,children[id,level,children]]'}).$promise;
-
-			meUserPromise.then(function(meUser){
-				var dataViewOrgUnits = meUser.dataViewOrganisationUnits;
+			
+			UserService.getCurrentUser().then(function(me){
+				var dataViewOrgUnits = me.dataViewOrganisationUnits;
 
 				var k = dataViewOrgUnits.length;
 				var currentOu = 0;

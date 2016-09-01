@@ -17,23 +17,15 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("DataStoreService", ['DataStore','meUser', '$q', function(DataStore, meUser, $q) {
+appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(DataStore, UserService) {
 
     var namespace = "projectmanager";
-    var userid = null;
     var defaultArrayKey = "values";
 
     var getUserId = function() {
-        // Get current user id
-        if (userid != null){
-            return $q.when(userid);
-        } else {
-            return meUser.get({fields: 'id'}).$promise
-                .then(function (user) {
-                    userid = user.id;
-                    return userid;
-                });
-        }
+        return UserService.getCurrentUser().then(function (user) {
+            return user.id;
+        });
     };
 
     var getCurrentUserSettings = function() {
