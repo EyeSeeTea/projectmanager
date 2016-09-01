@@ -31,8 +31,9 @@
             <div class="col-md-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">Users</div>
-                    <ul class="list-group">
-                        <li ng-repeat="user in projectUsers | orderBy:'userCredentials.username'" class="list-group-item">
+                    <ul class="list-group user-list">
+                        <li ng-repeat="user in projectUsers | orderBy:'userCredentials.username'"
+                            class="list-group-item" ng-click="user.selected = !user.selected">
                             <input type="checkbox" ng-model="user.selected">
                             {{user.userCredentials.username}}
                         </li>
