@@ -56,24 +56,26 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
             delete userCopy.selected;
             return userCopy;
         });
-        
-        $scope.progressbarDisplayed = true;
-        $scope.resetPasswordResult = {
-            total: targetUsers.length,
-            updated: 0,
-            done: false
-        };
-        angular.forEach(targetUsers, function(user) {
-            UserService.updateUserPassword(user, $scope.password.new).then(function(result) {
-                if (result.httpStatus === "OK") {
-                    $scope.resetPasswordResult.updated++;
-                    if ($scope.resetPasswordResult.updated === $scope.resetPasswordResult.total) {
-                        $scope.progressbarDisplayed = false;
-                        $scope.resetPasswordResult.done = true;
+
+        if (targetUsers.length > 0) {
+            $scope.progressbarDisplayed = true;
+            $scope.resetPasswordResult = {
+                total: targetUsers.length,
+                updated: 0,
+                done: false
+            };
+            angular.forEach(targetUsers, function (user) {
+                UserService.updateUserPassword(user, $scope.password.new).then(function (result) {
+                    if (result.httpStatus === "OK") {
+                        $scope.resetPasswordResult.updated++;
+                        if ($scope.resetPasswordResult.updated === $scope.resetPasswordResult.total) {
+                            $scope.progressbarDisplayed = false;
+                            $scope.resetPasswordResult.done = true;
+                        }
                     }
-                }
+                });
             });
-        });
+        }
     };
 
     // Watch for changes in user.project variable. If changes, reload project users
