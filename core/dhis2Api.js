@@ -233,12 +233,21 @@ return $resource( commonvariable.url+"userRoles/:idrole",
 
 Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"users/:iduser", 
-	{
-		idrole:'iduser',
-		fields: ':all,userCredentials[name,code,created,userRoles]'
-	},
-	{ get: { method: "GET"},
-	  put: {method: "PUT"}});
+	{},
+        {
+            get: {
+                method: "GET",
+                params: {
+                    fields: ':all,userCredentials[id,name,username,created,userRoles]',
+                    paging: false
+                }
+            },
+	        put: {
+                method: "PUT",
+                iduser: '@id'
+            }
+        }
+    );
 }]);
 
 Dhis2Api.factory("FilterResource",  ['$resource', 'commonvariable', function ($resource, commonvariable) {
