@@ -19,9 +19,13 @@
 
 <h2>{{ 'RESET_PASSWD' | translate }}</h2>
 
-	<div ng-if="targetProject.id" class="row">
+	<div ng-if="!user.project.id" class="row">
+		<project-selector project="user.project"></project-selector>
+	</div>
+
+	<div ng-if="user.project.id" class="row">
 		<div class="col-md-12">
-			<h2> {{ targetProject.name }} </h2>
+			<h2> {{ user.project.name }} </h2>
 		</div>
 		<div class="col-md-12 row">
 			<div class="col-md-5">

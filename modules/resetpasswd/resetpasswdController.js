@@ -26,7 +26,7 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
 	$scope.countUsers = 0;
 	var totalUsers = 0;
 
-    $scope.targetProject = {};
+    $scope.user = {project: {}};
     $scope.projectUsers = [];
     $scope.password = {};
 
@@ -34,12 +34,18 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
     // Again, lets suppose users have ONE orgunit assigned
     UserService.getCurrentUser().then(function(currentUser) {
         if (currentUser.organisationUnits[0].level === 4) {
-            $scope.targetProject = currentUser.organisationUnits[0];
-            UserService.getProjectUsers($scope.targetProject).then(function(projectUsers) {
+            $scope.user.project = currentUser.organisationUnits[0];
+            loadProjectUsers();
+        }
+    });
+
+    function loadProjectUsers () {
+        if ($scope.user.project.id){
+            UserService.getProjectUsers($scope.user.project).then(function(projectUsers) {
                 $scope.projectUsers = projectUsers;
             });
         }
-    });
+    }
 
     $scope.resetProjectPassword = function (){
         // Filter projectUser by selected property, and remove property
@@ -57,6 +63,16 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
             });
         });
     };
+
+    // Watch for changes in user.project variable. If changes, reload project users
+    $scope.$watch(
+        function(){
+            return $scope.user.project;
+        },
+        function(){
+            loadProjectUsers();
+        }
+    );
 
 
 	
