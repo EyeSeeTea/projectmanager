@@ -48,6 +48,12 @@
 				<div class="form_group">
 					<button type="button" ng-click="resetProjectPassword()" class="btn btn-primary">{{ 'RESET_BUTTON' | translate }}</button>
 				</div>
+                <br/>
+                <span ng-show="progressbarDisplayed">
+                    {{resetPasswordResult.updated}} / {{resetPasswordResult.total}}
+                </span>
+                <d2-progressBar></d2-progressBar>
+
 			</div>
 		</div>
 	</div>
