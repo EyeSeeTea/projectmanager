@@ -18,14 +18,47 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByUserRole', 'User', 'FilterResource',  function($scope, $filter, UsersByUserRole, User, FilterResource) {
+appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByUserRole', 'User', 'FilterResource', 'UserService',  function($scope, $filter, UsersByUserRole, User, FilterResource, UserService) {
 	var $translate = $filter('translate');
 	
 	
 	$scope.progressbarDisplayed = false;
 	$scope.countUsers = 0;
 	var totalUsers = 0;
-	
+
+    $scope.targetProject = {};
+    $scope.projectUsers = [];
+    $scope.password = {};
+
+    // Password reset is based on projects. If user orgunit is not a project, ask him to select one.
+    // Again, lets suppose users have ONE orgunit assigned
+    UserService.getCurrentUser().then(function(currentUser) {
+        if (currentUser.organisationUnits[0].level === 4) {
+            $scope.targetProject = currentUser.organisationUnits[0];
+            UserService.getProjectUsers($scope.targetProject).then(function(projectUsers) {
+                $scope.projectUsers = projectUsers;
+            });
+        }
+    });
+
+    $scope.resetProjectPassword = function (){
+        // Filter projectUser by selected property, and remove property
+        var targetUsers = $scope.projectUsers.filter(function(user){
+            return user.selected;
+        }).map(function(filteredUser){
+            var userCopy = $.extend({}, filteredUser);
+            delete userCopy.selected;
+            return userCopy;
+        });
+
+        angular.forEach(targetUsers, function(user) {
+            UserService.updateUserPassword(user, $scope.password.new).then(function(result) {
+                // TODO show some progress information
+            });
+        });
+    };
+
+
 	
 	function resetPassword(uidrole, newpasswd) {
 		

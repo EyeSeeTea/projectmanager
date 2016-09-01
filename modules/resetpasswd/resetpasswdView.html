@@ -19,7 +19,44 @@
 
 <h2>{{ 'RESET_PASSWD' | translate }}</h2>
 
-<form role="form">
+	<div ng-if="targetProject.id" class="row">
+		<div class="col-md-12">
+			<h2> {{ targetProject.name }} </h2>
+		</div>
+		<div class="col-md-12 row">
+			<div class="col-md-5">
+				<h3> New password </h3>
+				<input type="text" class="form-control" ng-model="password.new"/>
+				<br/>
+				<div class="form_group">
+					<button type="button" ng-click="resetProjectPassword()" class="btn btn-primary">{{ 'RESET_BUTTON' | translate }}</button>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="panel panel-default">
+					<div class="panel-heading">Users</div>
+					<ul class="list-group">
+						<li ng-repeat="user in projectUsers | orderBy:'userCredentials.username'" class="list-group-item">
+							<input type="checkbox" ng-model="user.selected">
+							{{user.userCredentials.username}}
+						</li>
+					</ul>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
 	<!--
 	<div class="row">
 	<div class="col-md-6">
@@ -29,6 +66,8 @@
 	</div>
 	<br/>
 	-->
+
+	<!--
 	<div class="row">
 	<div class="col-md-6">
 		<label for="file_name"> {{ 'ROLE_2' | translate }} </label>
@@ -54,6 +93,5 @@
 	<div class="form_group">	
 		<button type="button" ng-click="resetpass()" class="btn btn-primary">{{ 'RESET_BUTTON' | translate }}</button>						
 	</div>
-	
-	
-</form>
+	-->
+
