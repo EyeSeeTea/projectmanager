@@ -92,12 +92,12 @@ Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function 
 
 Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnits", 
-   {
-		fields:'name,id,level,parent',
-		pageSize:'10',
-		page:1
-   }, 
-  { get: { method: "GET"} });
+        {
+            fields: 'name,id,level,parent,children',
+            paging: false
+        },
+        { get: { method: "GET"} }
+    );
 }]);
 
 Dhis2Api.factory("OrganisationunitLevel",['$resource','commonvariable', function ($resource,commonvariable) {
