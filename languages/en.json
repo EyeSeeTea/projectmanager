@@ -88,6 +88,7 @@
 	"RESET_BUTTON":"Reset Passwords",
 	"MESSAGE_RESET":"Users with password updated: ",
 	"NEW_PASSWORD": "New password",
+	"NEW_PASSWORD_HINT": "Password must contain at least one capital letter and one digit.",
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",

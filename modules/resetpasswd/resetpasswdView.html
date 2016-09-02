@@ -40,25 +40,25 @@
                     </ul>
                 </div>
             </div>
-			<form name="individualUpdate">
-                <div class="col-md-5">
+            <div class="col-md-5">
+                <form name="individualUpdate" ng-submit="resetProjectPassword()">
                     <h3>{{ 'NEW_PASSWORD' | translate }}</h3>
                     <input name="password" type="text" class="form-control" ng-model="password.new"
                            minlength="8" maxlength="35" contains-digit contains-uppercase required/>
+                    <div><i>{{ 'NEW_PASSWORD_HINT' | translate }}</i></div>
                     <br/>
                     <div class="form_group">
-                        <button type="submit" ng-disabled="individualUpdate.$invalid" class="btn btn-primary"
-                                ng-click="resetProjectPassword()" >
+                        <button type="submit" ng-disabled="individualUpdate.$invalid" class="btn btn-primary">
                             {{ 'RESET_BUTTON' | translate }}
                         </button>
                     </div>
-                    <br/>
-                    <span ng-show="progressbarDisplayed">
-                        {{resetPasswordResult.updated}} / {{resetPasswordResult.total}}
-                    </span>
-                    <d2-progressbar-dynamic status="individualProgressStatus"></d2-progressbar-dynamic>
+                </form>
+                <br/>
+                <span ng-show="progressbarDisplayed">
+                    {{resetPasswordResult.updated}} / {{resetPasswordResult.total}}
+                </span>
+                <d2-progressbar-dynamic status="individualProgressStatus"></d2-progressbar-dynamic>
                 </div>
-            </form>
 		</div>
 	</div>
 

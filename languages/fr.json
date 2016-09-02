@@ -86,6 +86,7 @@
 	"RESET_BUTTON":"Réinitialiser",
 	"MESSAGE_RESET":"Utilisateurs avec le mot de passe actualisé: ",
 	"NEW_PASSWORD": "Nouveau mot de passe",
+	"NEW_PASSWORD_HINT": "Le mot de passe doit contenir au moins une lettre majuscule et un chiffre.",
 
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Données disponibles",

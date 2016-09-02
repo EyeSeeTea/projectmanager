@@ -86,6 +86,7 @@
 	"RESET_BUTTON":"Resetear Contraseñas",
 	"MESSAGE_RESET":"Usuarios con la contraseña actualizada: ",
 	"NEW_PASSWORD": "Nueva contraseña",
+	"NEW_PASSWORD_HINT": "La contraseña debe contener al menos una letra mayúscula y un dígito.",
 
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Datos disponibles",
