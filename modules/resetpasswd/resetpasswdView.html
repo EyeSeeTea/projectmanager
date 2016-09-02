@@ -38,23 +38,27 @@
                             {{user.userCredentials.username}}
                         </li>
                     </ul>
-
                 </div>
             </div>
-			<div class="col-md-5">
-				<h3>{{ 'NEW_PASSWORD' | translate }}</h3>
-				<input type="text" class="form-control" ng-model="password.new"/>
-				<br/>
-				<div class="form_group">
-					<button type="button" ng-click="resetProjectPassword()" class="btn btn-primary">{{ 'RESET_BUTTON' | translate }}</button>
-				</div>
-                <br/>
-                <span ng-show="progressbarDisplayed">
-                    {{resetPasswordResult.updated}} / {{resetPasswordResult.total}}
-                </span>
-                <d2-progressBar></d2-progressBar>
-
-			</div>
+			<form name="individualUpdate">
+                <div class="col-md-5">
+                    <h3>{{ 'NEW_PASSWORD' | translate }}</h3>
+                    <input name="password" type="text" class="form-control" ng-model="password.new"
+                           minlength="8" maxlength="35" required/>
+                    <br/>
+                    <div class="form_group">
+                        <button type="submit" ng-disabled="individualUpdate.$invalid" class="btn btn-primary"
+                                ng-click="resetProjectPassword()" >
+                            {{ 'RESET_BUTTON' | translate }}
+                        </button>
+                    </div>
+                    <br/>
+                    <span ng-show="progressbarDisplayed">
+                        {{resetPasswordResult.updated}} / {{resetPasswordResult.total}}
+                    </span>
+                    <d2-progressBar></d2-progressBar>
+                </div>
+            </form>
 		</div>
 	</div>
 
