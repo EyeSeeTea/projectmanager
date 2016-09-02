@@ -44,7 +44,7 @@
                 <div class="col-md-5">
                     <h3>{{ 'NEW_PASSWORD' | translate }}</h3>
                     <input name="password" type="text" class="form-control" ng-model="password.new"
-                           minlength="8" maxlength="35" required/>
+                           minlength="8" maxlength="35" contains-digit contains-uppercase required/>
                     <br/>
                     <div class="form_group">
                         <button type="submit" ng-disabled="individualUpdate.$invalid" class="btn btn-primary"
