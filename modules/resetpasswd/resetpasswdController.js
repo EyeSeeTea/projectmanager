@@ -30,6 +30,9 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
     $scope.projectUsers = [];
     $scope.password = {};
 
+	// Variable to control
+	$scope.individualProgressStatus = {};
+
     // Password reset is based on projects. If user orgunit is not a project, ask him to select one.
     // Again, lets suppose users have ONE orgunit assigned
     UserService.getCurrentUser().then(function(currentUser) {
@@ -58,22 +61,35 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
         });
 
         if (targetUsers.length > 0) {
-            $scope.progressbarDisplayed = true;
             $scope.resetPasswordResult = {
                 total: targetUsers.length,
                 updated: 0,
                 done: false
             };
+			$scope.individualProgressStatus = {
+				visible: true,
+				type: "info",
+				active: true,
+				value: ($scope.resetPasswordResult.updated / $scope.resetPasswordResult.total)
+			};
             angular.forEach(targetUsers, function (user) {
                 UserService.updateUserPassword(user, $scope.password.new).then(function (result) {
                     if (result.httpStatus === "OK") {
                         $scope.resetPasswordResult.updated++;
+						$scope.individualProgressStatus.value =
+							100 * ($scope.resetPasswordResult.updated / $scope.resetPasswordResult.total);
                         if ($scope.resetPasswordResult.updated === $scope.resetPasswordResult.total) {
-                            $scope.progressbarDisplayed = false;
+                            $scope.individualProgressStatus.type = "success";
+							$scope.individualProgressStatus.active = false;
                             $scope.resetPasswordResult.done = true;
                         }
                     }
-                });
+                },
+				function(someError) {
+					$scope.individualProgressStatus.type = "danger";
+					$scope.individualProgressStatus.active = false;
+					console.log("Error while updating user passwords");
+				});
             });
         }
     };
