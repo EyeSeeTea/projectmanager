@@ -92,12 +92,12 @@ Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function 
 
 Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnits", 
-   {
-		fields:'name,id,level,parent',
-		pageSize:'10',
-		page:1
-   }, 
-  { get: { method: "GET"} });
+        {
+            fields: 'name,id,level,parent,children',
+            paging: false
+        },
+        { get: { method: "GET"} }
+    );
 }]);
 
 Dhis2Api.factory("OrganisationunitLevel",['$resource','commonvariable', function ($resource,commonvariable) {
@@ -233,12 +233,21 @@ return $resource( commonvariable.url+"userRoles/:idrole",
 
 Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"users/:iduser", 
-	{
-		idrole:'iduser',
-		fields: ':all,userCredentials[name,code,created,userRoles]'
-	},
-	{ get: { method: "GET"},
-	  put: {method: "PUT"}});
+	{},
+        {
+            get: {
+                method: "GET",
+                params: {
+                    fields: ':all,userCredentials[id,name,username,created,userRoles]',
+                    paging: false
+                }
+            },
+	        put: {
+                method: "PUT",
+                iduser: '@id'
+            }
+        }
+    );
 }]);
 
 Dhis2Api.factory("FilterResource",  ['$resource', 'commonvariable', function ($resource, commonvariable) {

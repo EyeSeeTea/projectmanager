@@ -8,13 +8,15 @@
 	"SELECT_FILE": "Select file",
 	"IN_PROGRESS": "IN PROGRESS",
 	"FILE_NAME": "File name",
+	"USERS": "Users",
 	"VALIDATION_FILE_NAME": "Please, fill in the file name",
 	"VALIDATION_FILE": "Please, select a file",
 	"VALIDATION_START_DATE": "Please, fill in a start date",
 	"VALIDATION_END_DATE": "Please, fill in an end date",
 	"TITLE_CAPITAL": "Capital",
+	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Project",
-	
+
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Validate Data",
 	"DATA_APPROVAL_GET": "Get data",
@@ -85,6 +87,8 @@
 	"ROLE_3":"Field User ",
 	"RESET_BUTTON":"Reset Passwords",
 	"MESSAGE_RESET":"Users with password updated: ",
+	"NEW_PASSWORD": "New password",
+	"NEW_PASSWORD_HINT": "Password must contain at least one capital letter and one digit and must be between 8 and 35 characters long.",
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",

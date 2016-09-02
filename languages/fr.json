@@ -6,11 +6,13 @@
 	"SELECT_FILE": "Sélectionner le fichier",
 	"IN_PROGRESS": "EN COURS",
 	"FILE_NAME": "Nom du fichier",
+	"USERS": "Utilisateurs",
 	"VALIDATION_FILE_NAME": "Veuillez indiquer le nom de fichier",
 	"VALIDATION_FILE": "Veuillez sélectionner un fichier",
 	"VALIDATION_START_DATE": "Veuillez indiquer une date de début",
 	"VALIDATION_END_DATE": "Veuillez indiquer une date de fin",
 	"TITLE_CAPITAL": "Capitale",
+	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Projet",
 	
 	"_______________ Data ":" Approval_____________",
@@ -82,8 +84,10 @@
 	"ROLE_2":"MTL",
 	"ROLE_3":"Field User ",
 	"RESET_BUTTON":"Réinitialiser",
-	"MESSAGE_RESET":"Users with password updated: ",
-	
+	"MESSAGE_RESET":"Utilisateurs avec le mot de passe actualisé: ",
+	"NEW_PASSWORD": "Nouveau mot de passe",
+	"NEW_PASSWORD_HINT": "Le mot de passe doit contenir au moins une lettre majuscule et un chiffre et doit être comprise entre 8 et 35 caractères.",
+
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Données disponibles",
 	"NUMBER_OF_MONTHS": "Nombre de mois",

@@ -48,7 +48,8 @@ appManagerMSF.config(function($routeProvider) {
 	});
 	$routeProvider.when('/resetpasswd', {
 		templateUrl: "modules/resetpasswd/resetpasswdView.html",
-		controller: "resetpasswdController"
+		controller: "resetpasswdController",
+		css: "modules/resetpasswd/resetpasswdCss.css"
 	});
 	$routeProvider.when('/availabledata', {
 		templateUrl: "modules/availabledata/availabledataView.html",

@@ -17,13 +17,13 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-appManagerMSF.factory('UserService',['$q', 'meUser', function($q, meUser){
+appManagerMSF.factory('UserService',['$q', 'meUser', 'User', function($q, meUser, User){
  
     var currentUser;
     
     var currentUserFields = {
         fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
-            "organisationUnits[id,level,name],dataViewOrganisationUnits[id,level,children[id,level,children]]"
+            "organisationUnits[id,level,name,children],dataViewOrganisationUnits[id,level,children[id,level,children]]"
     };
     
     function getCurrentUser() {
@@ -36,9 +36,34 @@ appManagerMSF.factory('UserService',['$q', 'meUser', function($q, meUser){
             });
         }
     }
+
+    /**
+     * It returns a promise that resolves to a list of users associated to a project and its health sites
+     * @param project Orgunit object
+     */
+    function getProjectUsers(project) {
+        var childrenIds = project.children.map(function(child){
+            return child.id;
+        });
+
+        var projectFilter = {
+            "filter": "organisationUnits.id:in:[" + [project.id].concat(childrenIds).toString() + "]"
+        };
+
+        return User.get(projectFilter).$promise.then(function(projectUsers){
+            return projectUsers.users;
+        });
+    }
+    
+    function updateUserPassword(user, password) {
+        user.userCredentials.password = password;
+        return User.put({iduser:user.id}, user).$promise;
+    }
     
     return {
-        getCurrentUser: getCurrentUser
+        getCurrentUser: getCurrentUser,
+        getProjectUsers: getProjectUsers,
+        updateUserPassword: updateUserPassword
     }
     
 }]);
