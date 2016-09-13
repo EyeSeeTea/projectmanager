@@ -22,6 +22,9 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     var projectDatasetCode = 'DS_DEM';
     var siteDatasetCode = 'DS_DEM2';
 
+    var currentYear = new Date().getFullYear();
+    var periods = [currentYear - 1, currentYear, currentYear + 1];
+
     var userOrgunits;
     var userSites;
     var userServices;
@@ -70,7 +73,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         console.log("updating CBR");
         return getDatasetUidByCode(projectDatasetCode)
             .then(function (datasetId) {
-                return readDatasetValues(datasetId, userOrgunits, 2015);
+                return readDatasetValues(datasetId, userOrgunits, periods);
             })
             .then(function (values) {
                 return writeValues(values, userServices);
@@ -81,7 +84,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         console.log("updating Population");
         return getDatasetUidByCode(siteDatasetCode)
             .then(function (datasetId) {
-                return readDatasetValues(datasetId, userSites, 2015);
+                return readDatasetValues(datasetId, userSites, periods);
             })
             .then(function (values) {
                 return writeValues(values, userServices);
