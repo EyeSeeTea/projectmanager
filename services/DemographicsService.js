@@ -20,10 +20,7 @@
 appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID', 'DataExport', 'Organisationunit', function($q, UserService, DataSetsUID, DataExport, Organisationunit) {
 
     var projectDatasetCode = 'DS_DEM';
-    var siteDatasetCode = 'DEM2';
-
-    var projectDatasetUID;
-    var siteDatasetUID;
+    var siteDatasetCode = 'DS_DEM2';
 
     var userOrgunits;
     var userSites;
@@ -47,7 +44,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
 
     function saveUserOrgunits () {
         return UserService.getCurrentUser().then(function (meUser) {
-            userOrgunits = meUser.organisationUnits.map(function (ou) {return ou.id;});
+            userOrgunits = meUser.organisationUnits;
         });
     }
 
@@ -56,14 +53,14 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         userServices = [];
         var queries = [];
         for (var i = 0; i < userOrgunits.length; i++) {
-            var promise = Organisationunit.get({fields: 'id,path,level', filter: 'path:like:' + userOrgunits[i]}).$promise;
+            var promise = Organisationunit.get({fields: 'id,path,level', filter: 'path:like:' + userOrgunits[i].id}).$promise;
             queries.push(promise);
         }
         return $q.all(queries).then( function (responses) {
             angular.forEach(responses, function (response) {
                 angular.forEach(response.organisationUnits, function (orgunit) {
-                    if (orgunit.level === 5) userSites.push(orgunit.id);
-                    if (orgunit.level === 6) userServices.push(orgunit.id);
+                    if (orgunit.level === 5) userSites.push(orgunit);
+                    if (orgunit.level === 6) userServices.push(orgunit);
                 })
             });
         })
@@ -81,8 +78,14 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     }
 
     function updatePopulation () {
-        console.log("updating population");
-        return $q.when("Update population done");
+        console.log("updating Population");
+        return getDatasetUidByCode(siteDatasetCode)
+            .then(function (datasetId) {
+                return readDatasetValues(datasetId, userSites, 2015);
+            })
+            .then(function (values) {
+                return writeValues(values, userServices);
+            });
     }
 
     function getDatasetUidByCode (datasetCode) {
@@ -98,7 +101,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     function readDatasetValues (datasetUid, orgunits, periods) {
         return DataExport.get({
             dataSet: datasetUid,
-            orgUnit: orgunits.toString(),
+            orgUnit: orgunits.map(function (ou) {return ou.id;}).toString(),
             period: periods.toString()
         }).$promise
             .then( function (result) {
@@ -110,11 +113,14 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         if (values != undefined) {
             var payload = {dataValues: []};
             for (var i = 0; i < values.length; i++) {
-                for (var j = 0; j < orgunits.length; j++) {
+                var children = orgunits.filter(function (ou) {
+                    return ou.path.indexOf(values[i].orgUnit) >= 0;
+                });
+                for (var j = 0; j < children.length; j++) {
                     payload.dataValues.push({
                         dataElement: values[i].dataElement,
                         period: values[i].period,
-                        orgUnit: orgunits[j],
+                        orgUnit: children[j].id,
                         value: values[i].value
                     })
                 }
