@@ -121,6 +121,13 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
         return $.map(orgunits, function(orgunit, id){ return [orgunit]; })
     };
 
+    /**
+     * It starts the Refresh analytics process and returns a promise that:
+     * - resolves when the analytics process is finished
+     * - rejects when there is a problem during the execution
+     * - notifies each message retrieved about the analytics execution
+     * @returns {Promise}
+     */
     function refreshAnalytics () {
         var deferred = $q.defer();
 
@@ -143,6 +150,10 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
                         previousMessage = dataElement.message;
                     }
                 }
+            },
+            function (error) {
+                $interval.cancel(checkStatus);
+                deferred.reject("Error while refreshing analytics");
             });
         }, 200);
         
