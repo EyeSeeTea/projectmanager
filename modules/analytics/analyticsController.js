@@ -20,25 +20,33 @@
 
 appManagerMSF.controller('analyticsController', ["$scope", "AnalyticsService", "DemographicsService", function($scope, AnalyticsService, DemographicsService) {
 
-	$scope.progressbarDisplayed = false;
+	$scope.progressStatus = {};
 
 	$scope.analytics = function () {
 
-		$scope.progressbarDisplayed = true;
+		$scope.progressStatus = {
+			visible: true,
+			active: true,
+			type: 'info',
+			value: 100
+		};
 		$scope.summaryDisplayed = true;
+		$scope.notifications = [];
 
 		DemographicsService.updateDemographicData()
 			.then(AnalyticsService.refreshAnalytics)
 			.then(
 				function (success) {
-					$scope.progressbarDisplayed = false;
+					$scope.progressStatus.type = 'success';
+					$scope.progressStatus.active = false;
 				},
 				function (error) {
-					$scope.progressbarDisplayed = false;
-					// TODO Alert about the error
+					$scope.progressStatus.type = 'danger';
+					$scope.progressStatus.active = false;
+					console.log(error);
 				},
-				function (dataElement) {
-					$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
+				function (notification) {
+					$scope.notifications.push(notification);
 				}
 			);
 	};
