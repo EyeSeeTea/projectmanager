@@ -23,7 +23,8 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     var siteDatasetCode = 'DS_DEM2';
 
     var currentYear = new Date().getFullYear();
-    var periods = [currentYear - 1, currentYear, currentYear + 1];
+    var startDate = (currentYear - 1) + "-01-01";
+    var endDate = (currentYear + 1) + "-12-31";
 
     var userOrgunits;
     var userSites;
@@ -73,7 +74,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         console.log("updating CBR");
         return getDatasetUidByCode(projectDatasetCode)
             .then(function (datasetId) {
-                return readDatasetValues(datasetId, userOrgunits, periods);
+                return readDatasetValues(datasetId, userOrgunits, startDate, endDate);
             })
             .then(function (values) {
                 return writeValues(values, userServices);
@@ -84,7 +85,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         console.log("updating Population");
         return getDatasetUidByCode(siteDatasetCode)
             .then(function (datasetId) {
-                return readDatasetValues(datasetId, userSites, periods);
+                return readDatasetValues(datasetId, userSites, startDate, endDate);
             })
             .then(function (values) {
                 return writeValues(values, userServices);
@@ -101,11 +102,12 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         });
     }
 
-    function readDatasetValues (datasetUid, orgunits, periods) {
+    function readDatasetValues (datasetUid, orgunits, startDate, endDate) {
         return DataExport.get({
             dataSet: datasetUid,
             orgUnit: orgunits.map(function (ou) {return ou.id;}).toString(),
-            period: periods.toString()
+            startDate: startDate,
+            endDate: endDate
         }).$promise
             .then( function (result) {
                 return result.dataValues;
