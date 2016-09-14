@@ -26,7 +26,7 @@ appManagerMSF.factory('UserService',['$q', 'meUser', 'User', function($q, meUser
             "organisationUnits[id,level,name,children],dataViewOrganisationUnits[id,level,children[id,level,children]]"
     };
     
-    function getCurrentUser() {
+    function getCurrentUser () {
         if (currentUser != null) {
             return $q.when(currentUser);
         } else {
@@ -38,10 +38,38 @@ appManagerMSF.factory('UserService',['$q', 'meUser', 'User', function($q, meUser
     }
 
     /**
+     * It returns a promise that resolves to a boolean indicating if current user has the group or not
+     * @param groupName Group name to evaluate
+     */
+    function currentUserHasGroup (groupName) {
+        return getCurrentUser().then(function(me) {
+            var hasGroup = false;
+            angular.forEach(me.userGroups, function (userGroup) {
+                hasGroup = userGroup.name === groupName ? true : hasGroup;
+            });
+            return hasGroup;
+        });
+    }
+
+    /**
+     * It returns a promise that resolves to a boolean indicating if current user has the role or not
+     * @param roleName Role name to evaluate
+     */
+    function currentUserHasRole (roleName) {
+        return getCurrentUser().then(function(me) {
+            var hasRole = false;
+            angular.forEach(me.userCredentials.userRoles, function (userRole) {
+                hasRole = userRole.name === roleName ? true : hasRole;
+            });
+            return hasRole;
+        });
+    }
+    
+    /**
      * It returns a promise that resolves to a list of users associated to a project and its health sites
      * @param project Orgunit object
      */
-    function getProjectUsers(project) {
+    function getProjectUsers (project) {
         var childrenIds = project.children.map(function(child){
             return child.id;
         });
@@ -61,6 +89,8 @@ appManagerMSF.factory('UserService',['$q', 'meUser', 'User', function($q, meUser
     }
     
     return {
+        currentUserHasGroup: currentUserHasGroup,
+        currentUserHasRole: currentUserHasRole,
         getCurrentUser: getCurrentUser,
         getProjectUsers: getProjectUsers,
         updateUserPassword: updateUserPassword
