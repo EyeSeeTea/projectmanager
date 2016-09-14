@@ -71,7 +71,6 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     }
 
     function updateCbrAndPercentages () {
-        console.log("updating CBR");
         return getDatasetUidByCode(projectDatasetCode)
             .then(function (datasetId) {
                 return readDatasetValues(datasetId, userOrgunits, startDate, endDate);
@@ -82,7 +81,6 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     }
 
     function updatePopulation () {
-        console.log("updating Population");
         return getDatasetUidByCode(siteDatasetCode)
             .then(function (datasetId) {
                 return readDatasetValues(datasetId, userSites, startDate, endDate);
