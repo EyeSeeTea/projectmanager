@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("AnalyticsService", ['AnalyticsEngine', function(AnalyticsEngine) {
+appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart', function($q, $interval, AnalyticsEngine, Analytics, DataMart) {
 
     /**
      * Performs a query to analytics endpoint with the parameters provided.
@@ -121,9 +121,38 @@ appManagerMSF.factory("AnalyticsService", ['AnalyticsEngine', function(Analytics
         return $.map(orgunits, function(orgunit, id){ return [orgunit]; })
     };
 
+    function refreshAnalytics () {
+        var deferred = $q.defer();
+
+        Analytics.post();
+
+        var inputParameters = {};
+        var previousMessage = "";
+        var checkStatus = $interval( function () {
+            var result = DataMart.query(inputParameters);
+            result.$promise.then( function (data) {
+                var dataElement = data[0];
+                if (dataElement != undefined){
+                    inputParameters = {lastId: dataElement.uid};
+                    if (dataElement.completed == true){
+                        $interval.cancel(checkStatus);
+                        deferred.resolve("Done update analytics");
+                    }
+                    if (previousMessage != dataElement.message){
+                        deferred.notify(dataElement);
+                        previousMessage = dataElement.message;
+                    }
+                }
+            });
+        }, 200);
+        
+        return deferred.promise;
+    }
+
     return {
         queryAvailableData: queryAvailableData,
-        formatAnalyticsResult: formatAnalyticsResult
+        formatAnalyticsResult: formatAnalyticsResult,
+        refreshAnalytics: refreshAnalytics
     }
 
 }]);
