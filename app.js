@@ -18,7 +18,7 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','door3.css']);
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS', 'base64']);
 
 appManagerMSF.config(function($routeProvider) {
  
@@ -32,7 +32,7 @@ appManagerMSF.config(function($routeProvider) {
 	});
 	$routeProvider.when('/metadataexport', {
 		templateUrl: "modules/metadataexport/metadataexportView.html",
-			 controller: "metadataexportController"
+		controller: "metadataexportController"
 	});
 	$routeProvider.when('/analytics', {
 		templateUrl: "modules/analytics/analyticsView.html",
@@ -96,5 +96,4 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
       }).fail(function () {
     	  $translateProvider.determinePreferredLanguage();
 	  });
-	  
 });
