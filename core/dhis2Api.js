@@ -293,3 +293,7 @@ Dhis2Api.factory("OrganisationUnitGroupSet",['$resource','commonvariable', funct
 Dhis2Api.factory("OrganisationUnitGroup",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnitGroups" );
 }]);
+
+Dhis2Api.factory("MetadataVersion", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.urlbase + "api/metadata/version");
+}]);
