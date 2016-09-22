@@ -20,6 +20,7 @@
 appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreService', function($q, $base64, $http, DataStoreService) {
 
     var remoteSettings;
+    var defaultAPIVersion = 24;
     
     // Error messages
     var NO_REMOTE_SETTINGS = 'NO REMOTE SETTINGS';
@@ -31,6 +32,7 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreS
                 if (settings && settings.url && settings.metadataCredentials && settings.dataCredentials){
                     remoteSettings = {
                         url: settings.url,
+                        api: settings.url + '/api',
                         metadataAuth: 'Basic ' + $base64.encode(settings.metadataCredentials.username + ":" + settings.metadataCredentials.password),
                         dataAuth: 'Basic ' + $base64.encode(settings.dataCredentials.username + ":" + settings.dataCredentials.password)
                     }
@@ -44,22 +46,27 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreS
         );
     };
     
-    var exampleFunction = function () {
+    var executeRemoteQuery = function (remoteQuery) {
+        // Check if apiVersion is defined in remoteQuery (two digits).
+        var apiVersion = remoteQuery.apiVersion == undefined ? '/' + defaultAPIVersion :
+            /^\d{2}$/.test(remoteQuery.apiVersion) ? '/' + remoteQuery.apiVersion : '';
+        
         return init()
             .then(
                 function success() {
+                    // Choose authorization. Defaults to data authorization
+                    var authorization = remoteQuery.authType == 'METADATA' ? remoteSettings.metadataAuth : remoteSettings.dataAuth;
                     return $http({
-                        method: 'GET',
-                        url: remoteSettings.url + '/api/24/dataElements/eqbf2wJJ8ab',
+                        method: remoteQuery.method,
+                        url: remoteSettings.api + apiVersion + '/' + remoteQuery.resource,
+                        data: remoteQuery.data,
                         headers: {
-                            Authorization: remoteSettings.metadataAuth
+                            Authorization: authorization
                         }
                     })
-                })
-            .then(
-                function (success) {
-                    console.log(success);
-                })
+                }
+            )
+            .catch(handleRemoteErrors);
     };
 
     function init () {
@@ -70,24 +77,25 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreS
         }
     }
     
-    var handleRemoteErrors = function (message) {
+    function handleRemoteErrors (message) {
+        var errorString = message;
         if (message === NO_REMOTE_SETTINGS) {
-            console.log("No remote settings");
+            errorString = NO_REMOTE_SETTINGS;
         }
         else if (message == INVALID_REMOTE_SETTINGS) {
-            console.log("Invalid remote settings");
+            errorString = INVALID_REMOTE_SETTINGS;
         }
         else if (message.status == -1) {
-            console.log("IP address not in whitelist");
+            errorString = 'NOT_IN_WHITELIST';
         }
         else if (message.status == 401) {
-            console.log("Remote user not authorized");
+            errorString = 'USER_NOT_AUTHORIZED';
         }
-    };
+        return $q.reject(errorString);
+    }
     
     return {
         updateRemoteSettings: updateRemoteSettings,
-        exampleFunction: exampleFunction,
-        handleRemoteErrors: handleRemoteErrors
+        executeRemoteQuery: executeRemoteQuery
     }
 }]);
