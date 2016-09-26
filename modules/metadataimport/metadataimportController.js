@@ -46,6 +46,23 @@ appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncSer
 	function printSyncError (message) {
 		console.log(message);
 	}
+
+	$scope.metadataSync = function () {
+		MetadataSyncService.executeMetadataSync()
+			.then(
+				function () {
+					console.log("Metadata synchronization done")
+				},
+				function (data) {
+					console.log("Error in automatic metadata sync");
+					console.log(data);
+				},
+				function (data) {
+					console.log("Updated to " + data.currentVersion);
+					$scope.localMetadataVersion = data.currentVersion;
+				}
+			);
+	};
 		
 	$scope.sendFiles = function(){
 

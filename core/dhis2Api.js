@@ -297,3 +297,7 @@ Dhis2Api.factory("OrganisationUnitGroup",['$resource','commonvariable', function
 Dhis2Api.factory("MetadataVersion", ['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.urlbase + "api/metadata/version");
 }]);
+
+Dhis2Api.factory("MetadataSync", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.urlbase + "api/metadata/sync");
+}]);

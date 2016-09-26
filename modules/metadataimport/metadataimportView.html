@@ -36,6 +36,9 @@
             <b>Local:</b>
             <div ng-show="localMetadataVersion">{{localMetadataVersion}}</div>
             <div ng-hide="localMetadataVersion">No local version</div>
+            <div class="form_group">
+                <button class="btn btn-primary" ng-click='metadataSync()'>{{ 'IMPORT' | translate }}</button>
+            </div>
         </div>
     </div>
 

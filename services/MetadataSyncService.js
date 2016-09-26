@@ -17,14 +17,41 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'MetadataVersion', function($q, RemoteApiService, MetadataVersion) {
+appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', function($q, RemoteApiService, MetadataVersion, MetadataSync) {
 
     var remoteMetadataVersion;
     var localMetadataVersion;
 
     var executeMetadataSync = function () {
-        
+        var deferred = $q.defer();
+
+        metadataSyncRecursive(deferred)
+            .catch(handleSyncVersionError)
+            .then(function () {
+                deferred.resolve("Done");
+            });
+
+        return deferred.promise;
     };
+    
+    function metadataSyncRecursive (deferCtrl) {
+        deferCtrl.notify({currentVersion: localMetadataVersion});
+        return metadataSyncNextVersion()
+            .then(metadataSyncRecursive.bind(null, deferCtrl));
+    }
+
+    function metadataSyncNextVersion () {
+        var nextVersion = getNextVersion(localMetadataVersion);
+
+        return MetadataSync.get({versionName: nextVersion}).$promise
+            .then(updateLocalMetadataVersion);
+    }
+
+    function getNextVersion (currentVersion) {
+        var currentTokens = currentVersion.split('_');
+        return currentTokens[0] + "_" + (parseInt(currentTokens[1]) + 1);
+    }
+
 
     var getRemoteMetadataVersion = function () {
         if (remoteMetadataVersion) {
@@ -47,19 +74,21 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     };
 
     var getLocalMetadataVersion = function () {
-        if (localMetadataVersion) {
-            return $q.resolve(localMetadataVersion);
-        } else {
-            return MetadataVersion.get().$promise
-                .then(
-                    function (version) {
-                        localMetadataVersion = version.name;
-                        return localMetadataVersion;
-                    },
-                    handleGetVersionError
-                )
-        }
+        return $q(function (resolve) {
+            resolve(localMetadataVersion ? localMetadataVersion : updateLocalMetadataVersion());
+        })
+            .catch(handleGetVersionError);
     };
+
+    function  updateLocalMetadataVersion () {
+        return MetadataVersion.get().$promise
+            .then(
+                function (version) {
+                    localMetadataVersion = version.name;
+                    return localMetadataVersion;
+                }
+            )
+    }
 
     function handleGetVersionError (error) {
         var message = error;
@@ -67,6 +96,16 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
             message = 'NO_METADATA_VERSION';
         }
         return $q.reject(message);
+    }
+    
+    function handleSyncVersionError (error) {
+        console.log(error);
+
+        // Bad request. Next version does not exist
+        if (error.status == 400) {
+            return $q.resolve("Done");
+        }
+        return $q.reject("Error")
     }
     
     return {
