@@ -26,52 +26,72 @@
 </div>
 
 <div class="row">
+
+    <div class="col-md-6">
+        <h3>Automatic sync</h3>
+        <div class="row">
+            <b>Remote:</b>
+            <div ng-show="remoteMetadataVersion">{{remoteMetadataVersion}}</div>
+            <div ng-hide="remoteMetadataVersion">No remote version</div>
+            <b>Local:</b>
+            <div ng-show="localMetadataVersion">{{localMetadataVersion}}</div>
+            <div ng-hide="localMetadataVersion">No local version</div>
+        </div>
+    </div>
+
 	<div class="col-md-6">
-		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search"  required=""/>
-	</div>
+        <h3>Manual import</h3>
+        <div class="row">
+            <label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
+            <input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search"  required=""/>
+        </div>
+        <br/>
+        <div class="form_group">
+            <button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
+        </div>
+        <br/>
+        <div id="summary" ng-show="summaryDisplayed">
+            <h3>Import Summary</h3>
+
+            <h4>Import Count</h4>
+            <div id="importCount"></div>
+
+            <h4>Type Summary</h4>
+            <table id="typeSummary">
+                <thead>
+                <tr>
+                    <td>Type</td>
+                    <td>Imported</td>
+                    <td>Updated</td>
+                    <td>Ignored</td>
+                </tr>
+                </thead>
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
   
 	<br/>
-<d2-progressBar></d2-progressBar>
+<d2-progressbar-dynamic status="progressStatus"></d2-progressbar-dynamic>
 <br/>
-<div class="form_group">
-	<button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
-</div>
+
+
 <br/>
+
 <div id="summary" ng-show="summaryDisplayed">
-	<h3>Import Summary</h3>
-	
-	<h4>Import Count</h4>
-	<div id="importCount"></div>
-	
-	<h4>Type Summary</h4>
-	<table id="typeSummary">
-	    <thead>
-	    <tr>
-	        <td>Type</td>
-	        <td>Imported</td>
-	        <td>Updated</td>
-	        <td>Ignored</td>
-	    </tr>
-	    </thead>
-	    <tbody>
-	            
-	              
-	      </tbody>
-     </table>
-</div>
+    <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 
-<br/>
-
-<div id="summary_analytics" ng-show="summaryDisplayed">
-	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
-	
-	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
-		<col width="40%">
-		<col>
-		<tbody>
-		
-		</tbody>
-	</table>
+    <table data-toggle="table" id="notificationTable" class="notificationTable" style="">
+        <tbody>
+        <tr ng-repeat="notification in notifications">
+            <td>{{notification.time}}</td>
+            <td>: {{notification.message}}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>

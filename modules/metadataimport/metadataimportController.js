@@ -17,122 +17,87 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('metadataimportController', ["$scope", '$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart) {
-		
-		$scope.progressbarDisplayed = false;
-		$scope.undefinedFile = false;
-		
-		var $file;//single file
-		
-		var compress = false;
-		var fileContent;
-		
-	    $scope.sendFiles= function(){
-	    	
-	    	$scope.VarValidation();
-	    	
-	    	if (!$scope.undefinedFile){
-		    	$scope.progressbarDisplayed = true;
-		    	
-		    	if ($scope.getExtension($file.name)=="zip") compress=true;
-		    	
-		    	var fileReader = new FileReader();
-		        fileReader.readAsArrayBuffer($file);
-		        fileReader.onload = function(e) {
-		        	
-		        	fileContent = e.target.result;
-		        	
-		        	if (compress) {
-		        		
-		        		var zip = new JSZip(e.target.result);
-						
-						$.each(zip.files, function (index, zipEntry) {
-						
-							fileContent = zip.file(zipEntry.name).asArrayBuffer();
-						});
-		        	}
-		        	
-		        	
-		            $upload.http({
-		                url: commonvariable.url+"metaData",
-		                headers: {'Content-Type': 'application/json'},
-		                data: fileContent
-		            }).progress(function(ev) {
-		            	console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
-		            }).success(function(data) {
-		            	console.log(data);
-		            	
-		            	//$scope.progressbarDisplayed = false;
-		            	
-		            	Analytics.post();
-		            	
-		            	var inputParameters = {};
-		        		var previousMessage = "";	
-		            	
-		        		checkStatus = $interval(function() {
-		        			var result = DataMart.query(inputParameters);
-		        			 result.$promise.then(function(data_dataMart) {
-		        	    		console.log(data_dataMart);
-		        	    		var dataElement = data_dataMart[0];
-		        	    		if (dataElement != undefined){
-		        		    		inputParameters = {lastId: dataElement.uid};
-		        		    		if (dataElement.completed == true){
-		        	    				$interval.cancel(checkStatus);
-		        	    				$scope.progressbarDisplayed = false;
-		        	    			}
-		        		    		if (previousMessage != dataElement.message){
-		        		    			$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
-		        		    			previousMessage = dataElement.message;
-		        			 		}
-		        	    		}
-		        	    	});
-		                  }, 200);		            	
-		            	
-		            	$scope.generateSummary(data);
-		            	$scope.summaryDisplayed = true;
-		            	
-		            	
-	                    console.log("File upload SUCCESS");
-		            }).error(function(data) {
-		            	console.log("File upload FAILED");//error
-		            });
-		        };
-	    	}
-	    };
-	    
-	    $scope.VarValidation= function() {
-			console.log($file);
-			$scope.undefinedFile = ($file == undefined);
-		};
-	    	
-	    $scope.onFileSelect = function ($files) {
-            for (var i = 0; i < $files.length; i++) {
-                $file = $files[i];//set a single file
-                $scope.undefinedFile = false;
-            }
-       };
-       
-	   $scope.getExtension = function(filename) {
-			var parts = filename.split('.');
-			return parts[parts.length - 1];
-	   };
+appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
 
-       
-       $scope.generateSummary = function(data){
-    	   for (var dataGroup in data){
-       		if (dataGroup == 'importCount'){
-           		for (var dataElement in data[dataGroup]){
-           			$('#importCount').append(data[dataGroup][dataElement]+ " " + dataElement + "<br>");
-           		}
-       		}
-       		else if (dataGroup == 'importTypeSummaries') {
-       			for (var dataElementIndex in data[dataGroup]){
-       				var dataElement = data[dataGroup][dataElementIndex];
-       				var importCountElement = dataElement.importCount;
-       				$('#typeSummary tbody').append('<tr><td>' + dataElement.type + '</td><td>' + importCountElement.imported + '</td><td>' + importCountElement.updated + '</td><td>' + importCountElement.ignored + '</td></tr>');
-       			}
-			}
-       	}
-       };
+	$scope.progressStatus = {};
+	$scope.undefinedFile = false;
+
+	var $file;//single file
+
+	MetadataSyncService.getLocalMetadataVersion()
+		.then(
+			setLocalMetadataVersion,
+			printSyncError
+		)
+		.then(MetadataSyncService.getRemoteMetadataVersion)
+		.then(
+			setRemoteMetadataVersion,
+			printSyncError
+		);
+
+	function setLocalMetadataVersion (version) {
+		$scope.localMetadataVersion = version;
+	}
+
+	function setRemoteMetadataVersion (version) {
+		$scope.remoteMetadataVersion = version;
+	}
+	
+	function printSyncError (message) {
+		console.log(message);
+	}
+		
+	$scope.sendFiles = function(){
+
+		varValidation();
+
+		if (!$scope.undefinedFile){
+			$scope.progressStatus = {
+				visible: true,
+				active: true,
+				type: 'info',
+				value: 100
+			};
+
+			$scope.notifications = [];
+			MetadataImportService.importMetadataFile($file)
+				.then(printImportSummary)
+				.then(DemographicsService.updateDemographicData)
+				.then(AnalyticsService.refreshAnalytics)
+				.then(
+					function (success) {
+						$scope.progressStatus.type = 'success';
+						$scope.progressStatus.active = false;
+					},
+					function (error) {
+						$scope.progressStatus.type = 'danger';
+						$scope.progressStatus.active = false;
+						console.log(error);
+					},
+					function (notification) {
+						$scope.notifications.push(notification);
+					}
+				);
+		}
+	};
+
+	function varValidation () {
+		$scope.undefinedFile = ($file == undefined);
+	}
+
+	function printImportSummary (data) {
+		angular.forEach(data.stats, function (value, property) {
+			$('#importCount').append(value + " " + property + "<br>");
+		});
+		$scope.summaryDisplayed = true;
+	}
+
+	$scope.onFileSelect = function ($files) {
+		for (var i = 0; i < $files.length; i++) {
+			$file = $files[i];//set a single file
+			$scope.undefinedFile = false;
+		}
+	};
+
 
 }]);
