@@ -301,3 +301,7 @@ Dhis2Api.factory("MetadataVersion", ['$resource', 'commonvariable', function ($r
 Dhis2Api.factory("MetadataSync", ['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.urlbase + "api/metadata/sync");
 }]);
+
+Dhis2Api.factory("RemoteAvailability", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "synchronization/availability");
+}]);

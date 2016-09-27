@@ -20,6 +20,7 @@
 appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
 
 	$scope.progressStatus = {};
+	$scope.syncBarStatus = {};
 	$scope.undefinedFile = false;
 
 	var $file;//single file
@@ -28,32 +29,43 @@ appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncSer
 		.then(
 			setLocalMetadataVersion,
 			printSyncError
-		)
-		.then(MetadataSyncService.getRemoteMetadataVersion)
-		.then(
-			setRemoteMetadataVersion,
-			printSyncError
 		);
+
+	MetadataSyncService.isRemoteServerAvailable()
+		.then(function(data){
+			$scope.isRemoteAvailable = true;
+			$scope.remoteStatus = data;
+		},
+		function(error){
+			$scope.isRemoteAvailable = false;
+			$scope.remoteStatus = error;
+		});
 
 	function setLocalMetadataVersion (version) {
 		$scope.localMetadataVersion = version;
 	}
 
-	function setRemoteMetadataVersion (version) {
-		$scope.remoteMetadataVersion = version;
-	}
-	
 	function printSyncError (message) {
 		console.log(message);
 	}
 
 	$scope.metadataSync = function () {
+		$scope.syncBarStatus = {
+			visible: true,
+			active: true,
+			type: 'info',
+			value: 100
+		};
 		MetadataSyncService.executeMetadataSync()
 			.then(
 				function () {
+					$scope.syncBarStatus.active = false;
+					$scope.syncBarStatus.type = 'success';
 					console.log("Metadata synchronization done")
 				},
 				function (data) {
+					$scope.syncBarStatus.active = false;
+					$scope.syncBarStatus.type = 'danger';
 					console.log("Error in automatic metadata sync");
 					console.log(data);
 				},

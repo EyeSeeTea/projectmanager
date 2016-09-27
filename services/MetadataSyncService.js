@@ -17,7 +17,12 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', function($q, RemoteApiService, MetadataVersion, MetadataSync) {
+appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', function($q, RemoteApiService, MetadataVersion, MetadataSync, RemoteAvailability) {
+
+    // Error messages
+    var REMOTE_NOT_AVAILABLE = "REMOTE_NOT_AVAILABLE";
+    var REMOTE_NOT_CONFIGURED = "REMOTE_NOT_CONFIGURED";
+    var AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
 
     var remoteMetadataVersion;
     var localMetadataVersion;
@@ -80,6 +85,11 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
             .catch(handleGetVersionError);
     };
 
+    var isRemoteServerAvailable = function () {
+        return RemoteAvailability.get().$promise
+            .then(handleAvailabilityResponse);
+    };
+
     function  updateLocalMetadataVersion () {
         return MetadataVersion.get().$promise
             .then(
@@ -99,18 +109,32 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     }
     
     function handleSyncVersionError (error) {
-        console.log(error);
-
-        // Bad request. Next version does not exist
+        // Bad request. Next version does not exist. Sync done.
         if (error.status == 400) {
             return $q.resolve("Done");
         }
         return $q.reject("Error")
     }
+
+    function handleAvailabilityResponse (response) {
+        if (response.statusCode == 502 && response.message == "Remote server is not configured") {
+            return $q.reject(REMOTE_NOT_CONFIGURED);
+        }
+        else if (response.statusCode == 502 && response.message == "Network is unreachable") {
+            return $q.reject(REMOTE_NOT_AVAILABLE);
+        }
+        else if (response.statusCode == 401 && response.message == "Authentication failed") {
+            return $q.reject(AUTHENTICATION_FAILED);
+        }
+        else if (response.statusCode == 200) {
+            return $q.resolve("Authentication was successful");
+        }
+    }
     
     return {
         executeMetadataSync: executeMetadataSync,
         getRemoteMetadataVersion: getRemoteMetadataVersion,
-        getLocalMetadataVersion: getLocalMetadataVersion
+        getLocalMetadataVersion: getLocalMetadataVersion,
+        isRemoteServerAvailable: isRemoteServerAvailable
     }
 }]);
