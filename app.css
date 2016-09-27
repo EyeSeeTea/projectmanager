@@ -1,0 +1,21 @@
+.dhis2-header {
+    margin-left: 0;
+    margin-right: 0;
+    background-color: #b40303;
+}
+
+.logo-banner img {
+    height: 40px;
+}
+
+.app-title {
+    top: 12px;
+    font-weight: bold;
+    color: #fff;
+    font-size: 16px;
+}
+
+.left-side-menu {
+    background-color: #E8EAEA;
+    height: 100%;
+}

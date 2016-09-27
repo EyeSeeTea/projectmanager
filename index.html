@@ -63,6 +63,9 @@
     <script src="core/dhis2Api.js" type="text/javascript"> </script>
     <script src="app.js" type="text/javascript"> </script>
 
+    <!-- principal Styles-->
+    <link rel="stylesheet" href="app.css">
+
     <!--Services-->
     <script src="services/AnalyticsService.js" type="text/javascript"></script>
     <script src="services/DataStoreService.js" type="text/javascript"></script>
@@ -109,9 +112,9 @@
 </head>
 <body>
     <d2-header></d2-header>
-    <div class="row">
-	    <div class="col-md-2"><d2-secondarymenu></d2-secondarymenu></div>  <!-- directive that load the vertical menu -->
-	    <div class="col-md-10"><div ng-view></div></div>
+    <div class="row col-md-12">
+        <div class="col-md-2 left-side-menu"><d2-secondarymenu></d2-secondarymenu></div>  <!-- directive that load the vertical menu -->
+        <div class="col-md-10"><div ng-view></div></div>
     </div>
 </body>
 </html>
