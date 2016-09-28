@@ -23,6 +23,7 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     var REMOTE_NOT_AVAILABLE = "REMOTE_NOT_AVAILABLE";
     var REMOTE_NOT_CONFIGURED = "REMOTE_NOT_CONFIGURED";
     var AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
+    var REMOTE_IS_AVAILABLE = "REMOTE_IS_AVAILABLE";
 
     var remoteMetadataVersion;
     var localMetadataVersion;
@@ -117,7 +118,10 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     }
 
     function handleAvailabilityResponse (response) {
-        if (response.statusCode == 502 && response.message == "Remote server is not configured") {
+        if (response.statusCode == 200) {
+            return $q.resolve(REMOTE_IS_AVAILABLE);
+        }
+        else if (response.statusCode == 502 && response.message == "Remote server is not configured") {
             return $q.reject(REMOTE_NOT_CONFIGURED);
         }
         else if (response.statusCode == 502 && response.message == "Network is unreachable") {
@@ -126,8 +130,8 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
         else if (response.statusCode == 401 && response.message == "Authentication failed") {
             return $q.reject(AUTHENTICATION_FAILED);
         }
-        else if (response.statusCode == 200) {
-            return $q.resolve("Authentication was successful");
+        else {
+            return $q.reject(response.message);
         }
     }
     

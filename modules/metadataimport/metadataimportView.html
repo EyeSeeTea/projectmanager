@@ -30,19 +30,20 @@
                                                 'alert-success': remoteStatus && isRemoteAvailable}" role="alert">
                     <span ng-show="!remoteStatus">
                         <span class='remote-status-loading glyphicon glyphicon-repeat'></span>
-                        Checking remote status
+                        {{ 'CHECKING_REMOTE_STATUS' | translate }}
                     </span>
-                    <span ng-show="remoteStatus">{{ remoteStatus }}</span>
+                    <span ng-show="remoteStatus">{{ remoteStatus | translate }}</span>
                 </div>
             </div>
             <div class="row col-md-12">
                 <b>Local:</b>
                 <span ng-show="localMetadataVersion">{{localMetadataVersion}}</span>
-                <span ng-hide="localMetadataVersion">No local version</span>
+                <span ng-hide="localMetadataVersion">{{ 'NO_LOCAL_VERSION' | translate }}</span>
                 <br/>
                 <div class="form_group">
                     <button class="btn btn-primary" ng-click='metadataSync()'
-                            ng-class="{disabled: !isRemoteAvailable || !localMetadataVersion}">Update
+                            ng-class="{disabled: !isRemoteAvailable || !localMetadataVersion}">
+                        {{ 'SYNC_METADATA' | translate }}
                     </button>
                 </div>
                 <br/>
