@@ -28,7 +28,8 @@ appManagerMSF.config(function($routeProvider) {
 	});
 	$routeProvider.when('/metadataimport', {
 		templateUrl: "modules/metadataimport/metadataimportView.html",
-		controller: "metadataimportController"
+		controller: "metadataimportController",
+		css: "modules/metadataimport/metadataimportCss.css"
 	});
 	$routeProvider.when('/metadataexport', {
 		templateUrl: "modules/metadataexport/metadataexportView.html",

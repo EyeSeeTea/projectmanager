@@ -19,68 +19,77 @@
 
 <h2>{{ 'METADATA_IMPORT' | translate }}</h2>
 
-<div class="row" ng-show="undefinedFile">
-  	<div class="col-md-12">
-		<d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
-	</div>
-</div>
-
 <div class="row">
 
-    <div class="col-md-6">
-        <h3>Automatic sync</h3>
-        <div class="row col-md-8" ng-show="remoteStatus">
-            <div class="alert" ng-class="{'alert-danger': !isRemoteAvailable, 'alert-success': isRemoteAvailable}" role="alert">
-                {{ remoteStatus }}
+    <div class="col-md-6 right-border">
+        <div class="margin-20">
+            <h3>Automatic sync</h3>
+            <div class="row col-md-8">
+                <div class="alert" ng-class="{'alert-info': !remoteStatus,
+                                                'alert-danger': remoteStatus && !isRemoteAvailable,
+                                                'alert-success': remoteStatus && isRemoteAvailable}" role="alert">
+                    <span ng-show="!remoteStatus">
+                        <span class='remote-status-loading glyphicon glyphicon-repeat'></span>
+                        Checking remote status
+                    </span>
+                    <span ng-show="remoteStatus">{{ remoteStatus }}</span>
+                </div>
             </div>
-        </div>
-        <div class="row col-md-12">
-            <b>Local:</b>
-            <span ng-show="localMetadataVersion">{{localMetadataVersion}}</span>
-            <span ng-hide="localMetadataVersion">No local version</span>
-            <br/>
-            <div class="form_group">
-                <button class="btn btn-primary" ng-click='metadataSync()'
-                        ng-class="{disabled: !isRemoteAvailable || !localMetadataVersion}">Update
-                </button>
+            <div class="row col-md-12">
+                <b>Local:</b>
+                <span ng-show="localMetadataVersion">{{localMetadataVersion}}</span>
+                <span ng-hide="localMetadataVersion">No local version</span>
+                <br/>
+                <div class="form_group">
+                    <button class="btn btn-primary" ng-click='metadataSync()'
+                            ng-class="{disabled: !isRemoteAvailable || !localMetadataVersion}">Update
+                    </button>
+                </div>
+                <br/>
+                <d2-progressbar-dynamic status="syncBarStatus"></d2-progressbar-dynamic>
             </div>
-            <br/>
-            <d2-progressbar-dynamic status="syncBarStatus"></d2-progressbar-dynamic>
         </div>
     </div>
 
 	<div class="col-md-6">
-        <h3>Manual import</h3>
-        <div class="row">
-            <label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-            <input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search"  required=""/>
-        </div>
-        <br/>
-        <div class="form_group">
-            <button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
-        </div>
-        <br/>
-        <div id="summary" ng-show="summaryDisplayed">
-            <h3>Import Summary</h3>
+        <div class="margin-20">
+            <h3>Manual import</h3>
+            <div class="row" ng-show="undefinedFile">
+                <div class="col-md-12">
+                    <d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
+                </div>
+            </div>
+            <div class="row">
+                <label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
+                <input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search"  required=""/>
+            </div>
+            <br/>
+            <div class="form_group">
+                <button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
+            </div>
+            <br/>
+            <div id="summary" ng-show="summaryDisplayed">
+                <h3>Import Summary</h3>
 
-            <h4>Import Count</h4>
-            <div id="importCount"></div>
+                <h4>Import Count</h4>
+                <div id="importCount"></div>
 
-            <h4>Type Summary</h4>
-            <table id="typeSummary">
-                <thead>
-                <tr>
-                    <td>Type</td>
-                    <td>Imported</td>
-                    <td>Updated</td>
-                    <td>Ignored</td>
-                </tr>
-                </thead>
-                <tbody>
+                <h4>Type Summary</h4>
+                <table id="typeSummary">
+                    <thead>
+                    <tr>
+                        <td>Type</td>
+                        <td>Imported</td>
+                        <td>Updated</td>
+                        <td>Ignored</td>
+                    </tr>
+                    </thead>
+                    <tbody>
 
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
