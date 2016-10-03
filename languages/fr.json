@@ -47,6 +47,9 @@
 	"METADATA_IMPORT": "Importer un projet/dictionnaire",
 	"METADATA_EXPORT": "Exporter un projet/dictionnaire",
 	"METADATA_EXPORT_ZIP":"Comprimé ?",
+	"CHECKING_REMOTE_STATUS": "",
+	"NO_LOCAL_VERSION": "",
+	"SYNC_METADATA": "",
 	
 	"_______________ Data ":" Import and Export_____________",
 	"DATA_IMPORT": "Importer des données",
@@ -129,5 +132,11 @@
 	"PERIOD_SELECT_YEAR":"Sélectionner une année",
 	"PERIOD_SELECT_FINANCIAL_APRIL":"Sélectionner un exercice financier (avril)",
 	"PERIOD_SELECT_FINANCIAL_JULY":"Sélectionner un exercice financier (juillet)",
-	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Sélectionner un exercice financier (octobre)"
+	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Sélectionner un exercice financier (octobre)",
+
+	"________________Service ": " Metadata sync________",
+	"REMOTE_IS_AVAILABLE": "",
+	"REMOTE_NOT_AVAILABLE": "",
+	"REMOTE_NOT_CONFIGURED": "",
+	"AUTHENTICATION_FAILED": ""
 }

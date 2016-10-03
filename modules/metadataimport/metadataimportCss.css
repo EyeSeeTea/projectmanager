@@ -1,0 +1,15 @@
+.remote-status-loading {
+    -webkit-animation: rotation infinite linear 0.5s;
+    -moz-animation: rotation infinite linear 0.5s;
+    -o-animation: rotation infinite linear 0.5s;
+    animation: rotation infinite linear 0.5s;
+    text-indent: 0;
+}
+
+.right-border {
+    border-right: dashed 2px;
+}
+
+.margin-20 {
+    margin: 20px;
+}

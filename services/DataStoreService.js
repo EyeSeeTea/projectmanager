@@ -93,12 +93,17 @@ appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(D
     var getNamespaceKeyValue = function(namespace, key){
         return DataStore.get({namespace: namespace, key: key}).$promise;
     };
+    
+    var getKeyValue = function (key) {
+        return getNamespaceKeyValue(namespace, key);
+    };
 
     return {
         getCurrentUserSettings: getCurrentUserSettings,
         updateCurrentUserSettings: updateCurrentUserSettings,
         getNamespaceKeyValue: getNamespaceKeyValue,
-        updateNamespaceKeyArray: updateNamespaceKeyArray
+        updateNamespaceKeyArray: updateNamespaceKeyArray,
+        getKeyValue: getKeyValue
     };
 
 }]);

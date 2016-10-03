@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 	   
-var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
+var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
 
 // Specify the target api version of DHIS2
 var apiVersion = 24;
@@ -292,4 +292,16 @@ Dhis2Api.factory("OrganisationUnitGroupSet",['$resource','commonvariable', funct
 
 Dhis2Api.factory("OrganisationUnitGroup",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnitGroups" );
+}]);
+
+Dhis2Api.factory("MetadataVersion", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.urlbase + "api/metadata/version");
+}]);
+
+Dhis2Api.factory("MetadataSync", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.urlbase + "api/metadata/sync");
+}]);
+
+Dhis2Api.factory("RemoteAvailability", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "synchronization/availability");
 }]);
