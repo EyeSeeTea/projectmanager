@@ -43,7 +43,7 @@ var isOnline = urlBase.indexOf("//hmisocba.msf.es") >= 0;
 
 // Get and save DHIS version
 var version = "";
-$.ajax({ url: urlApi + "system/info", dataType: "json", async: "false", method: "GET" }).success( function (info) {
+$.ajax({ url: urlApi + "system/info", dataType: "json", async: "false", method: "GET" }).done( function (info) {
 	version = info.version;
 });
 
