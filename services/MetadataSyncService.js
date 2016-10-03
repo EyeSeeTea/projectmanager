@@ -35,6 +35,9 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
             .catch(handleSyncVersionError)
             .then(function () {
                 deferred.resolve("Done");
+            },
+            function () {
+                deferred.reject("Error");
             });
 
         return deferred.promise;

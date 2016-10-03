@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
+appManagerMSF.controller('metadataimportController', ["$scope", "$q", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, $q, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
 
 	$scope.progressStatus = {};
 	$scope.syncBarStatus = {};
@@ -50,6 +50,7 @@ appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncSer
 	}
 
 	$scope.metadataSync = function () {
+		$scope.analyticsLog = [];
 		$scope.syncBarStatus = {
 			visible: true,
 			active: true,
@@ -61,17 +62,39 @@ appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncSer
 				function () {
 					$scope.syncBarStatus.active = false;
 					$scope.syncBarStatus.type = 'success';
-					console.log("Metadata synchronization done")
+					console.log("Metadata synchronization done");
+					$scope.progressStatus = {
+						visible: true,
+						active: true,
+						type: 'info',
+						value: 100
+					};
 				},
-				function (data) {
+				function error() {
 					$scope.syncBarStatus.active = false;
 					$scope.syncBarStatus.type = 'danger';
 					console.log("Error in automatic metadata sync");
-					console.log(data);
+					throw "Metadata sync failed";
 				},
 				function (data) {
 					console.log("Updated to " + data.currentVersion);
 					$scope.localMetadataVersion = data.currentVersion;
+				}
+			)
+			.then(DemographicsService.updateDemographicData)
+			.then(AnalyticsService.refreshAnalytics)
+			.then(
+				function (success) {
+					$scope.progressStatus.type = 'success';
+					$scope.progressStatus.active = false;
+				},
+				function (error) {
+					$scope.progressStatus.type = 'danger';
+					$scope.progressStatus.active = false;
+					console.log(error);
+				},
+				function (notification) {
+					if (notification != undefined) $scope.analyticsLog.push(notification);
 				}
 			);
 	};
@@ -88,7 +111,7 @@ appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncSer
 				value: 100
 			};
 
-			$scope.notifications = [];
+			$scope.analyticsLog = [];
 			MetadataImportService.importMetadataFile($file)
 				.then(printImportSummary)
 				.then(DemographicsService.updateDemographicData)
@@ -104,7 +127,7 @@ appManagerMSF.controller('metadataimportController', ["$scope", "MetadataSyncSer
 						console.log(error);
 					},
 					function (notification) {
-						$scope.notifications.push(notification);
+						$scope.analyticsLog.push(notification);
 					}
 				);
 		}

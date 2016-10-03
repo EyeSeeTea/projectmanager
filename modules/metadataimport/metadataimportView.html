@@ -103,12 +103,12 @@
 
 <br/>
 
-<div id="summary" ng-show="summaryDisplayed">
+<div id="summary" ng-show="analyticsLog.length > 0">
     <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 
     <table data-toggle="table" id="notificationTable" class="notificationTable" style="">
         <tbody>
-        <tr ng-repeat="notification in notifications">
+        <tr ng-repeat="notification in analyticsLog">
             <td>{{notification.time}}</td>
             <td>: {{notification.message}}</td>
         </tr>
