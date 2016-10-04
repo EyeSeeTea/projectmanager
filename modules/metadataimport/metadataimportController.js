@@ -17,7 +17,11 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('metadataimportController', ["$scope", "$q", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, $q, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
+appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvariable", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, $q, commonvariable, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
+
+	$scope.info = {
+		url: commonvariable.urlbase
+	};
 
 	$scope.progressStatus = {};
 	$scope.syncBarStatus = {};
@@ -25,31 +29,62 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "MetadataS
 
 	var $file;//single file
 
-	MetadataSyncService.getLocalMetadataVersion()
-		.then(
-			setLocalMetadataVersion,
-			printSyncError
-		);
-
-	MetadataSyncService.isRemoteServerAvailable()
-		.then(function(data){
-			$scope.isRemoteAvailable = true;
-			$scope.remoteStatus = data;
-		},
-		function(error){
-			$scope.isRemoteAvailable = false;
-			$scope.remoteStatus = error;
-		});
+	// Initialize metadata sync information
+	function initMetadataSyncInfo() {
+		return MetadataSyncService.getLocalMetadataVersion()
+			.then(setLocalMetadataVersion)
+			.then(MetadataSyncService.isRemoteServerAvailable)
+			.then(MetadataSyncService.getRemoteMetadataVersion)
+			.then(setRemoteMetadataVersion)
+			.then(MetadataSyncService.getVersionDifference)
+			.then(setVersionDiff)
+			.catch(function (message) {
+				$scope.metadataSyncError = message;
+				$q.reject(message);
+			});
+	}
 
 	function setLocalMetadataVersion (version) {
 		$scope.localMetadataVersion = version;
 	}
 
-	function printSyncError (message) {
-		console.log(message);
+	function setRemoteMetadataVersion (version) {
+		$scope.remoteMetadataVersion = version;
+	}
+
+	function setVersionDiff (versionDiff) {
+		$scope.versionDiffNumber = versionDiff.length;
 	}
 
 	$scope.metadataSync = function () {
+		$scope.syncBarStatus = {
+			visible: true,
+			active: true,
+			type: 'info',
+			value: 0
+		};
+		MetadataSyncService.executeMetadataSyncDiff()
+			.then(
+				function (success){
+					$scope.syncBarStatus.active = false;
+					$scope.syncBarStatus.type = 'success';
+					console.log("Metadata synchronization done");
+					return initMetadataSyncInfo();
+				},
+				function (error){
+					$scope.syncBarStatus.active = false;
+					$scope.syncBarStatus.type = 'danger';
+					console.log("Error in automatic metadata sync");
+					throw "Metadata sync failed";
+				},
+				function (status) {
+					setLocalMetadataVersion(status.currentVersion);
+					$scope.syncBarStatus.value = (status.progress.updated / status.progress.total) * 100;
+				}
+			);
+	};
+	
+	$scope.metadataSyncIncremental = function () {
 		$scope.analyticsLog = [];
 		$scope.syncBarStatus = {
 			visible: true,
@@ -151,5 +186,6 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "MetadataS
 		}
 	};
 
+	initMetadataSyncInfo();
 
 }]);

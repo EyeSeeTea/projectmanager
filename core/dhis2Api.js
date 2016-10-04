@@ -305,3 +305,14 @@ Dhis2Api.factory("MetadataSync", ['$resource', 'commonvariable', function ($reso
 Dhis2Api.factory("RemoteAvailability", ['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "synchronization/availability");
 }]);
+
+Dhis2Api.factory("RemoteInstanceUrl", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "systemSettings/keyRemoteInstanceUrl", {}, {
+		get: {
+			method: 'GET',
+			transformResponse: function (response) {
+				return {html: response};
+			}
+		}
+	});
+}]);

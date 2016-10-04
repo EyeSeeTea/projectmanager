@@ -49,6 +49,7 @@
 	"METADATA_EXPORT_ZIP":"Compressed?",
 	"CHECKING_REMOTE_STATUS": "Checking remote server status",
 	"NO_LOCAL_VERSION": "No local version",
+	"NO_REMOTE_VERSION": "No remote version",
 	"SYNC_METADATA": "Sync metadata",
 	
 	"_______________ Data ":" Import and Export_____________",
@@ -138,5 +139,11 @@
 	"REMOTE_IS_AVAILABLE": "Remote server is available.",
 	"REMOTE_NOT_AVAILABLE": "Remote server is not available.",
 	"REMOTE_NOT_CONFIGURED": "Remote server settings are not configured.",
-	"AUTHENTICATION_FAILED": "Remote server credentials are not correct."
+	"AUTHENTICATION_FAILED": "Remote server credentials are not correct.",
+
+	"________________Service ": " Remote API___________",
+	"LOGGER_USER_NOT_AUTHORIZED": "Logger user credentials are not correct.",
+	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{url}}' in the whitelist.",
+	"NO_LOGGER_USER": "Logger user is not available.",
+	"INVALID_LOGGER_USER": "Logger user credentials are invalid."
 }

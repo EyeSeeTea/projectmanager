@@ -27,7 +27,53 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
 
     var remoteMetadataVersion;
     var localMetadataVersion;
+    var versionDiff;
 
+    /**
+     * Execute a metadata sync using the an auxiliary user to control how many updates are remaining. It uses metadata
+     * history order.
+     * @returns {*} It return a promise that notifies about the progress of the process.
+     */
+    var executeMetadataSyncDiff = function () {
+        return getVersionDifference()
+            .then(metadataSyncDiffRecursive)
+            .then(updateVersionDiff);
+    };
+
+    function metadataSyncDiffRecursive (versionArray) {
+        var deferred = $q.defer();
+
+        versionArray.reduce(function (previousPromise, version, index) {
+            return previousPromise.then(function (result) {
+                return metadataSync(version.name)
+                    .then(function (currentVersion) {
+                        deferred.notify({
+                            currentVersion: currentVersion,
+                            progress: {
+                                updated: index + 1,
+                                total: versionArray.length
+                            }
+                        });
+                        if (index + 1 === versionArray.length) deferred.resolve("Done");
+                    }, function (error) {
+                        deferred.reject(error);
+                    });
+            })
+        }, $q.resolve("Start"));
+
+        return deferred.promise;
+    }
+
+    function metadataSync (versionName) {
+        return MetadataSync.get({versionName: versionName}).$promise
+            .then(updateLocalMetadataVersion);
+    }
+
+    /**
+     * Execute a metadata sync incrementally until no more versions are available. It does not rely on version date, but
+     * version numbers. It does not require an auxiliary user, but it cannot know how many updates are remaining.
+     * @returns {Promise} It returns a promise that notifies about the last successful update.
+     */
     var executeMetadataSync = function () {
         var deferred = $q.defer();
 
@@ -62,6 +108,10 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     }
 
 
+    /**
+     * Get remote version. It requires an auxiliary user to be configured (RemoteApiService).
+     * @returns {*} Returns a promise that resolves to metadata version of remote server.
+     */
     var getRemoteMetadataVersion = function () {
         if (remoteMetadataVersion) {
             return $q.resolve(remoteMetadataVersion);
@@ -82,6 +132,10 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
         }
     };
 
+    /**
+     * Get local metadata version.
+     * @returns {*} A promise that resolves to metadata version of local server.
+     */
     var getLocalMetadataVersion = function () {
         return $q(function (resolve) {
             resolve(localMetadataVersion ? localMetadataVersion : updateLocalMetadataVersion());
@@ -89,10 +143,45 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
             .catch(handleGetVersionError);
     };
 
+    /**
+     * Check if remote server is available.
+     * @returns {*} A promise that successes if remote is available, and fails if not. If failure, it returns a error message.
+     */
     var isRemoteServerAvailable = function () {
         return RemoteAvailability.get().$promise
             .then(handleAvailabilityResponse);
     };
+
+    /**
+     * Get the difference between local and remote server.
+     * @returns {*} An array with the version objects that are different.
+     */
+    var getVersionDifference = function () {
+        return $q(function (resolve) {
+            resolve(versionDiff ? versionDiff : updateVersionDiff());
+        });
+    };
+
+    //////////////////////////////
+    // Private update functions //
+    //////////////////////////////
+
+    function updateVersionDiff () {
+        return getLocalMetadataVersion()
+            .then(function (localVersion) {
+                return RemoteApiService.executeRemoteQuery({
+                    method: 'GET',
+                    resource: 'metadata/version/history?baseline=' + localVersion,
+                    authType: 'METADATA',
+                    apiVersion: ''
+                })
+            })
+            .then(function (result) {
+                versionDiff = result.data == "" ? [] : result.data.metadataversions;
+                return versionDiff;
+            });
+
+    }
 
     function  updateLocalMetadataVersion () {
         return MetadataVersion.get().$promise
@@ -103,6 +192,10 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
                 }
             )
     }
+
+    ////////////////////
+    // Error handlers //
+    ////////////////////
 
     function handleGetVersionError (error) {
         var message = error;
@@ -140,8 +233,10 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     
     return {
         executeMetadataSync: executeMetadataSync,
+        executeMetadataSyncDiff: executeMetadataSyncDiff,
         getRemoteMetadataVersion: getRemoteMetadataVersion,
         getLocalMetadataVersion: getLocalMetadataVersion,
+        getVersionDifference: getVersionDifference,
         isRemoteServerAvailable: isRemoteServerAvailable
     }
 }]);

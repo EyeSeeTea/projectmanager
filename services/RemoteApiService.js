@@ -17,33 +17,42 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreService', function($q, $base64, $http, DataStoreService) {
+appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreService', 'RemoteInstanceUrl', function($q, $base64, $http, DataStoreService, RemoteInstanceUrl) {
 
     var remoteSettings;
     var defaultAPIVersion = 24;
     
     // Error messages
-    var NO_REMOTE_SETTINGS = 'NO REMOTE SETTINGS';
-    var INVALID_REMOTE_SETTINGS = 'INVALID REMOTE SETTINGS';
+    var NO_LOGGER_USER = 'NO LOGGER USER';
+    var INVALID_LOGGER_USER = 'INVALID LOGGER USER';
+    var NOT_IN_WHITELIST = 'NOT_IN_WHITELIST';
+    var LOGGER_USER_NOT_AUTHORIZED = 'LOGGER_USER_NOT_AUTHORIZED';
+    var REMOTE_NOT_CONFIGURED = 'REMOTE_NOT_CONFIGURED';
 
     var updateRemoteSettings = function () {
-        return DataStoreService.getKeyValue('remoteSettings').then(
-            function (settings) {
-                if (settings && settings.url && settings.metadataCredentials && settings.dataCredentials){
-                    remoteSettings = {
-                        url: settings.url,
-                        api: settings.url + '/api',
-                        metadataAuth: 'Basic ' + $base64.encode(settings.metadataCredentials.username + ":" + settings.metadataCredentials.password),
-                        dataAuth: 'Basic ' + $base64.encode(settings.dataCredentials.username + ":" + settings.dataCredentials.password)
-                    }
-                } else {
-                    return $q.reject(INVALID_REMOTE_SETTINGS);
+        return RemoteInstanceUrl.get().$promise
+            .then(function (remoteUrl) {
+                if (remoteUrl.html == "") {
+                    return $q.reject(REMOTE_NOT_CONFIGURED);
                 }
-            },
-            function error() {
-                return $q.reject(NO_REMOTE_SETTINGS);
-            }
-        );
+                return DataStoreService.getKeyValue('remoteSettings').then(
+                   function (settings) {
+                       if (settings.metadataCredentials){
+                           remoteSettings = {
+                               url: remoteUrl.html,
+                               api: remoteUrl.html + '/api',
+                               metadataAuth: 'Basic ' + $base64.encode(settings.metadataCredentials.username + ":" + settings.metadataCredentials.password)
+                               //dataAuth: 'Basic ' + $base64.encode(settings.dataCredentials.username + ":" + settings.dataCredentials.password)
+                           }
+                       } else {
+                           return $q.reject(INVALID_LOGGER_USER);
+                       }
+                   },
+                   function error() {
+                       return $q.reject(NO_LOGGER_USER);
+                   }
+               );
+            });
     };
     
     var executeRemoteQuery = function (remoteQuery) {
@@ -79,17 +88,17 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreS
     
     function handleRemoteErrors (message) {
         var errorString = message;
-        if (message === NO_REMOTE_SETTINGS) {
-            errorString = NO_REMOTE_SETTINGS;
+        if (message === NO_LOGGER_USER) {
+            errorString = NO_LOGGER_USER;
         }
-        else if (message == INVALID_REMOTE_SETTINGS) {
-            errorString = INVALID_REMOTE_SETTINGS;
+        else if (message == INVALID_LOGGER_USER) {
+            errorString = INVALID_LOGGER_USER;
         }
         else if (message.status == -1) {
-            errorString = 'NOT_IN_WHITELIST';
+            errorString = NOT_IN_WHITELIST;
         }
         else if (message.status == 401) {
-            errorString = 'USER_NOT_AUTHORIZED';
+            errorString = LOGGER_USER_NOT_AUTHORIZED;
         }
         return $q.reject(errorString);
     }

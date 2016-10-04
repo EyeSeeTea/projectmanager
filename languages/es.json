@@ -49,6 +49,7 @@
 	"METADATA_EXPORT_ZIP":"Comprimido?",
 	"CHECKING_REMOTE_STATUS": "",
 	"NO_LOCAL_VERSION": "",
+	"NO_REMOTE_VERSION": "",
 	"SYNC_METADATA": "",
 		
 	"_______________ Data ":" Import and Export_____________",
@@ -138,5 +139,11 @@
 	"REMOTE_IS_AVAILABLE": "",
 	"REMOTE_NOT_AVAILABLE": "",
 	"REMOTE_NOT_CONFIGURED": "",
-	"AUTHENTICATION_FAILED": ""
+	"AUTHENTICATION_FAILED": "",
+
+	"________________Service ": " Remote API___________",
+	"LOGGER_USER_NOT_AUTHORIZED": "",
+	"NOT_IN_WHITELIST": "",
+	"NO_LOGGER_USER": "",
+	"INVALID_LOGGER_USER": ""
 }
