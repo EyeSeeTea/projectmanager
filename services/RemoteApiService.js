@@ -23,8 +23,8 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreS
     var defaultAPIVersion = 24;
     
     // Error messages
-    var NO_LOGGER_USER = 'NO LOGGER USER';
-    var INVALID_LOGGER_USER = 'INVALID LOGGER USER';
+    var NO_LOGGER_USER = 'NO_LOGGER_USER';
+    var INVALID_LOGGER_USER = 'INVALID_LOGGER_USER';
     var NOT_IN_WHITELIST = 'NOT_IN_WHITELIST';
     var LOGGER_USER_NOT_AUTHORIZED = 'LOGGER_USER_NOT_AUTHORIZED';
     var REMOTE_NOT_CONFIGURED = 'REMOTE_NOT_CONFIGURED';

@@ -127,7 +127,7 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
                         remoteMetadataVersion = version.data.name;
                         return remoteMetadataVersion;
                     },
-                    handleGetVersionError
+                    handleGetRemoteVersionError
                 )
         }
     };
@@ -140,7 +140,7 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
         return $q(function (resolve) {
             resolve(localMetadataVersion ? localMetadataVersion : updateLocalMetadataVersion());
         })
-            .catch(handleGetVersionError);
+            .catch(handleGetLocalVersionError);
     };
 
     /**
@@ -197,10 +197,18 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     // Error handlers //
     ////////////////////
 
-    function handleGetVersionError (error) {
+    function handleGetLocalVersionError (error) {
         var message = error;
         if (error.status == 500) {
-            message = 'NO_METADATA_VERSION';
+            message = 'NO_LOCAL_METADATA_VERSION';
+        }
+        return $q.reject(message);
+    }
+
+    function handleGetRemoteVersionError (error) {
+        var message = error;
+        if (error.status == 500) {
+            message = 'NO_REMOTE_METADATA_VERSION';
         }
         return $q.reject(message);
     }

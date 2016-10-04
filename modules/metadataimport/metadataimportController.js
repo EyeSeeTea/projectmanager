@@ -24,7 +24,7 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvar
 	};
 
 	$scope.progressStatus = {};
-	$scope.syncBarStatus = {};
+	$scope.syncStatus = {};
 	$scope.undefinedFile = false;
 
 	var $file;//single file
@@ -57,7 +57,7 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvar
 	}
 
 	$scope.metadataSync = function () {
-		$scope.syncBarStatus = {
+		$scope.syncStatus = {
 			visible: true,
 			active: true,
 			type: 'info',
@@ -66,27 +66,27 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvar
 		MetadataSyncService.executeMetadataSyncDiff()
 			.then(
 				function (success){
-					$scope.syncBarStatus.active = false;
-					$scope.syncBarStatus.type = 'success';
+					$scope.syncStatus.active = false;
+					$scope.syncStatus.type = 'success';
 					console.log("Metadata synchronization done");
 					return initMetadataSyncInfo();
 				},
 				function (error){
-					$scope.syncBarStatus.active = false;
-					$scope.syncBarStatus.type = 'danger';
+					$scope.syncStatus.active = false;
+					$scope.syncStatus.type = 'danger';
 					console.log("Error in automatic metadata sync");
 					throw "Metadata sync failed";
 				},
 				function (status) {
 					setLocalMetadataVersion(status.currentVersion);
-					$scope.syncBarStatus.value = (status.progress.updated / status.progress.total) * 100;
+					$scope.syncStatus.value = (status.progress.updated / status.progress.total) * 100;
 				}
 			);
 	};
 	
 	$scope.metadataSyncIncremental = function () {
 		$scope.analyticsLog = [];
-		$scope.syncBarStatus = {
+		$scope.syncStatus = {
 			visible: true,
 			active: true,
 			type: 'info',
@@ -95,8 +95,8 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvar
 		MetadataSyncService.executeMetadataSync()
 			.then(
 				function () {
-					$scope.syncBarStatus.active = false;
-					$scope.syncBarStatus.type = 'success';
+					$scope.syncStatus.active = false;
+					$scope.syncStatus.type = 'success';
 					console.log("Metadata synchronization done");
 					$scope.progressStatus = {
 						visible: true,
@@ -106,8 +106,8 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvar
 					};
 				},
 				function error() {
-					$scope.syncBarStatus.active = false;
-					$scope.syncBarStatus.type = 'danger';
+					$scope.syncStatus.active = false;
+					$scope.syncStatus.type = 'danger';
 					console.log("Error in automatic metadata sync");
 					throw "Metadata sync failed";
 				},
