@@ -140,6 +140,8 @@
 	"REMOTE_NOT_AVAILABLE": "",
 	"REMOTE_NOT_CONFIGURED": "",
 	"AUTHENTICATION_FAILED": "",
+	"NO_LOCAL_METADATA_VERSION": "",
+	"NO_REMOTE_METADATA_VERSION": "",
 
 	"________________Service ": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "",
