@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreService', 'RemoteInstanceUrl', function($q, $base64, $http, DataStoreService, RemoteInstanceUrl) {
+appManagerMSF.factory("RemoteApiService", ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', function($q, $http, DataStoreService, RemoteInstanceUrl) {
 
     var remoteSettings;
     var defaultAPIVersion = 24;
@@ -41,8 +41,8 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$base64', '$http', 'DataStoreS
                            remoteSettings = {
                                url: remoteUrl.html,
                                api: remoteUrl.html + '/api',
-                               metadataAuth: 'Basic ' + $base64.encode(settings.metadataCredentials.username + ":" + settings.metadataCredentials.password)
-                               //dataAuth: 'Basic ' + $base64.encode(settings.dataCredentials.username + ":" + settings.dataCredentials.password)
+                               metadataAuth: 'Basic ' + btoa(settings.metadataCredentials.username + ":" + settings.metadataCredentials.password)
+                               //dataAuth: 'Basic ' + btoa(settings.dataCredentials.username + ":" + settings.dataCredentials.password)
                            }
                        } else {
                            return $q.reject(INVALID_LOGGER_USER);
