@@ -17,7 +17,10 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', function($q, RemoteApiService, MetadataVersion, MetadataSync, RemoteAvailability) {
+appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService', function($q, RemoteApiService, MetadataVersion, MetadataSync, RemoteAvailability, UserService) {
+
+    // Config variables
+    var serverStatusNamespace = 'projectServers';
 
     // Error messages
     var REMOTE_NOT_AVAILABLE = "REMOTE_NOT_AVAILABLE";
@@ -46,6 +49,7 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
         versionArray.reduce(function (previousPromise, version, index) {
             return previousPromise.then(function (result) {
                 return metadataSync(version.name)
+                    .then(writeRegisterInRemoteServer)
                     .then(function (currentVersion) {
                         deferred.notify({
                             currentVersion: currentVersion,
@@ -67,6 +71,38 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
     function metadataSync (versionName) {
         return MetadataSync.get({versionName: versionName}).$promise
             .then(updateLocalMetadataVersion);
+    }
+
+    function writeRegisterInRemoteServer (currentVersion) {
+        var register = {
+            metadata: currentVersion,
+            created: (new Date()).getTime()
+        };
+
+        // Try PUT first. If failure, try POST to create a new entry in the namespace.
+        return UserService.getCurrentUser()
+            .then(function (user) {
+                var orgunitid = user.organisationUnits[0].id;
+                return RemoteApiService.executeRemoteQuery({
+                    method: 'PUT',
+                    resource: 'dataStore/' + serverStatusNamespace + '/' + orgunitid,
+                    authType: 'METADATA',
+                    data: register
+                })
+                    .then(function success () {
+                        return currentVersion;
+                    },function error () {
+                        return RemoteApiService.executeRemoteQuery({
+                            method: 'POST',
+                            resource: 'dataStore/' + serverStatusNamespace + '/' + orgunitid,
+                            authType: 'METADATA',
+                            data: register
+                        })
+                            .then(function success() {
+                                return currentVersion;
+                            });
+                    });
+            });
     }
 
     /**
