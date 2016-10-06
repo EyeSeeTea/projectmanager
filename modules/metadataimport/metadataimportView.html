@@ -24,30 +24,47 @@
     <div class="col-md-6 right-border">
         <div class="margin-20">
             <h3>Automatic sync</h3>
-            <div class="row col-md-8">
-                <div class="alert" ng-class="{'alert-info': !remoteStatus,
-                                                'alert-danger': remoteStatus && !isRemoteAvailable,
-                                                'alert-success': remoteStatus && isRemoteAvailable}" role="alert">
-                    <span ng-show="!remoteStatus">
-                        <span class='remote-status-loading glyphicon glyphicon-repeat'></span>
-                        {{ 'CHECKING_REMOTE_STATUS' | translate }}
-                    </span>
-                    <span ng-show="remoteStatus">{{ remoteStatus | translate }}</span>
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{ 'TITLE_PROJECT' | translate }}</div>
+                        <div class="panel-body">
+                            <span ng-show="localMetadataVersion">
+                                {{localMetadataVersion}}
+                                <span ng-show="syncStatus.active" class='glyphicon glyphicon-repeat animation-rotation'></span>
+                            </span>
+                            <span ng-hide="localMetadataVersion">{{ 'NO_LOCAL_VERSION' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span ng-show="versionDiffNumber == 0">Up-to-date</span>
+                    <span ng-show="versionDiffNumber > 0">{{versionDiffNumber}} updates available</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Remote</div>
+                        <div class="panel-body">
+                            <span ng-show="remoteMetadataVersion">{{remoteMetadataVersion}}</span>
+                            <span ng-show="!remoteMetadataVersion && !metadataSyncError" class='glyphicon glyphicon-repeat animation-rotation'></span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row col-md-12">
-                <b>Local:</b>
-                <span ng-show="localMetadataVersion">{{localMetadataVersion}}</span>
-                <span ng-hide="localMetadataVersion">{{ 'NO_LOCAL_VERSION' | translate }}</span>
-                <br/>
-                <div class="form_group">
+            <div class="row">
+                <div class="col-md-12 form_group">
                     <button class="btn btn-primary" ng-click='metadataSync()'
-                            ng-class="{disabled: !isRemoteAvailable || !localMetadataVersion}">
+                            ng-class="{disabled: !remoteMetadataVersion || !localMetadataVersion || versionDiffNumber == 0}">
                         {{ 'SYNC_METADATA' | translate }}
                     </button>
                 </div>
-                <br/>
-                <d2-progressbar-dynamic status="syncBarStatus"></d2-progressbar-dynamic>
+            </div>
+            <br/>
+            <d2-progressbar-dynamic status="syncStatus"></d2-progressbar-dynamic>
+            <div class="row col-md-8">
+                <div ng-if="metadataSyncError" class="alert alert-danger" role="alert">
+                    <span>{{ metadataSyncError | translate:info }}</span>
+                </div>
             </div>
         </div>
     </div>
