@@ -17,10 +17,14 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("RemoteApiService", ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', function($q, $http, DataStoreService, RemoteInstanceUrl) {
+appManagerMSF.factory("RemoteApiService", ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 'commonvariable', function($q, $http, DataStoreService, RemoteInstanceUrl, commonvariable) {
 
     var remoteSettings;
-    var defaultAPIVersion = 24;
+    var defaultAPIVersion = commonvariable.apiVersion;
+
+    // DataStore configuration for remote user
+    var remoteSettingsNamespace = 'remoteSettings';
+    var remoteUserProperty = 'remoteUser';
     
     // Error messages
     var NO_LOGGER_USER = 'NO_LOGGER_USER';
@@ -35,14 +39,13 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$http', 'DataStoreService', 'R
                 if (remoteUrl.html == "") {
                     return $q.reject(REMOTE_NOT_CONFIGURED);
                 }
-                return DataStoreService.getKeyValue('remoteSettings').then(
+                return DataStoreService.getKeyValue(remoteSettingsNamespace).then(
                    function (settings) {
-                       if (settings.metadataCredentials){
+                       if (settings[remoteUserProperty]){
                            remoteSettings = {
                                url: remoteUrl.html,
                                api: remoteUrl.html + '/api',
-                               metadataAuth: 'Basic ' + btoa(settings.metadataCredentials.username + ":" + settings.metadataCredentials.password)
-                               //dataAuth: 'Basic ' + btoa(settings.dataCredentials.username + ":" + settings.dataCredentials.password)
+                               loggerAuth: 'Basic ' + btoa(settings[remoteUserProperty].username + ":" + settings[remoteUserProperty].password)
                            }
                        } else {
                            return $q.reject(INVALID_LOGGER_USER);
@@ -64,7 +67,7 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$http', 'DataStoreService', 'R
             .then(
                 function success() {
                     // Choose authorization. Defaults to data authorization
-                    var authorization = remoteQuery.authType == 'METADATA' ? remoteSettings.metadataAuth : remoteSettings.dataAuth;
+                    var authorization = remoteSettings.loggerAuth;
                     return $http({
                         method: remoteQuery.method,
                         url: remoteSettings.api + apiVersion + '/' + remoteQuery.resource,

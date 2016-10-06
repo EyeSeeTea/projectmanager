@@ -38,8 +38,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <span ng-show="versionDiffNumber > 0">{{versionDiffNumber}} updates available</span>
                     <span ng-show="versionDiffNumber == 0">Up-to-date</span>
+                    <span ng-show="versionDiffNumber > 0">{{versionDiffNumber}} updates available</span>
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
@@ -50,17 +50,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 form_group">
+            </div>
+            <div class="row">
+                <div class="col-md-12 form_group">
                     <button class="btn btn-primary" ng-click='metadataSync()'
                             ng-class="{disabled: !remoteMetadataVersion || !localMetadataVersion || versionDiffNumber == 0}">
                         {{ 'SYNC_METADATA' | translate }}
                     </button>
-                    </div>
                 </div>
-                <br/>
-                <d2-progressbar-dynamic status="syncStatus"></d2-progressbar-dynamic>
             </div>
+            <br/>
+            <d2-progressbar-dynamic status="syncStatus"></d2-progressbar-dynamic>
             <div class="row col-md-8">
                 <div ng-if="metadataSyncError" class="alert alert-danger" role="alert">
                     <span>{{ metadataSyncError | translate:info }}</span>

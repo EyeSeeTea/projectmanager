@@ -86,7 +86,6 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
                 return RemoteApiService.executeRemoteQuery({
                     method: 'PUT',
                     resource: 'dataStore/' + serverStatusNamespace + '/' + orgunitid,
-                    authType: 'METADATA',
                     data: register
                 })
                     .then(function success () {
@@ -95,7 +94,6 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
                         return RemoteApiService.executeRemoteQuery({
                             method: 'POST',
                             resource: 'dataStore/' + serverStatusNamespace + '/' + orgunitid,
-                            authType: 'METADATA',
                             data: register
                         })
                             .then(function success() {
@@ -155,7 +153,6 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
             return RemoteApiService.executeRemoteQuery({
                 method: 'GET',
                 resource: 'metadata/version',
-                authType: 'METADATA',
                 apiVersion: ''
             })
                 .then(
@@ -208,7 +205,6 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
                 return RemoteApiService.executeRemoteQuery({
                     method: 'GET',
                     resource: 'metadata/version/history?baseline=' + localVersion,
-                    authType: 'METADATA',
                     apiVersion: ''
                 })
             })

@@ -54,6 +54,7 @@ Dhis2Api.factory("commonvariable", function () {
 			urlbase: urlBase,
 			isOnline: isOnline,
 			version: version,
+			apiVersion: apiVersion,
 			OrganisationUnit:"",
 			OrganisationUnitList:[],
 			Period:"",
