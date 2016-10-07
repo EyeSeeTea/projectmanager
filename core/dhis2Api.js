@@ -317,3 +317,20 @@ Dhis2Api.factory("RemoteInstanceUrl", ['$resource', 'commonvariable', function (
 		}
 	});
 }]);
+
+Dhis2Api.factory("Events",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "events", {}, {
+		get: {
+			method: 'GET',
+			params: {skipPaging: true}
+		}
+	});
+}]);
+
+Dhis2Api.factory("TrackedEntityInstances",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "trackedEntityInstances/:uid" );
+}]);
+
+Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "enrollments/:uid" );
+}]);
