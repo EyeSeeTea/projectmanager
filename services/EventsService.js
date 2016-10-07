@@ -19,11 +19,32 @@
 
 appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances", "Enrollments", function($q, Events, TrackedEntityInstances, Enrollments) {
 
+    /**
+     * Exports all events and dependencies (trackedEntityInstances and enrollments) between startDate and endDate for the
+     * given array of orgunits and their descendants and, optionally, for the given array of programs. Returns a promise
+     * that resolves to an object with the structure:
+     * {events: [<array_of_events], trackedEntityInstances: [<array_of_teis>], enrollments: [<array_of_enrollments>]}
+     * @param startDate Start of export period
+     * @param endDate End of export period
+     * @param orgunits Array of orgunits
+     * @param programs Array of programs (optional)
+     * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
+     */
     var exportEventsWithDependencies = function (startDate, endDate, orgunits, programs) {
         return getEvents(startDate, endDate, orgunits, programs)
             .then(addTrackedEntitiesAndEnrollments)
     };
 
+    /**
+     * Exports all events between startDate and endDate for the given array of orgunits and their descendants and, optionally,
+     * for the given array of programs. Returns a promise that resolves to an object with the structure:
+     * {events: [<array_of_events]}
+     * @param startDate Start of export period
+     * @param endDate End of export period
+     * @param orgunits Array of orgunits
+     * @param programs Array of programs (optional)
+     * @returns {*} Promise that resolves to an object containing events
+     */
     function getEvents (startDate, endDate, orgunits, programs) {
         var commonParams = {
             startDate: startDate,
@@ -45,45 +66,66 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
             }
         )
     }
-    
+
+    /**
+     * This method accepts an object with the property events, and returns a promise that resolves to an object with
+     * the given events plus the trackedEntityInstances and enrollments included in the events.
+     * @param events Object with the structure {events: [<array_of_events>]}
+     * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
+     */
     function addTrackedEntitiesAndEnrollments (events) {
         var eventsWithTeisAndEnrolls = events;
 
-        var teisAndEnrolls = extractTrackedEntitiesAndEnrollments(events);
+        var teisArray = extractEventsPropertyToArray(events, 'trackedEntityInstance');
+        var enrollsArray = extractEventsPropertyToArray(events, 'enrollment');
 
-        var teiPromises = [];
-        if (teisAndEnrolls.trackedEntityInstances) {
-            teisAndEnrolls.trackedEntityInstances.forEach(function (tei) {
-                teiPromises.push(TrackedEntityInstances.get({uid: tei}).$promise);
+        return getTrackedEntityInstancesByUid(teisArray)
+            .then(function (trackedEntityInstances) {
+                angular.extend(eventsWithTeisAndEnrolls, trackedEntityInstances);
+                return getEnrollmentsByUid(enrollsArray);
             })
-        }
+            .then(function (enrollments) {
+                angular.extend(eventsWithTeisAndEnrolls, enrollments);
+                return eventsWithTeisAndEnrolls;
+            });
+    }
 
-        var enrollmentsPromises = [];
-        if (teisAndEnrolls.enrollments) {
-            teisAndEnrolls.enrollments.forEach(function (enrollment) {
-                enrollmentsPromises.push(Enrollments.get({uid: enrollment}).$promise);
-            })
-        }
+    /**
+     * This methods queries for a list of trackedEntityInstances
+     * @param teisUids Array of trackedEntityInstances uids (e.g.: ['ajdfkj','kkjefk']
+     * @returns {*} A promise that resolves to an object like {trackedEntityInstances: [...]}
+     */
+    function getTrackedEntityInstancesByUid (teisUids) {
+        var teiPromises = teisUids.map(function (tei) {
+            return TrackedEntityInstances.get({uid: tei}).$promise;
+        });
 
         return $q.all(teiPromises)
             .then(function (teiArray) {
-                var teis = teiArray.reduce(function (totalTeis, tei) {
+                return teiArray.reduce(function (totalTeis, tei) {
                     totalTeis.trackedEntityInstances.push(cleanResponse(tei));
                     return totalTeis;
                 }, {trackedEntityInstances: []});
-                angular.extend(eventsWithTeisAndEnrolls, teis);
-
-                return $q.all(enrollmentsPromises);
             })
-            .then(function (enrollmentsArray) {
-                var enrollments = enrollmentsArray.reduce(function (totalEnrolls, enrollment) {
+    }
+
+    /**
+     * This methods queries for a list of enrollments
+     * @param enrollUids Array of enrollments uids (e.g.: ['ajdfkj','kkjefk']
+     * @returns {*} A promise that resolves to an object like {enrollments: [...]}
+     */
+    function getEnrollmentsByUid (enrollUids) {
+        var enrollPromises = enrollUids.map(function (enrollment) {
+            return Enrollments.get({uid: enrollment}).$promise;
+        });
+
+        return $q.all(enrollPromises)
+            .then(function (enrollArray) {
+                return enrollArray.reduce(function (totalEnrolls, enrollment) {
                     totalEnrolls.enrollments.push(cleanResponse(enrollment));
                     return totalEnrolls;
                 }, {enrollments: []});
-                angular.extend(eventsWithTeisAndEnrolls, enrollments);
-
-                return eventsWithTeisAndEnrolls;
-            });
+            })
     }
 
     // Util functions
@@ -101,19 +143,17 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
         return combo;
     }
 
-    function extractTrackedEntitiesAndEnrollments (eventsObject) {
-        var trackedEntityInstances = eventsObject.events.map(function (event) {return event.trackedEntityInstance;});
-        var enrollments = eventsObject.events.map(function (event) {return event.enrollment;});
-        return {
-            trackedEntityInstances: getUniqueInArray(trackedEntityInstances),
-            enrollments: getUniqueInArray(enrollments)
-        };
+    function extractEventsPropertyToArray (eventsObject, property) {
+        var array  = eventsObject.events.map( function (event) {
+            return event[property];
+        });
+        return getUniqueInArray(array );
     }
 
     function getUniqueInArray (array) {
         var u = {}, a = [];
         for (var i = 0, l = array.length; i < l; ++i){
-            if (u.hasOwnProperty(array[i])) {
+            if (array[i] === undefined || u.hasOwnProperty(array[i])) {
                 continue;
             }
             a.push(array[i]);
