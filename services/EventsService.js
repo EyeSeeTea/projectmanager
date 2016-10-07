@@ -54,14 +54,14 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
         var teiPromises = [];
         if (teisAndEnrolls.trackedEntityInstances) {
             teisAndEnrolls.trackedEntityInstances.forEach(function (tei) {
-                teiPromises.push(TrackedEntityInstances.get({uid: tei.id}).$promise);
+                teiPromises.push(TrackedEntityInstances.get({uid: tei}).$promise);
             })
         }
 
         var enrollmentsPromises = [];
         if (teisAndEnrolls.enrollments) {
             teisAndEnrolls.enrollments.forEach(function (enrollment) {
-                enrollmentsPromises.push(Enrollments.get({uid: enrollment.id}).$promise);
+                enrollmentsPromises.push(Enrollments.get({uid: enrollment}).$promise);
             })
         }
 
@@ -101,14 +101,25 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
         return combo;
     }
 
-    function extractTrackedEntitiesAndEnrollments (events) {
-        // TODO Should return an object of type {"trackedEntityInstances":[{id:...},{id:...}], "enrollments":[{id:...},{id:...}]}
+    function extractTrackedEntitiesAndEnrollments (eventsObject) {
+        var trackedEntityInstances = eventsObject.events.map(function (event) {return event.trackedEntityInstance;});
+        var enrollments = eventsObject.events.map(function (event) {return event.enrollment;});
         return {
-            trackedEntityInstances: [{id: 'Rlbqiv1mRhH'},{id: 'rdUxVJia6ul'}],
-//            trackedEntityInstances: [],
-            enrollments: [{id: 'o3grMf7MOZG'}, {id: 'dtiu1x8P1f0'}]
-//            enrollments: []
+            trackedEntityInstances: getUniqueInArray(trackedEntityInstances),
+            enrollments: getUniqueInArray(enrollments)
         };
+    }
+
+    function getUniqueInArray (array) {
+        var u = {}, a = [];
+        for (var i = 0, l = array.length; i < l; ++i){
+            if (u.hasOwnProperty(array[i])) {
+                continue;
+            }
+            a.push(array[i]);
+            u[array[i]] = 1;
+        }
+        return a;
     }
 
     function cleanResponse (response) {
