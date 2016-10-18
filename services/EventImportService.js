@@ -21,26 +21,35 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
     var importEventFile = function (file) {
         return readZipFile(file).then(function(content) {
             var returnPromise = $q.resolve("Start");
+            var isEmptyFile = true;
             var zip = new JSZip(content);
 
             if (zip.file(EventHelper.TEIS_ZIP) != undefined) {
+                isEmptyFile = false;
                 returnPromise = returnPromise.then(function () {
                     return uploadFile(EventHelper.TEIS, zip.file(EventHelper.TEIS_ZIP).asArrayBuffer());
                 });
             }
 
             if (zip.file(EventHelper.ENROLLMENTS_ZIP) != undefined) {
+                isEmptyFile = false;
                 returnPromise = returnPromise.then(function () {
                     return uploadFile(EventHelper.ENROLLMENTS, zip.file(EventHelper.ENROLLMENTS_ZIP).asArrayBuffer());
                 });
             }
 
             if (zip.file(EventHelper.EVENTS_ZIP) != undefined) {
+                isEmptyFile = false;
                 returnPromise = returnPromise.then(function () {
                     return uploadFile(EventHelper.EVENTS, zip.file(EventHelper.EVENTS_ZIP).asArrayBuffer());
                 });
             }
-            return returnPromise;
+
+            if (isEmptyFile) {
+                return $q.reject("The file does not contain event data.")
+            } else {
+                return returnPromise;
+            }
         });
     };
 
