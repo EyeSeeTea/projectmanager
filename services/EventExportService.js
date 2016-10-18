@@ -17,7 +17,32 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances", "Enrollments", function($q, Events, TrackedEntityInstances, Enrollments) {
+appManagerMSF.factory("EventExportService", ["$q", "EventHelper", "Events", "TrackedEntityInstances", "Enrollments", function($q, EventHelper, Events, TrackedEntityInstances, Enrollments) {
+
+    /**
+     * Same that exportEventsWithDependencies, but returns a compressed file.
+     * @param startDate Start of export period
+     * @param endDate End of export period
+     * @param orgunits Array of orgunits
+     * @param programs Array of programs (optional)
+     * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
+     */
+    var exportEventsWithDependenciesInZip = function (startDate, endDate, orgunits, programs) {
+        return exportEventsWithDependencies(startDate, endDate, orgunits, programs)
+            .then(compressFileByElementType);
+    };
+
+    /**
+     * Same that exportEventsFromLastWithDependencies, but returns a compressed file.
+     * @param lastUpdated Date to start the event query
+     * @param orgunits Array of orgunits
+     * @param programs Array of programs (optional)
+     * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
+     */
+    var exportEventsFromLastWithDependenciesInZip = function (lastUpdated, orgunits, programs) {
+        return exportEventsFromLastWithDependencies(lastUpdated, orgunits, programs)
+            .then(compressFileByElementType);
+    };
 
     /**
      * Exports all events and dependencies (trackedEntityInstances and enrollments) between startDate and endDate for the
@@ -32,6 +57,21 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
      */
     var exportEventsWithDependencies = function (startDate, endDate, orgunits, programs) {
         return getEvents(startDate, endDate, orgunits, programs)
+            .then(addTrackedEntitiesAndEnrollments)
+    };
+
+    /**
+     * Exports all events and dependencies (trackedEntityInstances and enrollments) from lastUpdated for the
+     * given array of orgunits and their descendants and, optionally, for the given array of programs. Returns a promise
+     * that resolves to an object with the structure:
+     * {events: [<array_of_events], trackedEntityInstances: [<array_of_teis>], enrollments: [<array_of_enrollments>]}
+     * @param lastUpdated Date to start the event query
+     * @param orgunits Array of orgunits
+     * @param programs Array of programs (optional)
+     * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
+     */
+    var exportEventsFromLastWithDependencies = function (lastUpdated, orgunits, programs) {
+        return getEventsFromLast(lastUpdated, orgunits, programs)
             .then(addTrackedEntitiesAndEnrollments)
     };
 
@@ -51,8 +91,27 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
             endDate: endDate,
             ouMode: 'DESCENDANTS'
         };
+        return getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
+    }
 
-        // Create a promise array with the possible combinations of orgunit / program
+    /**
+     * Exports all events from lastUpdated for the given array of orgunits and their descendants and, optionally,
+     * for the given array of programs. Returns a promise that resolves to an object with the structure:
+     * {events: [<array_of_events]}
+     * @param lastUpdated Date to start the event query
+     * @param orgunits Array of orgunits
+     * @param programs Array of programs (optional)
+     * @returns {*} Promise that resolves to an object containing events
+     */
+    function getEventsFromLast (lastUpdated, orgunits, programs) {
+        var commonParams = {
+            lastUpdated: lastUpdated,
+            ouMode: 'DESCENDANTS'
+        };
+        return getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
+    }
+    
+    function getEventsFromOrgunitAndPrograms (commonParams, orgunits, programs) {
         var eventsPromises = [];
         getOrgunitProgramCombo(orgunits, programs).forEach(function (customParams) {
             eventsPromises.push(Events.get(angular.extend({}, commonParams, customParams)).$promise);
@@ -127,6 +186,24 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
                 }, {enrollments: []});
             })
     }
+    
+    function compressFileByElementType (file) {
+        var zip = new JSZip();
+
+        var events = new JSZip();
+        events.file(EventHelper.EVENTS_JSON, JSON.stringify({"events": file[EventHelper.EVENTS]}));
+        zip.file(EventHelper.EVENTS_ZIP, events.generate({type:"uint8array", compression:"DEFLATE"}));
+
+        var teis = new JSZip();
+        teis.file(EventHelper.TEIS_JSON, JSON.stringify({"trackedEntityInstances": file[EventHelper.TEIS]}));
+        zip.file(EventHelper.TEIS_ZIP, teis.generate({type:"uint8array", compression:"DEFLATE"}));
+
+        var enrollments = new JSZip();
+        enrollments.file(EventHelper.ENROLLMENTS_JSON, JSON.stringify({"enrollments": file[EventHelper.ENROLLMENTS]}));
+        zip.file(EventHelper.ENROLLMENTS_ZIP, enrollments.generate({type:"uint8array", compression:"DEFLATE"}));
+
+        return zip.generate({type:"blob", compression:"DEFLATE"});
+    }
 
     // Util functions
     function getOrgunitProgramCombo (orgunits, programs) {
@@ -167,7 +244,10 @@ appManagerMSF.factory("EventsService", ["$q", "Events", "TrackedEntityInstances"
     }
 
     return {
-        exportEventsWithDependencies: exportEventsWithDependencies
+        exportEventsWithDependencies: exportEventsWithDependencies,
+        exportEventsWithDependenciesInZip: exportEventsWithDependenciesInZip,
+        exportEventsFromLastWithDependencies: exportEventsFromLastWithDependencies,
+        exportEventsFromLastWithDependenciesInZip: exportEventsFromLastWithDependenciesInZip
     }
     
 }]);
