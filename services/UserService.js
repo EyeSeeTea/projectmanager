@@ -36,6 +36,13 @@ appManagerMSF.factory('UserService',['$q', 'meUser', 'User', function($q, meUser
             });
         }
     }
+    
+    function getCurrentUserOrgunits () {
+        return getCurrentUser()
+            .then(function (me) {
+                return me.organisationUnits;
+            });
+    }
 
     /**
      * It returns a promise that resolves to a boolean indicating if current user has the group or not
@@ -92,6 +99,7 @@ appManagerMSF.factory('UserService',['$q', 'meUser', 'User', function($q, meUser
         currentUserHasGroup: currentUserHasGroup,
         currentUserHasRole: currentUserHasRole,
         getCurrentUser: getCurrentUser,
+        getCurrentUserOrgunits: getCurrentUserOrgunits,
         getProjectUsers: getProjectUsers,
         updateUserPassword: updateUserPassword
     }
