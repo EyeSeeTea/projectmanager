@@ -19,9 +19,16 @@
 
 appManagerMSF.factory("ProgramService", ['UserService', 'Organisationunit', function(UserService, Organisationunit) {
 
+    const serviceCodeId = "pG4YeQyynJh";
+
     function getProgramsUnderUserHierarchy () {
         return UserService.getCurrentUserOrgunits()
             .then(getProgramsUnderHierarchy)
+    }
+
+    function getProgramsUnderUserHierarchyByService () {
+        return getProgramsUnderUserHierarchy()
+            .then(groupProgramsByService);
     }
 
     function getProgramsUnderHierarchy (orgunits) {
@@ -46,9 +53,24 @@ appManagerMSF.factory("ProgramService", ['UserService', 'Organisationunit', func
                 }, []);
         });
     }
+
+    function groupProgramsByService (programs) {
+        var codes = {};
+        for (var i = 0; i < programs.length; i++){
+            var serviceValue = programs[i].attributeValues.filter(function (attributeValue) {
+                return attributeValue.attribute.id == serviceCodeId;
+            });
+            if (serviceValue.length == 1) {
+                codes[serviceValue[0].value] = codes[serviceValue[0].value] || [];
+                codes[serviceValue[0].value].push(programs[i].id);
+            }
+        }
+        return codes;
+    }
     
     return {
-        getProgramsUnderUserHierarchy: getProgramsUnderUserHierarchy
+        getProgramsUnderUserHierarchy: getProgramsUnderUserHierarchy,
+        getProgramsUnderUserHierarchyByService: getProgramsUnderUserHierarchyByService
     }
 
 }]);
