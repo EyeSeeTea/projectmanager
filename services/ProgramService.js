@@ -70,13 +70,13 @@ appManagerMSF.factory("ProgramService", ['UserService', 'Organisationunit', 'Org
             filter: 'code:in:[' + Object.getOwnPropertyNames(codes).map(
                 function (code) {return 'OUG_' + code;})
                 .join(",") + "]",
-            fields: 'name,code'
+            fields: 'displayName,code'
         };
 
         return OrganisationUnitGroup.get(programQuery).$promise.then(function (data) {
             return data.organisationUnitGroups.map(function (group) {
                 return {
-                    id: group.name,
+                    name: group.displayName,
                     code: group.code,
                     programs: codes[group.code.split('OUG_')[1]]
                 }

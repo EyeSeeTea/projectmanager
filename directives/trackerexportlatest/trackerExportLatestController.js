@@ -21,6 +21,7 @@ appManagerMSF.directive('trackerExportLatest', function(){
     return{
         restrict: 'E',
         controller: 'trackerExportLatestController',
+        css: 'directives/trackerexportlatest/trackerExportLatestCss.css',
         templateUrl: 'directives/trackerexportlatest/trackerExportLatestView.html',
         scope: {}
     }
@@ -29,6 +30,12 @@ appManagerMSF.directive('trackerExportLatest', function(){
 appManagerMSF.controller('trackerExportLatestController', ['$scope', 'ProgramService', function ($scope, ProgramService) {
     
     $scope.params = {};
+
+    ProgramService.getProgramsUnderUserHierarchyByService()
+        .then(function (data) {
+            $scope.services = data;
+            $scope.clickAllServices();
+        });
     
     $scope.openLastUpdated = function ($event) {
         $event.preventDefault();
@@ -36,11 +43,15 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', 'ProgramSer
         $scope.dateopened = true;
     };
     
+    $scope.clickAllServices = function () {
+        $scope.allServices = !$scope.allServices;
+        $scope.services.map(function (service) {
+            service.selected = $scope.allServices;
+        });
+    };
+    
     $scope.submit = function() {
-        ProgramService.getProgramsUnderUserHierarchyByService()
-            .then(function (data) {
-                
-            });
+
     };
 
 }]);

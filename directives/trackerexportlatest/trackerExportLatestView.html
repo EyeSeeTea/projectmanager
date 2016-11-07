@@ -39,6 +39,24 @@
         </div>
     </div>
     <br/>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <ul class="list-group service-list">
+                    <li class="list-group-item service-header" ng-click="clickAllServices()">
+                        <input type="checkbox" ng-model="allServices">
+                        All services
+                    </li>
+                    <li ng-repeat="service in services | orderBy:'name'"
+                        class="list-group-item" ng-click="service.selected = !service.selected">
+                        <input type="checkbox" ng-model="service.selected">
+                        {{service.name}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/>
     <div class="form_group">
         <button type="submit" id="submit" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
     </div>
