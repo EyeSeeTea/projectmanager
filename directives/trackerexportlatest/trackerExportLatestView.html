@@ -1,0 +1,45 @@
+<!--
+   Copyright (c) 2015.
+
+   This file is part of Project Manager.
+
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+<form name="latestForm" ng-submit="latestForm.$valid && submit()" novalidate>
+    <div class="row">
+        <div class="col-md-6">
+            <label for="filename_latest"> {{ 'FILE_NAME' | translate }} </label>
+            <div class="input-group">
+                <input id="filename_latest" type="text" class="form-control" ng-model="latest.filename" name="file_name" required=""/>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12">
+            <span>
+                Export data from
+                <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="params.date" is-open="dateopened" ng-required="true" close-text="Close" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                until now
+            </span>
+        </div>
+    </div>
+    <br/>
+    <div class="form_group">
+        <button type="submit" id="submit" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
+    </div>
+</form>

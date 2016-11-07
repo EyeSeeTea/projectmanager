@@ -17,24 +17,12 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('trackerDataExportController', ["$scope", function ($scope) {
-    
-    $scope.latest = {};
+appManagerMSF.controller('trackerDataExportController', ['$scope', function ($scope) {
     
     $scope.activeTab = 1;
     
     $scope.setActiveTab = function (item) {
         $scope.activeTab = item;
-    };
-    
-    $scope.openLatest = function ($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.latest.dateopened = true;
-    };
-
-    $scope.submitLatest = function() {
-        console.log("export latest");
     };
     
 }]);

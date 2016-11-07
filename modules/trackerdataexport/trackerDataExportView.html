@@ -30,35 +30,7 @@
 <div class="row" >
     <div class="col-md-12">
         <div ng-if="activeTab === 1">
-
-            <form name="latestForm" ng-submit="latestForm.$valid && submitLatest()" novalidate>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="filename_latest"> {{ 'FILE_NAME' | translate }} </label>
-                        <div class="input-group">
-                            <input id="filename_latest" type="text" class="form-control" ng-model="latest.filename" name="file_name" required=""/>
-                        </div>
-                    </div>
-                </div>
-                <br/>
-                <div class="row">
-                    <div class="col-md-12">
-                        <span>
-                            Export data from
-                            <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="latest.date" is-open="latest.dateopened" ng-required="true" close-text="Close" />
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="openLatest($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
-                            until now
-                        </span>
-                    </div>
-                </div>
-                <br/>
-                <div class="form_group">
-                    <button type="submit" id="submit" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
-                </div>
-            </form>
-
+            <tracker-export-latest></tracker-export-latest>
         </div>
         <div ng-if="activeTab === 2">
             <h3>By period</h3>
