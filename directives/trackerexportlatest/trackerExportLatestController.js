@@ -27,7 +27,7 @@ appManagerMSF.directive('trackerExportLatest', function(){
     }
 });
 
-appManagerMSF.controller('trackerExportLatestController', ['$scope', 'ProgramService', function ($scope, ProgramService) {
+appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', function ($scope, $filter, ProgramService, UserService, EventExportService) {
     
     $scope.params = {};
 
@@ -51,7 +51,22 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', 'ProgramSer
     };
     
     $scope.submit = function() {
-
+        UserService.getCurrentUserOrgunits()
+            .then(function (orgunits) {
+                var lastUpdated = $filter('date')($scope.params.date,'yyyy-MM-dd');
+                return EventExportService.exportEventsFromLastWithDependenciesInZip(lastUpdated, orgunits, getSelectedPrograms());
+            })
+            .then(function (eventsZipFile) {
+                saveAs(eventsZipFile, $scope.params.filename + '.zip');
+            });
     };
+
+    function getSelectedPrograms () {
+        return $scope.services.filter(function (service) {
+            return service.selected;
+        }).reduce(function (array, service) {
+            return array.concat(service.programs);
+        }, []);
+    }
 
 }]);

@@ -62,7 +62,7 @@ appManagerMSF.factory("ProgramService", ['UserService', 'Organisationunit', 'Org
             });
             if (serviceValue.length == 1) {
                 codes[serviceValue[0].value] = codes[serviceValue[0].value] || [];
-                codes[serviceValue[0].value].push(programs[i].id);
+                codes[serviceValue[0].value].push(programs[i]);
             }
         }
 
