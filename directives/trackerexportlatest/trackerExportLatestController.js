@@ -28,14 +28,29 @@ appManagerMSF.directive('trackerExportLatest', function(){
 });
 
 appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', function ($scope, $filter, ProgramService, UserService, EventExportService, DataStoreService) {
-    
+
+    var dataStoreKey = 'trackerexport';
+
     $scope.params = {};
+    $scope.allServices = {};
 
     ProgramService.getProgramsUnderUserHierarchyByService()
         .then(function (data) {
             $scope.services = data;
             $scope.clickAllServices();
+        })
+        .then(addLastExportInfo);
+
+    function addLastExportInfo () {
+        return DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
+            if (log != undefined) {
+                $scope.allServices.lastExported = log.ALL;
+                $scope.services.map(function (service) {
+                    service.lastExported = log[service.code];
+                });
+            }
         });
+    }
     
     $scope.openLastUpdated = function ($event) {
         $event.preventDefault();
@@ -44,9 +59,9 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
     };
     
     $scope.clickAllServices = function () {
-        $scope.allServices = !$scope.allServices;
+        $scope.allServices.selected = !$scope.allServices.selected;
         $scope.services.map(function (service) {
-            service.selected = $scope.allServices;
+            service.selected = $scope.allServices.selected;
         });
     };
     
@@ -65,16 +80,16 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
     };
 
     function logExport () {
-        DataStoreService.getKeyValue('trackerexport').then(function (log) {
+        DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
             var current = generateLog();
             log = log || {};
-            if($scope.allServices) {
+            if($scope.allServices.selected) {
                 log.ALL = current;
             }
             getSelectedServices().map(function (service) {
                 log[service.code] = current;
             });
-            return DataStoreService.setKeyValue('trackerexport', log);
+            return DataStoreService.setKeyValue(dataStoreKey, log);
         });
     }
 
@@ -106,7 +121,7 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
 
     function evaluateAllServices (newServices) {
         if(newServices != undefined) {
-            $scope.allServices = newServices.reduce(function (state, current) {
+            $scope.allServices.selected = newServices.reduce(function (state, current) {
                 return state && current.selected;
             }, true);
         }

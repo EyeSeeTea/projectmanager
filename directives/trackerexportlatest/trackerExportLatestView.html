@@ -17,25 +17,24 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
 
 <form name="latestForm" ng-submit="latestForm.$valid && submit()" novalidate>
+    <br/>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <label for="filename_latest"> {{ 'FILE_NAME' | translate }} </label>
-            <div class="input-group">
-                <input id="filename_latest" type="text" class="form-control" ng-model="params.filename" name="file_name" required=""/>
-            </div>
+            <input id="filename_latest" type="text" class="form-control" ng-model="params.filename" name="file_name" required=""/>
         </div>
     </div>
     <br/>
     <div class="row">
         <div class="col-md-12">
-            <span>
-                Export data from
+            <span>Export data from</span>
+            <p class="col-md-2 input-group">
                 <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="params.date" is-open="dateopened" ng-required="true" close-text="Close" />
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
-                until now
-            </span>
+            </p>
+            <span>until now</span>
         </div>
     </div>
     <br/>
@@ -44,13 +43,15 @@
             <div class="panel panel-default">
                 <ul class="list-group service-list">
                     <li class="list-group-item service-header" ng-click="clickAllServices()">
-                        <input type="checkbox" ng-model="allServices">
-                        All services
+                        <input type="checkbox" ng-model="allServices.selected">
+                        <span>All services</span>
+                        <span class="pull-right">{{allServices.lastExported.end | date:'MM/dd/yyyy @ h:mma'}}</span>
                     </li>
                     <li ng-repeat="service in services | orderBy:'name'"
                         class="list-group-item" ng-click="service.selected = !service.selected">
                         <input type="checkbox" ng-model="service.selected">
-                        {{service.name}}
+                        <span>{{service.name}}</span>
+                        <span class="pull-right">{{service.lastExported.end | date:'MM/dd/yyyy @ h:mma'}}</span>
                     </li>
                 </ul>
             </div>
