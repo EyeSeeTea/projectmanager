@@ -98,4 +98,18 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
         }, []);
     }
 
+    $scope.$watch(
+        function () { return $scope.services;},
+        evaluateAllServices,
+        true
+    );
+
+    function evaluateAllServices (newServices) {
+        if(newServices != undefined) {
+            $scope.allServices = newServices.reduce(function (state, current) {
+                return state && current.selected;
+            }, true);
+        }
+    }
+
 }]);
