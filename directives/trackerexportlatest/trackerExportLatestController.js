@@ -58,7 +58,10 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
             .then(function (eventsZipFile) {
                 saveAs(eventsZipFile, $scope.params.filename + '.zip');
             })
-            .then(logExport);
+            .then(logExport)
+            .then(function final() {
+                console.log("Everything done");
+            });
     };
 
     function logExport () {
@@ -71,13 +74,13 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
             getSelectedServices().map(function (service) {
                 log[service.code] = current;
             });
-            console.log(log);
+            return DataStoreService.setKeyValue('trackerexport', log);
         });
     }
 
     function generateLog () {
         return {
-            filename: $scope.filename,
+            filename: $scope.params.filename,
             start: (new Date($scope.params.date)).toISOString(),
             end: (new Date()).toISOString()
         }
