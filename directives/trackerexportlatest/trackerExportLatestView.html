@@ -29,7 +29,8 @@
         <div class="col-md-12">
             <span>Export data from</span>
             <p class="col-md-2 input-group">
-                <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="params.date" is-open="dateopened" ng-required="true" close-text="Close" />
+                <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="params.date" is-open="dateopened"
+                       ng-required="true" close-text="Close" />
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
