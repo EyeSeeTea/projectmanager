@@ -106,3 +106,7 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
     	  $translateProvider.determinePreferredLanguage();
 	  });
 });
+
+appManagerMSF.config(function (uibDatepickerConfig) {
+	uibDatepickerConfig.startingDay = 1;
+});
