@@ -18,8 +18,14 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
 
 <div class="row" ng-show="status.visible">
-    <progressbar ng-class="{active: status.active, 'progress-striped': status.active}"
-                 value="status.value" type="{{status.type}}">
-        <span ng-show="status.active">{{ 'IN_PROGRESS' | translate }}</span>
-    </progressbar>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{status.value}}%;"
+             ng-class="{'active': status.active,
+                        'progress-striped': status.active,
+                        'progress-bar-info': status.type == 'info',
+                        'progress-bar-success': status.type == 'success',
+                        'progress-bar-danger': status.type == 'danger'}">
+            <span ng-show="status.active">{{ 'IN_PROGRESS' | translate }}</span>
+        </div>
+    </div>
 </div>

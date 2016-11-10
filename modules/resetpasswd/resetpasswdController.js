@@ -74,7 +74,7 @@ appManagerMSF.controller('resetpasswdController', ["$scope",'$filter', 'UsersByU
 			};
             angular.forEach(targetUsers, function (user) {
                 UserService.updateUserPassword(user, $scope.password.new).then(function (result) {
-                    if (result.httpStatus === "OK") {
+                    if (result.status === "OK") {
                         $scope.resetPasswordResult.updated++;
 						$scope.individualProgressStatus.value =
 							100 * ($scope.resetPasswordResult.updated / $scope.resetPasswordResult.total);
