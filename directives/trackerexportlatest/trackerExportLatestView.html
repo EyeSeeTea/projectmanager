@@ -29,7 +29,7 @@
         <div class="col-md-12">
             <span>{{ 'EXPORT_TRACKER_FROM' | translate }}</span>
             <p class="col-md-4 input-group">
-                <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ h:mma" ng-model="params.date" is-open="dateopened"
+                <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="params.date" is-open="dateopened"
                        ng-required="true" close-text="Close" />
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
@@ -46,13 +46,13 @@
                     <li class="list-group-item service-header" ng-click="clickAllServices()">
                         <input type="checkbox" ng-model="allServices.selected">
                         <span>{{ 'ALL_SERVICES' | translate }}</span>
-                        <span class="pull-right">{{allServices.lastExported.end | date:'dd/MM/yyyy @ h:mma'}}</span>
+                        <span class="pull-right">{{allServices.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
                     </li>
                     <li ng-repeat="service in services | orderBy:'name'"
                         class="list-group-item" ng-click="service.selected = !service.selected">
                         <input type="checkbox" ng-model="service.selected">
                         <span>{{service.name}}</span>
-                        <span class="pull-right">{{service.lastExported.end | date:'dd/MM/yyyy @ h:mma'}}</span>
+                        <span class="pull-right">{{service.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
                     </li>
                 </ul>
             </div>
