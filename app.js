@@ -47,6 +47,10 @@ appManagerMSF.config(function($routeProvider) {
 		templateUrl: "modules/dataexport/dataexportView.html",
 		controller: "dataexportController"
 	});
+	$routeProvider.when('/trackerdataimport', {
+		templateUrl: "modules/trackerdataimport/trackerDataImportView.html",
+		controller: "trackerDataImportController"
+	});
 	$routeProvider.when('/trackerdataexport', {
 		templateUrl: "modules/trackerdataexport/trackerDataExportView.html",
 		controller: "trackerDataExportController"
