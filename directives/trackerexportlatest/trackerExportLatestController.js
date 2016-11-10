@@ -39,17 +39,31 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
             $scope.services = data;
             $scope.clickAllServices();
         })
-        .then(addLastExportInfo);
+        .then(addLastExportInfo)
+        .then(setLatestExportAsDefault);
 
     function addLastExportInfo () {
         return DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
             if (log != undefined) {
-                $scope.allServices.lastExported = log.ALL;
                 $scope.services.map(function (service) {
                     service.lastExported = log[service.code];
                 });
             }
         });
+    }
+
+    function setLatestExportAsDefault () {
+        var latest = $scope.services.reduce(function (previous, current) {
+            if (previous.lastExported === undefined || current.lastExported === undefined) {
+                return {lastExported: undefined};
+            } else if (previous.lastExported.end < current.lastExported.end) {
+                return previous;
+            } else {
+                return current;
+            }
+        }, {lastExported: {end:null}});
+        $scope.allServices.lastExported = latest.lastExported;
+        $scope.params.date  = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
     }
     
     $scope.openLastUpdated = function ($event) {
