@@ -46,7 +46,7 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
 
         $scope.analyticsLog = [];
         EventImportService.importEventFile($file)
-            .then(AnalyticsService.refreshAnalytics)
+            .then(AnalyticsService.refreshEventAnalytics)
             .then(
                 function (success) {
                     $scope.progressStatus.type = 'success';

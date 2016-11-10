@@ -150,7 +150,7 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvar
 			MetadataImportService.importMetadataFile($file)
 				.then(printImportSummary)
 				.then(DemographicsService.updateDemographicData)
-				.then(AnalyticsService.refreshAnalytics)
+				.then(AnalyticsService.refreshAllAnalytics)
 				.then(
 					function (success) {
 						$scope.progressStatus.type = 'success';
