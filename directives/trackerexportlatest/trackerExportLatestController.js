@@ -39,10 +39,10 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
             $scope.services = data;
             $scope.clickAllServices();
         })
-        .then(addLastExportInfo)
+        .then(updateLastExportInfo)
         .then(setLatestExportAsDefault);
 
-    function addLastExportInfo () {
+    function updateLastExportInfo () {
         return DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
             if (log != undefined) {
                 $scope.services.map(function (service) {
@@ -80,7 +80,7 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
     };
     
     $scope.submit = function() {
-        UserService.getCurrentUserOrgunits()
+        return UserService.getCurrentUserOrgunits()
             .then(function (orgunits) {
                 return EventExportService.exportEventsFromLastWithDependenciesInZip($scope.params.date, orgunits, getSelectedPrograms());
             })
@@ -88,18 +88,17 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
                 saveAs(eventsZipFile, $scope.params.filename + '.zip');
             })
             .then(logExport)
+            .then(updateLastExportInfo)
+            .then(setLatestExportAsDefault)
             .then(function final() {
                 console.log("Everything done");
             });
     };
 
     function logExport () {
-        DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
+        return DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
             var current = generateLog();
             log = log || {};
-            if($scope.allServices.selected) {
-                log.ALL = current;
-            }
             getSelectedServices().map(function (service) {
                 log[service.code] = current;
             });
