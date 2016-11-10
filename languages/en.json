@@ -14,6 +14,7 @@
 	"TITLE_CAPITAL": "Capital",
 	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Project",
+	"ALL_SERVICES": "All services",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Validate Data",
@@ -76,7 +77,17 @@
 	"CLOSE":"Close",
 	"EMPTY_IMPORT_FILE": "The file contains no values",
   	"DETAILS": "Details",
-	
+
+	"____________Tracker Data Export":"__________",
+	"TRACKER_DATA_EXPORT": "Export individual data",
+	"LATEST_VALUES": "Latest values",
+	"BY_PERIOD": "By period",
+	"EXPORT_TRACKER_FROM": "Export data from",
+	"UNTIL_NOW": "Until now",
+
+	"____________Tracker Data Import":"__________",
+	"TRACKER_DATA_IMPORT": "Import individual data",
+
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Refresh data",
 	"ANALYTICS_MESSAGGE": "Analytics tables update",
@@ -142,7 +153,6 @@
 	"AUTHENTICATION_FAILED": "Remote server credentials are not correct.",
 	"NO_LOCAL_METADATA_VERSION": "Local server has not metadata version",
 	"NO_REMOTE_METADATA_VERSION": "Remote server has not metadata version",
-
 
 	"________________Service ": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Logger user credentials are not correct.",

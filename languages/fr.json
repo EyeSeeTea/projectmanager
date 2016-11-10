@@ -14,7 +14,8 @@
 	"TITLE_CAPITAL": "Capitale",
 	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Projet",
-	
+	"ALL_SERVICES": "Tous les services",
+
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Valider les données",
 	"DATA_APPROVAL_GET": "Obtenir les données",
@@ -76,8 +77,18 @@
 	"CLOSE":"Fermer",
 	"EMPTY_IMPORT_FILE":"El fichier n'a pas de valeurs",
 	"DETAILS": "Détails",
-	
-	"_______________ Analytics ":" _____________",	
+
+	"____________Tracker Data Export":"__________",
+	"TRACKER_DATA_EXPORT": "Exporter des données individuelles",
+	"LATEST_VALUES": "Dernières valeurs",
+	"BY_PERIOD": "Par période",
+	"EXPORT_TRACKER_FROM": "Exporter les données de",
+	"UNTIL_NOW": "jusqu'à maintenant",
+
+	"____________Tracker Data Import":"__________",
+	"TRACKER_DATA_IMPORT": "Importer des données individuelles",
+
+	"_______________ Analytics ":" _____________",
 	"ANALYTICS": "Actualiser les données",
 	"ANALYTICS_MESSAGGE": "Mise à jour des tableaux analytiques",
 	"ANALYTICS_BUTTON": "Actualiser",

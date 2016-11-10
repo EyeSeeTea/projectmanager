@@ -27,7 +27,7 @@
     <br/>
     <div class="row">
         <div class="col-md-12">
-            <span>Export data from</span>
+            <span>{{ 'EXPORT_TRACKER_FROM' | translate }}</span>
             <p class="col-md-4 input-group">
                 <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ h:mma" ng-model="params.date" is-open="dateopened"
                        ng-required="true" close-text="Close" />
@@ -35,7 +35,7 @@
                     <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
             </p>
-            <span>until now</span>
+            <span>{{ 'UNTIL_NOW' | translate }}</span>
         </div>
     </div>
     <br/>
@@ -45,7 +45,7 @@
                 <ul class="list-group service-list">
                     <li class="list-group-item service-header" ng-click="clickAllServices()">
                         <input type="checkbox" ng-model="allServices.selected">
-                        <span>All services</span>
+                        <span>{{ 'ALL_SERVICES' | translate }}</span>
                         <span class="pull-right">{{allServices.lastExported.end | date:'dd/MM/yyyy @ h:mma'}}</span>
                     </li>
                     <li ng-repeat="service in services | orderBy:'name'"
