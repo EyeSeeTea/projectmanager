@@ -11,6 +11,7 @@
 	"VALIDATION_FILE": "Please, seleccione un fichero",
 	"VALIDATION_START_DATE": "Por favor, introduzca la fecha de inicio",
 	"VALIDATION_END_DATE": "Por favor, introduzca la fecha de fin",
+	"VALIDATION_VALID_DATE": "Por favor, introduzca una fecha válida",
 	"TITLE_CAPITAL": "Capital",
 	"TITLE_MISSION": "Misión",
 	"TITLE_PROJECT": "Proyecto",

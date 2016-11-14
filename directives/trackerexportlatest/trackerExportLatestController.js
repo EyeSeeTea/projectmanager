@@ -33,6 +33,7 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
 
     $scope.params = {};
     $scope.allServices = {};
+    $scope.exporting = false;
 
     ProgramService.getProgramsUnderUserHierarchyByService()
         .then(function (data) {
@@ -80,6 +81,7 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
     };
     
     $scope.submit = function() {
+        $scope.exporting = true;
         return UserService.getCurrentUserOrgunits()
             .then(function (orgunits) {
                 return EventExportService.exportEventsFromLastWithDependenciesInZip($scope.params.date, orgunits, getSelectedPrograms());
@@ -92,6 +94,9 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
             .then(setLatestExportAsDefault)
             .then(function final() {
                 console.log("Everything done");
+            })
+            .finally(function () {
+                $scope.exporting = false;
             });
     };
 
@@ -99,7 +104,7 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
         return DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
             var current = generateLog();
             log = log || {};
-            getSelectedServices().map(function (service) {
+            $scope.getSelectedServices().map(function (service) {
                 log[service.code] = current;
             });
             return DataStoreService.setKeyValue(dataStoreKey, log);
@@ -114,14 +119,15 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
         }
     }
 
-    function getSelectedServices () {
-        return $scope.services.filter(function (service) {
-            return service.selected;
-        });
-    }
+    $scope.getSelectedServices = function () {
+        return !$scope.services ? [] :
+            $scope.services.filter(function (service) {
+                return service.selected;
+            });
+    };
 
     function getSelectedPrograms () {
-        return getSelectedServices().reduce(function (array, service) {
+        return $scope.getSelectedServices().reduce(function (array, service) {
             return array.concat(service.programs);
         }, []);
     }

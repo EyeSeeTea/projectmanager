@@ -18,10 +18,17 @@
 
 <form name="latestForm" ng-submit="latestForm.$valid && submit()" novalidate>
     <br/>
+    <div class="row" ng-show="latestForm.$submitted">
+        <div class="col-md-12">
+            <d2-messages type="danger" ng-show="latestForm.filename.$error.required" textmessage="{{ 'VALIDATION_FILE_NAME' | translate }}"></d2-messages>
+            <d2-messages type="danger" ng-show="latestForm.date.$error.date || latestForm.date.$error.required"
+                         textmessage="{{ 'VALIDATION_VALID_DATE' | translate }}"></d2-messages>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-4">
             <label for="filename_latest"> {{ 'FILE_NAME' | translate }} </label>
-            <input id="filename_latest" type="text" class="form-control" ng-model="params.filename" name="file_name" required=""/>
+            <input id="filename_latest" type="text" class="form-control" ng-model="params.filename" name="filename" required/>
         </div>
     </div>
     <br/>
@@ -30,7 +37,7 @@
             <span>{{ 'EXPORT_TRACKER_FROM' | translate }}</span>
             <p class="col-md-4 input-group">
                 <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="params.date" is-open="dateopened"
-                       ng-required="true" close-text="Close" />
+                       ng-required="true" close-text="Close" name="date" required/>
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
@@ -66,6 +73,9 @@
     </div>
     <br/>
     <div class="form_group">
-        <button type="submit" id="submit" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
+        <button type="submit" id="submit" class="btn btn-primary" ng-disabled="services.length == 0 || exporting || getSelectedServices().length == 0">
+            {{ 'EXPORT' | translate }}
+        </button>
+        <span ng-show="exporting" class='glyphicon glyphicon-repeat animation-rotation'></span>
     </div>
 </form>
