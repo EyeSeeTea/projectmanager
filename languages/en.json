@@ -84,6 +84,7 @@
 	"BY_PERIOD": "By period",
 	"EXPORT_TRACKER_FROM": "Export data from",
 	"UNTIL_NOW": "Until now",
+	"NO_SERVICES_AVAILABLE": "No services available",
 
 	"____________Tracker Data Import":"__________",
 	"TRACKER_DATA_IMPORT": "Import individual data",

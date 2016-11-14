@@ -43,16 +43,22 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <ul class="list-group service-list">
-                    <li class="list-group-item service-header" ng-click="clickAllServices()">
+                    <li class="list-group-item service-header" ng-show="services.length == 0">
+                        <span>{{ 'NO_SERVICES_AVAILABLE' | translate }}</span>
+                    </li>
+                    <li class="list-group-item service-header" ng-click="clickAllServices()" ng-show="services.length != 0">
                         <input type="checkbox" ng-model="allServices.selected">
                         <span>{{ 'ALL_SERVICES' | translate }}</span>
                         <span class="pull-right">{{allServices.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
                     </li>
-                    <li ng-repeat="service in services | orderBy:'name'"
+                    <li ng-repeat="service in services | orderBy:'name'" ng-show="services"
                         class="list-group-item" ng-click="service.selected = !service.selected">
                         <input type="checkbox" ng-model="service.selected">
                         <span>{{service.name}}</span>
                         <span class="pull-right">{{service.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
+                    </li>
+                    <li class="list-group-item" ng-hide="services">
+                        <span class='glyphicon glyphicon-repeat animation-rotation'></span>
                     </li>
                 </ul>
             </div>
