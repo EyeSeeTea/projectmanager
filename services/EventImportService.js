@@ -26,8 +26,12 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
                 var importOrder = [EventHelper.TEIS, EventHelper.ENROLLMENTS, EventHelper.EVENTS];
                 return importOrder.reduce(function (promise, element) {
                     if (content.elements[element] != undefined) {
+                        console.log(content.elements[element]);
                         return promise.then(function () {
-                            return uploadFile(element, content.elements[element].asArrayBuffer());
+                            return content.elements[element].async("uint8array")
+                                .then(function (data) {
+                                    return uploadFile(element, data);
+                                });
                         });
                     } else {
                         return promise;
@@ -38,23 +42,17 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
     };
 
     function readZipFile (file) {
-        console.log(file);
-        var deferred = $q.defer();
-        var fileReader = new FileReader();
-        fileReader.readAsArrayBuffer(file);
-        fileReader.onload = function(e) {
-            deferred.resolve(e.target.result)
-        };
-        return deferred.promise;
+        return JSZip.loadAsync(file)
     }
 
     function readEventZipFile (file) {
         return readZipFile(file).then(function (content) {
-            var zip = new JSZip(content);
+
             var elements = {};
-            elements[EventHelper.TEIS] = zip.file(EventHelper.TEIS_ZIP);
-            elements[EventHelper.ENROLLMENTS] = zip.file(EventHelper.ENROLLMENTS_ZIP);
-            elements[EventHelper.EVENTS] = zip.file(EventHelper.EVENTS_ZIP);
+            console.log(content);
+            elements[EventHelper.TEIS] = content.file(EventHelper.TEIS_ZIP);
+            elements[EventHelper.ENROLLMENTS] = content.file(EventHelper.ENROLLMENTS_ZIP);
+            elements[EventHelper.EVENTS] = content.file(EventHelper.EVENTS_ZIP);
 
             var isEmpty = elements[EventHelper.TEIS] == undefined &&
                 elements[EventHelper.ENROLLMENTS] == undefined &&
@@ -76,7 +74,7 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
             },
             data: new Uint8Array(file),
             headers: {'Content-Type': 'application/json'},
-            transformRequest: []
+            transformRequest: {}
         })
     }
 
