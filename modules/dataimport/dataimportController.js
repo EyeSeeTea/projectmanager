@@ -52,7 +52,9 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	        fileReader.onload = function(e) {
 
 	        	fileContent = e.target.result;
-	        	
+
+				//TODO Fix summary
+				/**
 	        	if (compress) {
 	        		
 	        		var zip = new JSZip(e.target.result);
@@ -60,7 +62,8 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 					$.each(zip.files, function (index, zipEntry) {
 						fileContentJSON = zip.file(zipEntry.name).asText();
 					});
-	        	}		        	
+	        	}
+				 */
 	        	
 	            $upload.http({
 	                url: commonvariable.url+"dataValueSets",

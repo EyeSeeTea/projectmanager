@@ -37,7 +37,6 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 	$scope.msjEmptyFile = false;
 	
 	// Read import file
-	var compress = false;
 	var fileContent;
 	var fileReader = new FileReader();
 	
@@ -48,68 +47,72 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 	}
 	
     fileReader.onload = function(e) {
-    	
+
     	fileContent = e.target.result;
-    	
-    	if ($scope.isCompress) {
-    		
-    		var zip = new JSZip(e.target.result);
-			
-			$.each(zip.files, function (index, zipEntry) {
-				fileContent = zip.file(zipEntry.name).asText();
+
+		new JSZip.external.Promise(
+			function (resolve, reject) {
+				if ($scope.isCompress) {
+					resolve(JSZip.loadAsync(fileContent).then(function(data){
+						return data.file(/.json$/)[0].async("string");
+					}));
+				} else {
+					resolve(fileContent);
+				}
+			})
+			.then(function (fileData) {
+				console.log(fileData);
+				var dataValues = JSON.parse(fileData).dataValues;
+				var data = {};
+
+				if (dataValues == undefined){
+					$scope.msjEmptyFile = true;
+					$scope.progressbarDisplayed = false;
+					return;
+				}
+
+				angular.forEach(dataValues, function(dataValue){
+					var value = {
+						dataElementId: dataValue.dataElement,
+						categoryOptionId: dataValue.categoryOptionCombo,
+						value: dataValue.value
+					};
+					if(data[dataValue.orgUnit] === undefined ){
+						data[dataValue.orgUnit] = {periods:{}};
+						data[dataValue.orgUnit].id = dataValue.orgUnit;
+					}
+					if(data[dataValue.orgUnit]['periods'][dataValue.period] === undefined){
+						data[dataValue.orgUnit]['periods'][dataValue.period] = [];
+					}
+					data[dataValue.orgUnit]['periods'][dataValue.period].push(value);
+				});
+
+				var healthCenters = {};
+				var kvalue = 0;
+				var num = Object.keys(data).length;
+				angular.forEach(data, function(value, serviceId){
+					Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent,dataSets[id,name,code,periodType]'}).$promise.then(function(service){
+
+						var parent = service.organisationUnits[0].parent;
+						if (healthCenters[parent.id] === undefined ){
+							healthCenters[parent.id] = {children:{}};
+							healthCenters[parent.id].id = parent.id;
+							healthCenters[parent.id].name = parent.name;
+						}
+
+						value.dataSets = filterDatasets(service.organisationUnits[0].dataSets);
+						healthCenters[parent.id]['children'][serviceId] = value;
+						healthCenters[parent.id]['children'][serviceId].name = service.organisationUnits[0].name;
+
+						kvalue++;
+						if ( kvalue==num ){
+							$scope.dataimportdata = healthCenters;
+							$scope.importLoaded = true;
+							$scope.progressbarDisplayed = false;
+						}
+					});
+				});
 			});
-    	}		        	
-    	
-    	var dataValues = JSON.parse(fileContent).dataValues;
-    	var data = {};
-    	
-    	if (dataValues == undefined){
-    		$scope.msjEmptyFile = true;
-    		$scope.progressbarDisplayed = false;
-    		return;
-    	}
-    	
-    	angular.forEach(dataValues, function(dataValue){
-    		var value = {
-    				dataElementId: dataValue.dataElement,
-    				categoryOptionId: dataValue.categoryOptionCombo,
-    				value: dataValue.value
-    		};
-    		if(data[dataValue.orgUnit] === undefined ){
-    			data[dataValue.orgUnit] = {periods:{}};
-				data[dataValue.orgUnit].id = dataValue.orgUnit;
-    		}
-    		if(data[dataValue.orgUnit]['periods'][dataValue.period] === undefined){
-    			data[dataValue.orgUnit]['periods'][dataValue.period] = [];
-    		}
-    		data[dataValue.orgUnit]['periods'][dataValue.period].push(value);
-    	});
-    	
-    	var healthCenters = {};
-    	var kvalue = 0;
-    	var num = Object.keys(data).length;
-    	angular.forEach(data, function(value, serviceId){
-    		Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent,dataSets[id,name,code,periodType]'}).$promise.then(function(service){
-
-    			var parent = service.organisationUnits[0].parent;
-    			if (healthCenters[parent.id] === undefined ){
-    				healthCenters[parent.id] = {children:{}};
-					healthCenters[parent.id].id = parent.id;
-					healthCenters[parent.id].name = parent.name;
-    			}
-
-    			value.dataSets = filterDatasets(service.organisationUnits[0].dataSets);
-    			healthCenters[parent.id]['children'][serviceId] = value;
-    			healthCenters[parent.id]['children'][serviceId].name = service.organisationUnits[0].name;
-    			
-    			kvalue++;
-    			if ( kvalue==num ){
-        			$scope.dataimportdata = healthCenters;
-        			$scope.importLoaded = true;
-        			$scope.progressbarDisplayed = false;
-    			}
-    		});
-    	});    	
     };
     
     $scope.clickSite = function(siteId){
