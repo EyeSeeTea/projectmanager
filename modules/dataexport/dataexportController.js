@@ -120,8 +120,10 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 					if($scope.zipped){
 						var zip = new JSZip();
 						zip.file(fileName + '.json', JSON.stringify(data));
-						var content = zip.generate({type:"blob", compression:"DEFLATE"});
-						saveAs(content, fileName + '.json.zip');
+						zip.generateAsync({type:"blob", compression:"DEFLATE"})
+							.then(function(content) {
+								saveAs(content, fileName + '.json.zip');
+							});
 					}
 					else{
 						var file = new Blob([JSON.stringify(data)], { type: 'application/json' });												
