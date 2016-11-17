@@ -46,7 +46,7 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
 
         $scope.analyticsLog = [];
         EventImportService.importEventFile($file)
-            .then(AnalyticsService.refreshEventAnalytics)
+            //.then(AnalyticsService.refreshEventAnalytics)
             .then(
                 function (success) {
                     $scope.progressStatus.type = 'success';
@@ -70,10 +70,8 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
     $scope.showImportSummary = function(){
         varValidation();
         if (!$scope.undefinedFile) {
-            EventImportService.previewEventFile($file).then(function(file) {
-                var zip = new JSZip();
-                var eve = zip.load(file["_data"].getContent()).files["events.json"]["_data"].getContent();
-                console.log(new Uint8Array(file.asArrayBuffer()));
+            EventImportService.previewEventFile($file).then(function(summary) {
+                console.log(summary);
             })
         }
     };

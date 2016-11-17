@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("ProgramService", ['UserService', 'Organisationunit', 'OrganisationUnitGroup', function(UserService, Organisationunit, OrganisationUnitGroup) {
+appManagerMSF.factory("ProgramService", ['UserService', 'Organisationunit', 'OrganisationUnitGroup', 'Programs', function(UserService, Organisationunit, OrganisationUnitGroup, Programs) {
 
     const serviceCodeId = "pG4YeQyynJh";
 
@@ -84,9 +84,15 @@ appManagerMSF.factory("ProgramService", ['UserService', 'Organisationunit', 'Org
         });
     }
     
+    function getProgramAndStages (programId) {
+        var fields = "id,displayName~rename(name),programStages[id,displayName~rename(name)]";
+        return Programs.get({uid: programId, fields: fields}).$promise;
+    }
+    
     return {
         getProgramsUnderUserHierarchy: getProgramsUnderUserHierarchy,
-        getProgramsUnderUserHierarchyByService: getProgramsUnderUserHierarchyByService
+        getProgramsUnderUserHierarchyByService: getProgramsUnderUserHierarchyByService,
+        getProgramAndStages: getProgramAndStages
     }
 
 }]);
