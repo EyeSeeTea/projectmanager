@@ -34,20 +34,25 @@ appManagerMSF.factory("MetadataImportService", ['$q', '$http', 'commonvariable',
 
             fileContent = e.target.result;
 
-            if (compress) {
-                var zip = new JSZip(e.target.result);
-                $.each(zip.files, function (index, zipEntry) {
-                    fileContent = zip.file(zipEntry.name).asArrayBuffer();
-                });
-            }
-
-            $http({
-                method: 'POST',
-                url: commonvariable.url + "metadata",
-                data: new Uint8Array(fileContent),
-                headers: {'Content-Type': 'application/json'},
-                transformRequest: []
-            })
+            new JSZip.external.Promise(
+                function (resolve, reject) {
+                    if (compress) {
+                        resolve(JSZip.loadAsync(fileContent).then(function(data){
+                            return data.file("metadata.json").async("uint8array");
+                        }));
+                    } else {
+                        resolve(fileContent);
+                    }
+                })
+                .then(function (data) {
+                    return $http({
+                        method: 'POST',
+                        url: commonvariable.url + "metadata",
+                        data: new Uint8Array(data),
+                        headers: {'Content-Type': 'application/json'},
+                        transformRequest: []
+                    })
+                })
                 .then(
                     function (response) {
                         deferred.resolve(response.data);
