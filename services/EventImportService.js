@@ -19,48 +19,52 @@
 appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "EventHelper", function($q, $http, commonvariable, EventHelper) {
     
     var importEventFile = function (file) {
-        return readZipFile(file).then(function(content) {
-            var returnPromise = $q.resolve("Start");
-            var isEmptyFile = true;
-            var zip = new JSZip(content);
-
-            if (zip.file(EventHelper.TEIS_ZIP) != undefined) {
-                isEmptyFile = false;
-                returnPromise = returnPromise.then(function () {
-                    return uploadFile(EventHelper.TEIS, zip.file(EventHelper.TEIS_ZIP).asArrayBuffer());
-                });
-            }
-
-            if (zip.file(EventHelper.ENROLLMENTS_ZIP) != undefined) {
-                isEmptyFile = false;
-                returnPromise = returnPromise.then(function () {
-                    return uploadFile(EventHelper.ENROLLMENTS, zip.file(EventHelper.ENROLLMENTS_ZIP).asArrayBuffer());
-                });
-            }
-
-            if (zip.file(EventHelper.EVENTS_ZIP) != undefined) {
-                isEmptyFile = false;
-                returnPromise = returnPromise.then(function () {
-                    return uploadFile(EventHelper.EVENTS, zip.file(EventHelper.EVENTS_ZIP).asArrayBuffer());
-                });
-            }
-
-            if (isEmptyFile) {
-                return $q.reject("The file does not contain event data.")
+        return readEventZipFile(file).then(function(content) {
+            if (content.isEmpty) {
+                return $q.reject("The file does not contain event data.");
             } else {
-                return returnPromise;
+                var importOrder = [EventHelper.TEIS, EventHelper.ENROLLMENTS, EventHelper.EVENTS];
+                return importOrder.reduce(function (promise, element) {
+                    if (content.elements[element] != undefined) {
+                        return promise.then(function () {
+                            return uploadFile(element, content.elements[element].asArrayBuffer());
+                        });
+                    } else {
+                        return promise;
+                    }
+                }, $q.resolve("Start"));
             }
         });
     };
 
     function readZipFile (file) {
+        console.log(file);
         var deferred = $q.defer();
         var fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
         fileReader.onload = function(e) {
             deferred.resolve(e.target.result)
         };
-        return deferred.promise
+        return deferred.promise;
+    }
+
+    function readEventZipFile (file) {
+        return readZipFile(file).then(function (content) {
+            var zip = new JSZip(content);
+            var elements = {};
+            elements[EventHelper.TEIS] = zip.file(EventHelper.TEIS_ZIP);
+            elements[EventHelper.ENROLLMENTS] = zip.file(EventHelper.ENROLLMENTS_ZIP);
+            elements[EventHelper.EVENTS] = zip.file(EventHelper.EVENTS_ZIP);
+
+            var isEmpty = elements[EventHelper.TEIS] == undefined &&
+                elements[EventHelper.ENROLLMENTS] == undefined &&
+                elements[EventHelper.EVENTS] == undefined;
+
+            return {
+                isEmpty: isEmpty,
+                elements: elements
+            }
+        });
     }
 
     function uploadFile (endpoint, file) {
@@ -76,7 +80,21 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
         })
     }
 
+    function previewEventFile (file) {
+        return readEventZipFile(file)
+            .then(function(content) {
+                console.log("entra");
+                if (content.elements[EventHelper.EVENTS] != undefined) {
+                    return content.elements[EventHelper.EVENTS];
+                } else {
+                    console.log("undefined");
+                    return $q.reject("No events");
+                }
+            });
+    }
+
     return {
-        importEventFile: importEventFile
+        importEventFile: importEventFile,
+        previewEventFile: previewEventFile
     }
 }]);

@@ -64,9 +64,19 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
     };
     
     function varValidation() {
-        console.log($file);
         $scope.undefinedFile = ($file == undefined);
     }
+    
+    $scope.showImportSummary = function(){
+        varValidation();
+        if (!$scope.undefinedFile) {
+            EventImportService.previewEventFile($file).then(function(file) {
+                var zip = new JSZip();
+                var eve = zip.load(file["_data"].getContent()).files["events.json"]["_data"].getContent();
+                console.log(new Uint8Array(file.asArrayBuffer()));
+            })
+        }
+    };
     
     $scope.onFileSelect = function ($files) {
         for (var i = 0; i < $files.length; i++) {
