@@ -34,7 +34,7 @@
     <br/>
     <div class="row">
         <div class="col-md-12">
-            <span>{{ 'EXPORT_TRACKER_FROM' | translate }}</span>
+            <label>{{ 'EXPORT_TRACKER_FROM' | translate }}</label>
             <p class="col-md-4 input-group">
                 <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="params.date" is-open="dateopened"
                        ng-required="true" close-text="Close" name="date" required/>
@@ -42,7 +42,6 @@
                     <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
             </p>
-            <span>{{ 'UNTIL_NOW' | translate }}</span>
         </div>
     </div>
     <br/>

@@ -83,7 +83,7 @@
 	"TRACKER_DATA_EXPORT": "Exporter des données individuelles",
 	"LATEST_VALUES": "Dernières valeurs",
 	"BY_PERIOD": "Par période",
-	"EXPORT_TRACKER_FROM": "Exporter les données de",
+	"EXPORT_TRACKER_FROM": "Exporter les données enregistrées ou mises à jour après",
 	"UNTIL_NOW": "jusqu'à maintenant",
 	"NO_SERVICES_AVAILABLE": "Pas de services disponibles",
 	"LAST_EXPORT": "Dernière exportation",
