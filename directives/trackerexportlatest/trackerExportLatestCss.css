@@ -1,4 +1,4 @@
-.service-list li:hover {
+.service-list .service-item:hover {
     cursor: pointer;
     background-color: rgb(245, 245, 245);
 }
@@ -7,6 +7,10 @@
     pointer-events: none;
 }
 
-.service-header {
+.service-sub-header {
     background-color: rgb(245, 245, 245);
+}
+
+.service-header {
+    background-color: lightgrey;
 }
