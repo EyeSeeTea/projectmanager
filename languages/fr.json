@@ -11,10 +11,13 @@
 	"VALIDATION_FILE": "Veuillez sélectionner un fichier",
 	"VALIDATION_START_DATE": "Veuillez indiquer une date de début",
 	"VALIDATION_END_DATE": "Veuillez indiquer une date de fin",
+	"VALIDATION_VALID_DATE": "Veullez indiquer une date valide",
 	"TITLE_CAPITAL": "Capitale",
 	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Projet",
-	
+	"ALL_SERVICES": "Tous les services",
+	"PROGRAM": "Programme",
+
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Valider les données",
 	"DATA_APPROVAL_GET": "Obtenir les données",
@@ -76,8 +79,22 @@
 	"CLOSE":"Fermer",
 	"EMPTY_IMPORT_FILE":"El fichier n'a pas de valeurs",
 	"DETAILS": "Détails",
-	
-	"_______________ Analytics ":" _____________",	
+
+	"____________Tracker Data Export":"__________",
+	"TRACKER_DATA_EXPORT": "Exporter des données individuelles",
+	"LATEST_VALUES": "Dernières valeurs",
+	"BY_PERIOD": "Par période",
+	"EXPORT_TRACKER_FROM": "Exporter les données enregistrées ou mises à jour après",
+	"UNTIL_NOW": "jusqu'à maintenant",
+	"NO_SERVICES_AVAILABLE": "Pas de services disponibles",
+	"LAST_EXPORT": "Dernière exportation",
+	"PREVIEW_FILE_SUMMARY": "Previsualiser sommaire",
+	"EVENT_COUNT": "Nombre de visites",
+
+	"____________Tracker Data Import":"__________",
+	"TRACKER_DATA_IMPORT": "Importer des données individuelles",
+
+	"_______________ Analytics ":" _____________",
 	"ANALYTICS": "Actualiser les données",
 	"ANALYTICS_MESSAGGE": "Mise à jour des tableaux analytiques",
 	"ANALYTICS_BUTTON": "Actualiser",

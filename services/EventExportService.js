@@ -190,19 +190,23 @@ appManagerMSF.factory("EventExportService", ["$q", "EventHelper", "Events", "Tra
     function compressFileByElementType (file) {
         var zip = new JSZip();
 
-        var events = new JSZip();
-        events.file(EventHelper.EVENTS_JSON, JSON.stringify({"events": file[EventHelper.EVENTS]}));
-        zip.file(EventHelper.EVENTS_ZIP, events.generate({type:"uint8array", compression:"DEFLATE"}));
+        var events = (new JSZip()).file(EventHelper.EVENTS_JSON, JSON.stringify({"events": file[EventHelper.EVENTS]}));
+        var teis = (new JSZip()).file(EventHelper.TEIS_JSON, JSON.stringify({"trackedEntityInstances": file[EventHelper.TEIS]}));
+        var enrolls = (new JSZip()).file(EventHelper.ENROLLMENTS_JSON, JSON.stringify({"enrollments": file[EventHelper.ENROLLMENTS]}));
 
-        var teis = new JSZip();
-        teis.file(EventHelper.TEIS_JSON, JSON.stringify({"trackedEntityInstances": file[EventHelper.TEIS]}));
-        zip.file(EventHelper.TEIS_ZIP, teis.generate({type:"uint8array", compression:"DEFLATE"}));
-
-        var enrollments = new JSZip();
-        enrollments.file(EventHelper.ENROLLMENTS_JSON, JSON.stringify({"enrollments": file[EventHelper.ENROLLMENTS]}));
-        zip.file(EventHelper.ENROLLMENTS_ZIP, enrollments.generate({type:"uint8array", compression:"DEFLATE"}));
-
-        return zip.generate({type:"blob", compression:"DEFLATE"});
+        return events.generateAsync({type: "blob", compression: "DEFLATE"})
+            .then(function (content) {
+                zip.file(EventHelper.EVENTS_ZIP, content);
+                return teis.generateAsync({type: "blob", compression: "DEFLATE"});
+            })
+            .then(function (content) {
+                zip.file(EventHelper.TEIS_ZIP, content);
+                return enrolls.generateAsync({type: "blob", compression: "DEFLATE"});
+            })
+            .then(function (content) {
+                zip.file(EventHelper.ENROLLMENTS_ZIP, content);
+                return zip.generateAsync({type: "blob", compression: "DEFLATE"});
+            });
     }
 
     // Util functions

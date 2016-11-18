@@ -18,7 +18,7 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS', 'base64']);
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
 
 appManagerMSF.config(function($routeProvider) {
  
@@ -46,6 +46,15 @@ appManagerMSF.config(function($routeProvider) {
 	$routeProvider.when('/dataexport', {
 		templateUrl: "modules/dataexport/dataexportView.html",
 		controller: "dataexportController"
+	});
+	$routeProvider.when('/trackerdataimport', {
+		templateUrl: "modules/trackerdataimport/trackerDataImportView.html",
+		controller: "trackerDataImportController",
+		css: "modules/trackerdataimport/trackerDataImportCss.css"
+	});
+	$routeProvider.when('/trackerdataexport', {
+		templateUrl: "modules/trackerdataexport/trackerDataExportView.html",
+		controller: "trackerDataExportController"
 	});
 	$routeProvider.when('/resetpasswd', {
 		templateUrl: "modules/resetpasswd/resetpasswdView.html",
@@ -97,4 +106,8 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
       }).fail(function () {
     	  $translateProvider.determinePreferredLanguage();
 	  });
+});
+
+appManagerMSF.config(function (uibDatepickerConfig) {
+	uibDatepickerConfig.startingDay = 1;
 });

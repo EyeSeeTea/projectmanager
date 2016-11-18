@@ -11,10 +11,13 @@
 	"VALIDATION_FILE": "Please, seleccione un fichero",
 	"VALIDATION_START_DATE": "Por favor, introduzca la fecha de inicio",
 	"VALIDATION_END_DATE": "Por favor, introduzca la fecha de fin",
+	"VALIDATION_VALID_DATE": "Por favor, introduzca una fecha válida",
 	"TITLE_CAPITAL": "Capital",
 	"TITLE_MISSION": "Misión",
 	"TITLE_PROJECT": "Proyecto",
-	
+	"ALL_SERVICES": "Todos los servicios",
+	"PROGRAM": "Programa",
+
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Aprobar datos",
 	"DATA_APPROVAL_GET": "Obtener Datos",
@@ -76,6 +79,20 @@
 	"CLOSE":"Cerrar",
 	"EMPTY_IMPORT_FILE":"El fichero no contiene valores",
   	"DETAILS": "Detalles",
+
+	"____________Tracker Data Export":"__________",
+	"TRACKER_DATA_EXPORT": "Exportar datos individuales",
+	"LATEST_VALUES": "Últimos valores",
+	"BY_PERIOD": "Por periodo",
+	"EXPORT_TRACKER_FROM": "Exportar datos registrados o actualizados después de",
+	"UNTIL_NOW": "hasta ahora",
+	"NO_SERVICES_AVAILABLE": "No hay servicios disponibles",
+	"LAST_EXPORT": "Última exportación",
+	"PREVIEW_FILE_SUMMARY": "Resumen de contenido",
+	"EVENT_COUNT": "Número de visitas",
+
+	"____________Tracker Data Import":"__________",
+	"TRACKER_DATA_IMPORT": "Importar datos individuales",
 
 	"_______________ Analytics ":" _____________",
 	"ANALYTICS": "Actualizar analíticas",

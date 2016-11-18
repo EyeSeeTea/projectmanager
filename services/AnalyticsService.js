@@ -128,9 +128,10 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
      * - notifies each message retrieved about the analytics execution
      * @returns {Promise}
      */
-    function refreshAnalytics () {
+    function refreshAnalytics (params) {
         var deferred = $q.defer();
 
+        //Analytics.post(params,'');
         Analytics.post();
 
         var inputParameters = {};
@@ -159,10 +160,25 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
         
         return deferred.promise;
     }
+    
+    function refreshAllAnalytics () {
+        return refreshAnalytics({});
+    }
+
+    function refreshEventAnalytics () {
+        return refreshAnalytics({skipAggregate: true});
+    }
+
+    function refreshAggregateAnalytics () {
+        return refreshAnalytics({skipEvents: true});
+    }
 
     return {
         queryAvailableData: queryAvailableData,
         formatAnalyticsResult: formatAnalyticsResult,
+        refreshAllAnalytics: refreshAllAnalytics,
+        refreshAggregateAnalytics: refreshAggregateAnalytics,
+        refreshEventAnalytics: refreshEventAnalytics,
         refreshAnalytics: refreshAnalytics
     }
 

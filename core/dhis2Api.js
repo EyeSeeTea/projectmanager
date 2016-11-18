@@ -292,7 +292,9 @@ Dhis2Api.factory("OrganisationUnitGroupSet",['$resource','commonvariable', funct
 }]);
 
 Dhis2Api.factory("OrganisationUnitGroup",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url+"organisationUnitGroups" );
+	return $resource( commonvariable.url+"organisationUnitGroups",
+		{paging: false}
+	);
 }]);
 
 Dhis2Api.factory("MetadataVersion", ['$resource', 'commonvariable', function ($resource, commonvariable) {
@@ -333,4 +335,8 @@ Dhis2Api.factory("TrackedEntityInstances",['$resource', 'commonvariable', functi
 
 Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "enrollments/:uid" );
+}]);
+
+Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "programs/:uid" );
 }]);

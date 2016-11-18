@@ -1,0 +1,16 @@
+.service-list .service-item:hover {
+    cursor: pointer;
+    background-color: rgb(245, 245, 245);
+}
+
+.service-list [type="checkbox"] {
+    pointer-events: none;
+}
+
+.service-sub-header {
+    background-color: rgb(245, 245, 245);
+}
+
+.service-header {
+    background-color: lightgrey;
+}

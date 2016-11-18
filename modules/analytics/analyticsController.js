@@ -34,7 +34,7 @@ appManagerMSF.controller('analyticsController', ["$scope", "AnalyticsService", "
 		$scope.notifications = [];
 
 		DemographicsService.updateDemographicData()
-			.then(AnalyticsService.refreshAnalytics)
+			.then(AnalyticsService.refreshAllAnalytics)
 			.then(
 				function (success) {
 					$scope.progressStatus.type = 'success';

@@ -63,6 +63,33 @@ appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(D
     };
 
     /**
+     * Set the value for the key and namespace provided.
+     * @param namespace Name of the namespace
+     * @param key Name of the key
+     * @param value New value
+     * @returns {*} 
+     */
+    var setNamespaceKeyValue = function (namespace, key, value) {
+        return getNamespaceKeyValue(namespace, key)
+            .then(function (currentValue) {
+                if (currentValue != undefined) {
+                    return DataStore.put({namespace: namespace, key: key}, value);
+                } else {
+                    return DataStore.save({namespace: namespace, key: key}, value);
+                }
+            })
+    };
+
+    /**
+     * Set the value for the key provided in the default namespace.
+     * @param key Name of the key
+     * @param value New value
+     */
+    var setKeyValue = function (key, value) {
+        return setNamespaceKeyValue(namespace, key, value);
+    };
+
+    /**
      * Introduces a new value in the array. This methods expects the value of the pair (namespace, key) to be an array.
      * If the value is empty, it creates a new array.
      * @param namespace Name of the namespace
@@ -73,15 +100,15 @@ appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(D
     var updateNamespaceKeyArray = function(namespace, key, value){
         return getNamespaceKeyValue(namespace, key)
             .then(function(currentValue){
-                currentValue[defaultArrayKey].push(value);
-                return DataStore.put({namespace: namespace, key: key}, currentValue);
-            },
-            function(noData){
-                var currentValue = {};
-                currentValue[defaultArrayKey] = [value];
-                return DataStore.save({namespace: namespace, key: key}, currentValue);
-            }
-        )
+                if (currentValue != undefined) {
+                    currentValue[defaultArrayKey].push(value);
+                    return DataStore.put({namespace: namespace, key: key}, currentValue);
+                } else {
+                    currentValue = {};
+                    currentValue[defaultArrayKey] = [value];
+                    return DataStore.save({namespace: namespace, key: key}, currentValue);
+                }
+            });
     };
 
     /**
@@ -91,7 +118,10 @@ appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(D
      * @returns {*|g|n} Promise with the value of the pair (namespace, key)
      */
     var getNamespaceKeyValue = function(namespace, key){
-        return DataStore.get({namespace: namespace, key: key}).$promise;
+        return DataStore.get({namespace: namespace, key: key}).$promise.then(
+            function (data) {return data;},
+            function () {return undefined}
+        )
     };
     
     var getKeyValue = function (key) {
@@ -102,7 +132,9 @@ appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(D
         getCurrentUserSettings: getCurrentUserSettings,
         updateCurrentUserSettings: updateCurrentUserSettings,
         getNamespaceKeyValue: getNamespaceKeyValue,
+        setNamespaceKeyValue: setNamespaceKeyValue,
         updateNamespaceKeyArray: updateNamespaceKeyArray,
+        setKeyValue: setKeyValue,
         getKeyValue: getKeyValue
     };
 
