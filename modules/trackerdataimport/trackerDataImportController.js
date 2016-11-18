@@ -44,9 +44,10 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
             value: 100
         };
 
+        $scope.summary = undefined;
         $scope.analyticsLog = [];
         EventImportService.importEventFile($file)
-            //.then(AnalyticsService.refreshEventAnalytics)
+            .then(AnalyticsService.refreshEventAnalytics)
             .then(
                 function (success) {
                     $scope.progressStatus.type = 'success';
@@ -67,12 +68,17 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
         $scope.undefinedFile = ($file == undefined);
     }
     
-    $scope.showImportSummary = function(){
+    $scope.showFileContentSummary = function(){
         varValidation();
         if (!$scope.undefinedFile) {
+            $scope.progressStatus = {visible: true, active: true, type: 'info', value: 100};
+            $scope.summary = undefined;
             EventImportService.previewEventFile($file).then(function(summary) {
                 console.log(summary);
-            })
+                $scope.summary = summary;
+                $scope.progressStatus.visible = false;
+                $scope.$apply();
+            });
         }
     };
     

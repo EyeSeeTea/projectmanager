@@ -16,6 +16,7 @@
 	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Projet",
 	"ALL_SERVICES": "Tous les services",
+	"PROGRAM": "Programme",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Valider les données",
@@ -87,6 +88,8 @@
 	"UNTIL_NOW": "jusqu'à maintenant",
 	"NO_SERVICES_AVAILABLE": "Pas de services disponibles",
 	"LAST_EXPORT": "Dernière exportation",
+	"PREVIEW_FILE_SUMMARY": "Previsualiser sommaire",
+	"EVENT_COUNT": "Nombre de visites",
 
 	"____________Tracker Data Import":"__________",
 	"TRACKER_DATA_IMPORT": "Importer des données individuelles",

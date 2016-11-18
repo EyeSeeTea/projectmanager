@@ -37,9 +37,28 @@
 <br/>
 <div class="row">
     <div class="col-md-12 form_group">
-        <button class="btn btn-primary"  ng-click='showImportDialog()'>{{ 'IMPORT' | translate }}</button>
-        <button class="btn btn-primary"  ng-click='showImportSummary()'>{{ 'IMPORT' | translate }}</button>
+        <button class="btn btn-primary" ng-click='showImportDialog()'>{{ 'IMPORT' | translate }}</button>
+        <button class="btn btn-primary" ng-click='showFileContentSummary()'>{{ 'PREVIEW_FILE_SUMMARY' | translate }}</button>
     </div>
+</div>
+<br/>
+<div id="file_summary" class="col-md-8" ng-show="summary">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>{{ 'PROGRAM' | translate }}</th>
+                <th>{{ 'EVENT_COUNT' | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="program in summary">
+                <td>{{ program.name }}</td>
+                <td>
+                    <p ng-repeat="stage in program.stages">{{ stage.value }} {{ stage.name }}</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <br/>
 <div class="col-md-6">
