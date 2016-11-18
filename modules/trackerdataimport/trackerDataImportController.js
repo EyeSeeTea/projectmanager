@@ -75,7 +75,6 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "$q", "EventI
             $scope.progressStatus = {visible: true, active: true, type: 'info', value: 100};
             $scope.summary = undefined;
             EventImportService.previewEventFile($file).then(function(summary) {
-                console.log(summary);
                 $scope.summary = summary;
                 $scope.progressStatus.visible = false;
             });

@@ -143,12 +143,10 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
                 if (dataElement != undefined){
                     inputParameters = {lastId: dataElement.uid};
                     if (dataElement.completed == true){
-                        console.log("done");
                         $interval.cancel(checkStatus);
                         deferred.resolve("Done update analytics");
                     }
                     if (previousMessage != dataElement.message){
-                        console.log("notificated");
                         deferred.notify(dataElement);
                         previousMessage = dataElement.message;
                     }
