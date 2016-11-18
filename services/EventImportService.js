@@ -19,9 +19,11 @@
 appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "EventHelper", "ProgramService", function($q, $http, commonvariable, EventHelper, ProgramService) {
     
     var importEventFile = function (file) {
-        return readEventZipFile(file).then(function(content) {
+        // It is required to wrap the return into a deferred object. If not, the following promises are not notified
+        var deferred = $q.defer();
+        readEventZipFile(file).then(function (content) {
             if (content.isEmpty) {
-                return $q.reject("The file does not contain event data.");
+                return deferred.reject("The file does not contain event data.");
             } else {
                 var importOrder = [EventHelper.TEIS, EventHelper.ENROLLMENTS, EventHelper.EVENTS];
                 return importOrder.reduce(function (promise, element) {
@@ -35,9 +37,14 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
                     } else {
                         return promise;
                     }
-                }, $q.resolve("Start"));
+                }, $q.resolve("Start"))
+                    .then(
+                        function () {deferred.resolve("Done");},
+                        function (error) {deferred.reject(error);}
+                    );
             }
         });
+        return deferred.promise;
     };
 
     function readZipFile (file) {
@@ -73,13 +80,20 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
             data: new Uint8Array(file),
             headers: {'Content-Type': 'application/json'},
             transformRequest: {}
-        })
+        });
     }
 
     function previewEventFile (file) {
-        return extractEvents(file)
+        // It is required to wrap the return into a deferred object. If not, the following promises are not notified
+        var deferred = $q.defer();
+        extractEvents(file)
             .then(classifyEventsByProgramAndStage)
-            .then(addNameToProgramsAndStages);
+            .then(addNameToProgramsAndStages)
+            .then(
+                function (file) {deferred.resolve(file)},
+                function (error) {deferred.reject(error)}
+            );
+        return deferred.promise;
     }
 
     function extractEvents (file) {

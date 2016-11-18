@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportService", "AnalyticsService", function($scope, EventImportService, AnalyticsService) {
+appManagerMSF.controller('trackerDataImportController', ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", function($scope, $q, EventImportService, AnalyticsService, DemographicsService) {
 
     $scope.progressStatus = {};
     $scope.undefinedFile = false;
@@ -33,7 +33,7 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
         }
     };
 
-    $scope.sendFiles= function(){
+    $scope.sendFiles = function(){
 
         $("#importConfirmation").modal("hide");
         
@@ -46,8 +46,9 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
 
         $scope.summary = undefined;
         $scope.analyticsLog = [];
+
         EventImportService.importEventFile($file)
-            .then(AnalyticsService.refreshEventAnalytics)
+            .then(AnalyticsService.refreshAnalytics)
             .then(
                 function (success) {
                     $scope.progressStatus.type = 'success';
@@ -77,7 +78,6 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "EventImportS
                 console.log(summary);
                 $scope.summary = summary;
                 $scope.progressStatus.visible = false;
-                $scope.$apply();
             });
         }
     };

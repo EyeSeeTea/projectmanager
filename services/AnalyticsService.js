@@ -131,7 +131,8 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
     function refreshAnalytics (params) {
         var deferred = $q.defer();
 
-        Analytics.post(params,'');
+        //Analytics.post(params,'');
+        Analytics.post();
 
         var inputParameters = {};
         var previousMessage = "";
@@ -142,10 +143,12 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
                 if (dataElement != undefined){
                     inputParameters = {lastId: dataElement.uid};
                     if (dataElement.completed == true){
+                        console.log("done");
                         $interval.cancel(checkStatus);
                         deferred.resolve("Done update analytics");
                     }
                     if (previousMessage != dataElement.message){
+                        console.log("notificated");
                         deferred.notify(dataElement);
                         previousMessage = dataElement.message;
                     }
@@ -177,7 +180,8 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
         formatAnalyticsResult: formatAnalyticsResult,
         refreshAllAnalytics: refreshAllAnalytics,
         refreshAggregateAnalytics: refreshAggregateAnalytics,
-        refreshEventAnalytics: refreshEventAnalytics
+        refreshEventAnalytics: refreshEventAnalytics,
+        refreshAnalytics: refreshAnalytics
     }
 
 }]);
