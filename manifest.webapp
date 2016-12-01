@@ -1,10 +1,10 @@
 {
 	"version":"1.4-dev",
-	"name":"Project Manager",
-	"description":"Project Manager",
+	"name":"HMIS Management",
+	"description":"General management of HMIS: data and metadata import/export, password reset,...",
 	"launch_path":"index.html",
 	"icons":{"16":null,
-	"48":"img/icons/Logo_48.jpg",
+	"48":"img/icons/Logo_48.png",
 	"128":null
 	},
 	"developer":{
@@ -18,7 +18,7 @@
 	"activities": {
 	  "dhis": {
 	  	"href": "*",
-	  	"namespace": "projectmanager"
+	  	"namespace": "HMIS_Management"
 	  }
 	}
 }

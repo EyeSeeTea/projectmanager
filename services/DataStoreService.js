@@ -19,7 +19,7 @@
 
 appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(DataStore, UserService) {
 
-    var namespace = "projectmanager";
+    var namespace = "HMIS_Management";
     var defaultArrayKey = "values";
 
     var getUserId = function() {
