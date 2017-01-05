@@ -47,8 +47,8 @@
 	 "ACCEPTED_HERE":"Approuvé et accepté",
 	
 	"_______________ Meta data ":" Import and Export_____________",
-	"METADATA_IMPORT": "Importer un projet/dictionnaire",
-	"METADATA_EXPORT": "Exporter un projet/dictionnaire",
+	"METADATA_IMPORT": "Importer un Configuration",
+	"METADATA_EXPORT": "Exporter un Configuration",
 	"METADATA_EXPORT_ZIP":"Comprimé ?",
 	"CHECKING_REMOTE_STATUS": "",
 	"NO_LOCAL_VERSION": "",
