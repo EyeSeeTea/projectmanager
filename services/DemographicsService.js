@@ -19,8 +19,8 @@
 
 appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID', 'DataExport', 'Organisationunit', function($q, UserService, DataSetsUID, DataExport, Organisationunit) {
 
-    var projectDatasetCode = 'DS_DEM';
-    var siteDatasetCode = 'DS_DEM2';
+    var demInfoDatasetCode = 'DS_DEM';
+    var populationDatasetCode = 'DS_POP_Y';
 
     var currentYear = new Date().getFullYear();
     var startDate = (currentYear - 1) + "-01-01";
@@ -71,7 +71,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     }
 
     function updateCbrAndPercentages () {
-        return getDatasetUidByCode(projectDatasetCode)
+        return getDatasetUidByCode(demInfoDatasetCode)
             .then(function (datasetId) {
                 return readDatasetValues(datasetId, userOrgunits, startDate, endDate);
             })
@@ -81,7 +81,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
     }
 
     function updatePopulation () {
-        return getDatasetUidByCode(siteDatasetCode)
+        return getDatasetUidByCode(populationDatasetCode)
             .then(function (datasetId) {
                 return readDatasetValues(datasetId, userSites, startDate, endDate);
             })
@@ -124,7 +124,8 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
                         dataElement: values[i].dataElement,
                         period: values[i].period,
                         orgUnit: children[j].id,
-                        value: values[i].value
+                        value: values[i].value,
+                        categoryOptionCombo: values[i].categoryOptionCombo
                     })
                 }
             }
