@@ -76,7 +76,7 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
                 return readDatasetValues(datasetId, userOrgunits, startDate, endDate);
             })
             .then(function (values) {
-                return writeValues(values, userServices);
+                return writeValues(values, userServices.concat(userSites));
             });
     }
 
