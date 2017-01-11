@@ -20,7 +20,7 @@
 appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID', 'DataExport', 'Organisationunit', function($q, UserService, DataSetsUID, DataExport, Organisationunit) {
 
     var demInfoDatasetCode = 'DS_DEM';
-    var populationDatasetCode = 'DS_POP_Y';
+    var populationDatasetCode = 'DS_POP_Q';
 
     var currentYear = new Date().getFullYear();
     var startDate = (currentYear - 1) + "-01-01";
