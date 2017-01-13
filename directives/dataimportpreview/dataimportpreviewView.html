@@ -56,7 +56,7 @@
 				<div class="panel panel-heading">{{ 'PERIOD' | translate }}</div>
 				<ul class="list-group">
 		    		<a id="{{ periodId}}" class="list-group-item" ng-class="{active: periodSelected == periodId}" 
-		    				ng-repeat="(periodId, period) in periods | orderBy:'periodId'" ng-click="clickPeriod(periodId)">
+		    				ng-repeat="(periodId, period) in periods" ng-click="clickPeriod(periodId)">
 		    			{{ periodId | d2FormatPeriod }}
 		    		</a>
 				</ul>

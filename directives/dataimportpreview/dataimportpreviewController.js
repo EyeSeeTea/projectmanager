@@ -61,7 +61,6 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 				}
 			})
 			.then(function (fileData) {
-				console.log(fileData);
 				var dataValues = JSON.parse(fileData).dataValues;
 				var data = {};
 
@@ -86,12 +85,13 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 					}
 					data[dataValue.orgUnit]['periods'][dataValue.period].push(value);
 				});
+				console.log(dataValues);
 
 				var healthCenters = {};
 				var kvalue = 0;
 				var num = Object.keys(data).length;
 				angular.forEach(data, function(value, serviceId){
-					Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent,dataSets[id,name,code,periodType]'}).$promise.then(function(service){
+					Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent[id,name],dataSets[id,name,code,periodType]'}).$promise.then(function(service){
 
 						var parent = service.organisationUnits[0].parent;
 						if (healthCenters[parent.id] === undefined ){
@@ -125,6 +125,7 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 	$scope.clickService = function(serviceId){
 		$scope.serviceSelected = serviceId;
 		$scope.periods = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].periods;
+		console.log($scope.dataimportdata);
 		$scope.periodSelected = null;
 	};
 	
