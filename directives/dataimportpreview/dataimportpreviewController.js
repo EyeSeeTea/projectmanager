@@ -33,7 +33,12 @@ Dhis2Api.directive('d2Dataimportpreview', function(){
 
 Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationunit", function($scope, Organisationunit){
 		
-	$scope.progressbarDisplayed = true;
+	$scope.importPreviewStatus = {
+		visible: true,
+		type: "info",
+		value: 100,
+		active: true
+	};
 	$scope.msjEmptyFile = false;
 	
 	// Read import file
@@ -66,7 +71,7 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 
 				if (dataValues == undefined){
 					$scope.msjEmptyFile = true;
-					$scope.progressbarDisplayed = false;
+					$scope.importPreviewStatus.visible = false;
 					return;
 				}
 
@@ -88,14 +93,13 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 					}
 					data[dataValue.orgUnit]['periods'][dataValue.period].values.push(value);
 				});
-				console.log(dataValues);
 
 				var healthCenters = {};
 				var kvalue = 0;
 				var num = Object.keys(data).length;
 				angular.forEach(data, function(value, serviceId){
 					Organisationunit.get({filter: 'id:eq:' + serviceId, fields: 'id,name,parent[id,name],dataSets[id,name,code,periodType]'}).$promise.then(function(service){
-
+						
 						var parent = service.organisationUnits[0].parent;
 						if (healthCenters[parent.id] === undefined ){
 							healthCenters[parent.id] = {children:{}};
@@ -111,7 +115,7 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 						if ( kvalue==num ){
 							$scope.dataimportdata = healthCenters;
 							$scope.importLoaded = true;
-							$scope.progressbarDisplayed = false;
+							$scope.importPreviewStatus.visible = false;
 						}
 					});
 				});

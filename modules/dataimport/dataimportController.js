@@ -19,7 +19,12 @@
 
 appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService) {
 		
-		$scope.progressbarDisplayed = false;
+		$scope.dataImportStatus = {
+			visible: false,
+			type: "info",
+			value: 100,
+			active: true
+		};
 		$scope.undefinedFile = false;
 		
 		var $file;//single file 
@@ -41,8 +46,8 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	    	
 	    	$scope.previewDataImport = false;
 	    	$("#importConfirmation").modal("hide");
-	    		    	
-	    	$scope.progressbarDisplayed = true;
+
+			$scope.dataImportStatus.visible = true;
 			$scope.importFailed = false;
 	    	
 	    	compress = getExtension($file.name) == "zip";
@@ -80,13 +85,13 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	        		checkStatus = $interval(function() {
 	        			var result = DataMart.query(inputParameters);
 	        			 result.$promise.then(function(data_datamart) {
-	        	    		console.log(data_datamart);
 	        	    		var dataElement = data_datamart[0];
 	        	    		if (dataElement != undefined){
 	        		    		inputParameters = {lastId: dataElement.uid};
 	        		    		if (dataElement.completed == true){
 	        	    				$interval.cancel(checkStatus);
-	        	    				$scope.progressbarDisplayed = false;
+									$scope.dataImportStatus.type = 'success';
+									$scope.dataImportStatus.active = false;
 	        	    			}
 	        		    		if (previousMessage != dataElement.message){
 	        		    			$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
@@ -102,7 +107,7 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	            		
 	            	console.log("File upload SUCCESS");
 	            }).error(function(data) {
-					$scope.progressbarDisplayed = false;
+					$scope.dataImportStatus.visible = false;
 					$scope.importFailed = true;
 
 	            	console.log("File upload FAILED");//error

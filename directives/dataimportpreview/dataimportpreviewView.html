@@ -20,8 +20,12 @@
 
 <div ng-controller='d2DataimportpreviewController'>
 
-	<d2-progressBar></d2-progressBar>
-	
+	<div class="row">
+		<div class="col-md-6">
+			<d2-progressbar-dynamic status="importPreviewStatus"></d2-progressbar-dynamic>
+		</div>
+	</div>
+
 	<div class="row" ng-show="msjEmptyFile">
 	  	<div class="col-md-12">
 			<d2-messages type="danger" textmessage="{{ 'EMPTY_IMPORT_FILE' | translate }}"></d2-messages>
