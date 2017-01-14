@@ -55,17 +55,17 @@
 			<div class="panel panel-default">
 				<div class="panel panel-heading">{{ 'PERIOD' | translate }}</div>
 				<ul class="list-group">
-		    		<a id="{{ periodId}}" class="list-group-item" ng-class="{active: periodSelected == periodId}" 
-		    				ng-repeat="(periodId, period) in periods" ng-click="clickPeriod(periodId)">
-		    			{{ periodId | d2FormatPeriod }}
+		    		<a id="{{ period.id}}" class="list-group-item" ng-class="{active: periodSelected == period.id}"
+		    				ng-repeat="period in periods | orderObjectBy:'id'" ng-click="clickPeriod(period.id)">
+		    			{{ period.id | d2FormatPeriod }}
 		    		</a>
 				</ul>
 			</div>		
 		</div>
 	</div>
 	
-	<d2-dataset-entry-form ng-repeat="(periodId, period) in periods" ng-if="periodId == periodSelected" 
+	<d2-dataset-entry-form ng-repeat="period in periods" ng-if="period.id == periodSelected"
 		period-id="periodSelected" datavalues="datavalues" datasets="datasets" orgunit="serviceSelected">
-	</d2-d2-dataset-entry-form>
+	</d2-dataset-entry-form>
 
 </div>

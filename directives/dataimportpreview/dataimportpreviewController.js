@@ -81,9 +81,12 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 						data[dataValue.orgUnit].id = dataValue.orgUnit;
 					}
 					if(data[dataValue.orgUnit]['periods'][dataValue.period] === undefined){
-						data[dataValue.orgUnit]['periods'][dataValue.period] = [];
+						data[dataValue.orgUnit]['periods'][dataValue.period] = {
+							"id": dataValue.period,
+							"values": []
+						};
 					}
-					data[dataValue.orgUnit]['periods'][dataValue.period].push(value);
+					data[dataValue.orgUnit]['periods'][dataValue.period].values.push(value);
 				});
 				console.log(dataValues);
 
@@ -125,13 +128,12 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 	$scope.clickService = function(serviceId){
 		$scope.serviceSelected = serviceId;
 		$scope.periods = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].periods;
-		console.log($scope.dataimportdata);
 		$scope.periodSelected = null;
 	};
 	
 	$scope.clickPeriod = function(periodId){
 		$scope.datasets = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].dataSets;
-		$scope.datavalues = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].periods[periodId];
+		$scope.datavalues = $scope.dataimportdata[$scope.siteSelected].children[$scope.serviceSelected].periods[periodId].values;
 		$scope.periodSelected = periodId;
 	};
 
