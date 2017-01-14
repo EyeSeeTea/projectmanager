@@ -22,6 +22,12 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 	function($scope, $q, $http, $parse, commonvariable, Organisationunit,
 			 OrganisationUnitGroupSet, OrgunitGroupSetService, UserService, DataStoreService, AnalyticsService) {
 
+		$scope.availableDataStatus = {
+			visible: false,
+			type: "info",
+			value: 100,
+			active: true
+		};
 		$scope.availablePeriods = [
 			{id: "LAST_3_MONTHS", name: 3},
 			{id: "LAST_6_MONTHS", name: 6},
@@ -70,7 +76,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 
 			// Initialize visibility of table and progressBar
 			$scope.tableDisplayed = false;
-			$scope.progressbarDisplayed = true;
+			$scope.availableDataStatus.visible = true;
 			
 			UserService.getCurrentUser().then(function(me){
 				var dataViewOrgUnits = me.dataViewOrganisationUnits;
@@ -103,7 +109,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 							// Check if last dataViewOrgunit
 							if(k === ++currentOu){
 								$scope.tableDisplayed = true;
-								$scope.progressbarDisplayed = false;
+								$scope.availableDataStatus.visible = false;
 							}
 						});
 				});
@@ -193,8 +199,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 		};
 
 		$scope.modifyFilter = function(filter){
-			var filterSetting = {};
-			if(filter.selected === undefined){
+			if(filter.selected === undefined || filter.selected === null){
 				delete selectedFilters[filter.id];
 			} else {
 				// Update filter information
@@ -202,6 +207,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 			}
 
 			/*
+			var filterSetting = {};
 			filterSetting = {
 				"key": "filters",
 				"value": selectedFilters
