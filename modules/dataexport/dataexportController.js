@@ -49,7 +49,12 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 		$scope.openedend = true;
 	};				  
 	///////////////////////////////////7		  
-	$scope.progressbarDisplayed = false;
+	$scope.dataExportStatus = {
+		visible: false,
+		type: "info",
+		value: 100,
+		active: true
+	};
 		
 	function RESTUtil() {}
 
@@ -66,13 +71,13 @@ appManagerMSF.controller('dataexportController', ["$scope",'$filter', "commonvar
 		}
 	
 	function updateprocess() {
-		$scope.progressbarDisplayed = false;
+		$scope.dataExportStatus.visible = false;
 	}
 	
 	$scope.submit=function(){
 		{			
 			
-		$scope.progressbarDisplayed = true;
+		$scope.dataExportStatus.visible = true;
 		
 		var api_url=commonvariable.url+"/dataValueSets.json?";
 

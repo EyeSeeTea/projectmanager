@@ -65,8 +65,10 @@
 	<br/>
 	<d2-treeorganisationunit  treetype="multiple" size='300px'></d2-treeorganisationunit>
 	<br/>
-	<div ng-show="progressbarDisplayed">
-	<d2-progressBar></d2-progressBar>
+	<div class="row">
+		<div class="col-md-6">
+			<d2-progressbar-dynamic status="dataExportStatus"></d2-progressbar-dynamic>
+		</div>
 	</div>
 	<br/>
 	<div class="form_group">	
