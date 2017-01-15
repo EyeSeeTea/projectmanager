@@ -87,13 +87,13 @@
             <div class="form_group">
                 <button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
             </div>
-            <br/>
             <div id="summary" ng-show="summaryDisplayed">
                 <h3>Import Summary</h3>
 
                 <h4>Import Count</h4>
                 <div id="importCount"></div>
 
+                <!--
                 <h4>Type Summary</h4>
                 <table id="typeSummary">
                     <thead>
@@ -104,15 +104,12 @@
                         <td>Ignored</td>
                     </tr>
                     </thead>
-                    <tbody>
-
-
-                    </tbody>
+                    <tbody></tbody>
                 </table>
+                -->
             </div>
         </div>
     </div>
-
 </div>
   
 <br/>
@@ -121,17 +118,13 @@
         <d2-progressbar-dynamic status="progressStatus"></d2-progressbar-dynamic>
     </div>
 </div>
-<br/>
-
-
-<br/>
 
 <div id="summary" ng-show="analyticsLog.length > 0">
     <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 
     <table data-toggle="table" id="notificationTable" class="notificationTable" style="">
         <tbody>
-        <tr ng-repeat="notification in analyticsLog">
+        <tr ng-repeat="notification in analyticsLog | orderBy:'-time'">
             <td>{{notification.time}}</td>
             <td>: {{notification.message}}</td>
         </tr>

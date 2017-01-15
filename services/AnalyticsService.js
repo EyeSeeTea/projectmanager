@@ -144,6 +144,7 @@ appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine',
                     inputParameters = {lastId: dataElement.uid};
                     if (dataElement.completed == true){
                         $interval.cancel(checkStatus);
+                        deferred.notify(dataElement.message);
                         deferred.resolve("Done update analytics");
                     }
                     if (previousMessage != dataElement.message){
