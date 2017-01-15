@@ -87,14 +87,15 @@
 
 <br/>
 
-<div id="summary_analytics" ng-show="summaryDisplayed">
+<div ng-show="analyticsLog.length > 0">
 	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
-	
+
 	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
-		<col width="40%">
-		<col>
 		<tbody>
-		
+		<tr ng-repeat="notification in analyticsLog | orderBy:'-time'">
+			<td>{{notification.time}}</td>
+			<td>: {{notification.message}}</td>
+		</tr>
 		</tbody>
 	</table>
 </div>

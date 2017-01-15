@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService) {
+appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService, AnalyticsService) {
 		
 		$scope.dataImportStatus = {
 			visible: false,
@@ -43,7 +43,7 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		};
 		
 	    $scope.sendFiles= function(){
-	    	
+			$scope.analyticsLog = [];
 	    	$scope.previewDataImport = false;
 	    	$("#importConfirmation").modal("hide");
 
@@ -78,32 +78,25 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	            	console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
 	            }).success(function(data) {
 
-	            	Analytics.post();
-	            	
-	            	var inputParameters = {};
-	        		var previousMessage = "";		            	
-	        		checkStatus = $interval(function() {
-	        			var result = DataMart.query(inputParameters);
-	        			 result.$promise.then(function(data_datamart) {
-	        	    		var dataElement = data_datamart[0];
-	        	    		if (dataElement != undefined){
-	        		    		inputParameters = {lastId: dataElement.uid};
-	        		    		if (dataElement.completed == true){
-	        	    				$interval.cancel(checkStatus);
-									$scope.dataImportStatus.type = 'success';
-									$scope.dataImportStatus.active = false;
-	        	    			}
-	        		    		if (previousMessage != dataElement.message){
-	        		    			$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
-	        		    			previousMessage = dataElement.message;
-	        			 		}
-	        	    		}
-	        	    	});
-	                  }, 200);
-	            	
+					AnalyticsService.refreshAllAnalytics()
+						.then(
+							function (success) {
+								$scope.dataImportStatus.type = 'success';
+								$scope.dataImportStatus.active = false;
+							},
+							function (error) {
+								$scope.dataImportStatus.type = 'danger';
+								$scope.dataImportStatus.active = false;
+								console.log(error);
+							},
+							function (notification) {
+								$scope.analyticsLog.push(notification);
+							}
+						);
+
 	            	$scope.generateSummary(data);
 	            	$scope.summaryDisplayed = true;
-					logDataimport($file.name, JSON.parse(fileContentJSON).dataValues, data);
+					logDataimport($file.name, data);
 	            		
 	            	console.log("File upload SUCCESS");
 	            }).error(function(data) {
@@ -164,7 +157,7 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		   }
        };
 
-	var logDataimport = function(filename, rawData, data){
+	var logDataimport = function(filename, data){
 		var namespace = "dataimportlog";
 		UserService.getCurrentUser().then(function(me){
 			var dataimportLog = {
@@ -173,8 +166,8 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 				filename: filename,
 				status: data.status,
 				importCount: data.importCount,
-				conflicts: data.conflicts,
-				data: DataImportService.getFormattedSummary(rawData)
+				conflicts: data.conflicts
+				//data: DataImportService.getFormattedSummary(rawData)
 			};
 			DataStoreService.updateNamespaceKeyArray(namespace, me.organisationUnits[0].id, dataimportLog);
 		})
