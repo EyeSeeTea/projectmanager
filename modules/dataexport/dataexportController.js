@@ -23,6 +23,12 @@ appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "co
 	// Set "zipped" to true by default
 	$scope.zipped = true;
 
+	$scope.demographicsSelected = false;
+	var currentYear = (new Date()).getFullYear();
+	$scope.availableYears = [currentYear - 3, currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
+	$scope.demographicsYear = currentYear;
+	var demographicsDatasets = ["DS_DEM", "DS_POP_Y"];
+
 	//new component for datepiker helder
 	 $scope.today = function() {
 		 $scope.dt = new Date();
@@ -72,8 +78,8 @@ appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "co
 		$scope.dataExportStatus.visible = false;
 	}
 	
-	$scope.submit=function(){
-			
+	$scope.submit = function() {
+		
 		$scope.dataExportStatus.visible = true;
 		
 		var api_url=commonvariable.url+"/dataValueSets.json?";
@@ -118,11 +124,12 @@ appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "co
 	};
 
 	var getDatasets = function() {
-		return DataSetsUID.get().$promise.then(function(data){
+		var filter = $scope.demographicsSelected ? {filter: "code:in:[" + demographicsDatasets.join(",") + "]"} : {};
+		return DataSetsUID.get(filter).$promise.then(function(data){
 			if(data.dataSets.length > 0) {
 				return data.dataSets;
 			} else {
-				$q.reject("No data sest");
+				$q.reject("No data set");
 			}
 		});
 	};
@@ -137,9 +144,16 @@ appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "co
 	};
 
 	var getBoundDates = function() {
-		return {
-			start: $filter('date')($scope.start_date,'yyyy-MM-dd'),
-			end: $filter('date')($scope.end_date,'yyyy-MM-dd')
+		if ($scope.demographicsSelected) {
+			return {
+				start: $scope.demographicsYear + "-01-01",
+				end: $scope.demographicsYear + "-12-31"
+			}
+		} else {
+			return {
+				start: $filter('date')($scope.start_date,'yyyy-MM-dd'),
+				end: $filter('date')($scope.end_date,'yyyy-MM-dd')
+			}
 		}
 	};
 }]);

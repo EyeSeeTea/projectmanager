@@ -80,6 +80,7 @@
 	"CLOSE":"Fermer",
 	"EMPTY_IMPORT_FILE":"El fichier n'a pas de valeurs",
 	"DETAILS": "Détails",
+	"DEMOGRAPHIC_DATA": "Données démographiques",
 
 	"____________Tracker Data Export":"__________",
 	"TRACKER_DATA_EXPORT": "Exporter des données individuelles",
