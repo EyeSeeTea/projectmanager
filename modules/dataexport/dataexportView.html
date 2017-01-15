@@ -34,7 +34,7 @@
 	<div class="col-md-6">
 		<label for="file_name"> {{ 'FILE_NAME' | translate }} </label>
 		<div class="input-group">
-		      <input type="text" class="form-control" ng-model="file_name" name="file_name" required=""/>
+		      <input id="file_name" type="text" class="form-control" ng-model="file_name" name="file_name" required=""/>
 			 	<span class="input-group-addon">
 		        	<label>{{ 'METADATA_EXPORT_ZIP' | translate }}</label> <input type="checkbox" ng-model="zipped" aria-label="...">
 		      	</span>	
@@ -43,24 +43,36 @@
 	</div>
 	<br/>
 	<div class="row">
-	<div class="col-md-3">
-		<label for="start_date">{{'EXPORT_INIT_DATE' | translate}}</label>
-	     <p class="input-group">
-            <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="start_date" is-open="openedstart" min-date="minDate" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="openstart($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-          </p>
-	</div>
-	<div class="col-md-3">
-		<label for="end_date">{{'EXPORT_END_DATE' | translate}}</label>
-	     <p class="input-group">
-            <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="end_date" is-open="openedend" min-date="minDate" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="openend($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-          </p>
-	</div>
+		<div class="col-md-3">
+			<label for="start_date">{{'EXPORT_INIT_DATE' | translate}}</label>
+			 <p class="input-group">
+				<input id="start_date" name="start_date" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="start_date"
+					   ng-disabled="demographicsSelected" ng-required="!demographicsSelected" is-open="openedstart" min-date="minDate"
+					   date-disabled="disabled(date, mode)" close-text="Close" />
+				<span class="input-group-btn">
+				  <button type="button" class="btn btn-default" ng-click="openstart($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			  </p>
+		</div>
+		<div class="col-md-3 right-border">
+			<label for="end_date">{{'EXPORT_END_DATE' | translate}}</label>
+			 <p class="input-group">
+				<input id="end_date" name="end_date" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="end_date"
+					   ng-disabled="demographicsSelected" ng-required="!demographicsSelected" is-open="openedend" min-date="minDate"
+					   date-disabled="disabled(date, mode)" close-text="Close" />
+				<span class="input-group-btn">
+				  <button type="button" class="btn btn-default" ng-click="openend($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			  </p>
+		</div>
+		<div class="col-md-3">
+			<label for="demYear">
+				<input id="demographics" type="checkbox" ng-model="demographicsSelected" aria-label="...">
+				<label for="demographics">{{ 'DEMOGRAPHIC_DATA' | translate }}</label>
+			</label>
+			<select id="demYear" class="form-control" ng-model="demographicsYear" ng-disabled="!demographicsSelected"
+					ng-options="year for year in availableYears">></select>
+		</div>
 	</div>
 	<br/>
 	<d2-treeorganisationunit  treetype="multiple" size='300px'></d2-treeorganisationunit>
@@ -70,9 +82,8 @@
 			<d2-progressbar-dynamic status="dataExportStatus"></d2-progressbar-dynamic>
 		</div>
 	</div>
-	<br/>
-	<div class="form_group">	
-		<button type="submit" id="submit" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>						
+	<div class="form_group">
+		<button type="submit" id="submit" class="btn btn-primary">{{ 'EXPORT' | translate }}</button>
 	</div>
 	
 </form>
