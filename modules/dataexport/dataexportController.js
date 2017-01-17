@@ -18,7 +18,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "DataExport",'$timeout', function($scope, $q, $filter, commonvariable, DataSetsUID, DataExport,$timeout) {
+appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "DataExport", 'DemographicsService', '$timeout', function($scope, $q, $filter, commonvariable, DataSetsUID, DataExport, DemographicsService, $timeout) {
 
 	// Set "zipped" to true by default
 	$scope.zipped = true;
@@ -88,7 +88,9 @@ appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "co
 		var fileName = getFilename();
 		var orgUnits = commonvariable.OrganisationUnitList;
 
-		getDatasets().then(function(dataSets) {
+		updateDemographicIfNeeded()
+			.then(getDatasets)
+			.then(function(dataSets) {
 
 			var dataset_filter = dataSets.reduce(function(list, dataset) {
 				return list + "dataSet=" + dataset.id + "&";
@@ -121,6 +123,14 @@ appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "co
 				$timeout(updateprocess, 5);
 			});
 		});
+	};
+
+	var updateDemographicIfNeeded = function() {
+		if ($scope.demographicsSelected) {
+			return DemographicsService.updateDemographicData();
+		} else {
+			return $q.when("No demographics needed");
+		}
 	};
 
 	var getDatasets = function() {
