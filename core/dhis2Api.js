@@ -178,6 +178,12 @@ Dhis2Api.factory("DataSetsUID",['$resource','commonvariable', function ($resourc
   { get: { method: "GET"} });
 }]);
 
+Dhis2Api.factory("DataElement",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataElements.json?fields=id&paging=false",
+		{},
+		{ get: { method: "GET"} });
+}]);
+
 Dhis2Api.factory("DataExport",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataValueSets.json", 
 	{startDate:'@startDate',

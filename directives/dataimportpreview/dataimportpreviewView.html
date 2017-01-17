@@ -20,8 +20,12 @@
 
 <div ng-controller='d2DataimportpreviewController'>
 
-	<d2-progressBar></d2-progressBar>
-	
+	<div class="row">
+		<div class="col-md-6">
+			<d2-progressbar-dynamic status="importPreviewStatus"></d2-progressbar-dynamic>
+		</div>
+	</div>
+
 	<div class="row" ng-show="msjEmptyFile">
 	  	<div class="col-md-12">
 			<d2-messages type="danger" textmessage="{{ 'EMPTY_IMPORT_FILE' | translate }}"></d2-messages>
@@ -55,17 +59,17 @@
 			<div class="panel panel-default">
 				<div class="panel panel-heading">{{ 'PERIOD' | translate }}</div>
 				<ul class="list-group">
-		    		<a id="{{ periodId}}" class="list-group-item" ng-class="{active: periodSelected == periodId}" 
-		    				ng-repeat="(periodId, period) in periods | orderBy:'periodId'" ng-click="clickPeriod(periodId)">
-		    			{{ periodId | d2FormatPeriod }}
+		    		<a id="{{ period.id}}" class="list-group-item" ng-class="{active: periodSelected == period.id}"
+		    				ng-repeat="period in periods | orderObjectBy:'id'" ng-click="clickPeriod(period.id)">
+		    			{{ period.id | d2FormatPeriod }}
 		    		</a>
 				</ul>
 			</div>		
 		</div>
 	</div>
 	
-	<d2-dataset-entry-form ng-repeat="(periodId, period) in periods" ng-if="periodId == periodSelected" 
+	<d2-dataset-entry-form ng-repeat="period in periods" ng-if="period.id == periodSelected"
 		period-id="periodSelected" datavalues="datavalues" datasets="datasets" orgunit="serviceSelected">
-	</d2-d2-dataset-entry-form>
+	</d2-dataset-entry-form>
 
 </div>

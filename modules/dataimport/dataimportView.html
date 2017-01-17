@@ -37,7 +37,11 @@
   
 	<br/>
 
-<d2-progressBar></d2-progressBar>
+<div class="row">
+	<div class="col-md-6">
+		<d2-progressbar-dynamic status="dataImportStatus"></d2-progressbar-dynamic>
+	</div>
+</div>
 
 <div class="row" ng-show="importFailed">
 	<div class="col-md-12">
@@ -47,9 +51,11 @@
 
 <br/>
 <div class="row">
-	<div class="form_group">
-		<button class="btn btn-primary"  ng-click='showImportDialog()'>{{ 'IMPORT' | translate }}</button>
-		<button class="btn btn-primary"  ng-click='previewFiles()'>{{ 'PREVIEW' | translate }}</button>
+	<div class="col-md-6">
+		<div class="form_group">
+			<button class="btn btn-primary"  ng-click='showImportDialog()'>{{ 'IMPORT' | translate }}</button>
+			<button class="btn btn-primary"  ng-click='previewFiles()'>{{ 'PREVIEW' | translate }}</button>
+		</div>
 	</div>
 </div>
 <br/>
@@ -81,14 +87,15 @@
 
 <br/>
 
-<div id="summary_analytics" ng-show="summaryDisplayed">
+<div ng-show="analyticsLog.length > 0">
 	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
-	
+
 	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
-		<col width="40%">
-		<col>
 		<tbody>
-		
+		<tr ng-repeat="notification in analyticsLog | orderBy:'-time'">
+			<td>{{notification.time}}</td>
+			<td>: {{notification.message}}</td>
+		</tr>
 		</tbody>
 	</table>
 </div>
