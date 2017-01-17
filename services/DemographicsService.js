@@ -17,10 +17,18 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID', 'DataExport', 'Organisationunit', function($q, UserService, DataSetsUID, DataExport, Organisationunit) {
+appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID', 'DataExport', 'Organisationunit', 'DataElement', function($q, UserService, DataSetsUID, DataExport, Organisationunit, DataElement) {
 
     var demInfoDatasetCode = 'DS_DEM';
+    var demInfoDatasetId;
     var populationDatasetCode = 'DS_POP_Q';
+    var populationDatasetId;
+    var ageDistributionCode = 'DEM3';
+    var ageDistributionId;
+    var populationCode = 'DEM1';
+    var populationId;
+    var populationByAgeCode = 'DEM4';
+    var populationByAgeId;
 
     var currentYear = new Date().getFullYear();
     var startDate = (currentYear - 1) + "-01-01";
@@ -37,7 +45,9 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
             if (hasRole) {
                 return saveUserOrgunits()
                     .then(saveUserSitesAndServices)
+                    .then(saveDemographicMetadata)
                     .then(updateCbrAndPercentages)
+                    .then(calculatePopulationByAge)
                     .then(updatePopulation);
 
             } else {
@@ -70,24 +80,90 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
         })
     }
 
-    function updateCbrAndPercentages () {
-        return getDatasetUidByCode(demInfoDatasetCode)
+    function saveDemographicMetadata () {
+        return getDatasetUidByCode(populationDatasetCode)
             .then(function (datasetId) {
-                return readDatasetValues(datasetId, userOrgunits, startDate, endDate);
+                populationDatasetId = datasetId;
+                return getDatasetUidByCode(demInfoDatasetCode);
             })
+            .then(function (datasetId) {
+                demInfoDatasetId = datasetId;
+                return getDataElementByCode(ageDistributionCode);
+            })
+            .then(function (dataElementId) {
+                ageDistributionId = dataElementId;
+                return getDataElementByCode(populationCode);
+            })
+            .then(function (dataElementId) {
+                populationId = dataElementId;
+                return getDataElementByCode(populationByAgeCode);
+            })
+            .then(function (dataElementId) {
+                populationByAgeId = dataElementId;
+            })
+    }
+
+    function updateCbrAndPercentages () {
+        var cbrAndPercentagesValues;
+        return readDatasetValues(demInfoDatasetId, userOrgunits, startDate, endDate)
             .then(function (values) {
-                return writeValues(values, userServices.concat(userSites));
+                cbrAndPercentagesValues = values;
+                // Copy cbr and age distributions from project to site
+                return writeValues(values, userSites);
+            })
+            .then(function () {
+                if (cbrAndPercentagesValues) {
+                    var cbrValues = cbrAndPercentagesValues.filter(function (value) {return value.dataElement != ageDistributionId;});
+                    // Not copy age distributions to services
+                    return writeValues(cbrValues, userServices);
+                } else {
+                    return $q.when("No values to update");
+                }
+            });
+    }
+
+    /**
+     * Calculates Population by age at project level and site level.
+     */
+    function calculatePopulationByAge () {
+        var ageDistribution;
+        return readDatasetValues(demInfoDatasetId, userOrgunits.concat(userSites), startDate, endDate)
+            .then(function (values) {
+                if (values != undefined) {
+                    ageDistribution = values.filter(function (value) { return value.dataElement == ageDistributionId});
+                    return readDatasetValues(populationDatasetId, userOrgunits.concat(userSites), startDate, endDate);
+                } else {
+                    return $q.reject("No age distribution information");
+                }
+            })
+            .then(function (populationValues) {
+                if (populationValues != undefined) {
+                    populationValues = populationValues.filter(function (value) { return value.dataElement == populationId});
+                    return writePopulationByAge(populationValues, ageDistribution);
+                } else {
+                    return $q.reject("No population data");
+                }
+            })
+            .catch(function(error) {
+                console.log("No population information: " + error);
             });
     }
 
     function updatePopulation () {
-        return getDatasetUidByCode(populationDatasetCode)
-            .then(function (datasetId) {
-                return readDatasetValues(datasetId, userSites, startDate, endDate);
-            })
+        return readDatasetValues(populationDatasetId, userSites, startDate, endDate)
             .then(function (values) {
                 return writeValues(values, userServices);
             });
+    }
+    
+    function getDataElementByCode (dataElementCode) {
+        return DataElement.get({filter: 'code:eq:' + dataElementCode}).$promise.then(function (dataElementInfo) {
+            if (dataElementInfo.dataElements.length != 0) {
+                return dataElementInfo.dataElements[0].id;
+            } else {
+                return undefined;
+            }
+        })
     }
 
     function getDatasetUidByCode (datasetCode) {
@@ -129,6 +205,28 @@ appManagerMSF.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID'
                     })
                 }
             }
+            return DataExport.save(payload).$promise;
+        } else {
+            return $q.when("No values to update");
+        }
+    }
+
+    function writePopulationByAge (populationValues, ageDistribution) {
+        if (populationValues != undefined && ageDistribution != undefined) {
+            var payload = {dataValues: []};
+            populationValues.map(function (popValue) {
+                ageDistribution.filter(function (value) {
+                    return value.period == popValue.period.substr(0,4) && value.orgUnit == popValue.orgUnit;
+                }).map(function (ageDistributionValue) {
+                    payload.dataValues.push({
+                        dataElement: populationByAgeId,
+                        period: popValue.period,
+                        orgUnit: popValue.orgUnit,
+                        value: Math.round((parseFloat(popValue.value) * parseFloat(ageDistributionValue.value) / 100)),
+                        categoryOptionCombo: ageDistributionValue.categoryOptionCombo
+                    })
+                })
+            });
             return DataExport.save(payload).$promise;
         } else {
             return $q.when("No values to update");
