@@ -27,7 +27,7 @@ appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "co
 	var currentYear = (new Date()).getFullYear();
 	$scope.availableYears = [currentYear - 3, currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
 	$scope.demographicsYear = currentYear;
-	var demographicsDatasets = ["DS_DEM", "DS_POP_Y"];
+	var demographicsDatasets = ["DS_DEM", "DS_POP_Q"];
 
 	//new component for datepiker helder
 	 $scope.today = function() {
