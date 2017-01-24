@@ -1,0 +1,66 @@
+.dhis2-header {
+    margin-left: 0;
+    margin-right: 0;
+    background-color: #b40303;
+}
+
+.logo-banner img {
+    height: 40px;
+}
+
+.app-title {
+    top: 12px;
+    font-weight: bold;
+    color: #fff;
+    font-size: 16px;
+}
+
+.left-side-menu {
+    background-color: #E8EAEA;
+    height: 100%;
+}
+
+/* Common animations */
+.animation-rotation {
+    -webkit-animation: rotation infinite linear 0.5s;
+    -moz-animation: rotation infinite linear 0.5s;
+    -o-animation: rotation infinite linear 0.5s;
+    animation: rotation infinite linear 0.5s;
+    text-indent: 0;
+}
+
+@-webkit-keyframes rotation {
+    0% {
+        -webkit-transform:rotate(0deg);
+    }
+    100% {
+        -webkit-transform:rotate(360deg);
+    }
+}
+
+@-moz-keyframes rotation {
+    0% {
+        -moz-transform:rotate(0deg);
+    }
+    100% {
+        -moz-transform:rotate(360deg);
+    }
+}
+
+@-o-keyframes rotation {
+    0% {
+        -o-transform:rotate(0deg);
+    }
+    100% {
+        -o-transform:rotate(360deg);
+    }
+}
+
+@keyframes rotation {
+    0% {
+        transform:rotate(0deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}

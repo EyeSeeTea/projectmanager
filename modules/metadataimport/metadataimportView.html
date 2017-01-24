@@ -19,59 +19,115 @@
 
 <h2>{{ 'METADATA_IMPORT' | translate }}</h2>
 
-<div class="row" ng-show="undefinedFile">
-  	<div class="col-md-12">
-		<d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
-	</div>
-</div>
-
 <div class="row">
+
+    <!--
+    <div class="col-md-6 right-border">
+        <div class="margin-20">
+            <h3>Automatic sync</h3>
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{ 'TITLE_PROJECT' | translate }}</div>
+                        <div class="panel-body">
+                            <span ng-show="localMetadataVersion">
+                                {{localMetadataVersion}}
+                                <span ng-show="syncStatus.active" class='glyphicon glyphicon-repeat animation-rotation'></span>
+                            </span>
+                            <span ng-hide="localMetadataVersion">{{ 'NO_LOCAL_VERSION' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span ng-show="versionDiffNumber == 0">Up-to-date</span>
+                    <span ng-show="versionDiffNumber > 0">{{versionDiffNumber}} updates available</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Remote</div>
+                        <div class="panel-body">
+                            <span ng-show="remoteMetadataVersion">{{remoteMetadataVersion}}</span>
+                            <span ng-show="!remoteMetadataVersion && !metadataSyncError" class='glyphicon glyphicon-repeat animation-rotation'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form_group">
+                    <button class="btn btn-primary" ng-click='metadataSync()'
+                            ng-class="{disabled: !remoteMetadataVersion || !localMetadataVersion || versionDiffNumber == 0}">
+                        {{ 'SYNC_METADATA' | translate }}
+                    </button>
+                </div>
+            </div>
+            <br/>
+            <d2-progressbar-dynamic status="syncStatus"></d2-progressbar-dynamic>
+            <div class="row col-md-8">
+                <div ng-if="metadataSyncError" class="alert alert-danger" role="alert">
+                    <span>{{ metadataSyncError | translate:info }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+
 	<div class="col-md-6">
-		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search"  required=""/>
-	</div>
+        <div class="margin-20">
+            <h3>Manual import</h3>
+            <div class="row" ng-show="undefinedFile">
+                <div class="col-md-12">
+                    <d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
+                </div>
+            </div>
+            <div class="row">
+                <label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
+                <input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search"  required=""/>
+            </div>
+            <br/>
+            <div class="form_group">
+                <button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
+            </div>
+            <div id="summary" ng-show="summaryDisplayed">
+                <h3>Import Summary</h3>
+
+                <h4>Import Count</h4>
+                <div id="importCount"></div>
+
+                <!--
+                <h4>Type Summary</h4>
+                <table id="typeSummary">
+                    <thead>
+                    <tr>
+                        <td>Type</td>
+                        <td>Imported</td>
+                        <td>Updated</td>
+                        <td>Ignored</td>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                -->
+            </div>
+        </div>
+    </div>
 </div>
   
-	<br/>
-<d2-progressBar></d2-progressBar>
 <br/>
-<div class="form_group">
-	<button class="btn btn-primary" ng-click='sendFiles()'>{{ 'IMPORT' | translate }}</button>
-</div>
-<br/>
-<div id="summary" ng-show="summaryDisplayed">
-	<h3>Import Summary</h3>
-	
-	<h4>Import Count</h4>
-	<div id="importCount"></div>
-	
-	<h4>Type Summary</h4>
-	<table id="typeSummary">
-	    <thead>
-	    <tr>
-	        <td>Type</td>
-	        <td>Imported</td>
-	        <td>Updated</td>
-	        <td>Ignored</td>
-	    </tr>
-	    </thead>
-	    <tbody>
-	            
-	              
-	      </tbody>
-     </table>
+<div class="row">
+    <div class="col-md-6">
+        <d2-progressbar-dynamic status="progressStatus"></d2-progressbar-dynamic>
+    </div>
 </div>
 
-<br/>
+<div id="summary" ng-show="analyticsLog.length > 0">
+    <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 
-<div id="summary_analytics" ng-show="summaryDisplayed">
-	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
-	
-	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
-		<col width="40%">
-		<col>
-		<tbody>
-		
-		</tbody>
-	</table>
+    <table data-toggle="table" id="notificationTable" class="notificationTable" style="">
+        <tbody>
+        <tr ng-repeat="notification in analyticsLog | orderBy:'-time'">
+            <td>{{notification.time}}</td>
+            <td>: {{notification.message}}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>

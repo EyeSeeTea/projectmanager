@@ -6,13 +6,19 @@
 	"SELECT_FILE": "Seleccionar archivo",
 	"IN_PROGRESS": "CARGANDO",
 	"FILE_NAME": "Nombre del fichero",
+	"USERS": "Usuarios",
 	"VALIDATION_FILE_NAME": "Por favor, rellene el nombre de fichero",
 	"VALIDATION_FILE": "Please, seleccione un fichero",
 	"VALIDATION_START_DATE": "Por favor, introduzca la fecha de inicio",
 	"VALIDATION_END_DATE": "Por favor, introduzca la fecha de fin",
+	"VALIDATION_VALID_DATE": "Por favor, introduzca una fecha válida",
 	"TITLE_CAPITAL": "Capital",
+	"TITLE_MISSION": "Misión",
 	"TITLE_PROJECT": "Proyecto",
-	
+	"TITLE_COMMON": "Común",
+	"ALL_SERVICES": "Todos los servicios",
+	"PROGRAM": "Programa",
+
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Aprobar datos",
 	"DATA_APPROVAL_GET": "Obtener Datos",
@@ -42,9 +48,13 @@
 	"ACCEPTED_HERE":"Aprobado y aceptado",
 	
 	"_______________ Meta data ":" Import and Export_____________",
-	"METADATA_IMPORT": "Importar Proyecto/Diccionario",
-	"METADATA_EXPORT": "Exportar Proyecto/Diccionario",
+	"METADATA_IMPORT": "Importar Configuración",
+	"METADATA_EXPORT": "Exportar Configuración",
 	"METADATA_EXPORT_ZIP":"Comprimido?",
+	"CHECKING_REMOTE_STATUS": "",
+	"NO_LOCAL_VERSION": "",
+	"NO_REMOTE_VERSION": "",
+	"SYNC_METADATA": "",
 		
 	"_______________ Data ":" Import and Export_____________",
 	"DATA_IMPORT": "Importar datos",
@@ -70,6 +80,21 @@
 	"CLOSE":"Cerrar",
 	"EMPTY_IMPORT_FILE":"El fichero no contiene valores",
   	"DETAILS": "Detalles",
+	"DEMOGRAPHIC_DATA": "Datos demográficos",
+
+	"____________Tracker Data Export":"__________",
+	"TRACKER_DATA_EXPORT": "Exportar datos individuales",
+	"LATEST_VALUES": "Últimos valores",
+	"BY_PERIOD": "Por periodo",
+	"EXPORT_TRACKER_FROM": "Exportar datos registrados o actualizados después de",
+	"UNTIL_NOW": "hasta ahora",
+	"NO_SERVICES_AVAILABLE": "No hay servicios disponibles",
+	"LAST_EXPORT": "Última exportación",
+	"PREVIEW_FILE_SUMMARY": "Resumen de contenido",
+	"EVENT_COUNT": "Número de visitas",
+
+	"____________Tracker Data Import":"__________",
+	"TRACKER_DATA_IMPORT": "Importar datos individuales",
 
 	"_______________ Analytics ":" _____________",
 	"ANALYTICS": "Actualizar analíticas",
@@ -77,13 +102,15 @@
 	"ANALYTICS_BUTTON": "Actualizar datos",
 	
 	"_______________ Reset":" password_____________",
-	"RESET_PASSWD":"Resetear passwords",
+	"RESET_PASSWD":"Resetear contraseñas",
 	"ROLE_1":"MedCo",
 	"ROLE_2":"MTL",
 	"ROLE_3":"Field User ",
-	"RESET_BUTTON":"Resetear Passwords",
-	"MESSAGE_RESET":"Usuarios con la password actualizada: ",
-		
+	"RESET_BUTTON":"Resetear Contraseñas",
+	"MESSAGE_RESET":"Usuarios con la contraseña actualizada: ",
+	"NEW_PASSWORD": "Nueva contraseña",
+	"NEW_PASSWORD_HINT": "La contraseña debe contener al menos una letra mayúscula y un dígito y debe tener entre 8 y 35 caracteres de longitud.",
+
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Datos disponibles",
 	"NUMBER_OF_MONTHS": "Número de meses",
@@ -125,5 +152,19 @@
 	"PERIOD_SELECT_YEAR":"seleccione un año",
 	"PERIOD_SELECT_FINANCIAL_APRIL":"Seleccione un periodo financiero (Abril)",
 	"PERIOD_SELECT_FINANCIAL_JULY":"Seleccione un periodo financiero (Julio)",
-	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Seleccione un periodo financiero (Octubre)"
+	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Seleccione un periodo financiero (Octubre)",
+
+	"________________Service ": " Metadata sync________",
+	"REMOTE_IS_AVAILABLE": "",
+	"REMOTE_NOT_AVAILABLE": "",
+	"REMOTE_NOT_CONFIGURED": "",
+	"AUTHENTICATION_FAILED": "",
+	"NO_LOCAL_METADATA_VERSION": "",
+	"NO_REMOTE_METADATA_VERSION": "",
+
+	"________________Service ": " Remote API___________",
+	"LOGGER_USER_NOT_AUTHORIZED": "",
+	"NOT_IN_WHITELIST": "",
+	"NO_LOGGER_USER": "",
+	"INVALID_LOGGER_USER": ""
 }

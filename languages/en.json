@@ -1,5 +1,3 @@
-
-
 {
 	"_______________ Common ":" for APPS_____________",
 	"TITLE_APPS": "MSF-OCBA Health Information System",
@@ -8,13 +6,19 @@
 	"SELECT_FILE": "Select file",
 	"IN_PROGRESS": "IN PROGRESS",
 	"FILE_NAME": "File name",
+	"USERS": "Users",
 	"VALIDATION_FILE_NAME": "Please, fill in the file name",
 	"VALIDATION_FILE": "Please, select a file",
 	"VALIDATION_START_DATE": "Please, fill in a start date",
 	"VALIDATION_END_DATE": "Please, fill in an end date",
+	"VALIDATION_VALID_DATE": "Please, fill in a valid date",
 	"TITLE_CAPITAL": "Capital",
+	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Project",
-	
+	"TITLE_COMMON": "Common",
+	"ALL_SERVICES": "All services",
+	"PROGRAM": "Program",
+
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Validate Data",
 	"DATA_APPROVAL_GET": "Get data",
@@ -41,12 +45,16 @@
 	"APPROVAL_ACCEPT_DESC":"Are you sure you want to accept this data set?",
 	"APPROVAL_UNACCEPT_TITLE":"Unaccpet",
 	"APPROVAL_UNACCEPT_DESC":"Are you sure you want to unaccept this data set?",
-	 "ACCEPTED_HERE":"Approved and accepted",
+	"ACCEPTED_HERE":"Approved and accepted",
 	
 	"_______________ Meta data ":" Import and Export_____________",
-	"METADATA_IMPORT": "Import Project/Dictionary",
-	"METADATA_EXPORT": "Export Project/Dictionary",
+	"METADATA_IMPORT": "Import Configuration",
+	"METADATA_EXPORT": "Export Configuration",
 	"METADATA_EXPORT_ZIP":"Compressed?",
+	"CHECKING_REMOTE_STATUS": "Checking remote server status",
+	"NO_LOCAL_VERSION": "No local version",
+	"NO_REMOTE_VERSION": "No remote version",
+	"SYNC_METADATA": "Sync metadata",
 	
 	"_______________ Data ":" Import and Export_____________",
 	"DATA_IMPORT": "Import data",
@@ -72,19 +80,36 @@
 	"CLOSE":"Close",
 	"EMPTY_IMPORT_FILE": "The file contains no values",
   	"DETAILS": "Details",
-	
+	"DEMOGRAPHIC_DATA": "Demographic data",
+
+	"____________Tracker Data Export":"__________",
+	"TRACKER_DATA_EXPORT": "Export individual data",
+	"LATEST_VALUES": "Latest values",
+	"BY_PERIOD": "By period",
+	"EXPORT_TRACKER_FROM": "Export data registered or updated after",
+	"UNTIL_NOW": "Until now",
+	"NO_SERVICES_AVAILABLE": "No services available",
+	"LAST_EXPORT": "Last export",
+	"PREVIEW_FILE_SUMMARY": "Preview summary",
+	"EVENT_COUNT": "Number of visits",
+
+	"____________Tracker Data Import":"__________",
+	"TRACKER_DATA_IMPORT": "Import individual data",
+
 	"_______________ Analytics ":" _____________",	
 	"ANALYTICS": "Refresh data",
 	"ANALYTICS_MESSAGGE": "Analytics tables update",
 	"ANALYTICS_BUTTON": "Refresh",
 	
 	"_______________ Reset":" password_____________",
-	"RESET_PASSWD":"Reset password users",
+	"RESET_PASSWD":"Reset users' password",
 	"ROLE_1":"MedCo",
 	"ROLE_2":"MTL",
 	"ROLE_3":"Field User ",
 	"RESET_BUTTON":"Reset Passwords",
 	"MESSAGE_RESET":"Users with password updated: ",
+	"NEW_PASSWORD": "New password",
+	"NEW_PASSWORD_HINT": "Password must contain at least one capital letter and one digit and must be between 8 and 35 characters long.",
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",
@@ -127,5 +152,19 @@
 	"PERIOD_SELECT_YEAR":"Select a year",
 	"PERIOD_SELECT_FINANCIAL_APRIL":"Select a financial period (April)",
 	"PERIOD_SELECT_FINANCIAL_JULY":"Select a financial period (July)",
-	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Select a financial period (October)"
+	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Select a financial period (October)",
+
+	"________________Service ": " Metadata sync________",
+	"REMOTE_IS_AVAILABLE": "Remote server is available.",
+	"REMOTE_NOT_AVAILABLE": "Remote server is not available.",
+	"REMOTE_NOT_CONFIGURED": "Remote server settings are not configured.",
+	"AUTHENTICATION_FAILED": "Remote server credentials are not correct.",
+	"NO_LOCAL_METADATA_VERSION": "Local server has not metadata version",
+	"NO_REMOTE_METADATA_VERSION": "Remote server has not metadata version",
+
+	"________________Service ": " Remote API___________",
+	"LOGGER_USER_NOT_AUTHORIZED": "Logger user credentials are not correct.",
+	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{url}}' in the whitelist.",
+	"NO_LOGGER_USER": "Logger user is not available.",
+	"INVALID_LOGGER_USER": "Logger user credentials are invalid."
 }

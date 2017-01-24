@@ -18,10 +18,16 @@
 
 
 appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$parse", "commonvariable",
-	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "meUser", "DataStoreService", "AnalyticsService",
+	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "DataStoreService", "AnalyticsService",
 	function($scope, $q, $http, $parse, commonvariable, Organisationunit,
-			 OrganisationUnitGroupSet, OrgunitGroupSetService, meUser, DataStoreService, AnalyticsService) {
+			 OrganisationUnitGroupSet, OrgunitGroupSetService, UserService, DataStoreService, AnalyticsService) {
 
+		$scope.availableDataStatus = {
+			visible: false,
+			type: "info",
+			value: 100,
+			active: true
+		};
 		$scope.availablePeriods = [
 			{id: "LAST_3_MONTHS", name: 3},
 			{id: "LAST_6_MONTHS", name: 6},
@@ -70,13 +76,10 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 
 			// Initialize visibility of table and progressBar
 			$scope.tableDisplayed = false;
-			$scope.progressbarDisplayed = true;
-
-			// Definition of meUser promise
-			var meUserPromise = meUser.get({fields: 'dataViewOrganisationUnits[id,level,children[id,level,children]]'}).$promise;
-
-			meUserPromise.then(function(meUser){
-				var dataViewOrgUnits = meUser.dataViewOrganisationUnits;
+			$scope.availableDataStatus.visible = true;
+			
+			UserService.getCurrentUser().then(function(me){
+				var dataViewOrgUnits = me.dataViewOrganisationUnits;
 
 				var k = dataViewOrgUnits.length;
 				var currentOu = 0;
@@ -106,7 +109,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 							// Check if last dataViewOrgunit
 							if(k === ++currentOu){
 								$scope.tableDisplayed = true;
-								$scope.progressbarDisplayed = false;
+								$scope.availableDataStatus.visible = false;
 							}
 						});
 				});
@@ -196,8 +199,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 		};
 
 		$scope.modifyFilter = function(filter){
-			var filterSetting = {};
-			if(filter.selected === undefined){
+			if(filter.selected === undefined || filter.selected === null){
 				delete selectedFilters[filter.id];
 			} else {
 				// Update filter information
@@ -205,6 +207,7 @@ appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$
 			}
 
 			/*
+			var filterSetting = {};
 			filterSetting = {
 				"key": "filters",
 				"value": selectedFilters

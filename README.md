@@ -11,17 +11,16 @@ DHIS2, a flexible, web-based open source information system to collect and analy
 * Import / export Meta-Data (Import / Export Project or Dictionary): Exports all Metadata in the system in the smallest format
 * Import / export data: Expors data by selected org. unit and period
 * Active / recover user: When a system imports metadata, user's passwords are not included in the exchange files. The Project Manager activates the imported users, which means, assign them a new password
+* Available data: show a table with the number of values introduced by orgunit and period.
 
-## Configuration
+## Build
 
-Configure the DHIS url in [the manifest.webapp](manifest.webapp#L20) depending on your DHIS2 server instance:
+Bower is used as dependency manager. In order to have all dependencies available you must execute 
+
 ```
-"activities": {
-    "dhis":{
-    "href":"../dhis/"
-    }
-  }
+# bower install
 ```
+in the app directory.
 
 ## Feedback
 

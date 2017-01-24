@@ -1,0 +1,8 @@
+.user-list li:hover {
+    cursor: pointer;
+    background-color: rgb(245, 245, 245);
+}
+
+.user-list [type="checkbox"] {
+    pointer-events: none;
+}

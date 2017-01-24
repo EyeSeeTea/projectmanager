@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("AnalyticsService", ['AnalyticsEngine', function(AnalyticsEngine) {
+appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart', function($q, $interval, AnalyticsEngine, Analytics, DataMart) {
 
     /**
      * Performs a query to analytics endpoint with the parameters provided.
@@ -121,9 +121,66 @@ appManagerMSF.factory("AnalyticsService", ['AnalyticsEngine', function(Analytics
         return $.map(orgunits, function(orgunit, id){ return [orgunit]; })
     };
 
+    /**
+     * It starts the Refresh analytics process and returns a promise that:
+     * - resolves when the analytics process is finished
+     * - rejects when there is a problem during the execution
+     * - notifies each message retrieved about the analytics execution
+     * @returns {Promise}
+     */
+    function refreshAnalytics (params) {
+        var deferred = $q.defer();
+
+        //Analytics.post(params,'');
+        Analytics.post();
+
+        var inputParameters = {};
+        var previousMessage = "";
+        var checkStatus = $interval( function () {
+            var result = DataMart.query(inputParameters);
+            result.$promise.then( function (data) {
+                var dataElement = data[0];
+                if (dataElement != undefined){
+                    inputParameters = {lastId: dataElement.uid};
+                    if (dataElement.completed == true){
+                        $interval.cancel(checkStatus);
+                        deferred.notify(dataElement.message);
+                        deferred.resolve("Done update analytics");
+                    }
+                    if (previousMessage != dataElement.message){
+                        deferred.notify(dataElement);
+                        previousMessage = dataElement.message;
+                    }
+                }
+            },
+            function (error) {
+                $interval.cancel(checkStatus);
+                deferred.reject("Error while refreshing analytics");
+            });
+        }, 200);
+        
+        return deferred.promise;
+    }
+    
+    function refreshAllAnalytics () {
+        return refreshAnalytics({});
+    }
+
+    function refreshEventAnalytics () {
+        return refreshAnalytics({skipAggregate: true});
+    }
+
+    function refreshAggregateAnalytics () {
+        return refreshAnalytics({skipEvents: true});
+    }
+
     return {
         queryAvailableData: queryAvailableData,
-        formatAnalyticsResult: formatAnalyticsResult
+        formatAnalyticsResult: formatAnalyticsResult,
+        refreshAllAnalytics: refreshAllAnalytics,
+        refreshAggregateAnalytics: refreshAggregateAnalytics,
+        refreshEventAnalytics: refreshEventAnalytics,
+        refreshAnalytics: refreshAnalytics
     }
 
 }]);

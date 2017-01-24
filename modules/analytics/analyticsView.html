@@ -19,22 +19,25 @@
 
 <h2>{{ 'ANALYTICS' | translate }}</h2>
 
-	<br/>
-		<d2-progressBar></d2-progressBar>	
-	<div class="form_group">
-		<button type="button" ng-click="analytics()" class="btn btn-primary">{{ 'ANALYTICS_BUTTON' | translate }}</button>
-	</div>	
+<br/>
+<div class="col-md-6">
+	<d2-progressbar-dynamic status="progressStatus"></d2-progressbar-dynamic>
+</div>
 
+<div class="col-md-12 form_group">
+	<button type="button" ng-click="analytics()" class="btn btn-primary">{{ 'ANALYTICS_BUTTON' | translate }}</button>
+</div>
 
+<br/>
 <div id="summary" ng-show="summaryDisplayed">
 	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 	
 	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
-		<col width="40%">
-		<col>
 		<tbody>
-		
+		<tr ng-repeat="notification in notifications | orderBy:'-time'">
+			<td>{{notification.time}}</td>
+			<td>: {{notification.message}}</td>
+		</tr>
 		</tbody>
 	</table>
 <div>
-	

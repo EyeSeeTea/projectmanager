@@ -21,16 +21,17 @@
 <ul class="nav nav-pills nav-stacked">
     <li></li>
     <li class="navbar-brand">{{ 'TITLE_CAPITAL' | translate }}</li>
-    <li><a href="#/metadataexport">{{ 'METADATA_EXPORT' | translate }}</a></li>
-    <li><a href="#/dataimport">{{ 'DATA_IMPORT' | translate }}</a></li>
+    <li data-toggle="pill"><a href="#/metadataexport">{{ 'METADATA_EXPORT' | translate }}</a></li>
+    <li data-toggle="pill"><a href="#/dataimport">{{ 'DATA_IMPORT' | translate }}</a></li>
+    <!-- <li data-toggle="pill"><a href="#/trackerdataimport">{{ 'TRACKER_DATA_IMPORT' | translate }}</a></li> -->
     <!-- <li><a href="#/dataapproval">{{ 'DATA_APPROVAL' | translate }}</a></li> -->
     <li class="navbar-brand">{{ 'TITLE_PROJECT' | translate }}</li>
-    <li ng-if="!isOnline"><a href="#/metadataimport">{{ 'METADATA_IMPORT' | translate }}</a></li>
-    <li><a href="#/dataexport">{{ 'DATA_EXPORT' | translate }}</a></li>
-    <br>
-    <br>
-    <li ng-if="!isOnline"><a href="#/analytics">{{ 'ANALYTICS' | translate }}</a></li>
-    <li><a href="#/availabledata">{{ 'AVAILABLE_DATA' | translate }}</a></li>
-    <li ng-if="!isOnline"><a href="#/resetpasswd">{{ 'RESET_PASSWD' | translate }}</a></li>
-    <li ng-if="isAdministrator"><a href="#/hmisadoption">{{'HMIS_ADOPTION' | translate}}</a></li>
+    <li data-toggle="pill" ng-if="!isOnline"><a href="#/metadataimport">{{ 'METADATA_IMPORT' | translate }}</a></li>
+    <li data-toggle="pill"><a href="#/dataexport">{{ 'DATA_EXPORT' | translate }}</a></li>
+    <!-- <li data-toggle="pill"><a href="#/trackerdataexport">{{ 'TRACKER_DATA_EXPORT' | translate }}</a></li> -->
+    <li class="navbar-brand">{{ 'TITLE_COMMON' | translate }}</li>
+    <li data-toggle="pill" ng-if="!isOnline"><a href="#/analytics">{{ 'ANALYTICS' | translate }}</a></li>
+    <li data-toggle="pill"><a href="#/availabledata">{{ 'AVAILABLE_DATA' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="!isOnline"><a href="#/resetpasswd">{{ 'RESET_PASSWD' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="isAdministrator"><a href="#/hmisadoption">{{'HMIS_ADOPTION' | translate}}</a></li>
 </ul>

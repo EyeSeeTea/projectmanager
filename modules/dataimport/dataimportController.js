@@ -17,9 +17,14 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "meUser", "DataImportService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, meUser, DataImportService) {
+appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService, AnalyticsService) {
 		
-		$scope.progressbarDisplayed = false;
+		$scope.dataImportStatus = {
+			visible: false,
+			type: "info",
+			value: 100,
+			active: true
+		};
 		$scope.undefinedFile = false;
 		
 		var $file;//single file 
@@ -38,11 +43,11 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		};
 		
 	    $scope.sendFiles= function(){
-	    	
+			$scope.analyticsLog = [];
 	    	$scope.previewDataImport = false;
 	    	$("#importConfirmation").modal("hide");
-	    		    	
-	    	$scope.progressbarDisplayed = true;
+
+			$scope.dataImportStatus.visible = true;
 			$scope.importFailed = false;
 	    	
 	    	compress = getExtension($file.name) == "zip";
@@ -52,7 +57,9 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	        fileReader.onload = function(e) {
 
 	        	fileContent = e.target.result;
-	        	
+
+				//TODO Fix summary
+				/**
 	        	if (compress) {
 	        		
 	        		var zip = new JSZip(e.target.result);
@@ -60,7 +67,8 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 					$.each(zip.files, function (index, zipEntry) {
 						fileContentJSON = zip.file(zipEntry.name).asText();
 					});
-	        	}		        	
+	        	}
+				 */
 	        	
 	            $upload.http({
 	                url: commonvariable.url+"dataValueSets",
@@ -70,36 +78,29 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 	            	console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
 	            }).success(function(data) {
 
-	            	Analytics.post();
-	            	
-	            	var inputParameters = {};
-	        		var previousMessage = "";		            	
-	        		checkStatus = $interval(function() {
-	        			var result = DataMart.query(inputParameters);
-	        			 result.$promise.then(function(data_datamart) {
-	        	    		console.log(data_datamart);
-	        	    		var dataElement = data_datamart[0];
-	        	    		if (dataElement != undefined){
-	        		    		inputParameters = {lastId: dataElement.uid};
-	        		    		if (dataElement.completed == true){
-	        	    				$interval.cancel(checkStatus);
-	        	    				$scope.progressbarDisplayed = false;
-	        	    			}
-	        		    		if (previousMessage != dataElement.message){
-	        		    			$('#notificationTable tbody').prepend('<tr><td>' + dataElement.time + '</td><td>' + dataElement.message + '</td></tr>');
-	        		    			previousMessage = dataElement.message;
-	        			 		}
-	        	    		}
-	        	    	});
-	                  }, 200);
-	            	
+					AnalyticsService.refreshAllAnalytics()
+						.then(
+							function (success) {
+								$scope.dataImportStatus.type = 'success';
+								$scope.dataImportStatus.active = false;
+							},
+							function (error) {
+								$scope.dataImportStatus.type = 'danger';
+								$scope.dataImportStatus.active = false;
+								console.log(error);
+							},
+							function (notification) {
+								$scope.analyticsLog.push(notification);
+							}
+						);
+
 	            	$scope.generateSummary(data);
 	            	$scope.summaryDisplayed = true;
-					logDataimport($file.name, JSON.parse(fileContentJSON).dataValues, data);
+					logDataimport($file.name, data);
 	            		
 	            	console.log("File upload SUCCESS");
 	            }).error(function(data) {
-					$scope.progressbarDisplayed = false;
+					$scope.dataImportStatus.visible = false;
 					$scope.importFailed = true;
 
 	            	console.log("File upload FAILED");//error
@@ -156,21 +157,20 @@ appManagerMSF.controller('dataimportController', ["$scope",'$interval', '$upload
 		   }
        };
 
-	var logDataimport = function(filename, rawData, data){
+	var logDataimport = function(filename, data){
 		var namespace = "dataimportlog";
-		meUser.get({fields: "userCredentials[code],organisationUnits[id]"}).$promise
-			.then(function(me){
-				var dataimportLog = {
-					timestamp: new Date().getTime(),
-					username: me.userCredentials.code,
-					filename: filename,
-					status: data.status,
-					importCount: data.importCount,
-					conflicts: data.conflicts,
-					data: DataImportService.getFormattedSummary(rawData)
-				};
-				DataStoreService.updateNamespaceKeyArray(namespace, me.organisationUnits[0].id, dataimportLog);
-			})
+		UserService.getCurrentUser().then(function(me){
+			var dataimportLog = {
+				timestamp: new Date().getTime(),
+				username: me.userCredentials.username,
+				filename: filename,
+				status: data.status,
+				importCount: data.importCount,
+				conflicts: data.conflicts
+				//data: DataImportService.getFormattedSummary(rawData)
+			};
+			DataStoreService.updateNamespaceKeyArray(namespace, me.organisationUnits[0].id, dataimportLog);
+		})
 	};
 	
 }]);

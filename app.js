@@ -18,7 +18,7 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','door3.css']);
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
 
 appManagerMSF.config(function($routeProvider) {
  
@@ -28,11 +28,12 @@ appManagerMSF.config(function($routeProvider) {
 	});
 	$routeProvider.when('/metadataimport', {
 		templateUrl: "modules/metadataimport/metadataimportView.html",
-		controller: "metadataimportController"
+		controller: "metadataimportController",
+		css: "modules/metadataimport/metadataimportCss.css"
 	});
 	$routeProvider.when('/metadataexport', {
 		templateUrl: "modules/metadataexport/metadataexportView.html",
-			 controller: "metadataexportController"
+		controller: "metadataexportController"
 	});
 	$routeProvider.when('/analytics', {
 		templateUrl: "modules/analytics/analyticsView.html",
@@ -44,11 +45,22 @@ appManagerMSF.config(function($routeProvider) {
 	});
 	$routeProvider.when('/dataexport', {
 		templateUrl: "modules/dataexport/dataexportView.html",
-		controller: "dataexportController"
+		controller: "dataexportController",
+		css: "modules/dataexport/dataexportCss.css"
+	});
+	$routeProvider.when('/trackerdataimport', {
+		templateUrl: "modules/trackerdataimport/trackerDataImportView.html",
+		controller: "trackerDataImportController",
+		css: "modules/trackerdataimport/trackerDataImportCss.css"
+	});
+	$routeProvider.when('/trackerdataexport', {
+		templateUrl: "modules/trackerdataexport/trackerDataExportView.html",
+		controller: "trackerDataExportController"
 	});
 	$routeProvider.when('/resetpasswd', {
 		templateUrl: "modules/resetpasswd/resetpasswdView.html",
-		controller: "resetpasswdController"
+		controller: "resetpasswdController",
+		css: "modules/resetpasswd/resetpasswdCss.css"
 	});
 	$routeProvider.when('/availabledata', {
 		templateUrl: "modules/availabledata/availabledataView.html",
@@ -85,7 +97,7 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
 	  
 	  $translateProvider.fallbackLanguage(['en']);
 
-	  jQuery.ajax({ url: urlApi + 'userSettings/keyUiLocale/', contentType: 'text/plain', method: 'GET', dataType: 'text', async: false}).success(function (uiLocale) {
+	  jQuery.ajax({ url: urlApi + 'userSettings/keyUiLocale/', contentType: 'text/plain', method: 'GET', dataType: 'text', async: false}).done(function (uiLocale) {
 		  if (uiLocale == ''){
 			  $translateProvider.determinePreferredLanguage();
 		  }
@@ -95,5 +107,8 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
       }).fail(function () {
     	  $translateProvider.determinePreferredLanguage();
 	  });
-	  
+});
+
+appManagerMSF.config(function (uibDatepickerConfig) {
+	uibDatepickerConfig.startingDay = 1;
 });
