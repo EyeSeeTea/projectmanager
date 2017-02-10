@@ -25,23 +25,17 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
             if (content.isEmpty) {
                 return deferred.reject("The file does not contain event data.");
             } else {
-                var importOrder = [EventHelper.TEIS, EventHelper.ENROLLMENTS, EventHelper.EVENTS];
-                return importOrder.reduce(function (promise, element) {
-                    if (content.elements[element] != undefined) {
-                        return promise.then(function () {
-                            return content.elements[element].async("uint8array")
-                                .then(function (data) {
-                                    return uploadFile(element, data);
-                                });
-                        });
-                    } else {
-                        return promise;
-                    }
-                }, $q.resolve("Start"))
-                    .then(
-                        function () {deferred.resolve("Done");},
-                        function (error) {deferred.reject(error);}
-                    );
+                return getAndUploadEventFileElement(content, EventHelper.TEIS)
+                    .then(function () {
+                        return getAndUploadEnrollmentsAsActive(content);
+                    }).then(function () {
+                        return getAndUploadEventFileElement(content, EventHelper.EVENTS);
+                    }).then(function () {
+                        return getAndUploadEventFileElement(content, EventHelper.ENROLLMENTS);
+                }).then(
+                    function () {deferred.resolve("Done");},
+                    function (error) {deferred.reject(error);}
+                );
             }
         });
         return deferred.promise;
@@ -70,17 +64,59 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
         });
     }
 
-    function uploadFile (endpoint, file) {
-        return $http({
-            method: 'POST',
-            url: commonvariable.url + endpoint,
-            params: {
-                strategy: 'CREATE_AND_UPDATE'
-            },
-            data: new Uint8Array(file),
-            headers: {'Content-Type': 'application/json'},
-            transformRequest: {}
+    function getAndUploadEventFileElement (content, element) {
+        return getEventZipFileElement(content, element).then(function (data) {
+            return uploadFile(element, data);
         });
+    }
+
+    function getAndUploadEnrollmentsAsActive (content) {
+        return content.elements[EventHelper.ENROLLMENTS].async("arraybuffer")
+            .then(function (zipFile) {
+                return JSZip.loadAsync(zipFile);
+            })
+            .then(function (enrollmentsFile) {
+                return enrollmentsFile.file(EventHelper.ENROLLMENTS_JSON).async("string");
+            })
+            .then(function (enrollmentsRaw) {
+                var activeEnrollments = JSON.parse(enrollmentsRaw).enrollments.map(function (enrollment) {
+                    enrollment.status = "ACTIVE";
+                    return enrollment;
+                });
+                return  (new JSZip()).file(
+                    EventHelper.ENROLLMENTS_JSON,
+                    JSON.stringify({"enrollments": activeEnrollments})
+                )
+                    .generateAsync({type: "uint8array", compression: "DEFLATE"});
+            })
+            .then(function (enrollmentsAsActiveInZip) {
+                return uploadFile(EventHelper.ENROLLMENTS, enrollmentsAsActiveInZip);
+            });
+    }
+
+    function getEventZipFileElement (content, element) {
+        if (content.elements[element] != undefined) {
+            return content.elements[element].async("uint8array");
+        } else {
+            return $q.resolve(undefined);
+        }
+    }
+
+    function uploadFile (endpoint, file) {
+        if (file != undefined) {
+            return $http({
+                method: 'POST',
+                url: commonvariable.url + endpoint,
+                params: {
+                    strategy: 'CREATE_AND_UPDATE'
+                },
+                data: new Uint8Array(file),
+                headers: {'Content-Type': 'application/json'},
+                transformRequest: {}
+            });
+        } else {
+            $q.resolve("Nothing to upload");
+        }
     }
 
     function previewEventFile (file) {
