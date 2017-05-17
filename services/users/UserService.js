@@ -15,9 +15,9 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Services = require('../services.module');
 
-
-appManagerMSF.factory('UserService',['$q', 'meUser', 'User', function($q, meUser, User){
+Services.factory('UserService',['$q', 'meUser', 'User', function($q, meUser, User){
  
     var currentUser;
     

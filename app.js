@@ -16,9 +16,12 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+require('./core/dhis2Api');
+require('./directives/directives.module');
+require('./directives/header/headerController');
+require('./directives/menu/menuController');
 
-
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','Directives', 'pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
 
 appManagerMSF.config(function($routeProvider) {
  

@@ -17,12 +17,13 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Directives = require('../directives.module');
+require('../../services/users/UserService');
 
-
-Dhis2Api.directive('d2Secondarymenu', function(){
+Directives.directive('d2Secondarymenu', function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/menu/menuView.html',
+		template: require('./menuView.html'),
 		controller: ['$scope', 'commonvariable', 'UserService', function($scope, commonvariable, UserService){
 
 			$scope.isOnline = commonvariable.isOnline;

@@ -346,3 +346,5 @@ Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resour
 Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "programs/:uid" );
 }]);
+
+module.exports = Dhis2Api;
