@@ -17,9 +17,8 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Directives = require('../directives.module');
 
-Directives.directive('projectSelector', function(){
+var projectSelector = [function(){
     return{
         restrict: 'E',
         template: require('./projectSelectorView.html'),
@@ -50,4 +49,6 @@ Directives.directive('projectSelector', function(){
             };
         }]
     }
-});
+}];
+
+module.exports = projectSelector;

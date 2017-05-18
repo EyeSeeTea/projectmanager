@@ -16,19 +16,19 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Directives = require('../directives.module');
 
-Directives.directive('d2Treeorganisationunit', function(){
+var treeorganisationunitDirective =  [function(){
 	return{
 		restrict: 'E',
 		template: require('./organisationUnitTreeView.html'),
+		controller: treeorganisationunitController,
 		scope: {
 		      treetype: '@',
 		      size:'@'
 		    }
 	}
-	}); 
-Directives.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrganisationunit',"commonvariable","UserService", function ($scope,$q,TreeOrganisationunit,commonvariable,UserService) {
+}]; 
+var treeorganisationunitController = ['$scope','$q','TreeOrganisationunit',"commonvariable","UserService", function ($scope,$q,TreeOrganisationunit,commonvariable,UserService) {
 	$scope.currentid="";
      $scope.loadingTree=true;
     
@@ -82,7 +82,7 @@ Directives.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOr
     		}
 
     	 return json;
-    	 }
+    	 };
     
      
   $scope.$watch(
@@ -105,5 +105,6 @@ Directives.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOr
             	   	}
             }
         );
-}]);
+}];
 
+module.exports = treeorganisationunitDirective;

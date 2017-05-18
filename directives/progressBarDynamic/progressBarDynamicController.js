@@ -16,9 +16,8 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Directives = require('../directives.module');
 
-Directives.directive('d2ProgressbarDynamic', function(){
+var progressBarDynamic = [function(){
     return{
         restrict: 'E',
         template: require('./progressBarDynamicView.html'),
@@ -38,4 +37,6 @@ Directives.directive('d2ProgressbarDynamic', function(){
              */
         }
     };
-}); 
+}];
+
+module.exports = progressBarDynamic;

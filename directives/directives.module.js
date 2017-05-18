@@ -6,6 +6,9 @@ var datasetEntryFormDirective = require('./dataimportpreview/datasetentryformCon
 var headerDirective = require('./header/headerController');
 var menuDirective = require('./menu/menuController');
 var messagesDirectives = require('./messages/messagesController');
+var progressBarDynamic = require('./progressBarDynamic/progressBarDynamicController');
+var projectSelector = require('./projectSelector/projectSelectorController');
+var treeorganisationunitDirective = require('./treeorganisationunit/organisationUnitTreeController');
 var formatPeriodFilter = require('./filters/formatPeriod');
 var orderObjectByFilter = require('./filters/orderObjectByFilter');
 
@@ -14,7 +17,10 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('d2DatasetEntryForm', datasetEntryFormDirective)
     .directive('d2Header', headerDirective)
     .directive('d2Messages', messagesDirectives)
+    .directive('d2ProgressbarDynamic', progressBarDynamic)
     .directive('d2Secondarymenu', menuDirective)
+    .directive('d2Treeorganisationunit', treeorganisationunitDirective)
+    .directive('projectSelector', projectSelector)
     .filter('orderObjectBy', orderObjectByFilter)
     .filter('d2FormatPeriod', formatPeriodFilter);
 
