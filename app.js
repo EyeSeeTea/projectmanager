@@ -20,60 +20,62 @@ require('./core/dhis2Api');
 require('./directives/directives.module');
 require('./directives/header/headerController');
 require('./directives/menu/menuController');
+require('./features/features.module');
+require('./features/analytics/analyticsController');
 
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','Directives', 'pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','Directives', 'Features', 'pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
 
 appManagerMSF.config(function($routeProvider) {
  
 	$routeProvider.when('/dataapproval', {
-		templateUrl: "modules/dataapproval/dataapprovalView.html",
+		templateUrl: "features/dataapproval/dataapprovalView.html",
 		controller: "dataapprovalController"
 	});
 	$routeProvider.when('/metadataimport', {
-		templateUrl: "modules/metadataimport/metadataimportView.html",
+		templateUrl: "features/metadataimport/metadataimportView.html",
 		controller: "metadataimportController",
-		css: "modules/metadataimport/metadataimportCss.css"
+		css: "features/metadataimport/metadataimportCss.css"
 	});
 	$routeProvider.when('/metadataexport', {
-		templateUrl: "modules/metadataexport/metadataexportView.html",
+		templateUrl: "features/metadataexport/metadataexportView.html",
 		controller: "metadataexportController"
 	});
 	$routeProvider.when('/analytics', {
-		templateUrl: "modules/analytics/analyticsView.html",
-		controller: "analyticsController"
+		template: require('./features/analytics/analyticsView.html'),
+		controller: 'analyticsController'
 	});
 	$routeProvider.when('/dataimport', {
-		templateUrl: "modules/dataimport/dataimportView.html",
+		templateUrl: "features/dataimport/dataimportView.html",
 		controller: "dataimportController"
 	});
 	$routeProvider.when('/dataexport', {
-		templateUrl: "modules/dataexport/dataexportView.html",
+		templateUrl: "features/dataexport/dataexportView.html",
 		controller: "dataexportController",
-		css: "modules/dataexport/dataexportCss.css"
+		css: "features/dataexport/dataexportCss.css"
 	});
 	$routeProvider.when('/trackerdataimport', {
-		templateUrl: "modules/trackerdataimport/trackerDataImportView.html",
+		templateUrl: "features/trackerdataimport/trackerDataImportView.html",
 		controller: "trackerDataImportController",
-		css: "modules/trackerdataimport/trackerDataImportCss.css"
+		css: "features/trackerdataimport/trackerDataImportCss.css"
 	});
 	$routeProvider.when('/trackerdataexport', {
-		templateUrl: "modules/trackerdataexport/trackerDataExportView.html",
+		templateUrl: "features/trackerdataexport/trackerDataExportView.html",
 		controller: "trackerDataExportController"
 	});
 	$routeProvider.when('/resetpasswd', {
-		templateUrl: "modules/resetpasswd/resetpasswdView.html",
+		templateUrl: "features/resetpasswd/resetpasswdView.html",
 		controller: "resetpasswdController",
-		css: "modules/resetpasswd/resetpasswdCss.css"
+		css: "features/resetpasswd/resetpasswdCss.css"
 	});
 	$routeProvider.when('/availabledata', {
-		templateUrl: "modules/availabledata/availabledataView.html",
+		templateUrl: "features/availabledata/availabledataView.html",
 		controller: "availabledataController",
-		css: "modules/availabledata/availabledataCss.css"
+		css: "features/availabledata/availabledataCss.css"
 	});
 	$routeProvider.when('/hmisadoption', {
-		templateUrl: "modules/hmisadoption/hmisadoptionView.html",
+		templateUrl: "features/hmisadoption/hmisadoptionView.html",
 		controller: "hmisadoptionController",
-		css: "modules/hmisadoption/hmisadoptionCss.css"
+		css: "features/hmisadoption/hmisadoptionCss.css"
 	});
 	$routeProvider.otherwise({
 		redirectTo: '/'

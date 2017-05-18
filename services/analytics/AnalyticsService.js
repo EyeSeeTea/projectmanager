@@ -16,8 +16,9 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Services = require('../services.module');
 
-appManagerMSF.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart', function($q, $interval, AnalyticsEngine, Analytics, DataMart) {
+Services.factory("AnalyticsService", ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart', function($q, $interval, AnalyticsEngine, Analytics, DataMart) {
 
     /**
      * Performs a query to analytics endpoint with the parameters provided.
