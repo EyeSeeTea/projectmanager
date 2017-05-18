@@ -22,8 +22,6 @@ require('../../services/orgunits/OrgunitGroupSetService');
 require('../../services/users/UserService');
 require('../../directives/progressBarDynamic/progressBarDynamicController');
 
-require('./availabledataCss.css');
-
 Features.controller('availabledataController', ["$scope", "$q", "$http", "$parse",
 	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "DataStoreService", "AnalyticsService",
 	function($scope, $q, $http, $parse, Organisationunit,

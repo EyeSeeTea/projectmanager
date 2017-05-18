@@ -23,6 +23,7 @@ require('./directives/menu/menuController');
 require('./features/features.module');
 require('./features/analytics/analyticsController');
 require('./features/availabledata/availabledataController');
+require('./features/resetpasswd/resetpasswdController');
 
 require('./app.css');
 
@@ -66,14 +67,14 @@ appManagerMSF.config(function($routeProvider) {
 		controller: "trackerDataExportController"
 	});
 	$routeProvider.when('/resetpasswd', {
-		templateUrl: "features/resetpasswd/resetpasswdView.html",
-		controller: "resetpasswdController",
-		css: "features/resetpasswd/resetpasswdCss.css"
+		template: require('./features/resetpasswd/resetpasswdView.html'),
+		controller: 'resetpasswdController',
+		css: require('./features/resetpasswd/resetpasswdCss.css')
 	});
 	$routeProvider.when('/availabledata', {
 		template: require('./features/availabledata/availabledataView.html'),
 		controller: 'availabledataController',
-//		css: require('./features/availabledata/availabledataCss.css')
+		css: require('./features/availabledata/availabledataCss.css')
 	});
 	$routeProvider.when('/hmisadoption', {
 		templateUrl: "features/hmisadoption/hmisadoptionView.html",

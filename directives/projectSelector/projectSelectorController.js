@@ -17,12 +17,12 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Directives = require('../directives.module');
 
-
-Dhis2Api.directive('projectSelector', function(){
+Directives.directive('projectSelector', function(){
     return{
         restrict: 'E',
-        templateUrl: 'directives/projectSelector/projectSelectorView.html',
+        template: require('./projectSelectorView.html'),
         scope: {
             project: '='
         },
