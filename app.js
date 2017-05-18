@@ -23,6 +23,7 @@ require('./directives/menu/menuController');
 require('./features/features.module');
 require('./features/analytics/analyticsController');
 require('./features/availabledata/availabledataController');
+require('./features/dataexport/dataexportController');
 require('./features/resetpasswd/resetpasswdController');
 
 require('./app.css');
@@ -53,9 +54,9 @@ appManagerMSF.config(function($routeProvider) {
 		controller: "dataimportController"
 	});
 	$routeProvider.when('/dataexport', {
-		templateUrl: "features/dataexport/dataexportView.html",
-		controller: "dataexportController",
-		css: "features/dataexport/dataexportCss.css"
+		template: require('./features/dataexport/dataexportView.html'),
+		controller: 'dataexportController',
+		css: require('./features/dataexport/dataexportCss.css')
 	});
 	$routeProvider.when('/trackerdataimport', {
 		templateUrl: "features/trackerdataimport/trackerDataImportView.html",

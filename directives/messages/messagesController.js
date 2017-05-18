@@ -16,19 +16,19 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Directives = require('../directives.module');
 
-
-Dhis2Api.directive('d2Messages', function(){
+Directives.directive('d2Messages', function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/messages/messagesView.html',
+		template: require('./messagesView.html'),
 		scope: {
 		      type: '@',
 		      textmessage: '@'
 		    }
 	}
-	}); 
-Dhis2Api.controller("d2messagesController", ['$scope',function ($scope) {
+	});
+Directives.controller("d2messagesController", ['$scope',function ($scope) {
 
 	switch($scope.type){
 		case 'success':

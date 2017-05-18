@@ -17,8 +17,13 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Features = require('../features.module');
+require('../../services/demographics/DemographicsService');
+require('../../directives/messages/messagesController');
+require('../../directives/progressBarDynamic/progressBarDynamicController');
+require('../../directives/treeorganisationunit/organisationUnitTreeController');
 
-appManagerMSF.controller('dataexportController', ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "DataExport", 'DemographicsService', '$timeout', function($scope, $q, $filter, commonvariable, DataSetsUID, DataExport, DemographicsService, $timeout) {
+Features.controller('dataexportController', ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "DataExport", 'DemographicsService', '$timeout', function($scope, $q, $filter, commonvariable, DataSetsUID, DataExport, DemographicsService, $timeout) {
 
 	// Set "zipped" to true by default
 	$scope.zipped = true;
