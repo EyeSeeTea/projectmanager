@@ -16,9 +16,8 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Services = require('../services.module');
 
-Services.factory("DataImportService", [function() {
+var dataImportService = [function() {
 
     var formattedData = {}, formattedSummary = {};
 
@@ -79,4 +78,6 @@ Services.factory("DataImportService", [function() {
         getFormattedSummary: getFormattedSummary,
         getPeriodType: getPeriodType
     }
-}]);
+}];
+
+module.exports = dataImportService;

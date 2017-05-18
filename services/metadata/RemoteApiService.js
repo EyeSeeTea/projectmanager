@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("RemoteApiService", ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 'commonvariable', function($q, $http, DataStoreService, RemoteInstanceUrl, commonvariable) {
+var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 'commonvariable', function($q, $http, DataStoreService, RemoteInstanceUrl, commonvariable) {
 
     var remoteSettings;
     var defaultAPIVersion = commonvariable.apiVersion;
@@ -110,4 +110,6 @@ appManagerMSF.factory("RemoteApiService", ['$q', '$http', 'DataStoreService', 'R
         updateRemoteSettings: updateRemoteSettings,
         executeRemoteQuery: executeRemoteQuery
     }
-}]);
+}];
+
+module.exports = remoteApiService;

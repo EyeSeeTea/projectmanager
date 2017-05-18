@@ -17,8 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('metadataexportController', ["$scope",'$filter', "MetaDataExport","MetaDataExportZip", function($scope, $filter, MetaDataExport,MetaDataExportZip) {
-	var $translate = $filter('translate');
+var metadataExport = ["$scope",'$filter', "MetaDataExport", function($scope, $filter, MetaDataExport) {
 	
 	$scope.progressbarDisplayed = false;
 	
@@ -51,4 +50,6 @@ appManagerMSF.controller('metadataexportController', ["$scope",'$filter', "MetaD
     	});
 	};
 		
-}]);
+}];
+
+module.exports = metadataExport;

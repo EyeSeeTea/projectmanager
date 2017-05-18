@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService', function($q, RemoteApiService, MetadataVersion, MetadataSync, RemoteAvailability, UserService) {
+var metadataSyncService = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService', function($q, RemoteApiService, MetadataVersion, MetadataSync, RemoteAvailability, UserService) {
 
     // Config variables
     var serverStatusNamespace = 'projectServers';
@@ -279,4 +279,6 @@ appManagerMSF.factory("MetadataSyncService", ['$q', 'RemoteApiService', 'Metadat
         getVersionDifference: getVersionDifference,
         isRemoteServerAvailable: isRemoteServerAvailable
     }
-}]);
+}];
+
+module.exports = metadataSyncService;

@@ -16,9 +16,8 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Services = require('../services.module');
 
-Services.factory("OrgunitGroupSetService", ['OrganisationUnitGroupSet','OrganisationUnitGroup','$q', function(OrganisationUnitGroupSet, OrganisationUnitGroup, $q) {
+var orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationUnitGroup','$q', function(OrganisationUnitGroupSet, OrganisationUnitGroup, $q) {
 
     /**
      * It returns and array of organisationUnitGroupsSets. The structure of each groupSet is the same that querying
@@ -55,4 +54,6 @@ Services.factory("OrgunitGroupSetService", ['OrganisationUnitGroupSet','Organisa
         getOrgunitGroupSets: getOrgunitGroupSets
     }
 
-}]);
+}];
+
+module.exports = orgunitGroupSetService;

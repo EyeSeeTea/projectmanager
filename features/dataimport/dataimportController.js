@@ -16,16 +16,8 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Features = require('../features.module');
-require('../../directives/dataimportpreview/dataimportpreviewController');
-require('../../directives/messages/messagesController');
-require('../../directives/progressBarDynamic/progressBarDynamicController');
-require('../../services/analytics/AnalyticsService');
-require('../../services/data/DataImportService');
-require('../../services/data-store/DataStoreService');
-require('../../services/users/UserService');
 
-Features.controller('dataimportController', ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService, AnalyticsService) {
+var dataImport = ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService, AnalyticsService) {
 		
 		$scope.dataImportStatus = {
 			visible: false,
@@ -181,4 +173,6 @@ Features.controller('dataimportController', ["$scope",'$interval', '$upload', '$
 		})
 	};
 	
-}]);
+}];
+
+module.exports = dataImport;

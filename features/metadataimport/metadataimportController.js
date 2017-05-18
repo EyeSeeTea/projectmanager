@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvariable", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, $q, commonvariable, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
+var metadataImport = ["$scope", "$q", "commonvariable", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, $q, commonvariable, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
 
 	$scope.info = {
 		url: commonvariable.urlbase
@@ -188,4 +188,6 @@ appManagerMSF.controller('metadataimportController', ["$scope", "$q", "commonvar
 
 	initMetadataSyncInfo();
 
-}]);
+}];
+
+module.exports = metadataImport;

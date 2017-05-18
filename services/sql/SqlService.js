@@ -18,7 +18,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-appManagerMSF.factory('sqlService',["SqlView", "SqlViewData", function(SqlView, SqlViewData){
+var sqlService = ["SqlView", "SqlViewData", function(SqlView, SqlViewData){
 
     var createPayload = function(sqlQuery) {
         // Generate a random name, based on a random integer.
@@ -64,4 +64,6 @@ appManagerMSF.factory('sqlService',["SqlView", "SqlViewData", function(SqlView, 
         executeSqlView: executeSqlView
     };
 
-}]);
+}];
+
+module.exports = sqlService;

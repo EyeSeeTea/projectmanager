@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("MetadataImportService", ['$q', '$http', 'commonvariable', function($q, $http, commonvariable) {
+var metadataImportService = ['$q', '$http', 'commonvariable', function($q, $http, commonvariable) {
 
     var compress = false;
     var fileContent;
@@ -80,4 +80,6 @@ appManagerMSF.factory("MetadataImportService", ['$q', '$http', 'commonvariable',
         importMetadataFile: importMetadataFile
     }
 
-}]);
+}];
+
+module.exports = metadataImportService;

@@ -17,7 +17,6 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-require('../../services/users/UserService');
 
 var menuDirective = [function(){
 	return{

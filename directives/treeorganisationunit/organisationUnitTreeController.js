@@ -28,6 +28,7 @@ var treeorganisationunitDirective =  [function(){
 		    }
 	}
 }]; 
+
 var treeorganisationunitController = ['$scope','$q','TreeOrganisationunit',"commonvariable","UserService", function ($scope,$q,TreeOrganisationunit,commonvariable,UserService) {
 	$scope.currentid="";
      $scope.loadingTree=true;

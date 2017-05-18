@@ -16,11 +16,8 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Features = require('../features.module');
-require('../../services/analytics/AnalyticsService');
-require('../../services/demographics/DemographicsService');
 
-Features.controller('analyticsController', ["$scope", "AnalyticsService", "DemographicsService", function($scope, AnalyticsService, DemographicsService) {
+var analytics = ["$scope", "AnalyticsService", "DemographicsService", function($scope, AnalyticsService, DemographicsService) {
 
 	$scope.progressStatus = {};
 
@@ -53,4 +50,6 @@ Features.controller('analyticsController', ["$scope", "AnalyticsService", "Demog
 			);
 	};
 	
-}]);
+}];
+
+module.exports = analytics;

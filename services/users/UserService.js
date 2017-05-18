@@ -15,9 +15,8 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Services = require('../services.module');
 
-Services.factory('UserService',['$q', 'meUser', 'User', function($q, meUser, User){
+var userService = ['$q', 'meUser', 'User', function($q, meUser, User){
  
     var currentUser;
     
@@ -104,4 +103,6 @@ Services.factory('UserService',['$q', 'meUser', 'User', function($q, meUser, Use
         updateUserPassword: updateUserPassword
     }
     
-}]);
+}];
+
+module.exports = userService;

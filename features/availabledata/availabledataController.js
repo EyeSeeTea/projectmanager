@@ -15,14 +15,8 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Features = require('../features.module');
-require('../../services/analytics/AnalyticsService');
-require('../../services/data-store/DataStoreService');
-require('../../services/orgunits/OrgunitGroupSetService');
-require('../../services/users/UserService');
-require('../../directives/progressBarDynamic/progressBarDynamicController');
 
-Features.controller('availabledataController', ["$scope", "$q", "$http", "$parse",
+var availableData = ["$scope", "$q", "$http", "$parse",
 	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "DataStoreService", "AnalyticsService",
 	function($scope, $q, $http, $parse, Organisationunit,
 			 OrganisationUnitGroupSet, OrgunitGroupSetService, UserService, DataStoreService, AnalyticsService) {
@@ -247,4 +241,6 @@ Features.controller('availabledataController', ["$scope", "$q", "$http", "$parse
 		// Initialize table
 		loadUserSettings().then(loadFilters).then(loadTable);
 	}
-]);
+];
+
+module.exports = availableData;

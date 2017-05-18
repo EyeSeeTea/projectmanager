@@ -16,9 +16,8 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Services = require('../services.module');
 
-Services.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID', 'DataExport', 'Organisationunit', 'DataElement', function($q, UserService, DataSetsUID, DataExport, Organisationunit, DataElement) {
+var demographicsService = ['$q', 'UserService', 'DataSetsUID', 'DataExport', 'Organisationunit', 'DataElement', function($q, UserService, DataSetsUID, DataExport, Organisationunit, DataElement) {
 
     var demInfoDatasetCode = 'DS_DEM';
     var demInfoDatasetId;
@@ -238,4 +237,6 @@ Services.factory("DemographicsService", ['$q', 'UserService', 'DataSetsUID', 'Da
         updateDemographicData: updateDemographicData
     }
 
-}]);
+}];
+
+module.exports = demographicsService;
