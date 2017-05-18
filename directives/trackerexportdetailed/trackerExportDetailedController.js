@@ -18,16 +18,16 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.directive('trackerExportDetailed', function(){
+var trackerExportDetailedDirective = [function(){
     return{
         restrict: 'E',
-        controller: 'trackerExportDetailedController',
-        templateUrl: 'directives/trackerexportdetailed/trackerExportDetailedView.html',
+        controller: trackerExportDetailedController,
+        template: require('./trackerExportDetailedView.html'),
         scope: {}
     }
-});
+}];
 
-appManagerMSF.controller('trackerExportDetailedController', ["$scope",'$filter', 'commonvariable', 'EventExportService', function($scope, $filter, commonvariable, EventExportService) {
+var trackerExportDetailedController = ["$scope",'$filter', 'commonvariable', 'EventExportService', function($scope, $filter, commonvariable, EventExportService) {
 
     $scope.exporting = false;
     
@@ -74,4 +74,6 @@ appManagerMSF.controller('trackerExportDetailedController', ["$scope",'$filter',
                 $scope.exporting = false;
             });
     }
-}]);
+}];
+
+module.exports = trackerExportDetailedDirective;

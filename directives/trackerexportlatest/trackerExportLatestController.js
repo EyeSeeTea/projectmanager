@@ -17,17 +17,17 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.directive('trackerExportLatest', function(){
+var trackerExportLatestDirective = [function(){
     return{
         restrict: 'E',
-        controller: 'trackerExportLatestController',
-        css: 'directives/trackerexportlatest/trackerExportLatestCss.css',
-        templateUrl: 'directives/trackerexportlatest/trackerExportLatestView.html',
+        controller: trackerExportLatestController,
+        css: require('./trackerExportLatestCss.css'),
+        template: require('./trackerExportLatestView.html'),
         scope: {}
     }
-});
+}];
 
-appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', function ($scope, $filter, ProgramService, UserService, EventExportService, DataStoreService) {
+var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', function ($scope, $filter, ProgramService, UserService, EventExportService, DataStoreService) {
 
     var dataStoreKey = 'trackerexport';
 
@@ -146,4 +146,6 @@ appManagerMSF.controller('trackerExportLatestController', ['$scope', '$filter', 
         }
     }
 
-}]);
+}];
+
+module.exports = trackerExportLatestDirective;

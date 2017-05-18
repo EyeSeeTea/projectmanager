@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("EventExportService", ["$q", "EventHelper", "Events", "TrackedEntityInstances", "Enrollments", function($q, EventHelper, Events, TrackedEntityInstances, Enrollments) {
+var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances", "Enrollments", function($q, EventHelper, Events, TrackedEntityInstances, Enrollments) {
 
     /**
      * Same that exportEventsWithDependencies, but returns a compressed file.
@@ -254,4 +254,6 @@ appManagerMSF.factory("EventExportService", ["$q", "EventHelper", "Events", "Tra
         exportEventsFromLastWithDependenciesInZip: exportEventsFromLastWithDependenciesInZip
     }
     
-}]);
+}];
+
+module.exports = eventExportService;

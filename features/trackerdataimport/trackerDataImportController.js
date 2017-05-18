@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('trackerDataImportController', ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", function($scope, $q, EventImportService, AnalyticsService, DemographicsService) {
+var trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", function($scope, $q, EventImportService, AnalyticsService, DemographicsService) {
 
     $scope.progressStatus = {};
     $scope.undefinedFile = false;
@@ -90,4 +90,6 @@ appManagerMSF.controller('trackerDataImportController', ["$scope", "$q", "EventI
         $scope.previewDataImport = false;
     };
 
-}]);
+}];
+
+module.exports = trackerDataImport;

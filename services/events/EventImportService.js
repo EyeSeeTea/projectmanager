@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "EventHelper", "ProgramService", function($q, $http, commonvariable, EventHelper, ProgramService) {
+var eventImportService = ["$q", "$http", "commonvariable", "EventHelper", "ProgramService", function($q, $http, commonvariable, EventHelper, ProgramService) {
     
     var importEventFile = function (file) {
         // It is required to wrap the return into a deferred object. If not, the following promises are not notified
@@ -184,4 +184,6 @@ appManagerMSF.factory("EventImportService", ["$q", "$http", "commonvariable", "E
         importEventFile: importEventFile,
         previewEventFile: previewEventFile
     }
-}]);
+}];
+
+module.exports = eventImportService;

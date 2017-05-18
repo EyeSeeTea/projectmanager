@@ -52,13 +52,13 @@ appManagerMSF.config(function($routeProvider) {
 		css: require('./features/dataexport/dataexportCss.css')
 	});
 	$routeProvider.when('/trackerdataimport', {
-		templateUrl: "features/trackerdataimport/trackerDataImportView.html",
-		controller: "trackerDataImportController",
-		css: "features/trackerdataimport/trackerDataImportCss.css"
+		template: require('./features/trackerdataimport/trackerDataImportView.html'),
+		controller: 'trackerDataImportController',
+		css: require('./features/trackerdataimport/trackerDataImportCss.css')
 	});
 	$routeProvider.when('/trackerdataexport', {
-		templateUrl: "features/trackerdataexport/trackerDataExportView.html",
-		controller: "trackerDataExportController"
+		template: require('./features/trackerdataexport/trackerDataExportView.html'),
+		controller: 'trackerDataExportController'
 	});
 	$routeProvider.when('/resetpasswd', {
 		template: require('./features/resetpasswd/resetpasswdView.html'),

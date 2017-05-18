@@ -9,6 +9,8 @@ var dataImport = require('./dataimport/dataimportController');
 var metadataExport = require('./metadataexport/metadataexportController');
 var metadataImport = require('./metadataimport/metadataimportController');
 var resetPassword = require('./resetpasswd/resetpasswdController');
+var trackerDataExport = require('./trackerdataexport/trackerDataExportController');
+var trackerDataImport = require('./trackerdataimport/trackerDataImportController');
 
 var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Services'])
     .controller('analyticsController', analytics)
@@ -17,6 +19,8 @@ var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Serv
     .controller('dataimportController', dataImport)
     .controller('metadataexportController', metadataExport)
     .controller('metadataimportController', metadataImport)
-    .controller('resetpasswdController', resetPassword);
+    .controller('resetpasswdController', resetPassword)
+    .controller('trackerDataExportController', trackerDataExport)
+    .controller('trackerDataImportController', trackerDataImport);
 
 module.exports = featuresModule;

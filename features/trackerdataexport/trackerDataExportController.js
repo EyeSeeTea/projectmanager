@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.controller('trackerDataExportController', ['$scope', function ($scope) {
+var trackerDataExport = ['$scope', function ($scope) {
     
     $scope.activeTab = 1;
     
@@ -25,4 +25,6 @@ appManagerMSF.controller('trackerDataExportController', ['$scope', function ($sc
         $scope.activeTab = item;
     };
     
-}]);
+}];
+
+module.exports = trackerDataExport;

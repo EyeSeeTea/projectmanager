@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-appManagerMSF.factory("EventHelper", function() {
+var eventHelper = [function() {
 
     // Constants to keep common names between EventExportService and EventImportService
     const TEIS = 'trackedEntityInstances';
@@ -42,4 +42,6 @@ appManagerMSF.factory("EventHelper", function() {
         EVENTS_ZIP: EVENTS_ZIP
     }
 
-});
+}];
+
+module.exports = eventHelper;
