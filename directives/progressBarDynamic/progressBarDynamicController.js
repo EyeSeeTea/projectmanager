@@ -16,12 +16,12 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Directives = require('../directives.module');
 
-
-Dhis2Api.directive('d2ProgressbarDynamic', function(){
+Directives.directive('d2ProgressbarDynamic', function(){
     return{
         restrict: 'E',
-        templateUrl: 'directives/progressBarDynamic/progressBarDynamicView.html',
+        template: require('./progressBarDynamicView.html'),
         scope: {
             status: '=?'
         },

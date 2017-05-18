@@ -15,11 +15,18 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Features = require('../features.module');
+require('../../services/analytics/AnalyticsService');
+require('../../services/data-store/DataStoreService');
+require('../../services/orgunits/OrgunitGroupSetService');
+require('../../services/users/UserService');
+require('../../directives/progressBarDynamic/progressBarDynamicController');
 
+require('./availabledataCss.css');
 
-appManagerMSF.controller('availabledataController', ["$scope", "$q", "$http", "$parse", "commonvariable",
+Features.controller('availabledataController', ["$scope", "$q", "$http", "$parse",
 	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "DataStoreService", "AnalyticsService",
-	function($scope, $q, $http, $parse, commonvariable, Organisationunit,
+	function($scope, $q, $http, $parse, Organisationunit,
 			 OrganisationUnitGroupSet, OrgunitGroupSetService, UserService, DataStoreService, AnalyticsService) {
 
 		$scope.availableDataStatus = {

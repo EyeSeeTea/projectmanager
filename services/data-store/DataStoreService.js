@@ -16,8 +16,9 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Services = require('../services.module');
 
-appManagerMSF.factory("DataStoreService", ['DataStore','UserService', function(DataStore, UserService) {
+Services.factory("DataStoreService", ['DataStore', 'UserService', function(DataStore, UserService) {
 
     var namespace = "HMIS_Management";
     var defaultArrayKey = "values";

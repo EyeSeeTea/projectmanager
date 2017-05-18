@@ -19,7 +19,9 @@
     "ng-file-upload": "2.2.2"
   },
   "devDependencies": {
+    "css-loader": "0.28.1",
     "html-loader": "0.4.5",
+    "style-loader": "0.17.0",
     "url-loader": "0.5.8",
     "webpack": "2.4.1"
   },

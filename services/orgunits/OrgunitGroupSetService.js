@@ -16,8 +16,9 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Services = require('../services.module');
 
-appManagerMSF.factory("OrgunitGroupSetService", ['OrganisationUnitGroupSet','OrganisationUnitGroup','$q', function(OrganisationUnitGroupSet, OrganisationUnitGroup, $q) {
+Services.factory("OrgunitGroupSetService", ['OrganisationUnitGroupSet','OrganisationUnitGroup','$q', function(OrganisationUnitGroupSet, OrganisationUnitGroup, $q) {
 
     /**
      * It returns and array of organisationUnitGroupsSets. The structure of each groupSet is the same that querying

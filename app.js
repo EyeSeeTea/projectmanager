@@ -22,6 +22,9 @@ require('./directives/header/headerController');
 require('./directives/menu/menuController');
 require('./features/features.module');
 require('./features/analytics/analyticsController');
+require('./features/availabledata/availabledataController');
+
+require('./app.css');
 
 var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','Directives', 'Features', 'pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
 
@@ -68,9 +71,9 @@ appManagerMSF.config(function($routeProvider) {
 		css: "features/resetpasswd/resetpasswdCss.css"
 	});
 	$routeProvider.when('/availabledata', {
-		templateUrl: "features/availabledata/availabledataView.html",
-		controller: "availabledataController",
-		css: "features/availabledata/availabledataCss.css"
+		template: require('./features/availabledata/availabledataView.html'),
+		controller: 'availabledataController',
+//		css: require('./features/availabledata/availabledataCss.css')
 	});
 	$routeProvider.when('/hmisadoption', {
 		templateUrl: "features/hmisadoption/hmisadoptionView.html",
