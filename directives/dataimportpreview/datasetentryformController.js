@@ -16,13 +16,13 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Directives = require('../directives.module');
+require('../../services/data/DataImportService');
 
-
-
-Dhis2Api.directive('d2DatasetEntryForm', function(){
+Directives.directive('d2DatasetEntryForm', function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/dataimportpreview/datasetentryformView.html',
+		template: require('./datasetentryformView.html'),
 		scope: {
 			periodId: '=',
 			datavalues: '=',
@@ -32,7 +32,7 @@ Dhis2Api.directive('d2DatasetEntryForm', function(){
 	};
 });
 
-Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm', 'commonvariable', 'DataImportService', 
+Directives.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm', 'commonvariable', 'DataImportService',
 	function($scope, DataSetEntryForm, commonvariable, DataImportService){
 	
 	function init(){

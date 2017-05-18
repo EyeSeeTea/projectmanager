@@ -24,6 +24,7 @@ require('./features/features.module');
 require('./features/analytics/analyticsController');
 require('./features/availabledata/availabledataController');
 require('./features/dataexport/dataexportController');
+require('./features/dataimport/dataimportController');
 require('./features/resetpasswd/resetpasswdController');
 
 require('./app.css');
@@ -50,8 +51,8 @@ appManagerMSF.config(function($routeProvider) {
 		controller: 'analyticsController'
 	});
 	$routeProvider.when('/dataimport', {
-		templateUrl: "features/dataimport/dataimportView.html",
-		controller: "dataimportController"
+		template: require('./features/dataimport/dataimportView.html'),
+		controller: 'dataimportController'
 	});
 	$routeProvider.when('/dataexport', {
 		template: require('./features/dataexport/dataexportView.html'),

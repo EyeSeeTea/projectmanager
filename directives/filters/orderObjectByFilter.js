@@ -16,8 +16,9 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+var Directives = require('../directives.module');
 
-appManagerMSF.filter( 'orderObjectBy', function(){
+Directives.filter( 'orderObjectBy', function(){
     return function( input, attribute ){
         if (!angular.isObject( input )) return input;
 
