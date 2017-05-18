@@ -19,7 +19,6 @@
 require('./core/dhis2Api');
 require('./directives/directives.module');
 require('./directives/header/headerController');
-require('./directives/menu/menuController');
 require('./features/features.module');
 require('./features/analytics/analyticsController');
 require('./features/availabledata/availabledataController');

@@ -16,19 +16,20 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Directives = require('../directives.module');
 
-Directives.directive('d2Messages', function(){
+var messagesDirective = [function(){
 	return{
 		restrict: 'E',
 		template: require('./messagesView.html'),
+		controller: messagesController,
 		scope: {
 		      type: '@',
 		      textmessage: '@'
 		    }
 	}
-	});
-Directives.controller("d2messagesController", ['$scope',function ($scope) {
+}];
+
+var messagesController = ['$scope',function ($scope) {
 
 	switch($scope.type){
 		case 'success':
@@ -46,9 +47,8 @@ Directives.controller("d2messagesController", ['$scope',function ($scope) {
 		case 'danger':
 			$scope.typemessage="alert alert-danger";
 			$scope.iconmessage="glyphicon glyphicon-exclamation-sign";
-			break;	
-	
+			break;
 	}
-	
-}]);
+}];
 
+module.exports = messagesDirective;

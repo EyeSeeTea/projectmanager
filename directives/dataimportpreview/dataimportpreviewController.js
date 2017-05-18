@@ -16,23 +16,21 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Directives = require('../directives.module');
-require('./datasetentryformController');
-require('../filters/orderObjectByFilter');
 
-Directives.directive('d2Dataimportpreview', function(){
+var dataImportPreviewDirective = [function(){
 	return{
 		restrict: 'E',
 		template: require('./dataimportpreviewView.html'),
 		css: require('./dataimportpreviewCss.css'),
+		controller: dataImportPreviewController,
 		scope: {
 			importFile: '=',
 			isCompress: '='
 		}
 	};
-});
+}];
 
-Directives.controller('d2DataimportpreviewController', ['$scope', "Organisationunit", function($scope, Organisationunit){
+var dataImportPreviewController =  ['$scope', "Organisationunit", function($scope, Organisationunit){
 		
 	$scope.importPreviewStatus = {
 		visible: true,
@@ -172,12 +170,6 @@ Directives.controller('d2DataimportpreviewController', ['$scope', "Organisationu
 		}
 	};
 	
-}]);
+}];
 
-Directives.filter('d2FormatPeriod', function() {
-	return function(original){
-		var year = original.substring(0,4);
-		var period = original.replace(year, '');
-		return year + " - " + period;
-	};
-});
+module.exports = dataImportPreviewDirective;

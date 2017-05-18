@@ -17,10 +17,9 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Directives = require('../directives.module');
 require('../../services/users/UserService');
 
-Directives.directive('d2Secondarymenu', function(){
+var menuDirective = [function(){
 	return{
 		restrict: 'E',
 		template: require('./menuView.html'),
@@ -39,4 +38,6 @@ Directives.directive('d2Secondarymenu', function(){
 			});
 		}]
 	}
-});
+}];
+
+module.exports = menuDirective;

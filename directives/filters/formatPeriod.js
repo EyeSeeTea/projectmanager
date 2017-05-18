@@ -1,4 +1,3 @@
-
 /*
  Copyright (c) 2015.
 
@@ -17,23 +16,12 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var orderObjectByFilter = [ function(){
-    return function( input, attribute ){
-        if (!angular.isObject( input )) return input;
-
-        var array = [];
-        for( var objectKey in input ) {
-            array.push(input[objectKey]);
-        }
-
-        // TODO Generalize to be used with any data type, not just Strings
-        array.sort( function( a, b ){
-            a = String(a[attribute]);
-            b = String(b[attribute]);
-            return a.localeCompare(b);
-        });
-        return array;
-    }
+var formatPeriodFilter = [ function(){
+    return function(original){
+        var year = original.substring(0,4);
+        var period = original.replace(year, '');
+        return year + " - " + period;
+    };
 }];
 
-module.exports = orderObjectByFilter;
+module.exports = formatPeriodFilter;

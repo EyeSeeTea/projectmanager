@@ -16,11 +16,12 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-var Directives = require('../directives.module');
 
-Directives.directive('d2Header', function(){
+var headerDirective = [function(){
 	return{
 		restrict: 'E',
 		template: require('./headerView.html')
 	}
-});
+}];
+
+module.exports = headerDirective;
