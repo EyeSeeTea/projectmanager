@@ -16,6 +16,27 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+require('./node_modules/angular/angular.min');
+require('./node_modules/angular-route/angular-route.min');
+require('./node_modules/angular-resource/angular-resource.min');
+require('./node_modules/angular-translate/dist/angular-translate.min');
+require('./node_modules/angular-translate-loader-static-files/angular-translate-loader-static-files.min');
+require('./node_modules/angular-sanitize/angular-sanitize.min');
+require('./node_modules/ng-file-upload/dist/angular-file-upload.min');
+require('./node_modules/ng-file-upload/dist/angular-file-upload-shim.min');
+require('./node_modules/angular-css/angular-css.min');
+
+//require('./node_modules/jquery/dist/jquery.min.js');
+require('./node_modules/file-saver/FileSaver.min.js');
+require('./node_modules/jszip/dist/jszip.min.js');
+
+require('./node_modules/bootstrap/dist/js/bootstrap.min');
+require('./node_modules/bootstrap/dist/css/bootstrap.min.css');
+require('./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls');
+
+require('./include/angular.treeview/angular.treeview');
+require('./include/angular.treeview/css/angular.treeview.css');
+
 require('./core/dhis2Api');
 require('./directives/directives.module');
 require('./features/features.module');

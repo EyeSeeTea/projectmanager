@@ -32,7 +32,12 @@ module.exports = {
             {
                 test: /\.png$/,
                 use: [ "url-loader?mimetype=image/png" ]
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                use: [ 'file-loader?name=public/fonts/[name].[ext]' ]
             }
+
         ]
     }
 };
