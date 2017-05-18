@@ -26,7 +26,7 @@ require('./node_modules/ng-file-upload/dist/angular-file-upload.min');
 require('./node_modules/ng-file-upload/dist/angular-file-upload-shim.min');
 require('./node_modules/angular-css/angular-css.min');
 
-//require('./node_modules/jquery/dist/jquery.min.js');
+require('./node_modules/jquery/dist/jquery.min.js');
 require('./node_modules/file-saver/FileSaver.min.js');
 require('./node_modules/jszip/dist/jszip.min.js');
 

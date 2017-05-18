@@ -1,5 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 module.exports = {
     entry: './app.js',
@@ -9,9 +11,18 @@ module.exports = {
     },
     plugins: [
         new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery",
-            "window.jQuery": "jquery"
+            $: 'jquery',
+            jQuery: 'jquery',
+            "window.jQuery": 'jquery'
+        }),
+        new HtmlWebpackPlugin({
+            template: 'index.html',
+            filename: 'index.html',
+            inject: 'head'
+        }),
+        new AddAssetHtmlPlugin({
+            filepath: require.resolve('./node_modules/jquery/dist/jquery.min'),
+            includeSourcemap: false
         })
     ],
     module: {

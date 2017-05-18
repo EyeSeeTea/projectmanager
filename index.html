@@ -22,17 +22,6 @@
 <head>
     <title>Project Manager</title>
 
-    <script src="node_modules/jquery/dist/jquery.min.js"  type="text/javascript"> </script>
-
-    <script src="dist/bundle.js" type="text/javascript"> </script>
-
-    <!-- Dhis menu -->
-    <link type="text/css" rel="stylesheet" href="../../../dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
-    <link type="text/css" rel="stylesheet" media="screen" href="../../../dhis-web-commons/css/menu.css">
-    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.translate.js"></script>
-    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.menu.js"></script>
-    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js"></script>
-
 </head>
 <body>
     <d2-header></d2-header>
@@ -40,5 +29,12 @@
         <div class="col-md-2 left-side-menu"><d2-secondarymenu></d2-secondarymenu></div>  <!-- directive that load the vertical menu -->
         <div class="col-md-10"><div ng-view></div></div>
     </div>
+
+    <!-- Dhis menu -->
+    <link type="text/css" rel="stylesheet" href="../../../dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
+    <link type="text/css" rel="stylesheet" media="screen" href="../../../dhis-web-commons/css/menu.css">
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.translate.js"></script>
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.menu.js"></script>
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js"></script>
 </body>
 </html>
