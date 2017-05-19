@@ -29,7 +29,9 @@
     "webpack": "2.4.1"
   },
   "scripts": {
-    "build": "cp -r languages dist/ && cp -r img dist/ && webpack --config webpack.config.js",
+    "copy-resources": "cp -r languages dist/ && cp -r img dist/ && cp manifest.webapp dist/" ,
+    "build-dev": "npm run copy-resources -- && webpack --config webpack.config.js",
+    "build-prod": "npm run copy-resources -- && webpack --config webpack.config.js -p",
     "test": "mocha"
   },
   "repository": {

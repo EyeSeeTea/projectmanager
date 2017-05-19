@@ -10,11 +10,6 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     plugins: [
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            "window.jQuery": 'jquery'
-        }),
         new HtmlWebpackPlugin({
             template: 'index.html',
             filename: 'index.html',
@@ -22,6 +17,14 @@ module.exports = {
         }),
         new AddAssetHtmlPlugin({
             filepath: require.resolve('./node_modules/jquery/dist/jquery.min'),
+            includeSourcemap: false
+        }),
+        new AddAssetHtmlPlugin({
+            filepath: require.resolve('./node_modules/file-saver/FileSaver.min'),
+            includeSourcemap: false
+        }),
+        new AddAssetHtmlPlugin({
+            filepath: require.resolve('./node_modules/jszip/dist/jszip.min.js'),
             includeSourcemap: false
         })
     ],

@@ -26,10 +26,6 @@ require('./node_modules/ng-file-upload/dist/angular-file-upload.min');
 require('./node_modules/ng-file-upload/dist/angular-file-upload-shim.min');
 require('./node_modules/angular-css/angular-css.min');
 
-require('./node_modules/jquery/dist/jquery.min.js');
-require('./node_modules/file-saver/FileSaver.min.js');
-require('./node_modules/jszip/dist/jszip.min.js');
-
 require('./node_modules/bootstrap/dist/js/bootstrap.min');
 require('./node_modules/bootstrap/dist/css/bootstrap.min.css');
 require('./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls');
