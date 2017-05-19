@@ -24,9 +24,9 @@ var progressBarDynamic = [function(){
         scope: {
             status: '=?'
         },
-        controller: function($scope) {
+        controller: ['$scope', function($scope) {
             // Initialize status object if empty
-            /**if (jQuery.isEmptyObject($scope.status)) {
+            if (jQuery.isEmptyObject($scope.status)) {
                 $scope.status = {
                     visible: false,
                     type: "info",
@@ -34,8 +34,13 @@ var progressBarDynamic = [function(){
                     active: false
                 }
             }
-             */
-        }
+            $scope.$watch('status.value',
+                function(newVal) {
+                    $scope.style = {
+                        width: newVal + "%"
+                    }
+                });
+        }]
     };
 }];
 

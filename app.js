@@ -44,7 +44,7 @@ require('./app.css');
 
 var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','Directives', 'Features', 'pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
 
-appManagerMSF.config(function($routeProvider) {
+appManagerMSF.config(['$routeProvider', function($routeProvider) {
  
 	$routeProvider.when('/dataapproval', {
 		templateUrl: "features/dataapproval/dataapprovalView.html",
@@ -100,9 +100,9 @@ appManagerMSF.config(function($routeProvider) {
 		redirectTo: '/'
 	});
 
-});
+}]);
 
-appManagerMSF.config(function ($translateProvider, urlApi) {
+appManagerMSF.config(['$translateProvider', 'urlApi', function ($translateProvider, urlApi) {
   
 	  $translateProvider.useStaticFilesLoader({
           prefix: 'languages/',
@@ -131,8 +131,8 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
       }).fail(function () {
     	  $translateProvider.determinePreferredLanguage();
 	  });
-});
+}]);
 
-appManagerMSF.config(function (uibDatepickerConfig) {
+appManagerMSF.config(['uibDatepickerConfig', function (uibDatepickerConfig) {
 	uibDatepickerConfig.startingDay = 1;
-});
+}]);

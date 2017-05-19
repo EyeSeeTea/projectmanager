@@ -19,7 +19,7 @@
 
 <div class="row" ng-show="status.visible">
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: {{status.value}}%;"
+        <div class="progress-bar" role="progressbar" ng-style="style"
              ng-class="{'active': status.active,
                         'progress-bar-striped': status.active,
                         'progress-bar-info': status.type == 'info',

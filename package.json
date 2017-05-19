@@ -29,7 +29,7 @@
     "webpack": "2.4.1"
   },
   "scripts": {
-    "start-webpack": "webpack --config webpack.config.js",
+    "build": "cp -r languages dist/ && cp -r img dist/ && webpack --config webpack.config.js",
     "test": "mocha"
   },
   "repository": {

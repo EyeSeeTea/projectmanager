@@ -19,7 +19,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-Dhis2Api.directive('containsDigit', function() {
+var containsDigitDirective = [function() {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
@@ -38,4 +38,6 @@ Dhis2Api.directive('containsDigit', function() {
             };
         }
     };
-});
+}];
+
+module.exports = containsDigitDirective;

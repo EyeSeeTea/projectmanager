@@ -28,7 +28,12 @@ var resetPassword = ["$scope",'$filter', 'UsersByUserRole', 'User', 'FilterResou
     $scope.password = {};
 
 	// Variable to control
-	$scope.individualProgressStatus = {};
+	$scope.individualProgressStatus = {
+		visible: false,
+		type: "info",
+		value: 0,
+		active: false
+	};
 
     // Password reset is based on projects. If user orgunit is not a project, ask him to select one.
     // Again, lets suppose users have ONE orgunit assigned
@@ -72,6 +77,7 @@ var resetPassword = ["$scope",'$filter', 'UsersByUserRole', 'User', 'FilterResou
             angular.forEach(targetUsers, function (user) {
                 UserService.updateUserPassword(user, $scope.password.new).then(function (result) {
                     if (result.status === "OK") {
+						console.info("Password reset for username " + user.userCredentials.username);
                         $scope.resetPasswordResult.updated++;
 						$scope.individualProgressStatus.value =
 							100 * ($scope.resetPasswordResult.updated / $scope.resetPasswordResult.total);
