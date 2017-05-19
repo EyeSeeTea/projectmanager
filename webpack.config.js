@@ -31,8 +31,18 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.js?$/,
+                use: [ 'babel-loader?presets[]=es2015' ],
+                exclude: /node_modules/
+            },
+            {
                 test: /\.css$/,
                 use: [ 'style-loader', 'css-loader' ]
+            },
+            {
+                test: /\.tsx?$/,
+                use: [ 'babel-loader?presets[]=es2015', 'ts-loader' ],
+                exclude: /node_modules/
             },
             {
                 test: /\.html$/,
@@ -53,5 +63,8 @@ module.exports = {
             }
 
         ]
+    },
+    resolve: {
+        extensions: [".tsx", ".ts", ".js"]
     }
 };
