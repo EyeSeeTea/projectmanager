@@ -21,6 +21,7 @@ var treeorganisationunitDirective =  [function(){
 	return{
 		restrict: 'E',
 		template: require('./organisationUnitTreeView.html'),
+		css: require('./organisationUnitTreeCss.css'),
 		controller: treeorganisationunitController,
 		scope: {
 		      treetype: '@',
