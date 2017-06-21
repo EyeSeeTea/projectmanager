@@ -41,6 +41,30 @@
 	background-color: #FFFFFF;
 }
 
+.relativelevel1 {
+	text-indent: 1em;
+}
+
+.relativelevel2 {
+	text-indent: 2em;
+}
+
+.relativelevel3 {
+	text-indent: 3em;
+}
+
+.relativelevel4 {
+	text-indent: 4em;
+}
+
+.relativelevel5 {
+	text-indent: 5em;
+}
+
+.relativelevel6 {
+	text-indent: 6em;
+}
+
 .glyphicon {
 	font-size: 0.8em;
 }

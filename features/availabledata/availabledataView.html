@@ -58,7 +58,7 @@
 	<tbody>
 	<tr ng-repeat="ou in tableRows | orderBy:'fullName'" ng-show="ou.relativeLevel == 0 || isClicked(ou.parents)"
 		ng-click="!ou.isLastLevel && clickOrgunit(ou)">
-		<td id="ou_{{ou.id}}" class="level{{ ou.level }}" style="text-indent: {{ou.relativeLevel}}em">
+		<td id="ou_{{ou.id}}" class="level{{ ou.level }} relativelevel{{ou.relativeLevel}}">
 				<span class="ou-prefix glyphicon {{ou.isLastLevel ? 'glyphicon-chevron-right' :
 						(isClicked([ou.id]) ? 'glyphicon-minus' : 'glyphicon-plus') }}"></span>
 			{{ ou.name }}
