@@ -17,18 +17,20 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-
-Dhis2Api.directive('d2Treeorganisationunit', function(){
+var treeorganisationunitDirective =  [function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/treeorganisationunit/organisationUnitTreeView.html',
+		template: require('./organisationUnitTreeView.html'),
+		css: require('./organisationUnitTreeCss.css'),
+		controller: treeorganisationunitController,
 		scope: {
 		      treetype: '@',
 		      size:'@'
 		    }
 	}
-	}); 
-Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrganisationunit',"commonvariable","UserService", function ($scope,$q,TreeOrganisationunit,commonvariable,UserService) {
+}]; 
+
+var treeorganisationunitController = ['$scope','$q','TreeOrganisationunit',"commonvariable","UserService", function ($scope,$q,TreeOrganisationunit,commonvariable,UserService) {
 	$scope.currentid="";
      $scope.loadingTree=true;
     
@@ -82,7 +84,7 @@ Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrga
     		}
 
     	 return json;
-    	 }
+    	 };
     
      
   $scope.$watch(
@@ -105,5 +107,6 @@ Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrga
             	   	}
             }
         );
-}]);
+}];
 
+module.exports = treeorganisationunitDirective;

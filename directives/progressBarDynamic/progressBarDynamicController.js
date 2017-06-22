@@ -17,17 +17,16 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-
-Dhis2Api.directive('d2ProgressbarDynamic', function(){
+var progressBarDynamic = [function(){
     return{
         restrict: 'E',
-        templateUrl: 'directives/progressBarDynamic/progressBarDynamicView.html',
+        template: require('./progressBarDynamicView.html'),
         scope: {
             status: '=?'
         },
-        controller: function($scope) {
+        controller: ['$scope', function($scope) {
             // Initialize status object if empty
-            /**if (jQuery.isEmptyObject($scope.status)) {
+            if (jQuery.isEmptyObject($scope.status)) {
                 $scope.status = {
                     visible: false,
                     type: "info",
@@ -35,7 +34,14 @@ Dhis2Api.directive('d2ProgressbarDynamic', function(){
                     active: false
                 }
             }
-             */
-        }
+            $scope.$watch('status.value',
+                function(newVal) {
+                    $scope.style = {
+                        width: newVal + "%"
+                    }
+                });
+        }]
     };
-}); 
+}];
+
+module.exports = progressBarDynamic;

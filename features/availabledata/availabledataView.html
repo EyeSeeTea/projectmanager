@@ -1,0 +1,75 @@
+
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+<h2>{{ 'AVAILABLE_DATA' | translate}}</h2>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="row form-inline">
+					<div class="col-md-8" ng-repeat="filter in availableFilters">
+						<label for="{{filter.id}}">{{filter.name}}</label>
+						<select id="{{filter.id}}" class="filter-select form-control"
+								ng-model="filter.selected" ng-change="modifyFilter(filter)"
+								ng-options="option as option.name for option in filter.organisationUnitGroups
+									| orderBy:'name' track by option.id">
+							<option value="">-</option>
+						</select>
+					</div>
+					<div class="col-md-4">
+						<label for="periodSelector">{{'NUMBER_OF_MONTHS' | translate}}:</label>
+						<div id="periodSelector" class="btn-group" data-toggle="buttons">
+							<label ng-repeat="period in availablePeriods" ng-click="modifyPeriod(period)"
+								   class="btn btn-default {{period.id == selectedPeriod.id ? 'active' : ''}}">
+								<input type="radio" name="options" autocomplete="off">
+								{{period.name}}
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<table class="table table-bordered table-condensed table-hover" ng-show="tableDisplayed">
+	<thead>
+	<tr>
+		<th class="orgunit">{{ 'ORGANISATIONUNIT_LABEL' | translate}}</th>
+		<th ng-repeat="pe in periods">{{ pe.name }}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-repeat="ou in tableRows | orderBy:'fullName'" ng-show="ou.relativeLevel == 0 || isClicked(ou.parents)"
+		ng-click="!ou.isLastLevel && clickOrgunit(ou)">
+		<td id="ou_{{ou.id}}" class="level{{ ou.level }} relativelevel{{ou.relativeLevel}}">
+				<span class="ou-prefix glyphicon {{ou.isLastLevel ? 'glyphicon-chevron-right' :
+						(isClicked([ou.id]) ? 'glyphicon-minus' : 'glyphicon-plus') }}"></span>
+			{{ ou.name }}
+		</td>
+		<td ng-repeat="pe in periods" title="{{ou.name}} - {{pe.name}}">{{ou.data[pe.id] | number:0}}</td>
+	</tr>
+	</tbody>
+</table>
+
+<div class="row">
+	<div class="col-md-6">
+		<d2-progressbar-dynamic status="availableDataStatus"></d2-progressbar-dynamic>
+	</div>
+</div>

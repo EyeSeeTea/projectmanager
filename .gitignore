@@ -3,4 +3,5 @@ projectmanager.zip
 exclude.txt
 deploy.bat
 files-excluded.txt
-bower_components/
+node_modules/
+dist/

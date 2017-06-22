@@ -18,11 +18,10 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-
-Dhis2Api.directive('d2Secondarymenu', function(){
+var menuDirective = [function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/menu/menuView.html',
+		template: require('./menuView.html'),
 		controller: ['$scope', 'commonvariable', 'UserService', function($scope, commonvariable, UserService){
 
 			$scope.isOnline = commonvariable.isOnline;
@@ -38,4 +37,6 @@ Dhis2Api.directive('d2Secondarymenu', function(){
 			});
 		}]
 	}
-});
+}];
+
+module.exports = menuDirective;
