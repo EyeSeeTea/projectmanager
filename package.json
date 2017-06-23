@@ -20,8 +20,10 @@
     "ng-file-upload": "2.2.2"
   },
   "devDependencies": {
-    "@types/jquery": "^3.2.3",
-    "@types/node": "^8.0.1",
+    "@types/angular-resource": "1.5.9",
+    "@types/angular": "1.5.14-alpha",
+    "@types/jquery": "3.2.3",
+    "@types/node": "8.0.1",
     "add-asset-html-webpack-plugin": "2.0.1",
     "babel-core": "6.24.1",
     "babel-loader": "7.0.0",

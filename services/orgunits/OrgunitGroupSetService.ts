@@ -17,7 +17,9 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationUnitGroup','$q', function(OrganisationUnitGroupSet, OrganisationUnitGroup, $q) {
+import * as angular from 'angular';
+
+export const orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationUnitGroup','$q', function(OrganisationUnitGroupSet, OrganisationUnitGroup, $q: ng.IQService) {
 
     /**
      * It returns and array of organisationUnitGroupsSets. The structure of each groupSet is the same that querying
@@ -26,16 +28,14 @@ var orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationUnitGroup'
      * @param groupSets - Array of organisationUnitGroupSets. OrgunitGroupSet = {"id": "ddslkfjdfsjk",...}
      * @returns {*} - Array of organisationUnitGroupSets with name and children[id, name]
      */
-    var getOrgunitGroupSets = function(groupSets){
-        var promiseArray = [];
-        angular.forEach(groupSets, function(groupSet){
+    let getOrgunitGroupSets = function(groupSets){
+        let promiseArray = [];
+        angular.forEach(groupSets, (groupSet) => {
             promiseArray.push(getTranslatedOrgunitGroupSet(groupSet));
         });
 
         return $q.all(promiseArray)
-            .then(function(data){
-                return data;
-            });
+            .then( data => data );
     };
 
     var getTranslatedOrgunitGroupSet = function(groupSet){
@@ -45,9 +45,7 @@ var orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationUnitGroup'
             paging: false,
             translate: true
         }).$promise
-            .then(function(groupSetInfo){
-                return groupSetInfo;
-            });
+            .then( groupSetInfo => groupSetInfo);
     };
 
     return {
@@ -55,5 +53,3 @@ var orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationUnitGroup'
     }
 
 }];
-
-module.exports = orgunitGroupSetService;
