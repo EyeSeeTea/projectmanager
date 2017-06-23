@@ -17,14 +17,14 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var progressBarDynamic = [function(){
+export const progressBarDynamic = [function(){
     return{
         restrict: 'E',
         template: require('./progressBarDynamicView.html'),
         scope: {
             status: '=?'
         },
-        controller: ['$scope', function($scope) {
+        controller: ['$scope', ($scope) => {
             // Initialize status object if empty
             if (jQuery.isEmptyObject($scope.status)) {
                 $scope.status = {
@@ -35,7 +35,7 @@ var progressBarDynamic = [function(){
                 }
             }
             $scope.$watch('status.value',
-                function(newVal) {
+                (newVal) => {
                     $scope.style = {
                         width: newVal + "%"
                     }
@@ -43,5 +43,3 @@ var progressBarDynamic = [function(){
         }]
     };
 }];
-
-module.exports = progressBarDynamic;

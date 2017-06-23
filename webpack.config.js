@@ -40,7 +40,7 @@ module.exports = {
                 use: [ 'style-loader', 'css-loader' ]
             },
             {
-                test: /\.tsx?$/,
+                test: /\.ts?$/,
                 use: [ 'babel-loader?presets[]=es2015', 'ts-loader' ],
                 exclude: /node_modules/
             },
