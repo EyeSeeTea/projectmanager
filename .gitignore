@@ -1,7 +1,6 @@
 project_manager.zip
 projectmanager.zip
 exclude.txt
-deploy.bat
 files-excluded.txt
 node_modules/
 dist/
