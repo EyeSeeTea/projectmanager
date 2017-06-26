@@ -19,7 +19,7 @@
     "ng-file-upload": "2.2.2"
   },
   "devDependencies": {
-    "@types/angular": "1.5.14-alpha",
+    "@types/angular": "1.5.4-alpha",
     "@types/angular-resource": "1.5.9",
     "@types/file-saver": "0.0.1",
     "@types/jquery": "3.2.3",
