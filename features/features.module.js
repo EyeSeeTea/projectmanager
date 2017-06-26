@@ -4,7 +4,7 @@ require('../directives/directives.module');
 
 var analytics = require('./analytics/analyticsController');
 var availableData = require('./availabledata/availabledataController');
-var dataExport = require('./dataexport/dataexportController');
+import {dataExport} from './dataexport/dataexportController';
 var dataImport = require('./dataimport/dataimportController');
 var metadataExport = require('./metadataexport/metadataexportController');
 var metadataImport = require('./metadataimport/metadataimportController');

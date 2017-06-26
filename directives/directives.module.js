@@ -6,7 +6,7 @@ var datasetEntryFormDirective = require('./dataimportpreview/datasetentryformCon
 var headerDirective = require('./header/headerController');
 var menuDirective = require('./menu/menuController');
 var messagesDirectives = require('./messages/messagesController');
-var progressBarDynamic = require('./progressBarDynamic/progressBarDynamicController');
+import {progressBarDynamic} from './progressBarDynamic/progressBarDynamicController';
 var projectSelector = require('./projectSelector/projectSelectorController');
 var treeorganisationunitDirective = require('./treeorganisationunit/organisationUnitTreeController');
 var containsDigitDirective = require('./validators/containsDigit');

@@ -18,16 +18,17 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var dataExport = ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "DataExport", 'DemographicsService', '$timeout', function($scope, $q, $filter, commonvariable, DataSetsUID, DataExport, DemographicsService, $timeout) {
+export const dataExport = ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "DataExport", 'DemographicsService', '$timeout', 
+		function($scope, $q: ng.IQService, $filter, commonvariable, DataSetsUID, DataExport, DemographicsService, $timeout) {
 
 	// Set "zipped" to true by default
 	$scope.zipped = true;
 
 	$scope.demographicsSelected = false;
-	var currentYear = (new Date()).getFullYear();
+	let currentYear: number = (new Date()).getFullYear();
 	$scope.availableYears = [currentYear - 3, currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
 	$scope.demographicsYear = currentYear;
-	var demographicsDatasets = ["DS_DEM", "DS_POP_Q"];
+	let demographicsDatasets: string[] = ["DS_DEM", "DS_POP_Q"];
 
 	//new component for datepiker helder
 	 $scope.today = function() {
@@ -61,18 +62,19 @@ var dataExport = ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "D
 		active: true
 	};
 		
-	function RESTUtil() {}
-
-	RESTUtil.requestGetData = function( url, successFunc, failFunc ) {
-		return $.ajax({
-			type: "GET",
-			dataType: "json",
-			url: url,
-			async: true,
-			success: successFunc,
-			error: failFunc
-		});
-	};
+	class RESTUtil {
+		
+		requestGetData(url, successFunc, failFunc ) {
+			return $.ajax({
+				type: "GET",
+				dataType: "json",
+				url: url,
+				async: true,
+				success: successFunc,
+				error: failFunc
+			});
+		}
+	}
 	
 	function updateprocess() {
 		$scope.dataExportStatus.visible = false;
@@ -82,47 +84,47 @@ var dataExport = ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "D
 		
 		$scope.dataExportStatus.visible = true;
 		
-		var api_url=commonvariable.url+"/dataValueSets.json?";
+		let api_url = commonvariable.url+"/dataValueSets.json?";
 
-		var boundDates = getBoundDates();
-		var fileName = getFilename();
-		var orgUnits = commonvariable.OrganisationUnitList;
+		const boundDates: BoundDates = getBoundDates();
+		const fileName: string = getFilename();
+		let orgUnits = commonvariable.OrganisationUnitList;
 
 		updateDemographicIfNeeded()
 			.then(getDatasets)
-			.then(function(dataSets) {
+			.then( dataSets => {
 
-			var dataset_filter = dataSets.reduce(function(list, dataset) {
-				return list + "dataSet=" + dataset.id + "&";
-			},"");
+				const dataset_filter = dataSets.reduce(function(list, dataset) {
+					return list + "dataSet=" + dataset.id + "&";
+				},"");
 
-			var orgUnits_filter = orgUnits.reduce(function(list, orgunit) {
-				return list + "&orgUnit=" + orgunit.id;
-			}, "");
+				const orgUnits_filter = orgUnits.reduce(function(list, orgunit) {
+					return list + "&orgUnit=" + orgunit.id;
+				}, "");
 
-			api_url = api_url + dataset_filter +
-				"startDate=" + boundDates.start + "&endDate=" + boundDates.end +
-				orgUnits_filter + "&children=true";
+				api_url = api_url + dataset_filter +
+					"startDate=" + boundDates.start + "&endDate=" + boundDates.end +
+					orgUnits_filter + "&children=true";
 
-			RESTUtil.requestGetData (api_url,
-
-			function(data){
-
-				if($scope.zipped){
-					var zip = new JSZip();
-					zip.file(fileName + '.json', JSON.stringify(data));
-					zip.generateAsync({type:"blob", compression:"DEFLATE"})
-						.then(function(content) {
-							saveAs(content, fileName + '.json.zip');
-						});
-				}
-				else{
-					var file = new Blob([JSON.stringify(data)], { type: 'application/json' });
-					saveAs(file, fileName + '.json');
-				}
-				$timeout(updateprocess, 5);
+				let restUtil = new RESTUtil();
+				restUtil.requestGetData (api_url,
+					data => {
+						if($scope.zipped){
+							let zip = new JSZip();
+							zip.file(fileName + '.json', JSON.stringify(data));
+							zip.generateAsync({type:"blob", compression:"DEFLATE"})
+								.then(function(content) {
+									saveAs(content, fileName + '.json.zip');
+								});
+						}
+						else{
+							let file = new Blob([JSON.stringify(data)], { type: 'application/json' });
+							saveAs(file, fileName + '.json');
+						}
+						$timeout(updateprocess, 5);
+					},
+					() => {});
 			});
-		});
 	};
 
 	var updateDemographicIfNeeded = function() {
@@ -144,7 +146,7 @@ var dataExport = ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "D
 		});
 	};
 
-	var getFilename = function() {
+	var getFilename = function(): string {
 		var today = new Date();
 		var dd = (today.getDate()<10 ? '0' + today.getDate() : today.getDate());
 		var mm = (today.getMonth()<9 ? '0' + (today.getMonth()+1) : today.getMonth());
@@ -153,19 +155,23 @@ var dataExport = ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "D
 		return $scope.file_name + "_" + yyyy + mm + dd;
 	};
 
-	var getBoundDates = function() {
+	var getBoundDates = function(): BoundDates {
 		if ($scope.demographicsSelected) {
-			return {
-				start: $scope.demographicsYear + "-01-01",
-				end: $scope.demographicsYear + "-12-31"
-			}
+			new BoundDates("","");
+			return new BoundDates(
+				$scope.demographicsYear + "-01-01",
+				$scope.demographicsYear + "-12-31");
 		} else {
-			return {
-				start: $filter('date')($scope.start_date,'yyyy-MM-dd'),
-				end: $filter('date')($scope.end_date,'yyyy-MM-dd')
-			}
+			return new BoundDates(
+				$filter('date')($scope.start_date,'yyyy-MM-dd'),
+				$filter('date')($scope.end_date,'yyyy-MM-dd'));
 		}
 	};
 }];
 
-module.exports = dataExport;
+class BoundDates {
+	constructor(
+		public start: string, 
+		public end: string
+	) {}
+}

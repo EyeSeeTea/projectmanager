@@ -9,7 +9,7 @@ var eventHelper = require('./events/EventHelper');
 var eventImportService = require('./events/EventImportService');
 var metadataImportService = require('./metadata/MetadataImportService');
 var metadataSyncService = require('./metadata/MetadataSyncService');
-var orgunitGroupSetService = require('./orgunits/OrgunitGroupSetService');
+import {orgunitGroupSetService} from './orgunits/OrgunitGroupSetService';
 var programsService = require('./programs/ProgramService');
 var remoteApiService = require('./metadata/RemoteApiService');
 var sqlService = require('./sql/SqlService');
