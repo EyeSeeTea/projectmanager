@@ -1,6 +1,4 @@
 project_manager.zip
 projectmanager.zip
-exclude.txt
-files-excluded.txt
 node_modules/
 dist/
