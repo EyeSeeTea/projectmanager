@@ -25,3 +25,17 @@ export class TrackerDataExportLog {
         public end: string
     ){}
 }
+
+export class ProgressStatus {
+    constructor(
+        public visible: boolean,
+        public active: boolean,
+        public type: string,
+        public value: number
+    ){}
+
+    static initialWithoutProgress: ProgressStatus = new ProgressStatus(true, true, "info", 100);
+    static doneSuccessful: ProgressStatus = new ProgressStatus(true, false, "success", 100);
+    static doneWithFailure: ProgressStatus = new ProgressStatus(true, false, "danger", 100);
+    static hidden: ProgressStatus = new ProgressStatus(false, false, "info", 100);
+}

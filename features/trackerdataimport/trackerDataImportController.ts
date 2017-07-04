@@ -1,4 +1,3 @@
-
 /* 
  Copyright (c) 2015.
 
@@ -17,12 +16,14 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", function($scope, $q, EventImportService, AnalyticsService, DemographicsService) {
+import { ProgressStatus } from '../../model/model';
+
+export const trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", function($scope, $q, EventImportService, AnalyticsService, DemographicsService) {
 
     $scope.progressStatus = {};
     $scope.undefinedFile = false;
 
-    var $file;//single file 
+    let $file;//single file 
     
     $scope.showImportDialog = function(){
 
@@ -37,12 +38,7 @@ var trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService
 
         $("#importConfirmation").modal("hide");
         
-        $scope.progressStatus = {
-            visible: true,
-            active: true,
-            type: 'info',
-            value: 100
-        };
+        $scope.progressStatus = ProgressStatus.initialWithoutProgress;
 
         $scope.summary = undefined;
         $scope.analyticsLog = [];
@@ -50,18 +46,9 @@ var trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService
         EventImportService.importEventFile($file)
             .then(AnalyticsService.refreshAnalytics)
             .then(
-                function (success) {
-                    $scope.progressStatus.type = 'success';
-                    $scope.progressStatus.active = false;
-                },
-                function (error) {
-                    $scope.progressStatus.type = 'danger';
-                    $scope.progressStatus.active = false;
-                    console.log(error);
-                },
-                function (notification) {
-                    $scope.analyticsLog.push(notification);
-                }
+                success => $scope.progressStatus = ProgressStatus.doneSuccessful,
+                error => $scope.progressStatus = ProgressStatus.doneWithFailure,
+                notification => $scope.analyticsLog.push(notification)
             );        
     };
     
@@ -72,11 +59,11 @@ var trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService
     $scope.showFileContentSummary = function(){
         varValidation();
         if (!$scope.undefinedFile) {
-            $scope.progressStatus = {visible: true, active: true, type: 'info', value: 100};
+            $scope.progressStatus = ProgressStatus.initialWithoutProgress;
             $scope.summary = undefined;
-            EventImportService.previewEventFile($file).then(function(summary) {
+            EventImportService.previewEventFile($file).then( summary => {
                 $scope.summary = summary;
-                $scope.progressStatus.visible = false;
+                $scope.progressStatus = ProgressStatus.hidden;
             });
         }
     };
@@ -91,5 +78,3 @@ var trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService
     };
 
 }];
-
-module.exports = trackerDataImport;

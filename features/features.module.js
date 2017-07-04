@@ -10,7 +10,7 @@ var metadataExport = require('./metadataexport/metadataexportController');
 var metadataImport = require('./metadataimport/metadataimportController');
 var resetPassword = require('./resetpasswd/resetpasswdController');
 import {trackerDataExport} from './trackerdataexport/trackerDataExportController';
-var trackerDataImport = require('./trackerdataimport/trackerDataImportController');
+import {trackerDataImport} from './trackerdataimport/trackerDataImportController';
 
 var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Services'])
     .controller('analyticsController', analytics)
