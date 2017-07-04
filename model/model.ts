@@ -18,6 +18,13 @@ export class Orgunit {
     ){}
 }
 
+export class Program {
+    constructor(
+        id: string,
+        name: string
+    ){}
+}
+
 export class TrackerDataExportLog {
     constructor(
         public filename: string,

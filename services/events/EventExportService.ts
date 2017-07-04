@@ -17,7 +17,11 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances", "Enrollments", function($q, EventHelper, Events, TrackedEntityInstances, Enrollments) {
+import * as angular from 'angular';
+import { Orgunit, Program } from '../../model/model';
+
+export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances", "Enrollments", 
+        function($q: ng.IQService, EventHelper, Events, TrackedEntityInstances, Enrollments) {
 
     /**
      * Same that exportEventsWithDependencies, but returns a compressed file.
@@ -27,7 +31,7 @@ var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
-    var exportEventsWithDependenciesInZip = function (startDate, endDate, orgunits, programs) {
+    var exportEventsWithDependenciesInZip = function (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
         return exportEventsWithDependencies(startDate, endDate, orgunits, programs)
             .then(compressFileByElementType);
     };
@@ -39,7 +43,7 @@ var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
-    var exportEventsFromLastWithDependenciesInZip = function (lastUpdated, orgunits, programs) {
+    var exportEventsFromLastWithDependenciesInZip = function (lastUpdated: string, orgunits: Orgunit[], programs?: Program[]) {
         return exportEventsFromLastWithDependencies(lastUpdated, orgunits, programs)
             .then(compressFileByElementType);
     };
@@ -55,7 +59,7 @@ var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
-    var exportEventsWithDependencies = function (startDate, endDate, orgunits, programs) {
+    var exportEventsWithDependencies = function (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
         return getEvents(startDate, endDate, orgunits, programs)
             .then(addTrackedEntitiesAndEnrollments)
     };
@@ -70,7 +74,7 @@ var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
-    var exportEventsFromLastWithDependencies = function (lastUpdated, orgunits, programs) {
+    var exportEventsFromLastWithDependencies = function (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
         return getEventsFromLast(lastUpdated, orgunits, programs)
             .then(addTrackedEntitiesAndEnrollments)
     };
@@ -85,7 +89,7 @@ var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events
      */
-    function getEvents (startDate, endDate, orgunits, programs) {
+    function getEvents (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
         var commonParams = {
             startDate: startDate,
             endDate: endDate,
@@ -103,26 +107,24 @@ var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events
      */
-    function getEventsFromLast (lastUpdated, orgunits, programs) {
-        var commonParams = {
+    function getEventsFromLast (lastUpdated: string, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
+        const commonParams = {
             lastUpdated: lastUpdated,
             ouMode: 'DESCENDANTS'
         };
         return getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
     }
     
-    function getEventsFromOrgunitAndPrograms (commonParams, orgunits, programs) {
-        var eventsPromises = [];
-        getOrgunitProgramCombo(orgunits, programs).forEach(function (customParams) {
+    function getEventsFromOrgunitAndPrograms (commonParams: any, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
+        let eventsPromises = [];
+        getOrgunitProgramCombo(orgunits, programs).forEach( (customParams) => {
             eventsPromises.push(Events.get(angular.extend({}, commonParams, customParams)).$promise);
         });
 
         return $q.all(eventsPromises).then(
-            function (eventsArray) {
-                return eventsArray.reduce(function (totalEvents, eventsResult) {
+            (eventsArray: EventList[]) => eventsArray.reduce( (totalEvents: EventList, eventsResult: EventList) => {
                     return {events: totalEvents.events.concat(eventsResult.events)};
-                }, {events: []});
-            }
+                }, EventList.empty)
         )
     }
 
@@ -256,4 +258,10 @@ var eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances
     
 }];
 
-module.exports = eventExportService;
+class EventList {
+    constructor(
+        public events: any[]
+    ){}
+
+    static empty = new EventList([]);
+}

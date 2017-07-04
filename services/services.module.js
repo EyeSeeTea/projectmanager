@@ -4,7 +4,7 @@ var analyticsService = require('./analytics/AnalyticsService');
 var dataImportService = require('./data/DataImportService');
 var demographicsService = require('./demographics/DemographicsService');
 var dataStoreService = require('./data-store/DataStoreService');
-var eventExportService = require('./events/EventExportService');
+import {eventExportService} from './events/EventExportService';
 var eventHelper = require('./events/EventHelper');
 var eventImportService = require('./events/EventImportService');
 var metadataImportService = require('./metadata/MetadataImportService');
