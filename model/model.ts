@@ -17,3 +17,11 @@ export class Orgunit {
         name: string
     ){}
 }
+
+export class TrackerDataExportLog {
+    constructor(
+        public filename: string,
+        public start: string,
+        public end: string
+    ){}
+}

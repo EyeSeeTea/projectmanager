@@ -12,7 +12,7 @@ var treeorganisationunitDirective = require('./treeorganisationunit/organisation
 var containsDigitDirective = require('./validators/containsDigit');
 var containsUppercaseDirective = require('./validators/containsUppercase');
 import {trackerExportDetailedDirective} from './trackerexportdetailed/trackerExportDetailedController';
-var trackerExportLatestDirective = require('./trackerexportlatest/trackerExportLatestController');
+import {trackerExportLatestDirective} from './trackerexportlatest/trackerExportLatestController';
 var formatPeriodFilter = require('./filters/formatPeriod');
 var orderObjectByFilter = require('./filters/orderObjectByFilter');
 
