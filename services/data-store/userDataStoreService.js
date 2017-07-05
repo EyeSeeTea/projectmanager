@@ -17,22 +17,24 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserService) {
+var userdataStoreService = ['userDataStore', 'UserService', function(userDataStore, UserService) {
 
-    var namespace = "HMIS_Management";
+    var namespace = "availableData";
     var defaultArrayKey = "values";
 
+    
     var getUserId = function() {
         return UserService.getCurrentUser().then(function (user) {
             return user.id;
         });
     };
+    
 
     var getCurrentUserSettings = function() {
-        return getUserId().then(function(userid){
-            return DataStore.get({namespace: namespace, key: userid}).$promise
+        
+            return userDataStore.get({namespace: namespace}).$promise
            
-        });
+        ;
     };
 
     /**
@@ -50,16 +52,16 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
                 if(userSettings[module] == undefined)
                     userSettings[module] = {};
                 userSettings[module][property.key] = property.value;
-                return getUserId().then(function(userid){
-                    return DataStore.put({namespace:namespace, key:userid}, userSettings);
-                });
+                
+                    return userDataStore.put({namespace:namespace}, userSettings);
+                ;
             },
             function(){
                 userSettings[module] = {};
                 userSettings[module][property.key] = property.value;
-                return getUserId().then(function(userid){
-                    return DataStore.save({namespace:namespace, key:userid}, userSettings);
-                });
+                
+                    return userDataStore.save({namespace:namespace}, userSettings);
+                ;
             });
     };
 
@@ -74,9 +76,9 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
         return getNamespaceKeyValue(namespace, key)
             .then(function (currentValue) {
                 if (currentValue != undefined) {
-                    return DataStore.put({namespace: namespace, key: key}, value);
+                    return userDataStore.put({namespace: namespace, key: key}, value);
                 } else {
-                    return DataStore.save({namespace: namespace, key: key}, value);
+                    return userDataStore.save({namespace: namespace, key: key}, value);
                 }
             })
     };
@@ -103,11 +105,11 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
             .then(function(currentValue){
                 if (currentValue != undefined) {
                     currentValue[defaultArrayKey].push(value);
-                    return DataStore.put({namespace: namespace, key: key}, currentValue);
+                    return userDataStore.put({namespace: namespace, key: key}, currentValue);
                 } else {
                     currentValue = {};
                     currentValue[defaultArrayKey] = [value];
-                    return DataStore.save({namespace: namespace, key: key}, currentValue);
+                    return userDataStore.save({namespace: namespace, key: key}, currentValue);
                 }
             });
     };
@@ -119,7 +121,7 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
      * @returns {*|g|n} Promise with the value of the pair (namespace, key)
      */
     var getNamespaceKeyValue = function(namespace, key){
-        return DataStore.get({namespace: namespace, key: key}).$promise.then(
+        return userDataStore.get({namespace: namespace, key: key}).$promise.then(
             function (data) {return data;},
             function () {return undefined}
         )
@@ -141,4 +143,4 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
 
 }];
 
-module.exports = dataStoreService;
+module.exports = userdataStoreService;

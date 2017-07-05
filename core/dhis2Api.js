@@ -282,6 +282,16 @@ Dhis2Api.factory("DataStore",['$resource','commonvariable', function ($resource,
 		{ put: { method: "PUT"} });
 }]);
 
+
+Dhis2Api.factory("userDataStore",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"userDataStore/:namespace/:key",
+		{
+			namespace:'namespace',
+			key:'key'
+		},
+		{ put: { method: "PUT"} });
+}]);
+
 Dhis2Api.factory("SqlView",['$resource', 'commonvariable', function($resource, commonvariable) {
 	return $resource( commonvariable.url + "sqlViews/:viewId",
 		{viewId:'@id'}, {post: {method: "POST"}});

@@ -17,9 +17,9 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 var availableData = ["$scope", "$q", "$http", "$parse",
-	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "DataStoreService", "AnalyticsService",
+	"Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "userDataStoreService", "AnalyticsService",
 	function($scope, $q, $http, $parse, Organisationunit,
-			 OrganisationUnitGroupSet, OrgunitGroupSetService, UserService, DataStoreService, AnalyticsService) {
+			 OrganisationUnitGroupSet, OrgunitGroupSetService, UserService, userDataStoreService, AnalyticsService) {
 
 		$scope.availableDataStatus = {
 			visible: false,
@@ -45,7 +45,7 @@ var availableData = ["$scope", "$q", "$http", "$parse",
 		var orgunitsInfo = {};
 
 		var loadUserSettings = function() {
-			return DataStoreService.getCurrentUserSettings().then(function(userSettings) {
+			return userDataStoreService.getCurrentUserSettings().then(function(userSettings) {
 					if(userSettings.availableData.period != null)
 						$scope.selectedPeriod = userSettings.availableData.period;
 					if(userSettings.availableData.filters != null)
@@ -101,12 +101,12 @@ var availableData = ["$scope", "$q", "$http", "$parse",
 							var parentRows = AnalyticsService.formatAnalyticsResult(parentResult, orgunitsInfo, []);
 							var childrenRows = AnalyticsService.formatAnalyticsResult(childrenResult, orgunitsInfo, [dataViewOrgUnit.id]);
 							$scope.tableRows = $scope.tableRows.concat(parentRows).concat(childrenRows);
-
+							
 							// Make visible orgunits under dataViewOrgunit
 							orgunitsInfo[dataViewOrgUnit.id].clicked = true;
 
 							// Check if last dataViewOrgunit
-							if(k === ++currentOu){
+							if(k === ++currentOu){  
 								$scope.tableDisplayed = true;
 								$scope.availableDataStatus.visible = false;
 							}
@@ -117,12 +117,15 @@ var availableData = ["$scope", "$q", "$http", "$parse",
 
 		var regenerateScopePeriodArray = function (analyticsResponse) {
 			$scope.periods = [];
-			angular.forEach(analyticsResponse.metaData.pe, function(pe){
+			angular.forEach(analyticsResponse.metaData.dimensions.pe, function(pe){
+			
 				$scope.periods.push({
 					id: pe,
-					name: analyticsResponse.metaData.names[pe]
+					//name: "period"
+					name: analyticsResponse.metaData.items[pe].name
 				})
 			});
+			
 		};
 
 		$scope.isClicked = function(orgunitIds){
@@ -232,7 +235,7 @@ var availableData = ["$scope", "$q", "$http", "$parse",
 				"value": $scope.selectedPeriod
 			};
 
-			DataStoreService.updateCurrentUserSettings("availableData", periodSetting)
+			userDataStoreService.updateCurrentUserSettings("availableData", periodSetting)
 				.then(function() {});
 
 			loadTable();
