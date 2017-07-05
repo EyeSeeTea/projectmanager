@@ -101,12 +101,12 @@ var availableData = ["$scope", "$q", "$http", "$parse",
 							var parentRows = AnalyticsService.formatAnalyticsResult(parentResult, orgunitsInfo, []);
 							var childrenRows = AnalyticsService.formatAnalyticsResult(childrenResult, orgunitsInfo, [dataViewOrgUnit.id]);
 							$scope.tableRows = $scope.tableRows.concat(parentRows).concat(childrenRows);
-
+							
 							// Make visible orgunits under dataViewOrgunit
 							orgunitsInfo[dataViewOrgUnit.id].clicked = true;
 
 							// Check if last dataViewOrgunit
-							if(k === ++currentOu){
+							if(k === ++currentOu){  
 								$scope.tableDisplayed = true;
 								$scope.availableDataStatus.visible = false;
 							}
@@ -117,12 +117,15 @@ var availableData = ["$scope", "$q", "$http", "$parse",
 
 		var regenerateScopePeriodArray = function (analyticsResponse) {
 			$scope.periods = [];
-			angular.forEach(analyticsResponse.metaData.pe, function(pe){
+			angular.forEach(analyticsResponse.metaData.dimensions.pe, function(pe){
+			
 				$scope.periods.push({
 					id: pe,
-					name: analyticsResponse.metaData.names[pe]
+					//name: "period"
+					name: analyticsResponse.metaData.items[pe].name
 				})
 			});
+			
 		};
 
 		$scope.isClicked = function(orgunitIds){
