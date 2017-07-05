@@ -5,7 +5,7 @@ var dataImportService = require('./data/DataImportService');
 var demographicsService = require('./demographics/DemographicsService');
 var dataStoreService = require('./data-store/DataStoreService');
 import { EventExportService } from './events/EventExportService';
-var eventHelper = require('./events/EventHelper');
+import { EventHelper } from './events/EventHelper';
 var eventImportService = require('./events/EventImportService');
 var metadataImportService = require('./metadata/MetadataImportService');
 var metadataSyncService = require('./metadata/MetadataSyncService');
@@ -21,7 +21,7 @@ var servicesModule = angular.module('Services', ['Dhis2Api'])
     .factory('DemographicsService', demographicsService)
     .factory('DataStoreService', dataStoreService)
     .service('EventExportService', EventExportService)
-    .factory('EventHelper', eventHelper)
+    .service('EventHelper', EventHelper)
     .factory('EventImportService', eventImportService)
     .factory('MetadataImportService', metadataImportService)
     .factory('MetadataSyncService', metadataSyncService)
