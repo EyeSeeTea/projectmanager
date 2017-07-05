@@ -4,12 +4,12 @@ var analyticsService = require('./analytics/AnalyticsService');
 var dataImportService = require('./data/DataImportService');
 var demographicsService = require('./demographics/DemographicsService');
 var dataStoreService = require('./data-store/DataStoreService');
-import {eventExportService} from './events/EventExportService';
+import { EventExportService } from './events/EventExportService';
 var eventHelper = require('./events/EventHelper');
 var eventImportService = require('./events/EventImportService');
 var metadataImportService = require('./metadata/MetadataImportService');
 var metadataSyncService = require('./metadata/MetadataSyncService');
-import {orgunitGroupSetService} from './orgunits/OrgunitGroupSetService';
+import { orgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
 var programsService = require('./programs/ProgramService');
 var remoteApiService = require('./metadata/RemoteApiService');
 var sqlService = require('./sql/SqlService');
@@ -20,7 +20,7 @@ var servicesModule = angular.module('Services', ['Dhis2Api'])
     .factory('DataImportService', dataImportService)
     .factory('DemographicsService', demographicsService)
     .factory('DataStoreService', dataStoreService)
-    .factory('EventExportService', eventExportService)
+    .service('EventExportService', EventExportService)
     .factory('EventHelper', eventHelper)
     .factory('EventImportService', eventImportService)
     .factory('MetadataImportService', metadataImportService)

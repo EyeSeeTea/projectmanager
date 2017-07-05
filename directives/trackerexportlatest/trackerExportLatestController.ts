@@ -29,7 +29,8 @@ export const trackerExportLatestDirective = [function(){
     }
 }];
 
-var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', function ($scope, $filter, ProgramService, UserService, EventExportService, DataStoreService) {
+var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 
+    function ($scope, $filter, ProgramService, UserService, EventExportService, DataStoreService) {
 
     const dataStoreKey: string = 'trackerexport';
 
@@ -85,21 +86,13 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
     $scope.submit = function() {
         $scope.exporting = true;
         return UserService.getCurrentUserOrgunits()
-            .then( orgunits => 
-                EventExportService.exportEventsFromLastWithDependenciesInZip($scope.params.date, orgunits, getSelectedPrograms())
-            )
-            .then( eventsZipFile => 
-                saveAs(eventsZipFile, $scope.params.filename + '.zip')
-            )
-            .then(logExport)
-            .then(updateLastExportInfo)
-            .then(setLatestExportAsDefault)
-            .then( () =>
-                console.log("Everything done")
-            )
-            .finally( () =>
-                $scope.exporting = false
-            );
+            .then( orgunits => EventExportService.exportEventsFromLastWithDependenciesInZip($scope.params.date, orgunits, getSelectedPrograms()) )
+            .then( eventsZipFile => saveAs(eventsZipFile, $scope.params.filename + '.zip') )
+            .then( () => logExport() )
+            .then( () => updateLastExportInfo() )
+            .then( () => setLatestExportAsDefault() )
+            .then( () => console.log("Everything done") )
+            .finally( () => $scope.exporting = false );
     };
 
     function logExport () {

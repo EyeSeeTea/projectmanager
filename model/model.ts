@@ -13,15 +13,15 @@ export class CommonVariable {
 
 export class Orgunit {
     constructor(
-        id: string,
-        name: string
+        public id: string,
+        public name: string
     ){}
 }
 
 export class Program {
     constructor(
-        id: string,
-        name: string
+        public id: string,
+        public name: string
     ){}
 }
 

@@ -20,8 +20,17 @@
 import * as angular from 'angular';
 import { Orgunit, Program } from '../../model/model';
 
-export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntityInstances", "Enrollments", 
-        function($q: ng.IQService, EventHelper, Events, TrackedEntityInstances, Enrollments) {
+export class EventExportService {
+
+    static $inject = ['$q','EventHelper', 'Events', 'TrackedEntityInstances', 'Enrollments'];
+
+    constructor(
+        private $q: ng.IQService, 
+        private EventHelper, 
+        private Events, 
+        private TrackedEntityInstances, 
+        private Enrollments
+    ){}
 
     /**
      * Same that exportEventsWithDependencies, but returns a compressed file.
@@ -31,9 +40,9 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
-    var exportEventsWithDependenciesInZip = function (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
-        return exportEventsWithDependencies(startDate, endDate, orgunits, programs)
-            .then(compressFileByElementType);
+    exportEventsWithDependenciesInZip (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
+        return this.exportEventsWithDependencies(startDate, endDate, orgunits, programs)
+            .then(file => this.compressFileByElementType(file));
     };
 
     /**
@@ -43,9 +52,9 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
-    var exportEventsFromLastWithDependenciesInZip = function (lastUpdated: string, orgunits: Orgunit[], programs?: Program[]) {
-        return exportEventsFromLastWithDependencies(lastUpdated, orgunits, programs)
-            .then(compressFileByElementType);
+    exportEventsFromLastWithDependenciesInZip (lastUpdated: string, orgunits: Orgunit[], programs?: Program[]) {
+        return this.exportEventsFromLastWithDependencies(lastUpdated, orgunits, programs)
+            .then(file => this.compressFileByElementType(file));
     };
 
     /**
@@ -59,9 +68,9 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
-    var exportEventsWithDependencies = function (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
-        return getEvents(startDate, endDate, orgunits, programs)
-            .then(addTrackedEntitiesAndEnrollments)
+    exportEventsWithDependencies (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
+        return this.getEvents(startDate, endDate, orgunits, programs)
+            .then(events => this.addTrackedEntitiesAndEnrollments(events))
     };
 
     /**
@@ -74,9 +83,9 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
-    var exportEventsFromLastWithDependencies = function (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
-        return getEventsFromLast(lastUpdated, orgunits, programs)
-            .then(addTrackedEntitiesAndEnrollments)
+    exportEventsFromLastWithDependencies (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
+        return this.getEventsFromLast(lastUpdated, orgunits, programs)
+            .then(events => this.addTrackedEntitiesAndEnrollments(events))
     };
 
     /**
@@ -89,13 +98,13 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events
      */
-    function getEvents (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
+    getEvents (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
         var commonParams = {
             startDate: startDate,
             endDate: endDate,
             ouMode: 'DESCENDANTS'
         };
-        return getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
+        return this.getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
     }
 
     /**
@@ -107,21 +116,21 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events
      */
-    function getEventsFromLast (lastUpdated: string, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
+    getEventsFromLast (lastUpdated: string, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
         const commonParams = {
             lastUpdated: lastUpdated,
             ouMode: 'DESCENDANTS'
         };
-        return getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
+        return this.getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
     }
     
-    function getEventsFromOrgunitAndPrograms (commonParams: any, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
+    getEventsFromOrgunitAndPrograms (commonParams: any, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
         let eventsPromises = [];
-        getOrgunitProgramCombo(orgunits, programs).forEach( (customParams) => {
-            eventsPromises.push(Events.get(angular.extend({}, commonParams, customParams)).$promise);
+        this.getOrgunitProgramCombo(orgunits, programs).forEach( (customParams) => {
+            eventsPromises.push(this.Events.get(angular.extend({}, commonParams, customParams)).$promise);
         });
 
-        return $q.all(eventsPromises).then(
+        return this.$q.all(eventsPromises).then(
             (eventsArray: EventList[]) => eventsArray.reduce( (totalEvents: EventList, eventsResult: EventList) => {
                     return {events: totalEvents.events.concat(eventsResult.events)};
                 }, EventList.empty)
@@ -134,18 +143,18 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param events Object with the structure {events: [<array_of_events>]}
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
-    function addTrackedEntitiesAndEnrollments (events) {
+    private addTrackedEntitiesAndEnrollments (events) {
         var eventsWithTeisAndEnrolls = events;
 
-        var teisArray = extractEventsPropertyToArray(events, 'trackedEntityInstance');
-        var enrollsArray = extractEventsPropertyToArray(events, 'enrollment');
+        var teisArray = this.extractEventsPropertyToArray(events, 'trackedEntityInstance');
+        var enrollsArray = this.extractEventsPropertyToArray(events, 'enrollment');
 
-        return getTrackedEntityInstancesByUid(teisArray)
-            .then(function (trackedEntityInstances) {
+        return this.getTrackedEntityInstancesByUid(teisArray)
+            .then( (trackedEntityInstances) => {
                 angular.extend(eventsWithTeisAndEnrolls, trackedEntityInstances);
-                return getEnrollmentsByUid(enrollsArray);
+                return this.getEnrollmentsByUid(enrollsArray);
             })
-            .then(function (enrollments) {
+            .then( (enrollments) => {
                 angular.extend(eventsWithTeisAndEnrolls, enrollments);
                 return eventsWithTeisAndEnrolls;
             });
@@ -156,15 +165,13 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param teisUids Array of trackedEntityInstances uids (e.g.: ['ajdfkj','kkjefk']
      * @returns {*} A promise that resolves to an object like {trackedEntityInstances: [...]}
      */
-    function getTrackedEntityInstancesByUid (teisUids) {
-        var teiPromises = teisUids.map(function (tei) {
-            return TrackedEntityInstances.get({uid: tei}).$promise;
-        });
+    private getTrackedEntityInstancesByUid (teisUids: string[]): ng.IPromise<TrackedEntityInstanceList> {
+        let teiPromises = teisUids.map( (tei) => this.TrackedEntityInstances.get({uid: tei}).$promise );
 
-        return $q.all(teiPromises)
-            .then(function (teiArray) {
-                return teiArray.reduce(function (totalTeis, tei) {
-                    totalTeis.trackedEntityInstances.push(cleanResponse(tei));
+        return this.$q.all(teiPromises)
+            .then( (teiArray) => {
+                return teiArray.reduce( (totalTeis, tei) => {
+                    totalTeis.trackedEntityInstances.push(this.cleanResponse(tei));
                     return totalTeis;
                 }, {trackedEntityInstances: []});
             })
@@ -175,65 +182,61 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
      * @param enrollUids Array of enrollments uids (e.g.: ['ajdfkj','kkjefk']
      * @returns {*} A promise that resolves to an object like {enrollments: [...]}
      */
-    function getEnrollmentsByUid (enrollUids) {
-        var enrollPromises = enrollUids.map(function (enrollment) {
-            return Enrollments.get({uid: enrollment}).$promise;
-        });
+    private getEnrollmentsByUid (enrollUids: string[]): ng.IPromise<EnrollmentList> {
+        let enrollPromises = enrollUids.map( (enrollment) => this.Enrollments.get({uid: enrollment}).$promise );
 
-        return $q.all(enrollPromises)
-            .then(function (enrollArray) {
-                return enrollArray.reduce(function (totalEnrolls, enrollment) {
-                    totalEnrolls.enrollments.push(cleanResponse(enrollment));
+        return this.$q.all(enrollPromises)
+            .then( (enrollArray) => {
+                return enrollArray.reduce( (totalEnrolls, enrollment) => {
+                    totalEnrolls.enrollments.push(this.cleanResponse(enrollment));
                     return totalEnrolls;
                 }, {enrollments: []});
             })
     }
     
-    function compressFileByElementType (file) {
-        var zip = new JSZip();
+    private compressFileByElementType (file) {
+        let zip: JSZip = new JSZip();
 
-        var events = (new JSZip()).file(EventHelper.EVENTS_JSON, JSON.stringify({"events": file[EventHelper.EVENTS]}));
-        var teis = (new JSZip()).file(EventHelper.TEIS_JSON, JSON.stringify({"trackedEntityInstances": file[EventHelper.TEIS]}));
-        var enrolls = (new JSZip()).file(EventHelper.ENROLLMENTS_JSON, JSON.stringify({"enrollments": file[EventHelper.ENROLLMENTS]}));
+        let events = (new JSZip()).file(this.EventHelper.EVENTS_JSON, JSON.stringify({"events": file[this.EventHelper.EVENTS]}));
+        let teis = (new JSZip()).file(this.EventHelper.TEIS_JSON, JSON.stringify({"trackedEntityInstances": file[this.EventHelper.TEIS]}));
+        let enrolls = (new JSZip()).file(this.EventHelper.ENROLLMENTS_JSON, JSON.stringify({"enrollments": file[this.EventHelper.ENROLLMENTS]}));
 
         return events.generateAsync({type: "blob", compression: "DEFLATE"})
-            .then(function (content) {
-                zip.file(EventHelper.EVENTS_ZIP, content);
+            .then( (content) => {
+                zip.file(this.EventHelper.EVENTS_ZIP, content);
                 return teis.generateAsync({type: "blob", compression: "DEFLATE"});
             })
-            .then(function (content) {
-                zip.file(EventHelper.TEIS_ZIP, content);
+            .then( (content) => {
+                zip.file(this.EventHelper.TEIS_ZIP, content);
                 return enrolls.generateAsync({type: "blob", compression: "DEFLATE"});
             })
-            .then(function (content) {
-                zip.file(EventHelper.ENROLLMENTS_ZIP, content);
+            .then( (content) => {
+                zip.file(this.EventHelper.ENROLLMENTS_ZIP, content);
                 return zip.generateAsync({type: "blob", compression: "DEFLATE"});
             });
     }
 
     // Util functions
-    function getOrgunitProgramCombo (orgunits, programs) {
-        var combo = [];
-        orgunits.forEach(function (orgunit) {
+    private getOrgunitProgramCombo (orgunits: Orgunit[], programs: Program[]): OrgunitProgramComboItem[] {
+        let combo: OrgunitProgramComboItem[] = [];
+        orgunits.forEach( (orgunit: Orgunit) => {
             if (programs && programs.length > 0) {
-                programs.forEach(function (program) {
-                    combo.push({orgUnit: orgunit.id, program: program.id});
+                programs.forEach((program: Program) => {
+                    combo.push(new OrgunitProgramComboItem(orgunit.id,program.id));
                 })
             } else {
-                combo.push({orgUnit: orgunit.id});
+                combo.push(new OrgunitProgramComboItem(orgunit.id));
             }
         });
         return combo;
     }
 
-    function extractEventsPropertyToArray (eventsObject, property) {
-        var array  = eventsObject.events.map( function (event) {
-            return event[property];
-        });
-        return getUniqueInArray(array );
+    private extractEventsPropertyToArray (eventsObject: EventList, property: string) {
+        let array  = eventsObject.events.map( (event) => event[property]);
+        return this.getUniqueInArray(array);
     }
 
-    function getUniqueInArray (array) {
+    private getUniqueInArray (array) {
         var u = {}, a = [];
         for (var i = 0, l = array.length; i < l; ++i){
             if (array[i] === undefined || u.hasOwnProperty(array[i])) {
@@ -245,18 +248,11 @@ export const eventExportService = ["$q", "EventHelper", "Events", "TrackedEntity
         return a;
     }
 
-    function cleanResponse (response) {
+    private cleanResponse (response) {
         return JSON.parse(angular.toJson(response));
     }
-
-    return {
-        exportEventsWithDependencies: exportEventsWithDependencies,
-        exportEventsWithDependenciesInZip: exportEventsWithDependenciesInZip,
-        exportEventsFromLastWithDependencies: exportEventsFromLastWithDependencies,
-        exportEventsFromLastWithDependenciesInZip: exportEventsFromLastWithDependenciesInZip
-    }
     
-}];
+};
 
 class EventList {
     constructor(
@@ -264,4 +260,25 @@ class EventList {
     ){}
 
     static empty = new EventList([]);
+}
+
+class EnrollmentList {
+    constructor(
+        public enrollments: any[]
+    ){}
+
+    static empty = new EnrollmentList([]);
+}
+
+class TrackedEntityInstanceList {
+    constructor(
+        public trackedEntityInstances: any[]
+    ){}
+}
+
+class OrgunitProgramComboItem {
+    constructor(
+        public orgUnit: string,
+        public program?: string
+    ){}
 }
