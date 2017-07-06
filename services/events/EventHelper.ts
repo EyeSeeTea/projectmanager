@@ -27,7 +27,7 @@ export class EventHelper {
     public ENROLLMENTS_JSON = this.ENROLLMENTS + '.json';
     public ENROLLMENTS_ZIP = this.ENROLLMENTS + '.zip';
     public EVENTS = 'events';
-    public EVENTS_JSON =this. EVENTS + '.json';
+    public EVENTS_JSON = this. EVENTS + '.json';
     public EVENTS_ZIP = this.EVENTS + '.zip';
 
 };

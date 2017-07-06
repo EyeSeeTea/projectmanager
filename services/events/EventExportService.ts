@@ -19,6 +19,7 @@
 
 import * as angular from 'angular';
 import { Orgunit, Program } from '../../model/model';
+import { EventHelper } from './EventHelper';
 
 export class EventExportService {
 
@@ -26,7 +27,7 @@ export class EventExportService {
 
     constructor(
         private $q: ng.IQService, 
-        private EventHelper, 
+        private EventHelper: EventHelper, 
         private Events, 
         private TrackedEntityInstances, 
         private Enrollments

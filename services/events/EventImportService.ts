@@ -17,6 +17,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { CommonVariable, Program } from '../../model/model';
+import { EventHelper } from './EventHelper';
 
 export class EventImportService {
 
@@ -26,7 +27,7 @@ export class EventImportService {
         private $q: ng.IQService,
         private $http, 
         private commonvariable: CommonVariable,
-        private EventHelper, 
+        private EventHelper: EventHelper, 
         private ProgramService
     ){}
 
