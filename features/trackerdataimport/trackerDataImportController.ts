@@ -62,6 +62,8 @@ export const trackerDataImport = ["$scope", "$q", "EventImportService", "Analyti
             $scope.progressStatus = ProgressStatus.initialWithoutProgress;
             $scope.summary = undefined;
             EventImportService.previewEventFile($file).then( summary => {
+                console.log("summary");
+                console.log(summary);
                 $scope.summary = summary;
                 $scope.progressStatus = ProgressStatus.hidden;
             });

@@ -21,7 +21,8 @@ export class Orgunit {
 export class Program {
     constructor(
         public id: string,
-        public name: string
+        public name: string,
+        public programStages: any[]
     ){}
 }
 
