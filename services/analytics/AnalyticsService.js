@@ -90,20 +90,20 @@ var analyticsService = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'Data
      */
     var formatAnalyticsResult = function(analytics, orgunitsInfo, hierarchy){
         var orgunits = {};
-        angular.forEach(analytics.metaData.ou, function(orgunit) {
+        angular.forEach(analytics.metaData.dimensions.ou, function(orgunit) {
 
-            var fullName = hierarchy.map(function (parent) {
-                return analytics.metaData.names[parent];
+                var fullName = hierarchy.map(function (parent) {
+                return analytics.metaData.items[parent].name;
             }).join("/");
 
-            if(fullName == "") fullName = fullName.concat(analytics.metaData.names[orgunit]);
-            else fullName = fullName.concat("/" + analytics.metaData.names[orgunit]);
+            if(fullName == "") fullName = fullName.concat(analytics.metaData.items[orgunit].name);
+            else fullName = fullName.concat("/" + analytics.metaData.items[orgunit].name);
 
             fullName = fullName.replace(/\ /g, "_");
 
             orgunits[orgunit] = {
                 id: orgunit,
-                name: analytics.metaData.names[orgunit],
+                name: analytics.metaData.items[orgunit].name,
                 fullName: fullName,
                 parents: hierarchy,
                 level: orgunitsInfo[orgunit].level,
