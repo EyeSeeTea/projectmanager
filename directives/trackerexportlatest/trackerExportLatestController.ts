@@ -18,6 +18,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { TrackerDataExportLog } from '../../model/model';
+import { EventExportService } from '../../services/services.module';
 
 export const trackerExportLatestDirective = [function(){
     return{
@@ -30,7 +31,7 @@ export const trackerExportLatestDirective = [function(){
 }];
 
 var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 
-    function ($scope, $filter, ProgramService, UserService, EventExportService, DataStoreService) {
+    function ($scope: ng.IScope, $filter, ProgramService, UserService, EventExportService: EventExportService, DataStoreService) {
 
     const dataStoreKey: string = 'trackerexport';
 
@@ -43,8 +44,8 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
             $scope.services = data;
             $scope.clickAllServices();
         })
-        .then(updateLastExportInfo)
-        .then(setLatestExportAsDefault);
+        .then( () => updateLastExportInfo() )
+        .then( () => setLatestExportAsDefault() );
 
     function updateLastExportInfo () {
         return DataStoreService.getKeyValue(dataStoreKey).then( log => {
@@ -127,7 +128,7 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
 
     $scope.$watch(
         () => $scope.services,
-        evaluateAllServices,
+        (newServices) => evaluateAllServices(newServices),
         true
     );
 

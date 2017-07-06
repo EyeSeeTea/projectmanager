@@ -1,4 +1,3 @@
-import { CommonVariable, Program } from '../../model/model';
 /*
  Copyright (c) 2015.
 
@@ -16,6 +15,8 @@ import { CommonVariable, Program } from '../../model/model';
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+
+import { CommonVariable, Program } from '../../model/model';
 
 export class EventImportService {
 

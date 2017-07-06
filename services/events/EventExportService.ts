@@ -40,7 +40,7 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
-    exportEventsWithDependenciesInZip (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
+    exportEventsWithDependenciesInZip (startDate: string, endDate: string, orgunits: Orgunit[], programs?: Program[]) {
         return this.exportEventsWithDependencies(startDate, endDate, orgunits, programs)
             .then(file => this.compressFileByElementType(file));
     };

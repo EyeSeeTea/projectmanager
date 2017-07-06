@@ -17,8 +17,10 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { ProgressStatus } from '../../model/model';
+import { EventImportService } from '../../services/services.module';
 
-export const trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", function($scope, $q, EventImportService, AnalyticsService, DemographicsService) {
+export const trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", 
+        function($scope: ng.IScope, $q: ng.IQService, EventImportService: EventImportService, AnalyticsService, DemographicsService) {
 
     $scope.progressStatus = {};
     $scope.undefinedFile = false;
@@ -44,7 +46,7 @@ export const trackerDataImport = ["$scope", "$q", "EventImportService", "Analyti
         $scope.analyticsLog = [];
 
         EventImportService.importEventFile($file)
-            .then(AnalyticsService.refreshAnalytics)
+            .then(() => AnalyticsService.refreshEventAnalytics())
             .then(
                 success => $scope.progressStatus = ProgressStatus.doneSuccessful,
                 error => $scope.progressStatus = ProgressStatus.doneWithFailure,
@@ -62,8 +64,6 @@ export const trackerDataImport = ["$scope", "$q", "EventImportService", "Analyti
             $scope.progressStatus = ProgressStatus.initialWithoutProgress;
             $scope.summary = undefined;
             EventImportService.previewEventFile($file).then( summary => {
-                console.log("summary");
-                console.log(summary);
                 $scope.summary = summary;
                 $scope.progressStatus = ProgressStatus.hidden;
             });

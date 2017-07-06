@@ -19,6 +19,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { CommonVariable, Orgunit } from '../../model/model';
+import { EventExportService } from '../../services/services.module';
 
 export const trackerExportDetailedDirective = [function(){
     return{
@@ -30,16 +31,15 @@ export const trackerExportDetailedDirective = [function(){
 }];
 
 var trackerExportDetailedController = ["$scope",'$filter', 'commonvariable', 'EventExportService', 
-        function($scope, $filter, commonvariable: CommonVariable, EventExportService) {
+        function($scope: ng.IScope, $filter: ng.IFilterService, commonvariable: CommonVariable, EventExportService: EventExportService) {
 
     $scope.exporting = false;
     
     //new component for datepiker helder
     $scope.today = () => $scope.dt = new Date();
+    $scope.clear = () => $scope.dt = null;
 
     $scope.today();
-
-    $scope.clear = () => $scope.dt = null;
 
     $scope.openstart = function($event) {
         $event.preventDefault();
@@ -61,14 +61,10 @@ var trackerExportDetailedController = ["$scope",'$filter', 'commonvariable', 'Ev
         
         const start: string = $filter('date')($scope.start_date,'yyyy-MM-dd');
         const end: string = $filter('date')($scope.end_date,'yyyy-MM-dd');
-
         const orgUnits: Orgunit[] = commonvariable.OrganisationUnitList;
-        console.log(orgUnits);
 
         EventExportService.exportEventsWithDependenciesInZip(start, end, orgUnits)
-            .then( 
-                (eventsZipFile) => saveAs(eventsZipFile, $scope.file_name + '.zip') )
-            .finally( 
-                () => $scope.exporting = false );
+            .then( (eventsZipFile) => saveAs(eventsZipFile, $scope.file_name + '.zip') )
+            .finally( () => $scope.exporting = false );
     }
 }];
