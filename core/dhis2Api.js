@@ -340,7 +340,7 @@ Dhis2Api.factory("Events",['$resource', 'commonvariable', function ($resource, c
 	return $resource( commonvariable.url + "events", {}, {
 		get: {
 			method: 'GET',
-			params: {skipPaging: true}
+			params: {skipPaging: true, includeDeleted: true}
 		}
 	});
 }]);
