@@ -11,8 +11,8 @@ var projectSelector = require('./projectSelector/projectSelectorController');
 var treeorganisationunitDirective = require('./treeorganisationunit/organisationUnitTreeController');
 var containsDigitDirective = require('./validators/containsDigit');
 var containsUppercaseDirective = require('./validators/containsUppercase');
-var trackerExportDetailedDirective = require('./trackerexportdetailed/trackerExportDetailedController');
-var trackerExportLatestDirective = require('./trackerexportlatest/trackerExportLatestController');
+import {trackerExportDetailedDirective} from './trackerexportdetailed/trackerExportDetailedController';
+import {trackerExportLatestDirective} from './trackerexportlatest/trackerExportLatestController';
 var formatPeriodFilter = require('./filters/formatPeriod');
 var orderObjectByFilter = require('./filters/orderObjectByFilter');
 

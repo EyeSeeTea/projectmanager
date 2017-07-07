@@ -18,7 +18,10 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var trackerExportDetailedDirective = [function(){
+import { CommonVariable, Orgunit } from '../../model/model';
+import { EventExportService } from '../../services/services.module';
+
+export const trackerExportDetailedDirective = [function(){
     return{
         restrict: 'E',
         controller: trackerExportDetailedController,
@@ -27,20 +30,16 @@ var trackerExportDetailedDirective = [function(){
     }
 }];
 
-var trackerExportDetailedController = ["$scope",'$filter', 'commonvariable', 'EventExportService', function($scope, $filter, commonvariable, EventExportService) {
+var trackerExportDetailedController = ["$scope",'$filter', 'commonvariable', 'EventExportService', 
+        function($scope: ng.IScope, $filter: ng.IFilterService, commonvariable: CommonVariable, EventExportService: EventExportService) {
 
     $scope.exporting = false;
     
     //new component for datepiker helder
-    $scope.today = function() {
-        $scope.dt = new Date();
-    };
+    $scope.today = () => $scope.dt = new Date();
+    $scope.clear = () => $scope.dt = null;
 
     $scope.today();
-
-    $scope.clear = function () {
-        $scope.dt = null;
-    };
 
     $scope.openstart = function($event) {
         $event.preventDefault();
@@ -56,24 +55,16 @@ var trackerExportDetailedController = ["$scope",'$filter', 'commonvariable', 'Ev
         $scope.openedend = true;
     };
     
-    $scope.submit = function () {
+    $scope.submit = function() {
 
         $scope.exporting = true;
         
-        var start = $filter('date')($scope.start_date,'yyyy-MM-dd');
-        var end = $filter('date')($scope.end_date,'yyyy-MM-dd');
-
-        var orgUnits = commonvariable.OrganisationUnitList;
-        console.log(orgUnits);
+        const start: string = $filter('date')($scope.start_date,'yyyy-MM-dd');
+        const end: string = $filter('date')($scope.end_date,'yyyy-MM-dd');
+        const orgUnits: Orgunit[] = commonvariable.OrganisationUnitList;
 
         EventExportService.exportEventsWithDependenciesInZip(start, end, orgUnits)
-            .then(function (eventsZipFile) {
-                saveAs(eventsZipFile, $scope.file_name + '.zip');
-            })
-            .finally(function () {
-                $scope.exporting = false;
-            });
+            .then( (eventsZipFile) => saveAs(eventsZipFile, $scope.file_name + '.zip') )
+            .finally( () => $scope.exporting = false );
     }
 }];
-
-module.exports = trackerExportDetailedDirective;

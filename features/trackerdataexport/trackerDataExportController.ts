@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var trackerDataExport = ['$scope', function ($scope) {
+export const trackerDataExport = ['$scope', function ($scope) {
     
     $scope.activeTab = 1;
     
@@ -26,5 +26,3 @@ var trackerDataExport = ['$scope', function ($scope) {
     };
     
 }];
-
-module.exports = trackerDataExport;

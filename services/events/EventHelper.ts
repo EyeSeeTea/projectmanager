@@ -17,31 +17,17 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var eventHelper = [function() {
+export class EventHelper {
 
     // Constants to keep common names between EventExportService and EventImportService
-    const TEIS = 'trackedEntityInstances';
-    const TEIS_JSON = TEIS + ".json";
-    const TEIS_ZIP = TEIS + ".zip";
-    const ENROLLMENTS = 'enrollments';
-    const ENROLLMENTS_JSON = ENROLLMENTS + '.json';
-    const ENROLLMENTS_ZIP = ENROLLMENTS + '.zip';
-    const EVENTS = 'events';
-    const EVENTS_JSON = EVENTS + '.json';
-    const EVENTS_ZIP = EVENTS + '.zip';
+    public TEIS = 'trackedEntityInstances';
+    public TEIS_JSON = this.TEIS + ".json";
+    public TEIS_ZIP = this.TEIS + ".zip";
+    public ENROLLMENTS = 'enrollments';
+    public ENROLLMENTS_JSON = this.ENROLLMENTS + '.json';
+    public ENROLLMENTS_ZIP = this.ENROLLMENTS + '.zip';
+    public EVENTS = 'events';
+    public EVENTS_JSON = this. EVENTS + '.json';
+    public EVENTS_ZIP = this.EVENTS + '.zip';
 
-    return {
-        TEIS: TEIS,
-        TEIS_JSON: TEIS_JSON,
-        TEIS_ZIP: TEIS_ZIP,
-        ENROLLMENTS: ENROLLMENTS,
-        ENROLLMENTS_JSON: ENROLLMENTS_JSON,
-        ENROLLMENTS_ZIP: ENROLLMENTS_ZIP,
-        EVENTS: EVENTS,
-        EVENTS_JSON: EVENTS_JSON,
-        EVENTS_ZIP: EVENTS_ZIP
-    }
-
-}];
-
-module.exports = eventHelper;
+};

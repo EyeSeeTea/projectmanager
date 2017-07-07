@@ -17,7 +17,10 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var trackerExportLatestDirective = [function(){
+import { TrackerDataExportLog } from '../../model/model';
+import { EventExportService } from '../../services/services.module';
+
+export const trackerExportLatestDirective = [function(){
     return{
         restrict: 'E',
         controller: trackerExportLatestController,
@@ -27,26 +30,27 @@ var trackerExportLatestDirective = [function(){
     }
 }];
 
-var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', function ($scope, $filter, ProgramService, UserService, EventExportService, DataStoreService) {
+var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 
+    function ($scope: ng.IScope, $filter, ProgramService, UserService, EventExportService: EventExportService, DataStoreService) {
 
-    var dataStoreKey = 'trackerexport';
+    const dataStoreKey: string = 'trackerexport';
 
     $scope.params = {};
     $scope.allServices = {};
     $scope.exporting = false;
 
     ProgramService.getProgramsUnderUserHierarchyByService()
-        .then(function (data) {
+        .then( data => {
             $scope.services = data;
             $scope.clickAllServices();
         })
-        .then(updateLastExportInfo)
-        .then(setLatestExportAsDefault);
+        .then( () => updateLastExportInfo() )
+        .then( () => setLatestExportAsDefault() );
 
     function updateLastExportInfo () {
-        return DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
+        return DataStoreService.getKeyValue(dataStoreKey).then( log => {
             if (log != undefined) {
-                $scope.services.map(function (service) {
+                $scope.services.map( service => {
                     service.lastExported = log[service.code];
                 });
             }
@@ -54,7 +58,7 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
     }
 
     function setLatestExportAsDefault () {
-        var latest = $scope.services.reduce(function (previous, current) {
+        const latest = $scope.services.reduce( (previous, current) => {
             if (previous.lastExported === undefined || current.lastExported === undefined) {
                 return {lastExported: undefined};
             } else if (previous.lastExported.end < current.lastExported.end) {
@@ -75,7 +79,7 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
     
     $scope.clickAllServices = function () {
         $scope.allServices.selected = !$scope.allServices.selected;
-        $scope.services.map(function (service) {
+        $scope.services.map( service => {
             service.selected = $scope.allServices.selected;
         });
     };
@@ -83,69 +87,57 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
     $scope.submit = function() {
         $scope.exporting = true;
         return UserService.getCurrentUserOrgunits()
-            .then(function (orgunits) {
-                return EventExportService.exportEventsFromLastWithDependenciesInZip($scope.params.date, orgunits, getSelectedPrograms());
-            })
-            .then(function (eventsZipFile) {
-                saveAs(eventsZipFile, $scope.params.filename + '.zip');
-            })
-            .then(logExport)
-            .then(updateLastExportInfo)
-            .then(setLatestExportAsDefault)
-            .then(function final() {
-                console.log("Everything done");
-            })
-            .finally(function () {
-                $scope.exporting = false;
-            });
+            .then( orgunits => EventExportService.exportEventsFromLastWithDependenciesInZip($scope.params.date, orgunits, getSelectedPrograms()) )
+            .then( eventsZipFile => saveAs(eventsZipFile, $scope.params.filename + '.zip') )
+            .then( () => logExport() )
+            .then( () => updateLastExportInfo() )
+            .then( () => setLatestExportAsDefault() )
+            .then( () => console.log("Everything done") )
+            .finally( () => $scope.exporting = false );
     };
 
     function logExport () {
-        return DataStoreService.getKeyValue(dataStoreKey).then(function (log) {
-            var current = generateLog();
+        return DataStoreService.getKeyValue(dataStoreKey).then( log => {
+            const current: TrackerDataExportLog = generateLog();
             log = log || {};
-            $scope.getSelectedServices().map(function (service) {
+            $scope.getSelectedServices().map( service => {
                 log[service.code] = current;
             });
             return DataStoreService.setKeyValue(dataStoreKey, log);
         });
     }
 
-    function generateLog () {
-        return {
-            filename: $scope.params.filename,
-            start: (new Date($scope.params.date)).toISOString(),
-            end: (new Date()).toISOString()
-        }
+    function generateLog (): TrackerDataExportLog {
+        return new TrackerDataExportLog(
+            $scope.params.filename,
+            (new Date($scope.params.date)).toISOString(),
+            (new Date()).toISOString()
+        )
     }
 
     $scope.getSelectedServices = function () {
         return !$scope.services ? [] :
-            $scope.services.filter(function (service) {
-                return service.selected;
-            });
+            $scope.services.filter( service => service.selected );
     };
 
     function getSelectedPrograms () {
-        return $scope.getSelectedServices().reduce(function (array, service) {
+        return $scope.getSelectedServices().reduce( (array, service) => {
             return array.concat(service.programs);
         }, []);
     }
 
     $scope.$watch(
-        function () { return $scope.services;},
-        evaluateAllServices,
+        () => $scope.services,
+        (newServices) => evaluateAllServices(newServices),
         true
     );
 
     function evaluateAllServices (newServices) {
         if(newServices != undefined) {
-            $scope.allServices.selected = newServices.reduce(function (state, current) {
+            $scope.allServices.selected = newServices.reduce( (state, current) => {
                 return state && current.selected;
             }, true);
         }
     }
 
 }];
-
-module.exports = trackerExportLatestDirective;
