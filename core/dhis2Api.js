@@ -346,7 +346,10 @@ Dhis2Api.factory("Events",['$resource', 'commonvariable', function ($resource, c
 }]);
 
 Dhis2Api.factory("TrackedEntityInstances",['$resource', 'commonvariable', function ($resource, commonvariable) {
-	return $resource( commonvariable.url + "trackedEntityInstances/:uid" );
+	return $resource( commonvariable.url + "trackedEntityInstances/:uid",
+		{
+			fields:':all,attributes[attribute,value,created]'
+		} );
 }]);
 
 Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resource, commonvariable) {
