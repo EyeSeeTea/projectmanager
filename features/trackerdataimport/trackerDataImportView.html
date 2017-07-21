@@ -28,7 +28,7 @@
 <div class="row">
     <div class="col-md-6">
         <label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-        <input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" required=""/>
+        <input type="file" class="form-control" ng-file-select="ctrl.onFileSelect($files)" name="file_search" required=""/>
     </div>
     <div ng-show="form.$submitted">
         <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>
@@ -37,10 +37,10 @@
 <br/>
 <div class="row">
     <div class="col-md-12 form_group">
-        <button class="btn btn-primary" ng-click='showImportDialog()' ng-disabled="progressStatus.visible && progressStatus.active">
+        <button class="btn btn-primary" ng-click='ctrl.showImportDialog()' ng-disabled="ctrl.progressStatus.visible && ctrl.progressStatus.active">
             {{ 'IMPORT' | translate }}
         </button>
-        <button class="btn btn-primary" ng-click='showFileContentSummary()' ng-disabled="progressStatus.visible && progressStatus.active">
+        <button class="btn btn-primary" ng-click='ctrl.showFileContentSummary()' ng-disabled="ctrl.progressStatus.visible && ctrl.progressStatus.active">
             {{ 'PREVIEW_FILE_SUMMARY' | translate }}
         </button>
     </div>
@@ -55,7 +55,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="program in summary">
+            <tr ng-repeat="program in ctrl.summary">
                 <td>{{ program.name }}</td>
                 <td>
                     <p ng-repeat="stage in program.stages">{{ stage.value }} {{ stage.name }}</p>
@@ -66,18 +66,18 @@
 </div>
 <br/>
 <div class="col-md-6">
-    <d2-progressbar-dynamic status="progressStatus"></d2-progressbar-dynamic>
+    <d2-progressbar-dynamic status="ctrl.progressStatus"></d2-progressbar-dynamic>
 </div>
 
 <br/>
 <br/>
 
-<div id="summary" ng-show="analyticsLog.length > 0">
+<div id="summary" ng-show="ctrl.analyticsLog.length > 0">
     <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 
     <table data-toggle="table" id="notificationTable" class="notificationTable" style="">
         <tbody>
-        <tr ng-repeat="notification in analyticsLog">
+        <tr ng-repeat="notification in ctrl.analyticsLog">
             <td>{{notification.time}}</td>
             <td>: {{notification.message}}</td>
         </tr>
@@ -98,7 +98,7 @@
                 {{ 'CONFIRM_IMPORT_BODY' | translate }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" ng-click="sendFiles()">{{ 'IMPORT' | translate }}</button>
+                <button type="button" class="btn btn-primary" ng-click="ctrl.sendFiles()">{{ 'IMPORT' | translate }}</button>
                 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#importConfirmation">{{ 'CLOSE' | translate }}</button>
             </div>
         </div>
