@@ -75,7 +75,7 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/trackerdataexport', {
 		template: require('./features/trackerdataexport/trackerDataExportView.html'),
-		controller: 'trackerDataExportController'
+		controller: 'trackerDataExportController as ctrl'
 	});
 	$routeProvider.when('/resetpasswd', {
 		template: require('./features/resetpasswd/resetpasswdView.html'),
