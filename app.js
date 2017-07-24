@@ -70,7 +70,8 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/trackerdataimport', {
 		template: require('./features/trackerdataimport/trackerDataImportView.html'),
-		controller: 'trackerDataImportController as ctrl',
+		controller: 'trackerDataImportController',
+		controllerAs: 'ctrl',
 		css: require('./features/trackerdataimport/trackerDataImportCss.css')
 	});
 	$routeProvider.when('/trackerdataexport', {

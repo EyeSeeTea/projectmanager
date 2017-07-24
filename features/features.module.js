@@ -2,6 +2,8 @@ require('../core/dhis2Api');
 require('../services/services.module');
 require('../directives/directives.module');
 
+
+
 var analytics = require('./analytics/analyticsController');
 var availableData = require('./availabledata/availabledataController');
 import {dataExport} from './dataexport/dataexportController';
@@ -23,7 +25,6 @@ var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Serv
     .controller('metadataimportController', metadataImport)
     .controller('resetpasswdController', resetPassword)
     .controller('trackerDataExportController', TrackerDataExport)
-    .controller('trackerDataImportController', TrackerDataImport)
-    .service('EventHelper2', EventHelper);
+    .controller('trackerDataImportController', TrackerDataImport);
 
 module.exports = featuresModule;

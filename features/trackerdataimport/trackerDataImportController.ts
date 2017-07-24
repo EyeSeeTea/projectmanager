@@ -21,7 +21,7 @@ import { EventImportService, EventHelper } from '../../services/services.module'
 
 export class TrackerDataImport {
 
-    static $inject = ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", "EventHelper2"];
+    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "EventHelper"];
 
     progressStatus = {};
     undefinedFile = false;
@@ -33,19 +33,12 @@ export class TrackerDataImport {
 
     $file;//single file
 
-    constructor(
-        private $q: ng.IQService, 
-        protected eventImportService: EventImportService, 
-        private AnalyticsService, 
-        private DemographicsService,
-        protected EventHelper2: EventHelper) {
-            console.log(EventHelper2.TEIS);
-        }
+    constructor(private $q: ng.IQService, private EventImportService: EventImportService, private AnalyticsService, 
+                private DemographicsService) {}
 
     showImportDialog() {
 
         this.varValidation();
-
         if (!this.undefinedFile){
             $("#importConfirmation").modal();
         }
@@ -60,7 +53,7 @@ export class TrackerDataImport {
         this.summary = undefined;
         this.analyticsLog = [];
 
-        this.eventImportService.importEventFile(this.$file)
+        this.EventImportService.importEventFile(this.$file)
             .then(() => this.AnalyticsService.refreshEventAnalytics())
             .then(
                 success => this.progressStatus = ProgressStatus.doneSuccessful,
@@ -71,13 +64,10 @@ export class TrackerDataImport {
 
     public showFileContentSummary() {
         this.varValidation();
-        console.log(this.EventHelper2.EVENTS);
-        console.log(this.eventImportService);
-        console.log(this.eventImportService.importEventFile);
         if (!this.undefinedFile) {
             this.progressStatus = ProgressStatus.initialWithoutProgress;
             this.summary = undefined;
-            this.eventImportService.previewEventFile(this.$file).then( summary => {
+            this.EventImportService.previewEventFile(this.$file).then( summary => {
                 this.summary = summary;
                 this.progressStatus = ProgressStatus.hidden;
             });
