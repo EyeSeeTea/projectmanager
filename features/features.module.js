@@ -14,8 +14,6 @@ var resetPassword = require('./resetpasswd/resetpasswdController');
 import {TrackerDataExport} from './trackerdataexport/trackerDataExportController';
 import {TrackerDataImport} from './trackerdataimport/trackerDataImportController';
 
-import {EventHelper} from '../services/events/EventHelper';
-
 var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Services'])
     .controller('analyticsController', analytics)
     .controller('availabledataController', availableData)

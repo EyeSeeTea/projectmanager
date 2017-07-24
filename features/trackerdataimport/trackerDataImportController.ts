@@ -17,14 +17,14 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { ProgressStatus } from '../../model/model';
-import { EventImportService, EventHelper } from '../../services/services.module';
+import { EventImportService } from '../../services/services.module';
 
 export class TrackerDataImport {
 
     static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "EventHelper"];
 
     progressStatus = {};
-    undefinedFile = false;
+    undefinedFile: boolean = false;
     summary: any;
     analyticsLog: any[];
 
