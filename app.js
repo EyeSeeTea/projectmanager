@@ -71,11 +71,12 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/trackerdataimport', {
 		template: require('./features/trackerdataimport/trackerDataImportView.html'),
 		controller: 'trackerDataImportController',
+		controllerAs: 'ctrl',
 		css: require('./features/trackerdataimport/trackerDataImportCss.css')
 	});
 	$routeProvider.when('/trackerdataexport', {
 		template: require('./features/trackerdataexport/trackerDataExportView.html'),
-		controller: 'trackerDataExportController'
+		controller: 'trackerDataExportController as ctrl'
 	});
 	$routeProvider.when('/resetpasswd', {
 		template: require('./features/resetpasswd/resetpasswdView.html'),

@@ -19,64 +19,71 @@
 import { ProgressStatus } from '../../model/model';
 import { EventImportService } from '../../services/services.module';
 
-export const trackerDataImport = ["$scope", "$q", "EventImportService", "AnalyticsService", "DemographicsService", 
-        function($scope: ng.IScope, $q: ng.IQService, EventImportService: EventImportService, AnalyticsService, DemographicsService) {
+export class TrackerDataImport {
 
-    $scope.progressStatus = {};
-    $scope.undefinedFile = false;
+    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "EventHelper"];
 
-    let $file;//single file 
-    
-    $scope.showImportDialog = function(){
+    progressStatus = {};
+    undefinedFile: boolean = false;
+    summary: any;
+    analyticsLog: any[];
 
-        varValidation();
+    importFailed: boolean;
+    previewDataImport: boolean;
 
-        if (!$scope.undefinedFile){
+    $file;//single file
+
+    constructor(private $q: ng.IQService, private EventImportService: EventImportService, private AnalyticsService, 
+                private DemographicsService) {}
+
+    showImportDialog() {
+
+        this.varValidation();
+        if (!this.undefinedFile){
             $("#importConfirmation").modal();
         }
     };
 
-    $scope.sendFiles = function(){
+    sendFiles() {
 
         $("#importConfirmation").modal("hide");
         
-        $scope.progressStatus = ProgressStatus.initialWithoutProgress;
+        this.progressStatus = ProgressStatus.initialWithoutProgress;
 
-        $scope.summary = undefined;
-        $scope.analyticsLog = [];
+        this.summary = undefined;
+        this.analyticsLog = [];
 
-        EventImportService.importEventFile($file)
-            .then(() => AnalyticsService.refreshEventAnalytics())
+        this.EventImportService.importEventFile(this.$file)
+            .then(() => this.AnalyticsService.refreshEventAnalytics())
             .then(
-                success => $scope.progressStatus = ProgressStatus.doneSuccessful,
-                error => $scope.progressStatus = ProgressStatus.doneWithFailure,
-                notification => $scope.analyticsLog.push(notification)
+                success => this.progressStatus = ProgressStatus.doneSuccessful,
+                error => this.progressStatus = ProgressStatus.doneWithFailure,
+                notification => this.analyticsLog.push(notification)
             );        
     };
-    
-    function varValidation() {
-        $scope.undefinedFile = ($file == undefined);
-    }
-    
-    $scope.showFileContentSummary = function(){
-        varValidation();
-        if (!$scope.undefinedFile) {
-            $scope.progressStatus = ProgressStatus.initialWithoutProgress;
-            $scope.summary = undefined;
-            EventImportService.previewEventFile($file).then( summary => {
-                $scope.summary = summary;
-                $scope.progressStatus = ProgressStatus.hidden;
+
+    public showFileContentSummary() {
+        this.varValidation();
+        if (!this.undefinedFile) {
+            this.progressStatus = ProgressStatus.initialWithoutProgress;
+            this.summary = undefined;
+            this.EventImportService.previewEventFile(this.$file).then( summary => {
+                this.summary = summary;
+                this.progressStatus = ProgressStatus.hidden;
             });
         }
     };
-    
-    $scope.onFileSelect = function ($files) {
+
+    onFileSelect($files) {
         for (var i = 0; i < $files.length; i++) {
-            $file = $files[i];//set a single file
-            $scope.undefinedFile = false;
-            $scope.importFailed = false;
+            this.$file = $files[i];//set a single file
+            this.undefinedFile = false;
+            this.importFailed = false;
         }
-        $scope.previewDataImport = false;
+        this.previewDataImport = false;
     };
 
-}];
+    private varValidation() {
+        this.undefinedFile = (this.$file == undefined);
+    }
+}
