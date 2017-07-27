@@ -31,7 +31,7 @@ export class EventImportService {
         private ProgramService
     ){}
 
-    importEventFile = function (file) {
+    importEventFile (file) {
         // It is required to wrap the return into a deferred object. If not, the following promises are not notified
         var deferred = this.$q.defer();
         this.readEventZipFile(file).then( (content) => {
