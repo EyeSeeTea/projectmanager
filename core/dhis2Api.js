@@ -117,13 +117,7 @@ Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,
 }]);
 
 Dhis2Api.factory("DataMart",['$resource','commonvariable', function ($resource,commonvariable) {
-	var datamartUrl = commonvariable.url;
-	if (commonvariable.version > "2.18"){
-		datamartUrl = datamartUrl + "system/tasks/ANALYTICSTABLE_UPDATE";
-	} else {
-		datamartUrl = datamartUrl + "system/tasks/DATAMART";
-	}
-	return $resource( datamartUrl,
+	return $resource( commonvariable.url + "system/tasks/ANALYTICSTABLE_UPDATE",
    {lastId:'@lastId'},
   { get: { method: "GET"} });
 
