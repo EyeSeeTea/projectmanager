@@ -354,4 +354,14 @@ Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource,
 	return $resource( commonvariable.url + "programs/:uid" );
 }]);
 
+Dhis2Api.factory("Ping", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "system/ping",
+		{},
+		{ get: { method: "GET", transformResponse: (data, headerGetter, status ) => ({data: data, headers: headerGetter(), status: status})	}} );
+}]);
+
+Dhis2Api.factory("Info", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "system/info");
+}]);
+
 module.exports = Dhis2Api;
