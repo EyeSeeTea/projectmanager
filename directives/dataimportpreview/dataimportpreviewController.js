@@ -72,6 +72,7 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 				if (dataValues == undefined){
 					$scope.msjEmptyFile = true;
 					$scope.importPreviewStatus.visible = false;
+					$scope.$apply();
 					return;
 				}
 
