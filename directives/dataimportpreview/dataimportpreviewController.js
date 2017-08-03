@@ -71,6 +71,7 @@ var dataImportPreviewController =  ['$scope', "Organisationunit", function($scop
 				if (dataValues == undefined){
 					$scope.msjEmptyFile = true;
 					$scope.importPreviewStatus.visible = false;
+					$scope.$apply();
 					return;
 				}
 
