@@ -71,7 +71,7 @@ export class EventExportService {
      */
     exportEventsWithDependencies (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
         return this.getEvents(startDate, endDate, orgunits, programs)
-            .then(events => this.addTrackedEntitiesAndEnrollments(events))
+            .then(events => this.addRelatedTrackedEntitiesAndEnrollments(events))
     };
 
     /**
@@ -85,8 +85,16 @@ export class EventExportService {
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
     exportEventsFromLastWithDependencies (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
-        return this.getEventsFromLast(lastUpdated, orgunits, programs)
-            .then(events => this.addTrackedEntitiesAndEnrollments(events))
+        const orgunitProgramCombo = this.getOrgunitProgramCombo(orgunits, programs);
+        return this.$q.all([
+            this.getEventsFromLast(lastUpdated, orgunits, programs),
+            this.getTrackedEntityInstancesFromLast(lastUpdated, orgunitProgramCombo),
+            this.getEnrollmentsFromLast(lastUpdated, orgunitProgramCombo)
+        ])
+            .then(([events, teis, enrolls]) => {
+                let dataWrapper = new EventDataWrapper(events.events, enrolls.enrollments, teis.trackedEntityInstances);
+                return this.addMissingTrackedEntitiesAndEnrollments(dataWrapper);
+            });
     };
 
     /**
@@ -124,8 +132,56 @@ export class EventExportService {
         };
         return this.getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs);
     }
+
+    /**
+     * Exports all trackedEntityInstances for the given orgunitProgramCombo. It includes orgunit descendants. Returns a promise that
+     * resolves to a TrackedEntityInstanceList
+     * @param lastUpdated Data to start the trackedEntityInstanceQuery
+     * @param orgunitProgramCombo Combo of orgunit/program
+     * @returns {*} Promise that resolves to a TrackedEntityInstanceList object
+     */
+    getTrackedEntityInstancesFromLast (lastUpdated: string, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
+        const commonParams = {
+            lastUpdated: lastUpdated,
+            ouMode: 'DESCENDANTS'
+        };
+        let teiPromises = orgunitProgramCombo.map( (combination) => {
+            const params = angular.extend({}, commonParams, {ou: combination.orgUnit, program: combination.program});
+            return this.TrackedEntityInstances.get(params).$promise;
+        });
+
+        return this.$q.all(teiPromises).then(
+            (teisArray: TrackedEntityInstanceList[]) => teisArray.reduce( (totalTeis: TrackedEntityInstanceList, currentTei: TrackedEntityInstanceList) => {
+                    return new TrackedEntityInstanceList(totalTeis.trackedEntityInstances.concat(currentTei.trackedEntityInstances));
+                }, TrackedEntityInstanceList.empty)
+        )
+    }
+
+    /**
+     * Exports all enrollments for the given orgunitProgramCombo. It includes orgunit descendants. Returns a promise that
+     * resolves to a EnrollmentList
+     * @param lastUpdated Data to start the trackedEntityInstanceQuery
+     * @param orgunitProgramCombo Combo of orgunit/program
+     * @returns {*} Promise that resolves to an EnrollmentList object
+     */
+    private getEnrollmentsFromLast (lastUpdated: string, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<EnrollmentList> {
+        const commonParams = {
+            lastUpdated: lastUpdated,
+            ouMode: 'DESCENDANTS'
+        };
+        let enrollPromises = orgunitProgramCombo.map( (combination) => {
+            const params = angular.extend({}, commonParams, {ou: combination.orgUnit, program: combination.program});
+            return this.Enrollments.get(params).$promise;
+        });
+
+        return this.$q.all(enrollPromises).then(
+            (enrollsArray: EnrollmentList[]) => enrollsArray.reduce( (totalEnrolls: EnrollmentList, currentEnroll: EnrollmentList) => {
+                    return new EnrollmentList(totalEnrolls.enrollments.concat(currentEnroll.enrollments));
+                }, EnrollmentList.empty)
+        )
+    }
     
-    getEventsFromOrgunitAndPrograms (commonParams: any, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
+    private getEventsFromOrgunitAndPrograms (commonParams: any, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
         let eventsPromises = [];
         this.getOrgunitProgramCombo(orgunits, programs).forEach( (customParams) => {
             eventsPromises.push(this.Events.get(angular.extend({}, commonParams, customParams)).$promise);
@@ -133,7 +189,7 @@ export class EventExportService {
 
         return this.$q.all(eventsPromises).then(
             (eventsArray: EventList[]) => eventsArray.reduce( (totalEvents: EventList, eventsResult: EventList) => {
-                    return {events: totalEvents.events.concat(eventsResult.events)};
+                    return new EventList(totalEvents.events.concat(eventsResult.events));
                 }, EventList.empty)
         )
     }
@@ -141,23 +197,46 @@ export class EventExportService {
     /**
      * This method accepts an object with the property events, and returns a promise that resolves to an object with
      * the given events plus the trackedEntityInstances and enrollments included in the events.
-     * @param events Object with the structure {events: [<array_of_events>]}
-     * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
+     * @param events Object of type EventList
+     * @returns {*} Promise that resolves to an updated EventDataWrapper
      */
-    private addTrackedEntitiesAndEnrollments (events) {
-        var eventsWithTeisAndEnrolls = events;
+    private addRelatedTrackedEntitiesAndEnrollments (events: EventList): ng.IPromise<EventDataWrapper> {
+        let dataWrapper = new EventDataWrapper(events.events, [], []);
 
         var teisArray = this.extractEventsPropertyToArray(events, 'trackedEntityInstance');
         var enrollsArray = this.extractEventsPropertyToArray(events, 'enrollment');
 
+        return this.addTrackedEntitiesAndEnrollments(dataWrapper, teisArray, enrollsArray);
+    }
+
+    /**
+     * This method adds to the EventDataWrapper passed as parameter the trackedEntityInstances and enrollments that are 
+     * related to the contained events and are not present in the EventDataWrapper.
+     * @param dataWrapper Target EventDataWrapper
+     * @returns {*} Promise that resolves to an updated EventDataWrapper
+     */
+    private addMissingTrackedEntitiesAndEnrollments (dataWrapper: EventDataWrapper): ng.IPromise<EventDataWrapper> {
+        const relatedTeis = this.extractEventsPropertyToArray(new EventList(dataWrapper.events), 'trackedEntityInstance');
+        const relatedEnrolls = this.extractEventsPropertyToArray(new EventList(dataWrapper.events), 'enrollment');
+
+        const existingTeis = dataWrapper.trackedEntityInstances.map(tei => tei.trackedEntityInstance);
+        const existingEnrolls = dataWrapper.enrollments.map(enroll => enroll.enrollment);
+
+        const missingTeis = relatedTeis.filter(tei => existingTeis.indexOf(tei) < 0);
+        const missingEnrolls = relatedEnrolls.filter(enroll => existingEnrolls.indexOf(enroll) < 0);
+
+        return this.addTrackedEntitiesAndEnrollments(dataWrapper, missingTeis, missingEnrolls);
+    }
+
+    private addTrackedEntitiesAndEnrollments (dataWrapper: EventDataWrapper, teisArray: string[], enrollsArray: string[]): ng.IPromise<EventDataWrapper> {
         return this.getTrackedEntityInstancesByUid(teisArray)
             .then( (trackedEntityInstances) => {
-                angular.extend(eventsWithTeisAndEnrolls, trackedEntityInstances);
+                dataWrapper.addTrackedEntityInstances(trackedEntityInstances.trackedEntityInstances)
                 return this.getEnrollmentsByUid(enrollsArray);
             })
             .then( (enrollments) => {
-                angular.extend(eventsWithTeisAndEnrolls, enrollments);
-                return eventsWithTeisAndEnrolls;
+                dataWrapper.addEnrollments(enrollments.enrollments);
+                return dataWrapper;
             });
     }
 
@@ -275,6 +354,28 @@ class TrackedEntityInstanceList {
     constructor(
         public trackedEntityInstances: any[]
     ){}
+
+    static empty = new TrackedEntityInstanceList([]);
+}
+
+class EventDataWrapper {
+    constructor(
+        public events: any[],
+        public enrollments: any[],
+        public trackedEntityInstances: any[]
+    ){}
+
+    addEvents(events: any[]) {
+        this.events = this.events.concat(events);
+    }
+
+    addTrackedEntityInstances(trackedEntityInstances: any[]) {
+        this.trackedEntityInstances = this.trackedEntityInstances.concat(trackedEntityInstances);
+    }
+
+    addEnrollments(enrollments: any[]) {
+        this.enrollments = this.enrollments.concat(enrollments);
+    }
 }
 
 class OrgunitProgramComboItem {

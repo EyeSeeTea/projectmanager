@@ -117,13 +117,7 @@ Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,
 }]);
 
 Dhis2Api.factory("DataMart",['$resource','commonvariable', function ($resource,commonvariable) {
-	var datamartUrl = commonvariable.url;
-	if (commonvariable.version > "2.18"){
-		datamartUrl = datamartUrl + "system/tasks/ANALYTICSTABLE_UPDATE";
-	} else {
-		datamartUrl = datamartUrl + "system/tasks/DATAMART";
-	}
-	return $resource( datamartUrl,
+	return $resource( commonvariable.url + "system/tasks/ANALYTICSTABLE_UPDATE",
    {lastId:'@lastId'},
   { get: { method: "GET"} });
 
@@ -358,6 +352,16 @@ Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resour
 
 Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "programs/:uid" );
+}]);
+
+Dhis2Api.factory("Ping", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "system/ping",
+		{},
+		{ get: { method: "GET", transformResponse: (data, headerGetter, status ) => ({data: data, headers: headerGetter(), status: status})	}} );
+}]);
+
+Dhis2Api.factory("Info", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "system/info");
 }]);
 
 module.exports = Dhis2Api;

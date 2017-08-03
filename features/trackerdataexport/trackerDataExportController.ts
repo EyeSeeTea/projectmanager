@@ -17,12 +17,13 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-export const trackerDataExport = ['$scope', function ($scope) {
+export class TrackerDataExport {
     
-    $scope.activeTab = 1;
-    
-    $scope.setActiveTab = function (item) {
-        $scope.activeTab = item;
+    activeTab: number = 1;
+
+    constructor(){}
+
+    setActiveTab = function (item) {
+        this.activeTab = item;
     };
-    
-}];
+}
