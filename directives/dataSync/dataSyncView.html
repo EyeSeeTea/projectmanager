@@ -17,25 +17,12 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
 
-<h2>{{ 'DATA_EXPORT' | translate }}</h2>
-
-<div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-tabs">
-            <li ng-class="{'active': activeTab == 1}" role="presentation"><a ng-click="setActiveTab(1)" href="">{{ 'Manual' }}</a></li>
-            <li ng-class="{'active': activeTab == 2}" role="presentation"><a ng-click="setActiveTab(2)" href="">{{ 'Sync'  }}</a></li>
-        </ul>
-    </div>
-</div>
-
-
-<div class="row" >
-    <div class="col-md-12">
-        <div ng-if="activeTab === 1">
-            <aggregate-data-export-manual></aggregate-data-export-manual>
-        </div>
-        <div ng-if="activeTab === 2">
-            <aggregate-data-sync></aggregate-data-sync>
-        </div>
-    </div>
-</div>
+<form name="form_sync" ng-submit="submit_sync()" novalidate>
+	<div class="form_group">
+		<button type="submit" id="submit_sync" class="btn btn-primary">{{ 'SYNC' | translate }}</button>
+	</div>
+	<div>
+		<p>Result: {{sync_result}}</p>
+		<p>Last Sync Date: {{sync_result_date}}</p>
+	</div>
+</form>

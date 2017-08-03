@@ -11,6 +11,13 @@ var projectSelector = require('./projectSelector/projectSelectorController');
 var treeorganisationunitDirective = require('./treeorganisationunit/organisationUnitTreeController');
 var containsDigitDirective = require('./validators/containsDigit');
 var containsUppercaseDirective = require('./validators/containsUppercase');
+
+import {dataexportmanualDirective} from  './dataexportmanual/dataexportmanualController';
+import {datasyncDirective} from  './datasync/datasyncController';
+
+import {importdatamanualDirective} from  './importdatamanual/importdatamanualController';
+import {importeddataDirective} from  './importeddata/importeddataController';
+
 import {trackerExportDetailedDirective} from './trackerexportdetailed/trackerExportDetailedController';
 import {trackerExportLatestDirective} from './trackerexportlatest/trackerExportLatestController';
 var formatPeriodFilter = require('./filters/formatPeriod');
@@ -29,6 +36,12 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('projectSelector', projectSelector)
     .directive('trackerExportDetailed', trackerExportDetailedDirective)
     .directive('trackerExportLatest', trackerExportLatestDirective)
+    .directive('aggregateDataExportManual', dataexportmanualDirective)
+    .directive('aggregateDataSync', datasyncDirective)
+    .directive('importDataManual', importdatamanualDirective)
+    .directive('importedData', importeddataDirective)
+
+
     .filter('orderObjectBy', orderObjectByFilter)
     .filter('d2FormatPeriod', formatPeriodFilter);
 

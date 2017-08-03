@@ -17,7 +17,17 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var dataImport = ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService, AnalyticsService) {
+export const importdatamanualDirective = [function(){
+    return{
+        restrict: 'E',
+        controller: importdatamanualController,
+        template: require('./importdatamanualView.html'),
+        scope: {}
+    }
+}];
+
+
+var importdatamanualController = ["$scope",'$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", function($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService, AnalyticsService) {
 		
 		$scope.dataImportStatus = {
 			visible: false,
@@ -175,4 +185,4 @@ var dataImport = ["$scope",'$interval', '$upload', '$filter', "commonvariable", 
 	
 }];
 
-module.exports = dataImport;
+/* module.exports = dataImport; */

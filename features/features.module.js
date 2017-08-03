@@ -5,7 +5,10 @@ require('../directives/directives.module');
 var analytics = require('./analytics/analyticsController');
 var availableData = require('./availabledata/availabledataController');
 import {dataExport} from './dataexport/dataexportController';
-var dataImport = require('./dataimport/dataimportController');
+
+import {dataimport} from './dataimport/dataimportController';
+
+
 var metadataExport = require('./metadataexport/metadataexportController');
 var metadataImport = require('./metadataimport/metadataimportController');
 var resetPassword = require('./resetpasswd/resetpasswdController');
@@ -16,7 +19,9 @@ var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Serv
     .controller('analyticsController', analytics)
     .controller('availabledataController', availableData)
     .controller('dataexportController', dataExport)
-    .controller('dataimportController', dataImport)
+     .controller('dataimportController', dataimport)
+
+
     .controller('metadataexportController', metadataExport)
     .controller('metadataimportController', metadataImport)
     .controller('resetpasswdController', resetPassword)

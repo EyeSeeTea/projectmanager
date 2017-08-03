@@ -1,122 +1,22 @@
-
-<!--   
-   Copyright (c) 2015.
- 
-   This file is part of Project Manager.
- 
-   Project Manager is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
- 
-   Project Manager is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
-
 <h2>{{ 'DATA_IMPORT' | translate }}</h2>
 
-<div class="row" ng-show="undefinedFile">
-  	<div class="col-md-12">
-		<d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
-	</div>
-</div>
-
 <div class="row">
-	<div class="col-md-6">
-		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
-		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" required=""/>
-	</div>
-	<div ng-show="form.$submitted">
-      <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li ng-class="{'active': activeTab == 1}" role="presentation"><a ng-click="setActiveTab(1)" href="">{{ 'Manual' }}</a></li>
+            <li ng-class="{'active': activeTab == 2}" role="presentation"><a ng-click="setActiveTab(2)" href="">{{ 'Sync'  }}</a></li>
+        </ul>
     </div>
 </div>
-  
-	<br/>
 
-<div class="row">
-	<div class="col-md-6">
-		<d2-progressbar-dynamic status="dataImportStatus"></d2-progressbar-dynamic>
-	</div>
-</div>
 
-<div class="row" ng-show="importFailed">
-	<div class="col-md-12">
-		<d2-messages type="danger" textmessage="{{ 'IMPORT_FAILED' | translate }}"></d2-messages>
-	</div>
-</div>
-
-<br/>
-<div class="row">
-	<div class="col-md-6">
-		<div class="form_group">
-			<button class="btn btn-primary"  ng-click='showImportDialog()'>{{ 'IMPORT' | translate }}</button>
-			<button class="btn btn-primary"  ng-click='previewFiles()'>{{ 'PREVIEW' | translate }}</button>
-		</div>
-	</div>
-</div>
-<br/>
-<div id="summary" ng-show="summaryDisplayed">
-	<h3>{{ 'IMPORT_SUMMARY' | translate }}</h3>
-	
-	<h4>{{ 'IMPORT_COUNT' | translate }}</h4>
-	<div id="importCount"></div>
-
-	<div ng-show="conflicts">
-		<h4>{{ 'CONFLICTS' | translate }}</h4>
-		<div>
-			<button class="btn btn-primary btn-xs" ng-class="{true: 'active'}[showConflicts]"
-					ng-click="showConflicts = !showConflicts">{{ 'DETAILS' | translate}}</button>
-		</div>
-		<table id="typeSummary" ng-show="showConflicts">
-			<thead>
-			<tr>
-				<td>{{ 'ELEMENT' | translate }}</td>
-				<td>{{ 'DESCRIPTION' | translate }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
-	</div>
-
-</div>
-
-<br/>
-
-<div ng-show="analyticsLog.length > 0">
-	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
-
-	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
-		<tbody>
-		<tr ng-repeat="notification in analyticsLog | orderBy:'-time'">
-			<td>{{notification.time}}</td>
-			<td>: {{notification.message}}</td>
-		</tr>
-		</tbody>
-	</table>
-</div>
-
-<d2-dataimportpreview ng-if="previewDataImport" import-file="dataFile" is-compress="isCompress"></d2-dataimportpreview>
-
-<!-- Show datavalue history -->
-<div class="modal" id="importConfirmation" role="dialog">
-	<div class="modal-dialog">
-    
-	   	<div class="modal-content">
-	   		<div class="modal-header">
-				<h4 class="modal-title">{{ 'CONFIRM_IMPORT_TITLE' | translate }}</h4>
-	    	</div>
-	  		<div class="modal-body">
-	  			{{ 'CONFIRM_IMPORT_BODY' | translate }}
-	  		</div>
-	  		<div class="modal-footer">
-	  			<button type="button" class="btn btn-primary" ng-click="sendFiles()">{{ 'IMPORT' | translate }}</button>
-	  			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#importConfirmation">{{ 'CLOSE' | translate }}</button>
-	  		</div>
-	  	</div>
-  	</div>
+<div class="row" >
+    <div class="col-md-12">
+        <div ng-if="activeTab === 1">
+            <import-data-manual></import-data-manual>
+        </div>
+        <div ng-if="activeTab === 2">
+            <imported-data></imported-data>
+        </div>
+    </div>
 </div>

@@ -16,8 +16,7 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-
-export const dataExport = ['$scope', function ($scope) {
+export const dataimport = ['$scope', function ($scope) {
     
     $scope.activeTab = 1;
     

@@ -19,10 +19,10 @@
 var userService = ['$q', 'meUser', 'User', function($q, meUser, User){
  
     var currentUser;
-    
+    var currentUserTree;
     var currentUserFields = {
         fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
-            "organisationUnits[id,level,name,children],dataViewOrganisationUnits[id,level,children[id,level,children]]"
+            "organisationUnits[id,level,name,children],dataViewOrganisationUnits[id,level]"
     };
     
     function getCurrentUser () {
@@ -35,7 +35,22 @@ var userService = ['$q', 'meUser', 'User', function($q, meUser, User){
             });
         }
     }
-    
+    function getCurrentUserTree () {
+        var currentUserFieldsTree = {
+        fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
+            "organisationUnits[id,level,name,children],dataViewOrganisationUnits[id,level,children[id,level,children[id,level,children[id,level,children[id,level,children]]]]]"
+    };
+        if (currentUserTree != null) {
+            return $q.when(currentUserTree);
+        } else {
+            return meUser.get(currentUserFieldsTree).$promise.then(function(me){
+                currentUserTree = me;
+                return currentUserTree;
+            });
+        }
+    }
+
+
     function getCurrentUserOrgunits () {
         return getCurrentUser()
             .then(function (me) {
@@ -100,7 +115,8 @@ var userService = ['$q', 'meUser', 'User', function($q, meUser, User){
         getCurrentUser: getCurrentUser,
         getCurrentUserOrgunits: getCurrentUserOrgunits,
         getProjectUsers: getProjectUsers,
-        updateUserPassword: updateUserPassword
+        updateUserPassword: updateUserPassword,
+        getCurrentUserTree: getCurrentUserTree
     }
     
 }];
