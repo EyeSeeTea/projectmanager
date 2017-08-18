@@ -56,6 +56,7 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
                                api: remoteUrl.html + '/api',
                                loggerAuth: 'Basic ' + btoa(settings[remoteUserProperty].username + ":" + settings[remoteUserProperty].password)
                            }
+                          console.log(remoteSettings);
                        } else {
                            return $q.reject(INVALID_LOGGER_USER);
                        }
@@ -68,6 +69,7 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
     };
     
     var executeRemoteQuery = function (remoteQuery) {
+       
         // Check if apiVersion is defined in remoteQuery (two digits).
         var apiVersion = remoteQuery.apiVersion == undefined ? '/' + defaultAPIVersion :
             /^\d{2}$/.test(remoteQuery.apiVersion) ? '/' + remoteQuery.apiVersion : '';
@@ -77,13 +79,14 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
                 function success() {
                     // Choose authorization. Defaults to data authorization
                     var authorization = remoteSettings.loggerAuth;
-                    return $http({
+                       return $http({
                         method: remoteQuery.method,
                         url: remoteSettings.api + apiVersion + '/' + remoteQuery.resource,
                         data: remoteQuery.data,
                         headers: {
-                            Authorization: authorization
-                        }
+                          Authorization: authorization
+                        },
+                         
                     })
                 }
             )

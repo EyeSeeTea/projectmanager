@@ -38,7 +38,7 @@ var userService = ['$q', 'meUser', 'User', function($q, meUser, User){
     function getCurrentUserTree () {
         var currentUserFieldsTree = {
         fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
-            "organisationUnits[id,level,name,children],dataViewOrganisationUnits[id,level,children[id,level,children[id,level,children[id,level,children[id,level,children]]]]]"
+            "organisationUnits[id,level,name,children],organisationUnitGroups[id],dataViewOrganisationUnits[id,name,level,children[id,name, level,organisationUnitGroups[id], children[id, name,level,organisationUnitGroups[id],children[id, name, level,organisationUnitGroups[id], children[id,name, level,children[id,name]]]]]]"
     };
         if (currentUserTree != null) {
             return $q.when(currentUserTree);

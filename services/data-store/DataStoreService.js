@@ -140,33 +140,35 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
             currentValue => {
                 var push = true;
                 if (currentValue != undefined) {
-
-                    console.log("Period: " + value.period);
+                  
                     for (var dataValue in currentValue[defaultArrayKey]) {
 
-                        if (currentValue[defaultArrayKey][dataValue].period == value.period && currentValue[defaultArrayKey][dataValue].orgUnit == value.orgUnit && currentValue[defaultArrayKey][dataValue].dataSet == value.dataSet) {
-                            console.log(currentValue[defaultArrayKey]);
+                        if (currentValue[defaultArrayKey][dataValue].period == value.period && currentValue[defaultArrayKey][dataValue].service == value.service && currentValue[defaultArrayKey][dataValue].dataSet == value.dataSet) {
+                           // console.log(currentValue[defaultArrayKey]);
                             push = false;
-                            console.log("Actualizado: " + value.period + " del dataset " + value.dataSet + " del Service " + value.orgUnit);
+                            console.log("Actualizado: " + value.period + " del dataset " + value.dataSet + " del Service " + value.service);
                             currentValue[defaultArrayKey][dataValue] = value;
-                            console.log(currentValue[defaultArrayKey][dataValue]);
+                           // console.log(currentValue[defaultArrayKey][dataValue]);
+                             return DataStore.put({ namespace: namespace, key: key }, currentValue)
                          }
+                        
                     }
 
                     if (push == true) {
-                        console.log("Insertado periodo: " + value.period + " del dataset " + value.dataSet + " del Service " + value.orgUnit);
-                        if (currentValue[defaultArrayKey]==undefined){ currentValue[defaultArrayKey]=[]; }
-                      /*  console.log("insertado antes " );
-                        console.log(currentValue[defaultArrayKey]); */
-                        currentValue[defaultArrayKey].push(value);
-                        /* console.log("insertado despues "); */
-                        console.log(currentValue[defaultArrayKey][dataValue]);
-                      /*  return DataStore.put({ namespace: namespace, key: key }, currentValue) */
+                        console.log("Insertado periodo: " + value.period + " del dataset " + value.dataSet + " del Service " + value.service);
+                        if (currentValue[defaultArrayKey]==undefined){ currentValue[defaultArrayKey]=[value]; 
+                        } else {
 
+                            currentValue[defaultArrayKey].push(value);
+                        }
+                      
+                       
+                      
+                    return DataStore.put({ namespace: namespace, key: key }, currentValue)
 
                     }
 
-                    return DataStore.put({ namespace: namespace, key: key }, currentValue)
+                    
 
                 } else {
                     currentValue = {};
@@ -175,6 +177,68 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
                 }
             });
     };
+
+
+
+
+
+
+
+    /**
+        * Introduces a new value in the array. This methods expects the value of the pair (namespace, key) to be an array.
+        * If the value is empty, it creates a new array.
+        * @param namespace Name of the namespace
+        * @param key Name of the key
+        * @param value New value to be pushed into the array
+        * @returns {*} Promise with the result of the put/post method
+        */
+    var deleteNamespaceKeyValue = function (namespace, key, value) {
+        return getNamespaceKeyValue(namespace, key)
+            .then(
+            currentValue => {
+              
+                if (currentValue != undefined) {
+
+                    //console.log("Period: " + value.period);
+                    for (var dataValue in currentValue[defaultArrayKey]) {
+
+                        if (currentValue[defaultArrayKey][dataValue].period == value.period && currentValue[defaultArrayKey][dataValue].service == value.service && currentValue[defaultArrayKey][dataValue].dataSet == value.dataSet) {
+                            console.log(currentValue[defaultArrayKey]);
+                       
+                            console.log("Borrado: " + value.period + " del dataset " + value.dataSet + " del Site " + value.siteName);
+                            currentValue[defaultArrayKey].splice(dataValue,1);
+
+
+                            //console.log(currentValue[defaultArrayKey][dataValue]);
+                              DataStore.put({ namespace: namespace, key: key }, currentValue);
+                                
+                                 return  currentValue[defaultArrayKey];
+                                
+                         }
+                        
+                    }
+
+                   
+                    
+
+                } 
+            });
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -256,7 +320,8 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
         getKeyValue: getKeyValue,
         getNamespaceDataSetValidationDate: getNamespaceDataSetValidationDate,
         updateNamespaceKeyArraylastPush: updateNamespaceKeyArraylastPush,
-        getNamespaceKeys: getNamespaceKeys
+        getNamespaceKeys: getNamespaceKeys,
+        deleteNamespaceKeyValue: deleteNamespaceKeyValue
     };
 
 }];

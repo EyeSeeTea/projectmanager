@@ -86,7 +86,7 @@ Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function 
 	return $resource(commonvariable.url+"organisationUnits/:uid", 
    {
 	uid:'@uid',
-    fields:'name,id,children[name,id]'
+    fields:'name,id, level, children[name,id, level, parent[id,parent]]'
    }, 
   { get: { method: "GET"} });
 }]);
@@ -94,7 +94,7 @@ Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function 
 Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnits", 
         {
-            fields: 'name,id,level,parent,children, dataSets',
+            fields: 'name,id,level,parent,children, dataSets[id, name], organisationunits[id, parent],[organisationUnitGroups[id]',
             paging: false
         },
         { get: { method: "GET"} }
@@ -329,6 +329,17 @@ Dhis2Api.factory("RemoteInstanceUrl", ['$resource', 'commonvariable', function (
 		}
 	});
 }]);
+
+
+
+Dhis2Api.factory("messageConversations", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "messageConversations",
+	{}, 
+  { post: { method: "POST"} });
+}]);
+
+
+
 
 Dhis2Api.factory("Events",['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "events", {}, {

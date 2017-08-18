@@ -111,7 +111,8 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 			const boundDates: BoundDates = getBoundDates();
 			const fileName: string = getFilename();
 			let orgUnits = commonvariable.OrganisationUnitList;
-
+console.log("orgUnits");
+console.log(orgUnits);
 			updateDemographicIfNeeded()
 				.then(getDatasets)
 				.then(dataSets => {
@@ -124,6 +125,15 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 						return list + "&orgUnit=" + orgunit.id;
 					}, "");
 
+					const projects = orgUnits.reduce(function (list, orgunit) {
+					if  (orgunit.level==4 && list.indexOf(orgunit.id) ==-1) { return list +  orgunit.id + ";" }
+					if  (orgunit.level==5  && list.indexOf(orgunit.parent.id) ==-1) { return list +  orgunit.parent.id + ";" }
+					if  (orgunit.level==6 && list.indexOf(orgunit.parent.parent.id) ==-1) { return list +  orgunit.parent.parent.id + ";" }
+					else { return list;}
+					}, "");
+
+
+
 					api_url = api_url + dataset_filter +
 						"startDate=" + boundDates.start + "&endDate=" + boundDates.end +
 						orgUnits_filter + "&children=true";
@@ -134,6 +144,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 							if ($scope.zipped) {
 								let zip = new JSZip();
 								zip.file(fileName + '.json', JSON.stringify(data));
+								zip.file($scope.file_name+"_"+  (new Date()).getTime()+ '_project.txt', projects );
 								zip.generateAsync({ type: "blob", compression: "DEFLATE" })
 									.then(function (content) {
 										saveAs(content, fileName + '.json.zip');

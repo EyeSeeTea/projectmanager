@@ -16,21 +16,167 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
 
-<h2>{{ 'Validation Data'}}</h2>
 
-<table class="table table-bordered table-condensed table-hover" >
-	
-	
-	<tr ng-repeat="dataSet in dataSets " >
-		<td >
-				
-			{{ dataSet.id }}
-		</td>
-		
-	</tr>
-	
+<div class="row">
+    <div class="col-md-6">
+        <d2-progressbar-dynamic status="validationDataStatus"></d2-progressbar-dynamic>
+    </div>
+</div>
+
+<div class="row" ng-show="showHeader">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="row form-inline">
+						<div class="col-md-2" ng-show="showMissions">
+						<label for="missionSelect">Mission</label>
+						<select id="missionSelect" class="filter-select form-control"
+								ng-model="filter.selected" ng-change="filterMission(filter)">
+                                <option value="">All</option>
+								<option ng-repeat="mission in missions" value="{{mission.id}}">{{mission.name}}</option>
+                                
+						</select>
+					</div>
+					<div class="col-md-4" ng-show="showMissions">
+						<label for="cellSelector">{{'Cell' | translate}}:</label>
+						<div id="cellSelector" class="btn-group" data-toggle="buttons">
+							<label ng-repeat="cell in cells" ng-click="modifycell(cell)"
+								   class="btn btn-default {{cell.id == selectedCell.id ? 'active' : ''}}">
+								<input type="radio" name="options" autocomplete="off">
+								{{cell.name}}
+							</label>
+
+                            <label  ng-click="modifycell(cell)"  class="btn btn-default {{ selectedCell.id=='' ? 'active' : ''}}">
+								<input type="radio" name="options" autocomplete="off">
+								{{'All'}}
+							</label>
+						</div>
+
+
+					</div>
+<div class="col-md-4">
+
+<label for="zeroSelector">{{'Show empty' | translate}}:</label>
+						<div id="zeroSelector" >
+						
+								   <input type="checkbox" ng-change="showZero(value)" ng-model="zero">
+								
+								
+							
+						</div>
+
+    <div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--
+<table class="table table-bordered table-condensed table-hover" ng-show="showMissionsTable">
+
+ <tr>
+    
+    <th>Mission</th>
+    
+    
+    <th> </th>
+  </tr>
+    <tr ng-repeat="mission in missions | filter:missionFilter | filter:cellFilter ">
+         
+        <td>
+            {{ mission.name }}
+        </td>
+     
+        <td>
+            <button ng-click="show_details_mission(mission);">Details</button>
+             
+         </td>
+    </tr>
+
 </table>
 
+-->
 
-<p>Last Sync Date: {{sync_result_date}}</p>
 
+<table class="table table-bordered table-condensed table-hover" ng-show="showProjectsTable">
+
+    <tr>
+        <th><a href="#/dataimport" ng-click="orderByFieldProject='missionName'; reverseSortProject = !reverseSortProject">Mission</a></th>
+        <th><a href="#/dataimport" ng-click="orderByFieldProject='name'; reverseSortProject = !reverseSortProject">Project</a></th>
+        <th><a href="#/dataimport" ng-click="orderByFieldProject='lastDatePush'; reverseSortProject = !reverseSortProject">Last Sync</a></th>
+        <th><a href="#/dataimport" ng-click="orderByFieldProject='datasets'; reverseSortProject = !reverseSortProject">Datasets</a></th>
+        <th> </th>
+    </tr>
+    <tr ng-repeat="project in projects | filter:missionFilter | filter:cellFilter | filter:zeroShow | orderBy:orderByFieldProject:reverseSortProject">
+       
+     
+       
+        <td>
+            {{ project.missionName }}
+        </td>
+        <td>
+            {{ project.name }}
+        </td>
+        <td>
+            {{ project.lastDatePush | date:'yyyy-MM-dd HH:mm:ss Z' }}
+        </td>
+        <td>
+            {{ project.datasets }}
+        </td>
+        <td>
+            <button ng-click="show_details(project);">Details</button>
+            <button ng-click="submit_validate(project);">Validate</button>
+        </td>
+    </tr>
+
+</table>
+
+<table class="table table-bordered table-condensed table-hover" ng-show="showDetails">
+
+    <tr>
+        <!-- <th>Project</th> -->
+        <th><a href="#/dataimport" ng-click="orderByField='siteName'; reverseSort = !reverseSort">Site</a></th>
+        <th> <a href="#/dataimport" ng-click="orderByField='serviceName'; reverseSort = !reverseSort">Service </a></th>
+        <th><a href="#/dataimport" ng-click="orderByField='dataSetName'; reverseSort = !reverseSort">Dataset</a></th>
+        <th><a href="#/dataimport" ng-click="orderByField='period'; reverseSort = !reverseSort">Period</a></th>
+        <th><a href="#/dataimport" ng-click="orderByField='lastDatePush'; reverseSort = !reverseSort">Last Sync</a></th>
+        <th></th>
+    </tr>
+
+    <tr ng-repeat="dataset in datasets  | filter:searchText | orderBy:orderByField:reverseSort ">
+
+        <!--       <td>
+            {{ dataset.project }}
+        </td> -->
+        <td>
+            {{ dataset.siteName }}
+        </td>
+        <td>
+            {{ dataset.serviceName }}
+        </td>
+        <!--   <td>
+            {{ dataset.service }}
+        </td>-->
+
+        <td>
+            {{ dataset.dataSetName }}
+        </td>
+
+
+        <td>
+            {{ dataset.period }}
+        </td>
+
+        <td>
+            {{ dataset.lastDatePush | date:'yyyy-MM-dd HH:mm:ss Z' }}
+        </td>
+        <td>
+            <button ng-click="show_details_dataset(dataset);">Preview</button>
+            <button ng-click="submit_validate_dataset(dataset, $index);">Validate</button>
+        </td>
+    </tr>
+
+</table>
