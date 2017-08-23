@@ -39,7 +39,7 @@ window.dhis2 = window.dhis2 || {};
 dhis2.settings = dhis2.settings || {};
 dhis2.settings.baseUrl = auxBaseUrl;
 
-var isOnline = urlBase.indexOf("//hmisocba.msf.es") >= 0;
+var isOnline = urlBase.indexOf("//dev.hmisocba.msf.es") >= 0;
 
 // Get and save DHIS version
 var version = "";

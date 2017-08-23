@@ -18,23 +18,22 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-export const dataexportmanualDirective = [function(){
-    return{
-        restrict: 'E',
-        controller: dataexportmanualController,
-        css: require('./dataexportmanualCss.css'),
-        template: require('./dataexportmanualView.html'),
-        scope: {}
-    }
+export const dataexportmanualDirective = [function () {
+	return {
+		restrict: 'E',
+		controller: dataexportmanualController,
+		css: require('./dataexportmanualCss.css'),
+		template: require('./dataexportmanualView.html'),
+		scope: {}
+	}
 }];
 
-var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", 'UserService', '$timeout',
-	function ($scope, $q: ng.IQService, $filter, commonvariable, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, UserService, $timeout) {
+var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "Info", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", 'UserService', '$timeout',
+	function ($scope, $q: ng.IQService, $filter, commonvariable, Info, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, UserService, $timeout) {
 
 		// Set "zipped" to true by default
 		$scope.zipped = true;
-			
-			
+
 		$scope.demographicsSelected = false;
 		let currentYear: number = (new Date()).getFullYear();
 		$scope.availableYears = [currentYear - 3, currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
@@ -101,7 +100,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 			$scope.dataExportStatus.visible = false;
 		};
 
-		
+
 		$scope.submit = function () {
 
 			$scope.dataExportStatus.visible = true;
@@ -111,8 +110,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 			const boundDates: BoundDates = getBoundDates();
 			const fileName: string = getFilename();
 			let orgUnits = commonvariable.OrganisationUnitList;
-console.log("orgUnits");
-console.log(orgUnits);
+
 			updateDemographicIfNeeded()
 				.then(getDatasets)
 				.then(dataSets => {
@@ -126,10 +124,10 @@ console.log(orgUnits);
 					}, "");
 
 					const projects = orgUnits.reduce(function (list, orgunit) {
-					if  (orgunit.level==4 && list.indexOf(orgunit.id) ==-1) { return list +  orgunit.id + ";" }
-					if  (orgunit.level==5  && list.indexOf(orgunit.parent.id) ==-1) { return list +  orgunit.parent.id + ";" }
-					if  (orgunit.level==6 && list.indexOf(orgunit.parent.parent.id) ==-1) { return list +  orgunit.parent.parent.id + ";" }
-					else { return list;}
+						if (orgunit.level == 4 && list.indexOf(orgunit.id) == -1) { return list + orgunit.id + ";" }
+						if (orgunit.level == 5 && list.indexOf(orgunit.parent.id) == -1) { return list + orgunit.parent.id + ";" }
+						if (orgunit.level == 6 && list.indexOf(orgunit.parent.parent.id) == -1) { return list + orgunit.parent.parent.id + ";" }
+						else { return list; }
 					}, "");
 
 
@@ -139,24 +137,29 @@ console.log(orgUnits);
 						orgUnits_filter + "&children=true";
 
 					let restUtil = new RESTUtil();
-					restUtil.requestGetData(api_url,
-						data => {
-							if ($scope.zipped) {
-								let zip = new JSZip();
-								zip.file(fileName + '.json', JSON.stringify(data));
-								zip.file($scope.file_name+"_"+  (new Date()).getTime()+ '_project.txt', projects );
-								zip.generateAsync({ type: "blob", compression: "DEFLATE" })
-									.then(function (content) {
-										saveAs(content, fileName + '.json.zip');
-									});
-							}
-							else {
-								let file = new Blob([JSON.stringify(data)], { type: 'application/json' });
-								saveAs(file, fileName + '.json');
-							}
-							$timeout(updateprocess, 5);
-						},
-						() => { });
+					Info.get().$promise.then(
+						info => {
+							var serverDate = info.serverDate;
+							restUtil.requestGetData(api_url,
+								data => {
+									if ($scope.zipped) {
+										let zip = new JSZip();
+										zip.file(fileName + '.json', JSON.stringify(data));
+										zip.file($scope.file_name + "_" + serverDate + '_project.txt', projects);
+										zip.generateAsync({ type: "blob", compression: "DEFLATE" })
+											.then(function (content) {
+												saveAs(content, fileName + '.json.zip');
+											});
+									}
+									else {
+										let file = new Blob([JSON.stringify(data)], { type: 'application/json' });
+										saveAs(file, fileName + '.json');
+									}
+									$timeout(updateprocess, 5);
+								},
+								() => { });
+
+						});
 				});
 		};
 

@@ -38,8 +38,8 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
     var projects = [];
     var sites = [];
     var services = [];
-    var role = null;
-    
+
+
     $scope.cells = [{ name: "Cell1", id: "kZZv93qYHHE" }, { name: "Cell2", id: "S2TjYXvvixI" }, { name: "Cell3", id: "HtTAwt3tb2J" }, { name: "Cell4", id: "WwsadBUxD0X" }, { name: "Cell5", id: "LZBm2f3o63Q" }, { name: "UE", id: "pI3jvvIVWed" }];
     $scope.validationDataStatus = {
         visible: false,
@@ -53,21 +53,15 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
 
         $scope.validationDataStatus.visible = true;
         return getProjectsDatastore(serversPushDatesNamespace).then(
-
             projectsDatastore => {
-
-
                 return getUserMissions().then(
                     missions => {
                         return missions.reduce((total7, mission) => {
                             return total7.then(
                                 /* Buscamos los proyectos para cada mision */
                                 () => {
-
                                     return getMissionProjects(mission, projectsDatastore).then(
-
                                         projects => {
-
                                             return projects.reduce((total6, project) => {
                                                 return total6.then(
                                                     () => {
@@ -76,22 +70,18 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
 
                                                                 lastDatePush = null;
                                                                 if (data != undefined) {
-
                                                                     lastDatePush = data.lastDatePush;
                                                                     lastPushDateSaved = data.lastPushDateSaved;
-                                                                    if (lastPushDateSaved == undefined) { lastPushDateSaved = parseInt(lastDatePush - 30 * 12 * 60 * 60 * 1000) }
-
-
-                                                                    //  $scope.sync_result_date = data.lastDatePush;
+                                                                     if (lastPushDateSaved != lastDatePush) {
                                                                     sites = getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
                                                                     services = getSiteServices(sites);
-
                                                                     return servicesValues(project, services);
+                                                                    }
                                                                 } else { console.log("no hay datos importados"); }
                                                             }
                                                         ).then(
                                                             () => {
-                                                                if (lastDatePush != undefined) {
+                                                                if ((lastDatePush != undefined) && (lastPushDateSaved != lastDatePush)) {
                                                                     return DataStoreService.updateNamespaceKeyArraylastPush(serversPushDatesNamespace, project.id + "_date", lastDatePush);
                                                                 }
                                                             });
@@ -110,19 +100,19 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
     $scope.filterMission = function (filter) {
 
         $scope.missionFilter.missionID = filter.selected;
-        $scope.cellFilter.cellID = "" 
+        $scope.cellFilter.cellID = ""
         $scope.showDetails = false;
     }
 
     $scope.modifycell = function (cell) {
         if (cell != undefined) {
             $scope.cellFilter.cellID = cell.id;
-           
+
         } else { $scope.cellFilter.cellID = "" }
         $scope.missionFilter.missionID = "";
 
-     
-    $scope.filter.selected = ""; 
+
+        $scope.filter.selected = "";
 
         $scope.showDetails = false;
     }
@@ -137,12 +127,12 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
     $scope.show_details = function (project) {
         $scope.searchText.project = project.id;
         $scope.showDetails = true;
-     
+
     }
     $scope.show_details_mission = function (mission) {
         $scope.missionFilter.missionID = mission.id;
         $scope.showProjectsTable = true;
-      
+
     }
 
 
@@ -161,7 +151,7 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
 
     $scope.showZero = function (value) {
         if ($scope.zero == true) {
-        $scope.zeroShow = $scope.greaterThan('datasets', -1);
+            $scope.zeroShow = $scope.greaterThan('datasets', -1);
         }
         else {
             $scope.zeroShow = $scope.greaterThan('datasets', 0);
@@ -181,7 +171,7 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
 
     function readDatastore() {
 
-        $scope.orderByField = 'ServiceName';
+        $scope.orderByField = 'siteName';
         $scope.reverseSort = false;
         $scope.orderByFieldProject = 'missionName';
         $scope.reverseSortProject = false;
@@ -249,11 +239,10 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
 
     function servicesValues(project, services) {
         return services.reduce((total2, service) => {
-              return total2.then(
+            return total2.then(
                 () => {
                     return getDatasets(service.id).then(
                         dataSets => {
-                  
                             return dataSetsValues(dataSets, service, project);
                         });
                 }
@@ -266,22 +255,30 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
         return dataSets.reduce((total3, dataSet) => {
             return total3.then(
                 () => {
-                   // if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
-                    return readDatasetValues(dataSet.id, service.id, new Date(lastPushDateSaved)).then(
-                        dataValues => {
-         
-                            if (dataValues != undefined) {
-                                return updateDatastoreValues(dataValues, project.id, service, dataSet);
-                            }
-                        });
-                     //  }
+                    if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
+                        return readDatasetValues(dataSet.id, service.id, new Date(lastPushDateSaved)).then(
+                            dataValues => {
+                                
+                                if (dataValues != undefined) {
+                                    return updateDatastoreValues(dataValues, project.id, service, dataSet);
+                                }
+                            });
+                    }
                 });
         }, $q.when("Done total 3"));
     }
 
     function updateDatastoreValues(dataValues, project, service, dataSet) {
 
-        return dataValues.reduce((total, dataValue) => {
+        var periods = [];
+        for (var i in dataValues) {
+            periods.push(dataValues[i].period);
+        }
+        var uniquePeriods = [...new Set(periods)];
+
+
+
+        return uniquePeriods.reduce((total, period) => {
             var register = {
                 project: project,
                 siteName: service.siteName,
@@ -290,7 +287,7 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
                 dataSet: dataSet.id,
                 dataSetName: dataSet.name,
                 lastDatePush: lastDatePush,
-                period: dataValue.period
+                period: period
             };
 
 
@@ -359,22 +356,26 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
                 UserService.getCurrentUserTree().then(function (me) {
                     /* Buscamos las misiones que tiene asignadas el usuario */
                     missions = me.dataViewOrganisationUnits;
-                    role = me.userCredentials.userRoles[0].id;
-               
-                    //  if (role == "imjx3wfUjCJ" || role=="nnNYZeZaox6" || role=="LQc5gwr1qMa") { $scope.showMissionsTable = true }
+
+                    $scope.isMedco = false;
+
+                    angular.forEach(me.userCredentials.userRoles, function (userRole) {
+                        $scope.isMedco = userRole.name === "MedCo" ? true : $scope.isMedco;
+                    });
+
                     if (missions[0].level == 1) {
                         missions = missions[0].children[1].children;
                         $scope.showMissions = true
 
                     }
                     if (missions[0].level == 2) {
-                    missions = missions[0].children
-                    $scope.showMissions = true
+                        missions = missions[0].children
+                        $scope.showMissions = true
                     }
-                 
+
 
                     $scope.missions = missions;
-               
+
                     return missions;
                 }));
         });

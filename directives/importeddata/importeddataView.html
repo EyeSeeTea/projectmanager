@@ -108,7 +108,7 @@
         <th><a href="#/dataimport" ng-click="orderByFieldProject='name'; reverseSortProject = !reverseSortProject">Project</a></th>
         <th><a href="#/dataimport" ng-click="orderByFieldProject='lastDatePush'; reverseSortProject = !reverseSortProject">Last Sync</a></th>
         <th><a href="#/dataimport" ng-click="orderByFieldProject='datasets'; reverseSortProject = !reverseSortProject">Datasets</a></th>
-        <th> </th>
+        <th  > </th>
     </tr>
     <tr ng-repeat="project in projects | filter:missionFilter | filter:cellFilter | filter:zeroShow | orderBy:orderByFieldProject:reverseSortProject">
        
@@ -128,7 +128,7 @@
         </td>
         <td>
             <button ng-click="show_details(project);">Details</button>
-            <button ng-click="submit_validate(project);">Validate</button>
+            <button  ng-if="isMedco" ng-click="submit_validate(project);">Validate</button>
         </td>
     </tr>
 
@@ -175,7 +175,7 @@
         </td>
         <td>
             <button ng-click="show_details_dataset(dataset);">Preview</button>
-            <button ng-click="submit_validate_dataset(dataset, $index);">Validate</button>
+            <button  ng-if="isMedco" ng-click="submit_validate_dataset(dataset, $index);">Validate</button>
         </td>
     </tr>
 

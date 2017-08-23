@@ -102,18 +102,35 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 										dateExport = parseInt(dateExport[1]);
 
 
-										var register = { lastDatePush: dateExport };
+										var register = {
+											lastDatePush: dateExport,
+											lastPushDateSaved: parseInt(dateExport - 60 * 24 * 60 * 60 * 1000)
+										};
 										var values = { values: [] };
 
 										for (var i in projects) {
 											if (projects[i] != "") {
 
-												DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projects[i] + "_date", register);
-												DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projects[i] + "_values")
+												var project = projects[i];
+												DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_date")
+													.then(
+													dates => {
+														console.log("project");
+														console.log(project);
+														if (dates.lastDatePushlastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePushlastDatePush }
+														if (dates.lastPushDateSaved != undefined) {
+															register.lastPushDateSaved = dates.lastPushDateSaved
+														}
+														DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_date", register);
+													}
+
+													);
+
+												DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_values")
 													.then(
 													currentValue => {
 														if (currentValue == undefined) {
-															DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projects[i] + "_values", values);
+															DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_values", values);
 														}
 													});
 
@@ -139,23 +156,24 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 		}).progress(function (ev) {
 			console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
 		}).success(function (data) {
-
-			AnalyticsService.refreshAllAnalytics()
-				.then(
-				function (success) {
-					$scope.dataImportStatus.type = 'success';
-					$scope.dataImportStatus.active = false;
-				},
-				function (error) {
-					$scope.dataImportStatus.type = 'danger';
-					$scope.dataImportStatus.active = false;
-					console.log(error);
-				},
-				function (notification) {
-					$scope.analyticsLog.push(notification);
-				}
-				);
-
+			console.log(data);
+			/*
+						AnalyticsService.refreshAllAnalytics()
+							.then(
+							function (success) {
+								$scope.dataImportStatus.type = 'success';
+								$scope.dataImportStatus.active = false;
+							},
+							function (error) {
+								$scope.dataImportStatus.type = 'danger';
+								$scope.dataImportStatus.active = false;
+								console.log(error);
+							},
+							function (notification) {
+								$scope.analyticsLog.push(notification);
+							}
+							);
+			*/
 			$scope.generateSummary(data);
 			$scope.summaryDisplayed = true;
 			logDataimport($file.name, data);
@@ -207,6 +225,11 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 
 	$scope.generateSummary = function (data) {
 		var gt218 = commonvariable.version > "2.18";
+		console.log("gt218");
+		console.log(gt218);
+
+
+
 		for (var dataGroup in data) {
 			if ((dataGroup == 'dataValueCount' && !gt218) || (dataGroup == 'importCount' && gt218)) {
 				for (var dataElement in data[dataGroup]) {

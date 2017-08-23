@@ -61,7 +61,8 @@
 				<ul class="list-group">
 		    		<a id="{{ period.id}}" class="list-group-item" ng-class="{active: periodSelected == period.id}"
 		    				ng-repeat="period in periods | orderObjectBy:'id'" ng-click="clickPeriod(period.id)">
-		    			{{ period.id | d2FormatPeriod }}
+		    		<!--	{{ period.id | d2FormatPeriod }} -->
+						{{ period.id  }}
 		    		</a>
 				</ul>
 			</div>		

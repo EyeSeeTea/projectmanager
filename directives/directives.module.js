@@ -17,7 +17,7 @@ import {datasyncDirective} from  './datasync/datasyncController';
 
 import {importdatamanualDirective} from  './importdatamanual/importdatamanualController';
 import {importeddataDirective} from  './importeddata/importeddataController';
-import {validationdataDirective} from  './validationdata/validationdataController';
+
 import {trackerExportDetailedDirective} from './trackerexportdetailed/trackerExportDetailedController';
 import {trackerExportLatestDirective} from './trackerexportlatest/trackerExportLatestController';
 var formatPeriodFilter = require('./filters/formatPeriod');
@@ -40,7 +40,7 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('aggregateDataSync', datasyncDirective)
     .directive('importDataManual', importdatamanualDirective)
     .directive('importedData', importeddataDirective)
-    .directive('validationData', validationdataDirective)
+   
 
     .filter('orderObjectBy', orderObjectByFilter)
     .filter('d2FormatPeriod', formatPeriodFilter);

@@ -1,4 +1,3 @@
-
 <!--   
    Copyright (c) 2015.
  
@@ -17,31 +16,30 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
 
-<!-- <form name="form_sync" ng-submit="submit_sync()"  ng-hide="online"  novalidate> -->
+<form name="form_sync" ng-submit="submit_sync()" ng-hide="isOnline" novalidate>
 
-<form name="form_sync" ng-submit="submit_sync()"  novalidate>
 
-	<div class="form_group">
-		<button type="submit" id="submit_sync" class="btn btn-primary">{{ 'SYNC' | translate }}</button>
-      
-	</div>
-	<div>
-		<p>Result: {{sync_result}}</p>
-		<p>Last Sync Date: {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
-	</div>
+
+        <div class="form_group">
+                <button type="submit" id="submit_sync" class="btn btn-primary">{{ 'SYNC' | translate }}</button>
+
+        </div>
+        <div>
+                <p>Result: {{sync_result}}</p>
+                <p>Last Sync Date: {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
+        </div>
 </form>
 
-<!-- <form name="form_validation" ng-submit="submitValidationRequest()" ng-show="online" novalidate> --> 
+<form name="form_validation" ng-submit="submitValidationRequest()" ng-show="isOnline" novalidate>
 
-<form name="form_validation" ng-submit="submitValidationRequest()" novalidate>
 
-	<div class="form_group">
-		
-        <button type="submit" id="submitValidationRequest" class="btn btn-primary">{{ 'Validation Request' | translate }}</button>
+        <div class="form_group">
 
-	</div>
-	<div>
-	
-		<p>Last Validation Date: {{validation_date | date:'yyyy-MM-dd HH:mm:ss Z' }}</p>
-	</div>
+                <button type="submit" id="submitValidationRequest" class="btn btn-primary">{{ 'Validation Request' | translate }}</button>
+
+        </div>
+        <div>
+
+                <p>Last Validation Date: {{validation_date | date:'yyyy-MM-dd HH:mm:ss Z' }}</p>
+        </div>
 </form>

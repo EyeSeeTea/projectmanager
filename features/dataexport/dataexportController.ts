@@ -17,12 +17,17 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-export const dataExport = ['$scope', function ($scope) {
+export const dataExport = ['$scope', 'commonvariable', 'UserService', function ($scope, commonvariable, UserService) {
     
     $scope.activeTab = 1;
     
     $scope.setActiveTab = function (item) {
         $scope.activeTab = item;
     };
+    	$scope.isMfp=false;
+       
+        UserService.currentUserHasRole("Medical Focal Point").then(
+            role =>  $scope.isMfp=role);
+        
     
 }];

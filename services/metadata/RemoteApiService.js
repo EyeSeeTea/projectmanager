@@ -56,8 +56,7 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
                                api: remoteUrl.html + '/api',
                                loggerAuth: 'Basic ' + btoa(settings[remoteUserProperty].username + ":" + settings[remoteUserProperty].password)
                            }
-                          console.log(remoteSettings);
-                       } else {
+                        } else {
                            return $q.reject(INVALID_LOGGER_USER);
                        }
                    },
