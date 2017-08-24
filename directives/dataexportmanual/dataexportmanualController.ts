@@ -139,7 +139,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 					let restUtil = new RESTUtil();
 					Info.get().$promise.then(
 						info => {
-							var serverDate = info.serverDate;
+							var serverDate = new Date(info.serverDate).getTime()
 							restUtil.requestGetData(api_url,
 								data => {
 									if ($scope.zipped) {
