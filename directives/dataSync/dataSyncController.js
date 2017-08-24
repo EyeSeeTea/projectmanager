@@ -147,7 +147,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 		}
 
 		$scope.submitValidationRequest = function () {
-			var result_date = null;
+		
 			var sync_result = null;
 			let api_url = commonvariable.url + "/messageConversations";
 			var values = { values: [] }
@@ -189,7 +189,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 
 
 		$scope.submit_sync = function () {
-			var result_date = null;
+		
 			var sync_result = null;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
 
@@ -208,7 +208,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 						data => {
 
 							if (data == null) {
-								sync_result = "Import process completed successfully (No data updated)"
+								sync_result = "Import process completed successfully (No data updated)";
 								$scope.sync_result = sync_result;
 							}
 							else {
@@ -221,7 +221,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 								medcos => {
 									var message = {
 										"subject": "Data Sync - " + projectName,
-										"text": "Data Sync: Date - " + result_date + ". Result: " + sync_result,
+										"text": "Data Sync: Date - " + $scope.sync_result_date  + ". Result: " + sync_result,
 										"users": medcos
 									}
 									sendMessage(message);
