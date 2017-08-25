@@ -303,7 +303,8 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
         return DataExport.get({
             dataSet: datasetUid,
             orgUnit: service,
-            lastUpdated: lastUpdated
+            lastUpdated: lastUpdated,
+            includeDeleted: true
         }).$promise
             .then(function (result) {
                 return result.dataValues;
