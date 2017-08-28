@@ -68,8 +68,6 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 		fileReader.onload = function (e) {
 
 			//fileContent = e.target.result;
-			console.log("file");
-
 			//TODO Fix summary
 
 			if (compress) {
@@ -86,7 +84,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 
 								zipEntry.async("text").then(
 									data => {
-										console.log(data);
+										
 										fileContent = data;
 										upload();
 									})
@@ -95,7 +93,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 
 								zipEntry.async("string").then(
 									data => {
-										console.log(data);
+										
 										//var projects2 = data.replace(/['"]+/g, '');
 										var projects = data.split(";");
 										var dateExport = zipEntry.name.split("_");
@@ -115,9 +113,8 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 												DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_date")
 													.then(
 													dates => {
-														console.log("project");
-														console.log(project);
-														if (dates.lastDatePushlastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePushlastDatePush }
+														
+														if (dates.lastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePush }
 														if (dates.lastPushDateSaved != undefined) {
 															register.lastPushDateSaved = dates.lastPushDateSaved
 														}
@@ -130,7 +127,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 													.then(
 													currentValue => {
 														if (currentValue == undefined) {
-															DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_values", values);
+															DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_values", { values: [] });
 														}
 													});
 
@@ -225,11 +222,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 
 	$scope.generateSummary = function (data) {
 		var gt218 = commonvariable.version > "2.18";
-		console.log("gt218");
-		console.log(gt218);
-
-
-
+		
 		for (var dataGroup in data) {
 			if ((dataGroup == 'dataValueCount' && !gt218) || (dataGroup == 'importCount' && gt218)) {
 				for (var dataElement in data[dataGroup]) {

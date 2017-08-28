@@ -21,11 +21,12 @@ export const importeddataDirective = [function () {
         restrict: 'E',
         controller: importeddataController,
         template: require('./importeddataView.html'),
+        css: require('./importeddataController.css'),
         scope: {}
     }
 }];
 
-var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter', "Analytics", "Organisationunit", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", "DataExport", function ($scope, $interval, $q, $upload, $filter, Analytics, Organisationunit, DataStoreService, UserService, DataImportService, AnalyticsService, DataExport) {
+var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvariable", '$filter', "DataSetEntryForm", "Analytics", "Organisationunit", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", "DataExport", function ($scope, $interval, $q, $upload, commonvariable, $filter, DataSetEntryForm, Analytics, Organisationunit, DataStoreService, UserService, DataImportService, AnalyticsService, DataExport) {
 
     var serversPushDatesNamespace = "ServersPushDates";
     var lastPushDateSaved = null;
@@ -72,10 +73,13 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
                                                                 if (data != undefined) {
                                                                     lastDatePush = data.lastDatePush;
                                                                     lastPushDateSaved = data.lastPushDateSaved;
-                                                                     if (lastPushDateSaved != lastDatePush) {
-                                                                    sites = getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
-                                                                    services = getSiteServices(sites);
-                                                                    return servicesValues(project, services);
+                                                                    if (lastPushDateSaved != lastDatePush) {
+                                                                        sites = getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
+                                                                        services = getSiteServices(sites);
+
+
+
+                                                                        return servicesValues(project, services);
                                                                     }
                                                                 } else { console.log("no hay datos importados"); }
                                                             }
@@ -165,9 +169,74 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
     }
 
     $scope.show_details_dataset = function (dataset) {
-        console.log(dataset);
-        console.log("Details dataset" + dataset.dataSet);
+
+        DataSetEntryForm.get({ dataSetId: dataset.dataSet }).$promise.then(function (dataSetHtml) {
+            var codeHtml = dataSetHtml.codeHtml;
+            codeHtml = codeHtml.replace(/id="tabs"/g, 'id="tabs-' + dataset.dataSet + '"');
+            $("#dataset").html(codeHtml);
+            formatDatasets();
+            readDatasetValuesPreview(dataset.dataSet, dataset.service, dataset.period).then(dataValues => {
+                previewDataset(dataValues, dataset.lastPushDateSaved);
+
+            })
+
+
+
+
+        })
     }
+
+    function previewDataset(dataValues, lastPushDateSaved) {
+
+
+
+        angular.forEach(dataValues, function (datavalue) {
+            var valueCell = $("#" + datavalue.dataElement + "-" + datavalue.categoryOptionCombo + "-val");
+            if (new Date(datavalue.lastUpdated).getTime() > lastPushDateSaved) { valueCell.addClass("newValue") }
+
+            // Check if the dataelement cell exists
+            if (valueCell.length == 1) {
+                if (valueCell.val().length > 0) {
+                    valueCell.val(parseFloat(valueCell.val()) + parseFloat(datavalue.value));
+                } else {
+                    valueCell.val(datavalue.value);
+                }
+            } else {
+                // TODO Manage not present dataelements
+            }
+        });
+    };
+    function formatDatasets() {
+        // Remove section filters
+        $(".sectionFilter").remove();
+
+        // Set entryfields as readonly
+        $(".entryfield").prop("readonly", true);
+
+        // Set some layout to tables
+        $(".sectionTable").addClass("table table-condensed table-bordered table-striped");
+
+        // Modify titles of sections to place them as section header
+        var sectionLinks = $("div[id^='tabs-'] > ul > li > a");
+        sectionLinks.each(function () {
+            var sectionId = $(this).attr("href");
+            if (sectionId.startsWith("#")) { sectionId = sectionId.substring(1); }
+
+            $("#" + sectionId).prepend("<h3>" + $(this).html() + "</h3>");
+            $(this).parent().remove();
+        });
+
+        // Add click event listeners to entryfields
+        $(".entryfield").click(function () {
+            var idtokens = $(this).attr("id").split("-");
+            var de = idtokens[0];
+            var co = idtokens[1];
+            $scope.datahistory = commonvariable.url + "charts/history/data.png?de=" + de + "&co=" + co + "&ou="
+                + $scope.orgunit + "&pe=" + $scope.periodId;
+            $scope.$apply();
+            $("#dataValueHistory").modal();
+        });
+    };
 
     function readDatastore() {
 
@@ -214,6 +283,12 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
                                                             project['missionName'] = mission.name;
                                                             project['missionID'] = mission.id;
                                                             project['cellID'] = getOrgunitCell(project);
+                                                            var today = new Date().getTime();
+
+                                                            var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
+
+                                                            if (diff > 30) { project['overdueSync'] = true }
+
                                                             return DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_values").then(
                                                                 data => {
                                                                     datasets_scope = datasets_scope.concat(data.values);
@@ -258,7 +333,7 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
                     if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
                         return readDatasetValues(dataSet.id, service.id, new Date(lastPushDateSaved)).then(
                             dataValues => {
-                                
+
                                 if (dataValues != undefined) {
                                     return updateDatastoreValues(dataValues, project.id, service, dataSet);
                                 }
@@ -287,6 +362,7 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
                 dataSet: dataSet.id,
                 dataSetName: dataSet.name,
                 lastDatePush: lastDatePush,
+                lastPushDateSaved: lastPushDateSaved,
                 period: period
             };
 
@@ -304,6 +380,17 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', '$filter',
             dataSet: datasetUid,
             orgUnit: service,
             lastUpdated: lastUpdated,
+            includeDeleted: true
+        }).$promise
+            .then(function (result) {
+                return result.dataValues;
+            });
+    }
+    function readDatasetValuesPreview(datasetUid, service, period) {
+        return DataExport.get({
+            dataSet: datasetUid,
+            orgUnit: service,
+            period: period,
             includeDeleted: true
         }).$promise
             .then(function (result) {

@@ -96,7 +96,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 			var values = { values: [] }
 			Info.get().$promise.then(
 				info => {
-					lastDatePush= new Date(info.serverDate).getTime();
+					lastDatePush = new Date(info.serverDate).getTime();
 					register = {
 						lastDatePush: lastDatePush,
 						lastPushDateSaved: parseInt(lastDatePush - 60 * 24 * 60 * 60 * 1000)
@@ -107,12 +107,12 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 						resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
 
 					}).then(function success(dates) {
-						
-							if (dates.data.lastPushDateSaved != undefined) {
-								register.lastPushDateSaved = dates.data.lastPushDateSaved
-							}
 
-						}, function error() {}
+						if (dates.data.lastPushDateSaved != undefined) {
+							register.lastPushDateSaved = dates.data.lastPushDateSaved
+						}
+
+					}, function error() { }
 						).then(
 						() => {
 							RemoteApiService.executeRemoteQuery({
@@ -137,8 +137,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 										});
 								}).then(
 								() => {
-									DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register).then(() => {
-									});
+									DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
 								});
 							$scope.sync_result_date = register.lastDatePush;
 						})
@@ -147,7 +146,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 		}
 
 		$scope.submitValidationRequest = function () {
-		
+
 			var sync_result = null;
 			let api_url = commonvariable.url + "/messageConversations";
 			var values = { values: [] }
@@ -189,7 +188,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 
 
 		$scope.submit_sync = function () {
-		
+
 			var sync_result = null;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
 
@@ -221,7 +220,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 								medcos => {
 									var message = {
 										"subject": "Data Sync - " + projectName,
-										"text": "Data Sync: Date - " + $scope.sync_result_date  + ". Result: " + sync_result,
+										"text": "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
 										"users": medcos
 									}
 									sendMessage(message);
@@ -253,8 +252,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 			return getMission(projectId).then(mission => {
 				return getUsersMissions(mission).then(
 					users => {
-						//console.log("users");
-						//console.log(users);
+
 						for (var user in users) {
 							for (var role in users[user].userCredentials.userRoles) {
 								if (users[user].userCredentials.userRoles[role].id == "IQ6i3gWsYYa") {

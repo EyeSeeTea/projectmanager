@@ -74,32 +74,6 @@
 	</div>
 </div>
 
-<!--
-<table class="table table-bordered table-condensed table-hover" ng-show="showMissionsTable">
-
- <tr>
-    
-    <th>Mission</th>
-    
-    
-    <th> </th>
-  </tr>
-    <tr ng-repeat="mission in missions | filter:missionFilter | filter:cellFilter ">
-         
-        <td>
-            {{ mission.name }}
-        </td>
-     
-        <td>
-            <button ng-click="show_details_mission(mission);">Details</button>
-             
-         </td>
-    </tr>
-
-</table>
-
--->
-
 
 <table class="table table-bordered table-condensed table-hover" ng-show="showProjectsTable">
 
@@ -120,7 +94,7 @@
         <td>
             {{ project.name }}
         </td>
-        <td>
+        <td ng-class="{ overdue: project.overdueSync == true }" >
             {{ project.lastDatePush | date:'yyyy-MM-dd HH:mm:ss Z' }}
         </td>
         <td>
@@ -137,7 +111,7 @@
 <table class="table table-bordered table-condensed table-hover" ng-show="showDetails">
 
     <tr>
-        <!-- <th>Project</th> -->
+     
         <th><a href="#/dataimport" ng-click="orderByField='siteName'; reverseSort = !reverseSort">Site</a></th>
         <th> <a href="#/dataimport" ng-click="orderByField='serviceName'; reverseSort = !reverseSort">Service </a></th>
         <th><a href="#/dataimport" ng-click="orderByField='dataSetName'; reverseSort = !reverseSort">Dataset</a></th>
@@ -148,19 +122,13 @@
 
     <tr ng-repeat="dataset in datasets  | filter:searchText | orderBy:orderByField:reverseSort ">
 
-        <!--       <td>
-            {{ dataset.project }}
-        </td> -->
         <td>
             {{ dataset.siteName }}
         </td>
         <td>
             {{ dataset.serviceName }}
         </td>
-        <!--   <td>
-            {{ dataset.service }}
-        </td>-->
-
+       
         <td>
             {{ dataset.dataSetName }}
         </td>
@@ -180,3 +148,5 @@
     </tr>
 
 </table>
+
+<div id="dataset"></div>
