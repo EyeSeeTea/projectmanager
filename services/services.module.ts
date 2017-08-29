@@ -17,7 +17,7 @@ import { SystemService } from './system/SystemService';
 var programsService = require('./programs/ProgramService');
 var remoteApiService = require('./metadata/RemoteApiService');
 var sqlService = require('./sql/SqlService');
-var userService = require('./users/UserService');
+import { UserService } from './users/UserService';
 
 export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .factory('AnalyticsService', analyticsService)
@@ -35,12 +35,13 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .factory('ProgramService', programsService)
     .factory('RemoteApiService', remoteApiService)
     .factory('sqlService', sqlService)
-    .factory('UserService', userService);
+    .factory('UserService', UserService);
 
 export {
     EventExportService,
     EventHelper,
     EventImportService,
     orgunitGroupSetService,
-    SystemService
+    SystemService,
+    UserService
 }
