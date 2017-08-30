@@ -47,4 +47,10 @@ export class SystemService {
         )
     }
 
+    sleep(milliseconds: number): ng.IPromise<any> {
+        const deferred = this.$q.defer();
+        setTimeout(() => deferred.resolve("Done"), milliseconds);
+        return deferred.promise;
+    }
+
 }

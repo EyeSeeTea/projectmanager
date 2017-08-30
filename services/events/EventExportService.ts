@@ -19,15 +19,19 @@
 
 import * as angular from 'angular';
 import { Orgunit, Program } from '../../model/model';
-import { EventHelper } from './EventHelper';
+import { EventHelper, SystemService } from '../services.module';
 
 export class EventExportService {
 
-    static $inject = ['$q','EventHelper', 'Events', 'TrackedEntityInstances', 'Enrollments'];
+    static $inject = ['$q','EventHelper', 'SystemService', 'Events', 'TrackedEntityInstances', 'Enrollments'];
+
+    // Minumum time (in seconds) since the lastUpdated event
+    private minTimeAfterUpdates = 10 
 
     constructor(
         private $q: ng.IQService, 
-        private EventHelper: EventHelper, 
+        private EventHelper: EventHelper,
+        private SystemService: SystemService, 
         private Events, 
         private TrackedEntityInstances, 
         private Enrollments
@@ -182,15 +186,31 @@ export class EventExportService {
     }
     
     private getEventsFromOrgunitAndPrograms (commonParams: any, orgunits: Orgunit[], programs: Program[]): ng.IPromise<EventList> {
+        let maxLastUpdatedDateAllowed: Date;
         let eventsPromises = [];
         this.getOrgunitProgramCombo(orgunits, programs).forEach( (customParams) => {
             eventsPromises.push(this.Events.get(angular.extend({}, commonParams, customParams)).$promise);
         });
 
-        return this.$q.all(eventsPromises).then(
-            (eventsArray: EventList[]) => eventsArray.reduce( (totalEvents: EventList, eventsResult: EventList) => {
+        return this.SystemService.getServerDateWithoutTimezone().then( serverDateResponse => {
+            maxLastUpdatedDateAllowed = new Date(serverDateResponse);
+            maxLastUpdatedDateAllowed.setSeconds(maxLastUpdatedDateAllowed.getSeconds() - this.minTimeAfterUpdates);
+            return null;
+        })
+            .then( () => this.$q.all(eventsPromises))
+            .then( (eventsArray: EventList[]) => {
+                const eventList = eventsArray.reduce( (totalEvents: EventList, eventsResult: EventList) => {
                     return new EventList(totalEvents.events.concat(eventsResult.events));
                 }, EventList.empty)
+                const recentlyUpdated = eventList.events.some(event => new Date(event.lastUpdated) > maxLastUpdatedDateAllowed)
+                if (recentlyUpdated) {
+                    console.log("EventExportService: delaying event export for " + this.minTimeAfterUpdates + " seconds");
+                    return this.SystemService.sleep(this.minTimeAfterUpdates * 1000)
+                        .then(() => this.getEventsFromOrgunitAndPrograms(commonParams, orgunits, programs));
+                } else {
+                    return eventList;
+                }
+            }
         )
     }
 
