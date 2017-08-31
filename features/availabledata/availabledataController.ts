@@ -17,23 +17,16 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import * as angular from 'angular';
-import { ProgressStatus } from '../../model/model';
+import { AvailableDataItem, ProgressStatus } from '../../model/model';
 import { AnalyticsService } from '../../services/services.module';
 
 export class AvailableData {
 
 	static $inject = ["$q", "$http", "$parse", "Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "userDataStoreService", "AnalyticsService"];
 
-	constructor(
-		private $q: ng.IQService,
-		private $http: ng.IHttpService,
-		private $parse: ng.IParseService,
-		private Organisationunit,
-		private OrganisationUnitGroupSet,
-		private OrgunitGroupSetService,
-		private UserService,
-		private userDataStoreService,
-		private AnalyticsService: AnalyticsService
+	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
+				private Organisationunit, private OrganisationUnitGroupSet,	private OrgunitGroupSetService,
+				private UserService, private userDataStoreService, private AnalyticsService: AnalyticsService
 	){
 		// Initialize table
 		this.loadUserSettings()
@@ -61,8 +54,8 @@ export class AvailableData {
 	selectedFilters = {};
 	orgunitsInfo = {};
 	periods;
-	tableRows = [];
-	tableDisplayed = false;
+	tableRows: AvailableDataItem[] = [];
+	tableDisplayed: boolean = false;
 
 	loadUserSettings() {
 		return this.userDataStoreService.getCurrentUserSettings().then(
@@ -107,18 +100,18 @@ export class AvailableData {
 
 				// Add orgunits to orgunitsInfo. That info will be required later.
 				this.orgunitsInfo[dataViewOrgUnit.id] = dataViewOrgUnit;
-				$.map(dataViewOrgUnit.children, child => this.orgunitsInfo[child.id] = child);
+				dataViewOrgUnit.children.map( child => this.orgunitsInfo[child.id] = child );
 
 				this.$q.all([parentPromise, childrenPromise])
 					.then( analyticsData => {
-						var parentResult = analyticsData[0];
-						var childrenResult = analyticsData[1];
+						const parentResult = analyticsData[0];
+						const childrenResult = analyticsData[1];
 
 						// Generate public period array. It is required for other functions
 						this.regenerateScopePeriodArray(parentResult);
 
-						var parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, []);
-						var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id]);
+						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, []);
+						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id]);
 						this.tableRows = this.tableRows.concat(parentRows).concat(childrenRows);
 						
 						// Make visible orgunits under dataViewOrgunit
@@ -135,13 +128,12 @@ export class AvailableData {
 	}
 
 	private regenerateScopePeriodArray(analyticsResponse) {
-		this.periods = [];
-		angular.forEach(analyticsResponse.metaData.dimensions.pe, pe => {
-			this.periods.push({
-				id: pe,
+		this.periods = analyticsResponse.metaData.dimensions.pe.map(period => {
+			return {
+				id: period,
 				//name: "period"
-				name: analyticsResponse.metaData.items[pe].name
-			})
+				name: analyticsResponse.metaData.items[period].name
+			}
 		});
 	}
 
@@ -189,7 +181,6 @@ export class AvailableData {
 				childrenHierarchy.push(orgunit.id);
 				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy);
 				this.tableRows = this.tableRows.concat(childrenRows);
-
 			})
 			.finally( () => {
 				// Once finished, remove loadingIcon
@@ -197,14 +188,9 @@ export class AvailableData {
 			});
 	}
 
-	private childrenLoaded(orgunitId) {
-		var children = this.orgunitsInfo[orgunitId].children;
-		for(var i = 0; i < children.length; i++){
-			if(this.orgunitsInfo[children[i].id] != undefined) {
-				return true;
-			}
-		}
-		return false;
+	private childrenLoaded(orgunitId): boolean {
+		return this.orgunitsInfo[orgunitId].children
+			.some( child => this.orgunitsInfo[child.id] != undefined );
 	}
 
 	private addLoadingIcon(orgunitId) {

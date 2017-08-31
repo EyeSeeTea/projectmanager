@@ -18,6 +18,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import * as angular from 'angular';
+import { AvailableDataItem } from '../../model/model';
 
 export class AnalyticsService {
 
@@ -100,7 +101,7 @@ export class AnalyticsService {
      * @param hierarchy - hierarchy arrya, like ["fiasdfl3fj","aldfkjlskf"] (parents). Only applicable if isRoot == false
      * @returns {*} - Result data structure
      */
-    formatAnalyticsResult(analytics, orgunitsInfo, hierarchy): AvailableDataItem[][] {
+    formatAnalyticsResult(analytics, orgunitsInfo, hierarchy): AvailableDataItem[] {
         let orgunits: {[key: string]: AvailableDataItem} = {};
         angular.forEach(analytics.metaData.dimensions.ou, function(orgunit) {
                 var fullName = hierarchy.map(function (parent) {
@@ -129,7 +130,7 @@ export class AnalyticsService {
             orgunits[row[0]].data[row[1]] = row[2];
         });
 
-        return $.map(orgunits, (orgunit, id) => [orgunit])
+        return $.map(orgunits, (orgunit, id) => orgunit)
     };
 
     /**
@@ -196,18 +197,5 @@ class AnalyticsParameters {
         public hierarchyMeta: string,
         public displayProperty: string,
         public filter?: any
-    ){}
-}
-
-class AvailableDataItem {
-    constructor(
-        public id: string,       // Orgunit id
-        public name: string,
-        public fullName: string,
-        public parents: string[],
-        public level: number,
-        public relativeLevel: number,
-        public isLastLevel: boolean,
-        public data: any
     ){}
 }
