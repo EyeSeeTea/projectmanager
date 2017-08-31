@@ -4,7 +4,7 @@ require('../directives/directives.module');
 
 
 import {Analytics} from './analytics/analyticsController';
-var availableData = require('./availabledata/availabledataController');
+import {AvailableData} from './availabledata/availabledataController';
 import {dataExport} from './dataexport/dataexportController';
 var dataImport = require('./dataimport/dataimportController');
 var metadataExport = require('./metadataexport/metadataexportController');
@@ -15,7 +15,7 @@ import {TrackerDataImport} from './trackerdataimport/trackerDataImportController
 
 var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Services'])
     .controller('analyticsController', Analytics)
-    .controller('availabledataController', availableData)
+    .controller('availabledataController', AvailableData)
     .controller('dataexportController', dataExport)
     .controller('dataimportController', dataImport)
     .controller('metadataexportController', metadataExport)
