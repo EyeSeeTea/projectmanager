@@ -85,7 +85,7 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/availabledata', {
 		template: require('./features/availabledata/availabledataView.html'),
-		controller: 'availabledataController',
+		controller: 'availabledataController as ctrl',
 		css: require('./features/availabledata/availabledataCss.css')
 	});
 	$routeProvider.when('/hmisadoption', {
