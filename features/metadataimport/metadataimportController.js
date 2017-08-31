@@ -32,13 +32,13 @@ var metadataImport = ["$scope", "$q", "commonvariable", "MetadataSyncService", "
 	// Initialize metadata sync information
 	function initMetadataSyncInfo() {
 		return MetadataSyncService.getLocalMetadataVersion()
-			.then(setLocalMetadataVersion)
-			.then(MetadataSyncService.isRemoteServerAvailable)
-			.then(MetadataSyncService.getRemoteMetadataVersion)
-			.then(setRemoteMetadataVersion)
-			.then(MetadataSyncService.getVersionDifference)
-			.then(setVersionDiff)
-			.catch(function (message) {
+			.then(localVersion => setLocalMetadataVersion(localVersion))
+			.then(() => MetadataSyncService.isRemoteServerAvailable())
+			.then(() => MetadataSyncService.getRemoteMetadataVersion())
+			.then(remoteVersion => setRemoteMetadataVersion(remoteVersion))
+			.then(() => MetadataSyncService.getVersionDifference())
+			.then(versionDiff => setVersionDiff(versionDiff))
+			.catch((message) => {
 				$scope.metadataSyncError = message;
 				$q.reject(message);
 			});
@@ -116,8 +116,8 @@ var metadataImport = ["$scope", "$q", "commonvariable", "MetadataSyncService", "
 					$scope.localMetadataVersion = data.currentVersion;
 				}
 			)
-			.then(DemographicsService.updateDemographicData)
-			.then(AnalyticsService.refreshAnalytics)
+			.then(() => DemographicsService.updateDemographicData())
+			.then(() => AnalyticsService.refreshAnalytics())
 			.then(
 				function (success) {
 					$scope.progressStatus.type = 'success';
@@ -148,9 +148,9 @@ var metadataImport = ["$scope", "$q", "commonvariable", "MetadataSyncService", "
 
 			$scope.analyticsLog = [];
 			MetadataImportService.importMetadataFile($file)
-				.then(printImportSummary)
-				.then(DemographicsService.updateDemographicData)
-				.then(AnalyticsService.refreshAllAnalytics)
+				.then(data => printImportSummary(data))
+				.then(() => DemographicsService.updateDemographicData())
+				.then(() => AnalyticsService.refreshAllAnalytics())
 				.then(
 					function (success) {
 						$scope.progressStatus.type = 'success';
