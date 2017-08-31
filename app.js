@@ -57,7 +57,7 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/analytics', {
 		template: require('./features/analytics/analyticsView.html'),
-		controller: 'analyticsController'
+		controller: 'analyticsController as ctrl'
 	});
 	$routeProvider.when('/dataimport', {
 		template: require('./features/dataimport/dataimportView.html'),

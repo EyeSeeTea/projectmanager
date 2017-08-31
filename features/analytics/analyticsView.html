@@ -21,20 +21,20 @@
 
 <br/>
 <div class="col-md-6">
-	<d2-progressbar-dynamic status="progressStatus"></d2-progressbar-dynamic>
+	<d2-progressbar-dynamic status="ctrl.progressStatus"></d2-progressbar-dynamic>
 </div>
 
 <div class="col-md-12 form_group">
-	<button type="button" ng-click="analytics()" class="btn btn-primary">{{ 'ANALYTICS_BUTTON' | translate }}</button>
+	<button type="button" ng-click="ctrl.analytics()" class="btn btn-primary">{{ 'ANALYTICS_BUTTON' | translate }}</button>
 </div>
 
 <br/>
-<div id="summary" ng-show="summaryDisplayed">
+<div id="summary" ng-show="ctrl.summaryDisplayed">
 	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 	
 	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
 		<tbody>
-		<tr ng-repeat="notification in notifications | orderBy:'-time'">
+		<tr ng-repeat="notification in ctrl.notifications | orderBy:'-time'">
 			<td>{{notification.time}}</td>
 			<td>: {{notification.message}}</td>
 		</tr>
