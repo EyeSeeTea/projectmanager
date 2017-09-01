@@ -1,5 +1,3 @@
-
-
 /* 
    Copyright (c) 2015.
  
@@ -18,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-
+import { RESTUtil, ValidationRecord } from '../../model/model';
 
 export const datasyncDirective = [function () {
 	return {
@@ -31,34 +29,29 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "Organisationunit", "DataExport", "messageConversations", "RemoteApiService", "DataStoreService", 'UserService',
-	function ($scope, $q, $filter, commonvariable, Info, Organisationunit, DataExport, messageConversations, RemoteApiService, DataStoreService, UserService) {
+var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisationunit",  "messageConversations", "RemoteApiService", "DataStoreService", 'UserService',
+	function ($scope, $q: ng.IQService, commonvariable, Info, Organisationunit, messageConversations, RemoteApiService, DataStoreService, UserService) {
 
 		var projectId = null;
 		var projectName = null;
-		var medcoID = null;
 		$scope.sync_result = "";
 		$scope.sync_result_date = "";
-		var namespace = "dataPush";
 		var lastDatePush = null;
 		var lastPushDateSaved = null;
 		var serversPushDatesNamespace = "ServersPushDates";
 
-		var register = {
-			lastDatePush: null,
-			lastPushDateSaved: null
-		};
+		var register: ValidationRecord = new ValidationRecord(null, null);
 
 		UserService.getCurrentUser()
-			.then(function (user) {
+			.then(user => {
 				$scope.isOnline = commonvariable.isOnline
 				projectId = user.organisationUnits[0].id;
 				projectName = user.organisationUnits[0].name;
 				DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date").then(
-					data => {
+					(data: ValidationRecord) => {
 						lastDatePush = data.lastDatePush;
 						lastPushDateSaved = data.lastPushDateSaved;
-						if (lastPushDateSaved == undefined) { lastPushDateSaved = parseInt(lastDatePush - 60 * 12 * 60 * 60 * 1000) }
+						if (lastPushDateSaved == undefined) { lastPushDateSaved = (lastDatePush - 60 * 12 * 60 * 60 * 1000) }
 						$scope.sync_result_date = data.lastDatePush;
 						$scope.validation_date = data.lastDatePush;
 					}, error => {
@@ -67,30 +60,6 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 				);
 			});
 
-		class RESTUtil {
-
-			requestGetData(url, successFunc, failFunc) {
-				return $.ajax({
-					type: "GET",
-					dataType: "json",
-					url: url,
-					async: true,
-					success: successFunc,
-					error: failFunc
-				});
-			};
-
-			requestPostData(url, successFunc, failFunc) {
-				return $.ajax({
-					type: "POST",
-					dataType: "json",
-					url: url,
-					async: true,
-					success: successFunc,
-					error: failFunc
-				});
-			};
-		};
 
 		function writeRegisterInRemoteServer(projectId) {
 			var values = { values: [] }
@@ -99,7 +68,7 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 					lastDatePush = new Date(info.serverDate).getTime();
 					register = {
 						lastDatePush: lastDatePush,
-						lastPushDateSaved: parseInt(lastDatePush - 60 * 24 * 60 * 60 * 1000)
+						lastPushDateSaved: (lastDatePush - 60 * 24 * 60 * 60 * 1000)
 					};
 
 					RemoteApiService.executeRemoteQuery({
@@ -158,16 +127,16 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 						lastPushDateSaved: lastPushDateSaved
 					};
 					UserService.getCurrentUser()
-						.then(function (user) {
+						.then(user => {
 							projectId = user.organisationUnits[0].id;
 							projectName = user.organisationUnits[0].name;
 							getMedco(projectId).then(
 								medcos => {
 
 									var message = {
-										"subject": "Data Validation Request - " + projectName,
-										"text": "Data Validation Request: Date - " + register.lastDatePush,
-										"users": medcos
+										subject: "Data Validation Request - " + projectName,
+										text: "Data Validation Request: Date - " + register.lastDatePush,
+										users: medcos
 									}
 
 									sendMessageOnline(message);
@@ -188,13 +157,10 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 
 
 		$scope.submit_sync = function () {
-
 			var sync_result = null;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
-
-
 			UserService.getCurrentUser()
-				.then(function (user) {
+				.then(user => {
 					projectId = user.organisationUnits[0].id;
 					projectName = user.organisationUnits[0].name;
 
@@ -205,7 +171,6 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 					let restUtil = new RESTUtil();
 					restUtil.requestPostData(api_url,
 						data => {
-
 							if (data == null) {
 								sync_result = "Import process completed successfully (No data updated)";
 								$scope.sync_result = sync_result;
@@ -219,9 +184,9 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 							getMedco(projectId).then(
 								medcos => {
 									var message = {
-										"subject": "Data Sync - " + projectName,
-										"text": "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
-										"users": medcos
+										subject: "Data Sync - " + projectName,
+										text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
+										users: medcos
 									}
 									sendMessage(message);
 								});
@@ -244,7 +209,6 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 
 		function sendMessageOnline(message) {
 			messageConversations.post(message);
-
 		}
 
 		function getMedco(projectId) {
@@ -252,7 +216,6 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 			return getMission(projectId).then(mission => {
 				return getUsersMissions(mission).then(
 					users => {
-
 						for (var user in users) {
 							for (var role in users[user].userCredentials.userRoles) {
 								if (users[user].userCredentials.userRoles[role].id == "IQ6i3gWsYYa") {
@@ -283,7 +246,6 @@ var datasyncController = ["$scope", "$q", "$filter", "commonvariable", "Info", "
 			return $q(function (resolve) {
 				resolve(
 					Organisationunit.get({ filter: 'id:eq:' + mission, fields: 'id,name,users[id,userCredentials[userRoles[id]]]' }).$promise.then(
-
 						mission => {
 							return mission.organisationUnits[0].users;
 						}

@@ -102,7 +102,7 @@
         </td>
         <td>
             <button ng-click="show_details(project);">Details</button>
-            <button  ng-if="isMedco" ng-click="submit_validate(project);">Validate</button>
+            <!-- <button  ng-if="isMedco" ng-click="submit_validate(project);">Validate</button> -->
         </td>
     </tr>
 
@@ -149,4 +149,4 @@
 
 </table>
 
-<div id="dataset"></div>
+<div id="dataset" ng-show="showDetails"></div>

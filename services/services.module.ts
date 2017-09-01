@@ -35,7 +35,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .factory('ProgramService', programsService)
     .factory('RemoteApiService', remoteApiService)
     .factory('sqlService', sqlService)
-    .factory('UserService', UserService);
+    .service('UserService', UserService);
 
 export {
     EventExportService,

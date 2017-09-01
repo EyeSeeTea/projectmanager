@@ -26,7 +26,7 @@ export const importeddataDirective = [function () {
     }
 }];
 
-var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvariable", '$filter', "DataSetEntryForm", "Analytics", "Organisationunit", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", "DataExport", function ($scope, $interval, $q, $upload, commonvariable, $filter, DataSetEntryForm, Analytics, Organisationunit, DataStoreService, UserService, DataImportService, AnalyticsService, DataExport) {
+var importeddataController = ["$scope", "$q", "commonvariable",  "DataSetEntryForm",  "Organisationunit", "DataStoreService", "UserService",  "DataExport", function ($scope,  $q,  commonvariable,  DataSetEntryForm, Organisationunit, DataStoreService, UserService, DataExport) {
 
     var serversPushDatesNamespace = "ServersPushDates";
     var lastPushDateSaved = null;
@@ -51,7 +51,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
 
 
     function fillDatastore() {
-
         $scope.validationDataStatus.visible = true;
         return getProjectsDatastore(serversPushDatesNamespace).then(
             projectsDatastore => {
@@ -68,7 +67,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                                                     () => {
                                                         return DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
                                                             data => {
-
                                                                 lastDatePush = null;
                                                                 if (data != undefined) {
                                                                     lastDatePush = data.lastDatePush;
@@ -76,9 +74,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                                                                     if (lastPushDateSaved != lastDatePush) {
                                                                         sites = getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
                                                                         services = getSiteServices(sites);
-
-
-
                                                                         return servicesValues(project, services);
                                                                     }
                                                                 } else { console.log("no hay datos importados"); }
@@ -97,12 +92,9 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                     });
             }
         );
-
-
     }
 
     $scope.filterMission = function (filter) {
-
         $scope.missionFilter.missionID = filter.selected;
         $scope.cellFilter.cellID = ""
         $scope.showDetails = false;
@@ -111,13 +103,9 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
     $scope.modifycell = function (cell) {
         if (cell != undefined) {
             $scope.cellFilter.cellID = cell.id;
-
         } else { $scope.cellFilter.cellID = "" }
         $scope.missionFilter.missionID = "";
-
-
         $scope.filter.selected = "";
-
         $scope.showDetails = false;
     }
 
@@ -125,24 +113,19 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
     $scope.submit_validate = function (project) {
         console.log(project);
         console.log("Validar" + project.id);
-
-
     }
+
     $scope.show_details = function (project) {
         $scope.searchText.project = project.id;
         $scope.showDetails = true;
-
     }
+
     $scope.show_details_mission = function (mission) {
         $scope.missionFilter.missionID = mission.id;
         $scope.showProjectsTable = true;
-
     }
 
-
-
     $scope.submit_validate_dataset = function (dataset) {
-
         return DataStoreService.deleteNamespaceKeyValue(serversPushDatesNamespace, dataset.project + "_values", dataset).then(
             datasets => {
                 var index = $scope.datasets.indexOf(dataset);
@@ -169,7 +152,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
     }
 
     $scope.show_details_dataset = function (dataset) {
-
         DataSetEntryForm.get({ dataSetId: dataset.dataSet }).$promise.then(function (dataSetHtml) {
             var codeHtml = dataSetHtml.codeHtml;
             codeHtml = codeHtml.replace(/id="tabs"/g, 'id="tabs-' + dataset.dataSet + '"');
@@ -177,19 +159,11 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
             formatDatasets();
             readDatasetValuesPreview(dataset.dataSet, dataset.service, dataset.period).then(dataValues => {
                 previewDataset(dataValues, dataset.lastPushDateSaved);
-
             })
-
-
-
-
         })
     }
 
     function previewDataset(dataValues, lastPushDateSaved) {
-
-
-
         angular.forEach(dataValues, function (datavalue) {
             var valueCell = $("#" + datavalue.dataElement + "-" + datavalue.categoryOptionCombo + "-val");
             if (new Date(datavalue.lastUpdated).getTime() > lastPushDateSaved) { valueCell.addClass("newValue") }
@@ -209,19 +183,15 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
     function formatDatasets() {
         // Remove section filters
         $(".sectionFilter").remove();
-
         // Set entryfields as readonly
         $(".entryfield").prop("readonly", true);
-
         // Set some layout to tables
         $(".sectionTable").addClass("table table-condensed table-bordered table-striped");
-
         // Modify titles of sections to place them as section header
         var sectionLinks = $("div[id^='tabs-'] > ul > li > a");
         sectionLinks.each(function () {
             var sectionId = $(this).attr("href");
             if (sectionId.startsWith("#")) { sectionId = sectionId.substring(1); }
-
             $("#" + sectionId).prepend("<h3>" + $(this).html() + "</h3>");
             $(this).parent().remove();
         });
@@ -266,7 +236,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                 return getUserMissions().then(
                     missions => {
                         angular.forEach(missions, function (mission) {
-                            /* Buscamos los proyectos para cada mision */
                             mission['missionID'] = mission.id;
                             mission['cellID'] = getOrgunitCell(mission);
                             return getMissionProjects(mission, projectsDatastore).then(
@@ -284,11 +253,8 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                                                             project['missionID'] = mission.id;
                                                             project['cellID'] = getOrgunitCell(project);
                                                             var today = new Date().getTime();
-
                                                             var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
-
                                                             if (diff > 30) { project['overdueSync'] = true }
-
                                                             return DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_values").then(
                                                                 data => {
                                                                     datasets_scope = datasets_scope.concat(data.values);
@@ -307,10 +273,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                     });
             });
     }
-
-
-
-
 
     function servicesValues(project, services) {
         return services.reduce((total2, service) => {
@@ -333,7 +295,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                     if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
                         return readDatasetValues(dataSet.id, service.id, new Date(lastPushDateSaved)).then(
                             dataValues => {
-
                                 if (dataValues != undefined) {
                                     return updateDatastoreValues(dataValues, project.id, service, dataSet);
                                 }
@@ -344,17 +305,14 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
     }
 
     function updateDatastoreValues(dataValues, project, service, dataSet) {
-
         var periods = [];
         for (var i in dataValues) {
             periods.push(dataValues[i].period);
         }
         var uniquePeriods = [...new Set(periods)];
 
-
-
         return uniquePeriods.reduce((total, period) => {
-            var register = {
+            var uniquePeriodRecord = {
                 project: project,
                 siteName: service.siteName,
                 service: service.id,
@@ -365,19 +323,17 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                 lastPushDateSaved: lastPushDateSaved,
                 period: period
             };
-
-
             return total.then(
                 () => {
-                    return DataStoreService.updateNamespaceKeyArrayPeriod(serversPushDatesNamespace, project + "_values", register)
+                    return DataStoreService.updateNamespaceKeyArrayPeriod(serversPushDatesNamespace, project + "_values", uniquePeriodRecord)
                 })
         }, $q.when("Done total"));
     }
 
 
-    function readDatasetValues(datasetUid, service, lastUpdated) {
+    function readDatasetValues(datasetId, service, lastUpdated) {
         return DataExport.get({
-            dataSet: datasetUid,
+            dataSet: datasetId,
             orgUnit: service,
             lastUpdated: lastUpdated,
             includeDeleted: true
@@ -386,9 +342,10 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                 return result.dataValues;
             });
     }
-    function readDatasetValuesPreview(datasetUid, service, period) {
+
+    function readDatasetValuesPreview(datasetId, service, period) {
         return DataExport.get({
-            dataSet: datasetUid,
+            dataSet: datasetId,
             orgUnit: service,
             period: period,
             includeDeleted: true
@@ -406,6 +363,7 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
                 return data.organisationUnits[0].dataSets;
             });
     }
+
     function projectsFilter(value) {
         return value.indexOf("date") > -1
     }
@@ -441,29 +399,22 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
     function getUserMissions() {
         return $q(function (resolve) {
             resolve(
-                UserService.getCurrentUserTree().then(function (me) {
+                UserService.getCurrentUserTree().then(me => {
                     /* Buscamos las misiones que tiene asignadas el usuario */
                     missions = me.dataViewOrganisationUnits;
-
                     $scope.isMedco = false;
-
                     angular.forEach(me.userCredentials.userRoles, function (userRole) {
                         $scope.isMedco = userRole.name === "MedCo" ? true : $scope.isMedco;
                     });
-
                     if (missions[0].level == 1) {
                         missions = missions[0].children[1].children;
                         $scope.showMissions = true
-
                     }
                     if (missions[0].level == 2) {
                         missions = missions[0].children
                         $scope.showMissions = true
                     }
-
-
                     $scope.missions = missions;
-
                     return missions;
                 }));
         });
@@ -471,19 +422,15 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
 
     function getMissionProjects(mission, projectsDatastore) {
         return $q(function (resolve) {
-
             projects = mission.children;
             var projects2 = [];
             angular.forEach(projects, function (project, index2) {
                 var index = projectsDatastore.indexOf(project.id);
-                //  console.log("project " + project.id + " index " + index2 + " index encontrado " + index);
                 if (index > -1) {
                     projects2[index] = project
                 }
             });
-
             resolve(projects2);
-            //  })
         });
 
     }
@@ -506,8 +453,6 @@ var importeddataController = ["$scope", '$interval', "$q", '$upload', "commonvar
         return services;
     }
 
-
     fillDatastore().then(() => { readDatastore(); });
 
 }];
-

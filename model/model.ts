@@ -47,3 +47,35 @@ export class ProgressStatus {
     static doneWithFailure: ProgressStatus = new ProgressStatus(true, false, "danger", 100);
     static hidden: ProgressStatus = new ProgressStatus(false, false, "info", 100);
 }
+
+export class ValidationRecord {
+    constructor(
+        public lastDatePush: number,
+        public lastPushDateSaved: number
+    ){}
+}
+
+export class RESTUtil {
+
+    requestGetData(url, successFunc, failFunc) {
+        return $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: url,
+            async: true,
+            success: successFunc,
+            error: failFunc
+        });
+    };
+
+    requestPostData(url, successFunc, failFunc) {
+        return $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url,
+            async: true,
+            success: successFunc,
+            error: failFunc
+        });
+    };
+};

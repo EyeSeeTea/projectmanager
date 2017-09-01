@@ -1,4 +1,3 @@
-
 /*
  Copyright (c) 2015.
 
@@ -124,8 +123,6 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
             });
     }
 
-
-
     /**
         * Introduces a new value in the array. This methods expects the value of the pair (namespace, key) to be an array.
         * If the value is empty, it creates a new array.
@@ -167,8 +164,7 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
                     return DataStore.put({ namespace: namespace, key: key }, currentValue)
 
                     }
-
-                    
+      
 
                 } else {
                     currentValue = {};
@@ -177,11 +173,6 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
                 }
             });
     };
-
-
-
-
-
 
 
     /**
@@ -224,21 +215,6 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
                 } 
             });
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -297,12 +273,6 @@ var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserSer
 
         )
     };
-
-
-
-
-
-
 
 
     var getKeyValue = function (key) {
