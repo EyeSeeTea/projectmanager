@@ -11,7 +11,7 @@ import { EventExportService } from './events/EventExportService';
 import { EventHelper } from './events/EventHelper';
 import { EventImportService } from './events/EventImportService';
 var metadataImportService = require('./metadata/MetadataImportService');
-var metadataSyncService = require('./metadata/MetadataSyncService');
+import { MetadataSyncService } from './metadata/MetadataSyncService';
 import { orgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
 import { SystemService } from './system/SystemService';
 var programsService = require('./programs/ProgramService');
@@ -29,7 +29,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('EventHelper', EventHelper)
     .service('EventImportService', EventImportService)
     .factory('MetadataImportService', metadataImportService)
-    .factory('MetadataSyncService', metadataSyncService)
+    .service('MetadataSyncService', MetadataSyncService)
     .factory('OrgunitGroupSetService', orgunitGroupSetService)
     .service('SystemService', SystemService)
     .factory('ProgramService', programsService)
@@ -42,6 +42,7 @@ export {
     EventExportService,
     EventHelper,
     EventImportService,
+    MetadataSyncService,
     orgunitGroupSetService,
     SystemService,
     UserService

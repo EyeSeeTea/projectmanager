@@ -48,7 +48,7 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/metadataimport', {
 		template: require('./features/metadataimport/metadataimportView.html'),
-		controller: 'metadataimportController',
+		controller: 'metadataimportController as ctrl',
 		css: require('./features/metadataimport/metadataimportCss.css')
 	});
 	$routeProvider.when('/metadataexport', {
@@ -70,8 +70,7 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/trackerdataimport', {
 		template: require('./features/trackerdataimport/trackerDataImportView.html'),
-		controller: 'trackerDataImportController',
-		controllerAs: 'ctrl',
+		controller: 'trackerDataImportController as ctrl',
 		css: require('./features/trackerdataimport/trackerDataImportCss.css')
 	});
 	$routeProvider.when('/trackerdataexport', {
