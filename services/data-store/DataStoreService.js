@@ -1,4 +1,3 @@
-
 /*
  Copyright (c) 2015.
 
@@ -17,21 +16,21 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserService) {
+var dataStoreService = ['DataStore', 'UserService', function (DataStore, UserService) {
 
     var namespace = "HMIS_Management";
     var defaultArrayKey = "values";
 
-    var getUserId = function() {
+    var getUserId = function () {
         return UserService.getCurrentUser().then(function (user) {
             return user.id;
         });
     };
 
-    var getCurrentUserSettings = function() {
-        return getUserId().then(function(userid){
-            return DataStore.get({namespace: namespace, key: userid}).$promise
-           
+    var getCurrentUserSettings = function () {
+        return getUserId().then(function (userid) {
+            return DataStore.get({ namespace: namespace, key: userid }).$promise
+
         });
     };
 
@@ -41,24 +40,24 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
      * @param property With the syntax {"key": "property-name", "value": "property-value"}
      * @returns {*}
      */
-    var updateCurrentUserSettings = function(module, property){
+    var updateCurrentUserSettings = function (module, property) {
         var userSettings = {};
         return getCurrentUserSettings()
-            .then(function(successResult){
+            .then(function (successResult) {
                 userSettings = successResult;
                 // Update userSettings with new property, without modifying the others
-                if(userSettings[module] == undefined)
+                if (userSettings[module] == undefined)
                     userSettings[module] = {};
                 userSettings[module][property.key] = property.value;
-                return getUserId().then(function(userid){
-                    return DataStore.put({namespace:namespace, key:userid}, userSettings);
+                return getUserId().then(function (userid) {
+                    return DataStore.put({ namespace: namespace, key: userid }, userSettings);
                 });
             },
-            function(){
+            function () {
                 userSettings[module] = {};
                 userSettings[module][property.key] = property.value;
-                return getUserId().then(function(userid){
-                    return DataStore.save({namespace:namespace, key:userid}, userSettings);
+                return getUserId().then(function (userid) {
+                    return DataStore.save({ namespace: namespace, key: userid }, userSettings);
                 });
             });
     };
@@ -74,9 +73,9 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
         return getNamespaceKeyValue(namespace, key)
             .then(function (currentValue) {
                 if (currentValue != undefined) {
-                    return DataStore.put({namespace: namespace, key: key}, value);
+                    return DataStore.put({ namespace: namespace, key: key }, value);
                 } else {
-                    return DataStore.save({namespace: namespace, key: key}, value);
+                    return DataStore.save({ namespace: namespace, key: key }, value);
                 }
             })
     };
@@ -98,19 +97,126 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
      * @param value New value to be pushed into the array
      * @returns {*} Promise with the result of the put/post method
      */
-    var updateNamespaceKeyArray = function(namespace, key, value){
+    var updateNamespaceKeyArray = function (namespace, key, value) {
         return getNamespaceKeyValue(namespace, key)
-            .then(function(currentValue){
+            .then(function (currentValue) {
                 if (currentValue != undefined) {
                     currentValue[defaultArrayKey].push(value);
-                    return DataStore.put({namespace: namespace, key: key}, currentValue);
+                    return DataStore.put({ namespace: namespace, key: key }, currentValue);
                 } else {
                     currentValue = {};
                     currentValue[defaultArrayKey] = [value];
-                    return DataStore.save({namespace: namespace, key: key}, currentValue);
+                    return DataStore.save({ namespace: namespace, key: key }, currentValue);
                 }
             });
     };
+
+
+    var updateNamespaceKeyArraylastPush = function (namespace, key, lastPushDate) {
+        return getNamespaceKeyValue(namespace, key)
+            .then(
+            currentValue => {
+                if (currentValue != undefined) {
+                    currentValue['lastPushDateSaved'] = lastPushDate;
+                    return DataStore.put({ namespace: namespace, key: key }, currentValue)
+                }
+            });
+    }
+
+    /**
+        * Introduces a new value in the array. This methods expects the value of the pair (namespace, key) to be an array.
+        * If the value is empty, it creates a new array.
+        * @param namespace Name of the namespace
+        * @param key Name of the key
+        * @param value New value to be pushed into the array
+        * @returns {*} Promise with the result of the put/post method
+        */
+    var updateNamespaceKeyArrayPeriod = function (namespace, key, value) {
+        return getNamespaceKeyValue(namespace, key)
+            .then(
+            currentValue => {
+                var push = true;
+                if (currentValue != undefined) {
+                  
+                    for (var dataValue in currentValue[defaultArrayKey]) {
+
+                        if (currentValue[defaultArrayKey][dataValue].period == value.period && currentValue[defaultArrayKey][dataValue].service == value.service && currentValue[defaultArrayKey][dataValue].dataSet == value.dataSet) {
+                           // console.log(currentValue[defaultArrayKey]);
+                            push = false;
+                            console.log("Actualizado: " + value.period + " del dataset " + value.dataSet + " del Service " + value.service);
+                            currentValue[defaultArrayKey][dataValue] = value;
+                           // console.log(currentValue[defaultArrayKey][dataValue]);
+                             return DataStore.put({ namespace: namespace, key: key }, currentValue)
+                         }
+                        
+                    }
+
+                    if (push == true) {
+                        console.log("Insertado periodo: " + value.period + " del dataset " + value.dataSet + " del Service " + value.service);
+                        if (currentValue[defaultArrayKey]==undefined){ currentValue[defaultArrayKey]=[value]; 
+                        } else {
+
+                            currentValue[defaultArrayKey].push(value);
+                        }
+                      
+                       
+                      
+                    return DataStore.put({ namespace: namespace, key: key }, currentValue)
+
+                    }
+      
+
+                } else {
+                    currentValue = {};
+                    currentValue[defaultArrayKey] = [value];
+                    return DataStore.save({ namespace: namespace, key: key }, currentValue);
+                }
+            });
+    };
+
+
+    /**
+        * Introduces a new value in the array. This methods expects the value of the pair (namespace, key) to be an array.
+        * If the value is empty, it creates a new array.
+        * @param namespace Name of the namespace
+        * @param key Name of the key
+        * @param value New value to be pushed into the array
+        * @returns {*} Promise with the result of the put/post method
+        */
+    var deleteNamespaceKeyValue = function (namespace, key, value) {
+        return getNamespaceKeyValue(namespace, key)
+            .then(
+            currentValue => {
+              
+                if (currentValue != undefined) {
+
+                    //console.log("Period: " + value.period);
+                    for (var dataValue in currentValue[defaultArrayKey]) {
+
+                        if (currentValue[defaultArrayKey][dataValue].period == value.period && currentValue[defaultArrayKey][dataValue].service == value.service && currentValue[defaultArrayKey][dataValue].dataSet == value.dataSet) {
+                            console.log(currentValue[defaultArrayKey]);
+                       
+                            console.log("Borrado: " + value.period + " del dataset " + value.dataSet + " del Site " + value.siteName);
+                            currentValue[defaultArrayKey].splice(dataValue,1);
+
+
+                            //console.log(currentValue[defaultArrayKey][dataValue]);
+                              DataStore.put({ namespace: namespace, key: key }, currentValue);
+                                
+                                 return  currentValue[defaultArrayKey];
+                                
+                         }
+                        
+                    }
+
+                   
+                    
+
+                } 
+            });
+    };
+
+
 
     /**
      * Get currentValue for the pair (namespace, key)
@@ -118,13 +224,57 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
      * @param key Name of the key
      * @returns {*|g|n} Promise with the value of the pair (namespace, key)
      */
-    var getNamespaceKeyValue = function(namespace, key){
-        return DataStore.get({namespace: namespace, key: key}).$promise.then(
-            function (data) {return data;},
-            function () {return undefined}
+    var getNamespaceKeyValue = function (namespace, key) {
+        return DataStore.get({ namespace: namespace, key: key }).$promise.then(
+            function (data) { return data; },
+            function () { return undefined }
         )
     };
-    
+
+
+
+
+    /**
+     * Get currentValue for the pair (namespace, key)
+     * @param namespace Name of the namespace
+     * @param key Name of the key
+     * @returns {*|g|n} Promise with the value of the pair (namespace, key)
+     */
+    var getNamespaceKeys = function (namespace) {
+        var key="";
+        return DataStore.query({ namespace: namespace, key: key }).$promise.then(
+            function (data) { return data; },
+            function () { return undefined }
+        )
+    };
+
+    var getNamespaceDataSetValidationDate = function (namespace, key, orgUnit, dataSet) {
+
+        return DataStore.get({ namespace: namespace, key: key }).$promise.then(
+            data => {
+                console.log("Namespace");
+                console.log(data);
+
+                for (var value in data.values) {
+                    console.log("Value");
+                    console.log(value);
+
+
+                    if (data.values[value].orgUnit == orgUnit && data.values[value].dataSet == dataSet) {
+
+                        return new Date(data.lastValidationDate);
+                    }
+
+                }
+
+            },
+            () => { return undefined }
+
+
+        )
+    };
+
+
     var getKeyValue = function (key) {
         return getNamespaceKeyValue(namespace, key);
     };
@@ -135,8 +285,13 @@ var dataStoreService = ['DataStore', 'UserService', function(DataStore, UserServ
         getNamespaceKeyValue: getNamespaceKeyValue,
         setNamespaceKeyValue: setNamespaceKeyValue,
         updateNamespaceKeyArray: updateNamespaceKeyArray,
+        updateNamespaceKeyArrayPeriod: updateNamespaceKeyArrayPeriod,
         setKeyValue: setKeyValue,
-        getKeyValue: getKeyValue
+        getKeyValue: getKeyValue,
+        getNamespaceDataSetValidationDate: getNamespaceDataSetValidationDate,
+        updateNamespaceKeyArraylastPush: updateNamespaceKeyArraylastPush,
+        getNamespaceKeys: getNamespaceKeys,
+        deleteNamespaceKeyValue: deleteNamespaceKeyValue
     };
 
 }];

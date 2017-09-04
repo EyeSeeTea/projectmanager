@@ -22,11 +22,7 @@ var metadataSyncService = ['$q', 'RemoteApiService', 'MetadataVersion', 'Metadat
     // Config variables
     var serverStatusNamespace = 'projectServers';
 
-    // Error messages
-    var REMOTE_NOT_AVAILABLE = "REMOTE_NOT_AVAILABLE";
-    var REMOTE_NOT_CONFIGURED = "REMOTE_NOT_CONFIGURED";
-    var AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
-    var REMOTE_IS_AVAILABLE = "REMOTE_IS_AVAILABLE";
+   
 
     var remoteMetadataVersion;
     var localMetadataVersion;
@@ -176,14 +172,7 @@ var metadataSyncService = ['$q', 'RemoteApiService', 'MetadataVersion', 'Metadat
             .catch(handleGetLocalVersionError);
     };
 
-    /**
-     * Check if remote server is available.
-     * @returns {*} A promise that successes if remote is available, and fails if not. If failure, it returns a error message.
-     */
-    var isRemoteServerAvailable = function () {
-        return RemoteAvailability.get().$promise
-            .then(handleAvailabilityResponse);
-    };
+   
 
     /**
      * Get the difference between local and remote server.
@@ -253,23 +242,7 @@ var metadataSyncService = ['$q', 'RemoteApiService', 'MetadataVersion', 'Metadat
         return $q.reject("Error")
     }
 
-    function handleAvailabilityResponse (response) {
-        if (response.statusCode == 200) {
-            return $q.resolve(REMOTE_IS_AVAILABLE);
-        }
-        else if (response.statusCode == 502 && response.message == "Remote server is not configured") {
-            return $q.reject(REMOTE_NOT_CONFIGURED);
-        }
-        else if (response.statusCode == 502 && response.message == "Network is unreachable") {
-            return $q.reject(REMOTE_NOT_AVAILABLE);
-        }
-        else if (response.statusCode == 401 && response.message == "Authentication failed") {
-            return $q.reject(AUTHENTICATION_FAILED);
-        }
-        else {
-            return $q.reject(response.message);
-        }
-    }
+    
     
     return {
         executeMetadataSync: executeMetadataSync,
@@ -277,7 +250,7 @@ var metadataSyncService = ['$q', 'RemoteApiService', 'MetadataVersion', 'Metadat
         getRemoteMetadataVersion: getRemoteMetadataVersion,
         getLocalMetadataVersion: getLocalMetadataVersion,
         getVersionDifference: getVersionDifference,
-        isRemoteServerAvailable: isRemoteServerAvailable
+       /* isRemoteServerAvailable: isRemoteServerAvailable */
     }
 }];
 
