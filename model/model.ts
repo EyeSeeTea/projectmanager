@@ -79,3 +79,16 @@ export class RESTUtil {
         });
     };
 };
+
+export class AvailableDataItem {
+    constructor(
+        public id: string,
+        public name: string,
+        public fullName: string,
+        public parents: string[],
+        public level: number,
+        public relativeLevel: number,
+        public isLastLevel: boolean,
+        public data: any
+    ){}
+}

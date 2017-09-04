@@ -71,6 +71,7 @@ console.log(dataValues);
 				if (dataValues == undefined){
 					$scope.msjEmptyFile = true;
 					$scope.importPreviewStatus.visible = false;
+					$scope.$apply();
 					return;
 				}
 

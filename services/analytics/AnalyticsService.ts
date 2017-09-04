@@ -17,7 +17,20 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var analyticsService = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart', function($q, $interval, AnalyticsEngine, Analytics, DataMart) {
+import * as angular from 'angular';
+import { AvailableDataItem } from '../../model/model';
+
+export class AnalyticsService {
+
+    static $inject = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart'];
+
+    constructor(
+        private $q: ng.IQService,
+        private $interval: ng.IIntervalService,
+        private AnalyticsEngine,
+        private Analytics,
+        private DataMart
+    ){}
 
     /**
      * Performs a query to analytics endpoint with the parameters provided.
@@ -29,14 +42,13 @@ var analyticsService = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'Data
      * @param filters - Filters = { "filterid": {"id": "optionid",...}, ... {"adsfjdsfjk": {"id": "sdflkasdfj",...}}
      * @returns {*|n} - Result of analytics endpoint
      */
-    var queryAvailableData = function(orgunit, period, filters){
-        var analyticsParameters = buildAnalyticsParameters(orgunit, period, filters);
+    queryAvailableData(orgunit, period, filters) {
+        const analyticsParameters: AnalyticsParameters = this.buildAnalyticsParameters(orgunit, period, filters);
 
-        return AnalyticsEngine.get(analyticsParameters).$promise;
+        return this.AnalyticsEngine.get(analyticsParameters).$promise;
     };
 
-    var buildAnalyticsParameters = function(orgunit, period, filters){
-        var parameters = {};
+    private buildAnalyticsParameters(orgunit, period, filters): AnalyticsParameters {
 
         var orgunits = "";
         if(orgunit instanceof Array){
@@ -46,14 +58,15 @@ var analyticsService = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'Data
         }
 
         // Build dimension parameter
-        parameters.dimension = [
-            "ou:" + orgunits,
-            "pe:" + period.id
-        ];
-
-        parameters.aggregationType = "COUNT";
-        parameters.hierarchyMeta = "TRUE";
-        parameters.displayProperty = "NAME";
+        var parameters: AnalyticsParameters = {
+            dimension: [
+                "ou:" + orgunits,
+                "pe:" + period.id
+            ],
+            aggregationType: "COUNT",
+            hierarchyMeta: "TRUE",
+            displayProperty: "NAME"
+        };
 
         if(filters !== null){
             var filterArray = [];
@@ -88,10 +101,9 @@ var analyticsService = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'Data
      * @param hierarchy - hierarchy arrya, like ["fiasdfl3fj","aldfkjlskf"] (parents). Only applicable if isRoot == false
      * @returns {*} - Result data structure
      */
-    var formatAnalyticsResult = function(analytics, orgunitsInfo, hierarchy){
-        var orgunits = {};
+    formatAnalyticsResult(analytics, orgunitsInfo, hierarchy): AvailableDataItem[] {
+        let orgunits: {[key: string]: AvailableDataItem} = {};
         angular.forEach(analytics.metaData.dimensions.ou, function(orgunit) {
-
                 var fullName = hierarchy.map(function (parent) {
                 return analytics.metaData.items[parent].name;
             }).join("/");
@@ -118,7 +130,7 @@ var analyticsService = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'Data
             orgunits[row[0]].data[row[1]] = row[2];
         });
 
-        return $.map(orgunits, function(orgunit, id){ return [orgunit]; })
+        return $.map(orgunits, (orgunit, id) => orgunit)
     };
 
     /**
@@ -128,61 +140,62 @@ var analyticsService = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'Data
      * - notifies each message retrieved about the analytics execution
      * @returns {Promise}
      */
-    function refreshAnalytics (params) {
-        var deferred = $q.defer();
+    refreshAnalytics (params) {
+        var deferred = this.$q.defer();
 
         //Analytics.post(params,'');
-        Analytics.post();
+        this.Analytics.post();
 
         var inputParameters = {};
         var previousMessage = "";
-        var checkStatus = $interval( function () {
-            var result = DataMart.query(inputParameters);
-            result.$promise.then( function (data) {
-                var dataElement = data[0];
-                if (dataElement != undefined){
-                    inputParameters = {lastId: dataElement.uid};
-                    if (dataElement.completed == true){
-                        $interval.cancel(checkStatus);
-                        deferred.notify(dataElement.message);
-                        deferred.resolve("Done update analytics");
+        var checkStatus = this.$interval( () => {
+            var result = this.DataMart.query(inputParameters);
+            result.$promise.then( 
+                data => {
+                    var dataElement = data[0];
+                    if (dataElement != undefined){
+                        inputParameters = {lastId: dataElement.uid};
+                        if (dataElement.completed == true){
+                            this.$interval.cancel(checkStatus);
+                            deferred.notify(dataElement.message);
+                            deferred.resolve("Done update analytics");
+                        }
+                        if (previousMessage != dataElement.message){
+                            deferred.notify(dataElement);
+                            previousMessage = dataElement.message;
+                        }
                     }
-                    if (previousMessage != dataElement.message){
-                        deferred.notify(dataElement);
-                        previousMessage = dataElement.message;
-                    }
+                }, 
+                error => {
+                    this.$interval.cancel(checkStatus);
+                    deferred.reject("Error while refreshing analytics");
                 }
-            },
-            function (error) {
-                $interval.cancel(checkStatus);
-                deferred.reject("Error while refreshing analytics");
-            });
+            );
         }, 200);
         
         return deferred.promise;
     }
     
-    function refreshAllAnalytics () {
-        return refreshAnalytics({});
+    refreshAllAnalytics () {
+        return this.refreshAnalytics({});
     }
 
-    function refreshEventAnalytics () {
-        return refreshAnalytics({skipAggregate: true});
+    refreshEventAnalytics () {
+        return this.refreshAnalytics({skipAggregate: true});
     }
 
-    function refreshAggregateAnalytics () {
-        return refreshAnalytics({skipEvents: true});
+    refreshAggregateAnalytics () {
+        return this.refreshAnalytics({skipEvents: true});
     }
 
-    return {
-        queryAvailableData: queryAvailableData,
-        formatAnalyticsResult: formatAnalyticsResult,
-        refreshAllAnalytics: refreshAllAnalytics,
-        refreshAggregateAnalytics: refreshAggregateAnalytics,
-        refreshEventAnalytics: refreshEventAnalytics,
-        refreshAnalytics: refreshAnalytics
-    }
+}
 
-}];
-
-module.exports = analyticsService;
+class AnalyticsParameters {
+    constructor(
+        public dimension: any,
+        public aggregationType: string,
+        public hierarchyMeta: string,
+        public displayProperty: string,
+        public filter?: any
+    ){}
+}
