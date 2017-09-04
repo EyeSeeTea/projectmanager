@@ -17,6 +17,8 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
+import {MetadataVersion} from '../../model/model';
+
 export class MetadataSyncService {
 
     static $inject = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService'];
@@ -276,20 +278,4 @@ export class MetadataSyncService {
         }
     }
     
-}
-
-class MetadataVersion {
-    constructor(
-        public name: string,        // Like "Version_2"
-        public type: string,        // Like "BEST_EFFORT"
-        public created: string,
-        public id: string,
-        public hashCode: string
-    ){}
-}
-
-class MetadataDiff {
-    constructor(
-        public metadataversions: MetadataVersion[]
-    ){}
 }

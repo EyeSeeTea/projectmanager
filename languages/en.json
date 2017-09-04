@@ -164,7 +164,7 @@
 
 	"________________Service ": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Logger user credentials are not correct.",
-	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{url}}' in the whitelist.",
+	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{urlbase}}' in the whitelist.",
 	"NO_LOGGER_USER": "Logger user is not available.",
 	"INVALID_LOGGER_USER": "Logger user credentials are invalid."
 }

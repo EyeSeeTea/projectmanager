@@ -42,6 +42,7 @@ export class ProgressStatus {
         public value: number
     ){}
 
+    static initialWithProgress: ProgressStatus = new ProgressStatus(true, true, "info", 0);
     static initialWithoutProgress: ProgressStatus = new ProgressStatus(true, true, "info", 100);
     static doneSuccessful: ProgressStatus = new ProgressStatus(true, false, "success", 100);
     static doneWithFailure: ProgressStatus = new ProgressStatus(true, false, "danger", 100);
@@ -90,5 +91,15 @@ export class AvailableDataItem {
         public relativeLevel: number,
         public isLastLevel: boolean,
         public data: any
+    ){}
+}
+
+export class MetadataVersion {
+    constructor(
+        public name: string,        // Like "Version_2"
+        public type: string,        // Like "BEST_EFFORT"
+        public created: string,
+        public id: string,
+        public hashCode: string
     ){}
 }
