@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 'commonvariable', function($q, $http, DataStoreService, RemoteInstanceUrl, commonvariable) {
+var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 'RemoteAvailability', 'commonvariable', function($q, $http, DataStoreService, RemoteInstanceUrl, RemoteAvailability, commonvariable) {
 
     var remoteSettings;
     var defaultAPIVersion = commonvariable.apiVersion;
@@ -33,21 +33,30 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
     var LOGGER_USER_NOT_AUTHORIZED = 'LOGGER_USER_NOT_AUTHORIZED';
     var REMOTE_NOT_CONFIGURED = 'REMOTE_NOT_CONFIGURED';
 
+ // Error messages
+    var REMOTE_NOT_AVAILABLE = "REMOTE_NOT_AVAILABLE";
+    var REMOTE_NOT_CONFIGURED = "REMOTE_NOT_CONFIGURED";
+    var AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
+    var REMOTE_IS_AVAILABLE = "REMOTE_IS_AVAILABLE";
+
+
     var updateRemoteSettings = function () {
         return RemoteInstanceUrl.get().$promise
             .then(function (remoteUrl) {
+                
                 if (remoteUrl.html == "") {
                     return $q.reject(REMOTE_NOT_CONFIGURED);
                 }
                 return DataStoreService.getKeyValue(remoteSettingsNamespace).then(
                    function (settings) {
+                      
                        if (settings[remoteUserProperty]){
                            remoteSettings = {
                                url: remoteUrl.html,
                                api: remoteUrl.html + '/api',
                                loggerAuth: 'Basic ' + btoa(settings[remoteUserProperty].username + ":" + settings[remoteUserProperty].password)
                            }
-                       } else {
+                        } else {
                            return $q.reject(INVALID_LOGGER_USER);
                        }
                    },
@@ -59,6 +68,7 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
     };
     
     var executeRemoteQuery = function (remoteQuery) {
+       
         // Check if apiVersion is defined in remoteQuery (two digits).
         var apiVersion = remoteQuery.apiVersion == undefined ? '/' + defaultAPIVersion :
             /^\d{2}$/.test(remoteQuery.apiVersion) ? '/' + remoteQuery.apiVersion : '';
@@ -68,13 +78,14 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
                 function success() {
                     // Choose authorization. Defaults to data authorization
                     var authorization = remoteSettings.loggerAuth;
-                    return $http({
+                       return $http({
                         method: remoteQuery.method,
                         url: remoteSettings.api + apiVersion + '/' + remoteQuery.resource,
                         data: remoteQuery.data,
                         headers: {
-                            Authorization: authorization
-                        }
+                          Authorization: authorization
+                        },
+                         
                     })
                 }
             )
@@ -89,6 +100,35 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
         }
     }
     
+
+     /**
+     * Check if remote server is available.
+     * @returns {*} A promise that successes if remote is available, and fails if not. If failure, it returns a error message.
+     */
+    var isRemoteServerAvailable = function () {
+        return RemoteAvailability.get().$promise
+            .then(handleAvailabilityResponse);
+    };
+
+
+function handleAvailabilityResponse (response) {
+        if (response.statusCode == 200) {
+            return $q.resolve(REMOTE_IS_AVAILABLE);
+        }
+        else if (response.statusCode == 502 && response.message == "Remote server is not configured") {
+            return $q.reject(REMOTE_NOT_CONFIGURED);
+        }
+        else if (response.statusCode == 502 && response.message == "Network is unreachable") {
+            return $q.reject(REMOTE_NOT_AVAILABLE);
+        }
+        else if (response.statusCode == 401 && response.message == "Authentication failed") {
+            return $q.reject(AUTHENTICATION_FAILED);
+        }
+        else {
+            return $q.reject(response.message);
+        }
+    }
+
     function handleRemoteErrors (message) {
         var errorString = message;
         if (message === NO_LOGGER_USER) {
@@ -108,7 +148,8 @@ var remoteApiService = ['$q', '$http', 'DataStoreService', 'RemoteInstanceUrl', 
     
     return {
         updateRemoteSettings: updateRemoteSettings,
-        executeRemoteQuery: executeRemoteQuery
+        executeRemoteQuery: executeRemoteQuery,
+        isRemoteServerAvailable: isRemoteServerAvailable
     }
 }];
 

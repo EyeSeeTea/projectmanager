@@ -17,7 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var metadataImport = ["$scope", "$q", "commonvariable", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, $q, commonvariable, MetadataSyncService, DemographicsService, AnalyticsService, MetadataImportService) {
+var metadataImport = ["$scope", "$q", "commonvariable", "MetadataSyncService", "RemoteApiService", "DemographicsService", "AnalyticsService", "MetadataImportService", function($scope, $q, commonvariable, MetadataSyncService, RemoteApiService, DemographicsService, AnalyticsService, MetadataImportService) {
 
 	$scope.info = {
 		url: commonvariable.urlbase
