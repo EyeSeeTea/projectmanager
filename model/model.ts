@@ -114,3 +114,11 @@ export class MetadataVersion {
         public hashCode: string
     ){}
 }
+
+export class MetadataSyncRecord {
+    constructor(
+        public project: string,
+        public version: string,
+        public created: Date
+    ){}
+}

@@ -92,6 +92,11 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 		controller: "hmisadoptionController",
 		css: "features/hmisadoption/hmisadoptionCss.css"
 	});
+	$routeProvider.when('/metadatamonitor', {
+		template: require("./features/metadatamonitor/metadatamonitorView.html"),
+		controller: "metadatamonitorController as ctrl",
+		css: require("./features/metadatamonitor/metadatamonitorCss.css")
+	});
 	$routeProvider.otherwise({
 		redirectTo: '/'
 	});
