@@ -50,7 +50,8 @@ export class UserService {
     getCurrentUserTree () {
         const currentUserFieldsTree = {
             fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
-                "organisationUnits[id,level,name,children],organisationUnitGroups[id],dataViewOrganisationUnits[id,name,level,children[id,name, level,organisationUnitGroups[id], children[id, name,level,organisationUnitGroups[id],children[id, name, level,organisationUnitGroups[id], children[id,name, level,children[id,name]]]]]]"
+                "organisationUnits[id,level,name,children],organisationUnitGroups[id]," + 
+                "dataViewOrganisationUnits[id,name,level,children[id,name, level,organisationUnitGroups[id], children[id, name,level,organisationUnitGroups[id],children[id, name, level,organisationUnitGroups[id], children[id,name, level,children[id,name]]]]]]"
         };
         if (this.currentUserTree != null) {
             return this.$q.when(this.currentUserTree);
@@ -73,13 +74,7 @@ export class UserService {
      * @param groupName Group name to evaluate
      */
     currentUserHasGroup (groupName): ng.IPromise<Boolean> {
-        return this.getCurrentUser().then( me => {
-            var hasGroup: Boolean = false;
-            angular.forEach(me.userGroups, userGroup => {
-                hasGroup = userGroup.name === groupName ? true : hasGroup;
-            });
-            return hasGroup;
-        });
+        return this.getCurrentUser().then( me => me.userGroups.some( userGroup => userGroup.name === groupName ));
     }
 
     /**
@@ -87,13 +82,7 @@ export class UserService {
      * @param roleName Role name to evaluate
      */
     currentUserHasRole (roleName): ng.IPromise<Boolean> {
-        return this.getCurrentUser().then( me => {
-            var hasRole = false;
-            angular.forEach(me.userCredentials.userRoles, userRole => {
-                hasRole = userRole.name === roleName ? true : hasRole;
-            });
-            return hasRole;
-        });
+        return this.getCurrentUser().then( me => me.userCredentials.userRoles.some( userRole => userRole.name === roleName ));
     }
     
     /**

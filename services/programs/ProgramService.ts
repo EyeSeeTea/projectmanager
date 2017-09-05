@@ -31,7 +31,7 @@ export class ProgramService {
         private Programs
     ){}
 
-    serviceCodeId = "pG4YeQyynJh";
+    readonly serviceCodeId = "pG4YeQyynJh";
 
     getProgramsUnderUserHierarchy() {
         return this.UserService.getCurrentUserOrgunits()
