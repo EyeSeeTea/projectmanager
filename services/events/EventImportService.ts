@@ -17,7 +17,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { CommonVariable, Program } from '../../model/model';
-import { EventHelper } from './EventHelper';
+import { EventHelper, ProgramService } from '../services.module';
 
 export class EventImportService {
 
@@ -28,7 +28,7 @@ export class EventImportService {
         private $http, 
         private commonvariable: CommonVariable,
         private EventHelper: EventHelper, 
-        private ProgramService
+        private ProgramService: ProgramService
     ){}
 
     importEventFile (file) {
@@ -51,7 +51,7 @@ export class EventImportService {
         return deferred.promise;
     };
 
-    private readZipFile (file) {
+    private readZipFile (file): Promise<JSZip> {
         return (new JSZip()).loadAsync(file)
     }
 
@@ -129,9 +129,7 @@ export class EventImportService {
             .then((events) => this.classifyEventsByProgramAndStage(events))
             .then((programs) => this.addNameToProgramsAndStages(programs))
             .then(
-                (file) => {
-                    deferred.resolve(file);
-                },
+                (summary) => deferred.resolve(summary),
                 (error) => deferred.reject(error)
             );
         return deferred.promise;
@@ -153,7 +151,7 @@ export class EventImportService {
 
     private classifyEventsByProgramAndStage (events) {
         var programs = {};
-        $.each(events, function (index, event) {
+        $.each(events, (index, event) => {
             programs[event.program] = programs[event.program] || {stages:{}};
             programs[event.program].stages[event.programStage] = programs[event.program].stages[event.programStage] || {value: 0};
             programs[event.program].stages[event.programStage].value++;
@@ -162,14 +160,14 @@ export class EventImportService {
     }
     
     private addNameToProgramsAndStages (eventsByProgram) {
-        var promiseArray = $.map(eventsByProgram, (value, property) => {
-            return this.ProgramService.getProgramAndStages(property);
+        var promiseArray = $.map(eventsByProgram, (value, programId) => {
+            return this.ProgramService.getProgramAndStages(programId);
         });
 
         return this.$q.all(promiseArray).then((data) => {
-            $.each(data, (index, program: Program) => {
+            data.forEach(program => {
                 eventsByProgram[program.id].name = program.name;
-                $.each(program.programStages, (index, stage) => {
+                program.programStages.forEach( stage => {
                     if (eventsByProgram[program.id].stages[stage.id]) {
                         eventsByProgram[program.id].stages[stage.id].name = stage.name;
                     }

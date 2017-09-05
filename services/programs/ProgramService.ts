@@ -18,7 +18,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { UserService } from '../../services/services.module';
-import { Orgunit } from '../../model/model';
+import { Orgunit, Program } from '../../model/model';
 
 export class ProgramService {
 
@@ -92,7 +92,7 @@ export class ProgramService {
         });
     }
     
-    getProgramAndStages(programId) {
+    getProgramAndStages(programId: string): ng.IPromise<Program> {
         var fields = "id,displayName~rename(name),programStages[id,displayName~rename(name)]";
         return this.Programs.get({uid: programId, fields: fields}).$promise;
     }
