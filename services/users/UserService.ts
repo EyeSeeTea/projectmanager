@@ -17,6 +17,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import * as angular from 'angular';
+import { OrgunitExtended } from '../../model/model';
 
 export class UserService {
 
@@ -32,7 +33,7 @@ export class UserService {
     private currentUserTree;
     private currentUserFields = {
         fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
-            "organisationUnits[id,level,name,children],dataViewOrganisationUnits[id,level]"
+            "organisationUnits[id,level,name,children[id,name]],dataViewOrganisationUnits[id,level]"
     };
     
     getCurrentUser () {
@@ -62,11 +63,9 @@ export class UserService {
     }
 
 
-    getCurrentUserOrgunits () {
+    getCurrentUserOrgunits(): ng.IPromise<OrgunitExtended[]>{
         return this.getCurrentUser()
-            .then( me => {
-                return me.organisationUnits;
-            });
+            .then( me => me.organisationUnits );
     }
 
     /**
@@ -87,7 +86,7 @@ export class UserService {
      * It returns a promise that resolves to a boolean indicating if current user has the role or not
      * @param roleName Role name to evaluate
      */
-    currentUserHasRole (roleName) {
+    currentUserHasRole (roleName): ng.IPromise<Boolean> {
         return this.getCurrentUser().then( me => {
             var hasRole = false;
             angular.forEach(me.userCredentials.userRoles, userRole => {

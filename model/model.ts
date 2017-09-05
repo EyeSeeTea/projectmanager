@@ -18,6 +18,17 @@ export class Orgunit {
     ){}
 }
 
+export class OrgunitExtended extends Orgunit {
+    constructor(
+        public id: string,
+        public name: string,
+        public level: number,
+        public children: Orgunit[]
+    ){
+        super(id, name);
+    }
+}
+
 export class Program {
     constructor(
         public id: string,
