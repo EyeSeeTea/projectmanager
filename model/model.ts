@@ -18,6 +18,17 @@ export class Orgunit {
     ){}
 }
 
+export class OrgunitExtended extends Orgunit {
+    constructor(
+        public id: string,
+        public name: string,
+        public level: number,
+        public children: Orgunit[]
+    ){
+        super(id, name);
+    }
+}
+
 export class Program {
     constructor(
         public id: string,
@@ -29,8 +40,8 @@ export class Program {
 export class TrackerDataExportLog {
     constructor(
         public filename: string,
-        public start: string,
-        public end: string
+        public start: Date,
+        public end: Date
     ){}
 }
 
