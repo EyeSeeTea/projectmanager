@@ -29,8 +29,8 @@ export class Program {
 export class TrackerDataExportLog {
     constructor(
         public filename: string,
-        public start: string,
-        public end: string
+        public start: Date,
+        public end: Date
     ){}
 }
 

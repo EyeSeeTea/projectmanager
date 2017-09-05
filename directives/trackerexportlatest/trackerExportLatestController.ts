@@ -18,7 +18,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { TrackerDataExportLog } from '../../model/model';
-import { EventExportService } from '../../services/services.module';
+import { EventExportService, SystemService } from '../../services/services.module';
 
 export const trackerExportLatestDirective = [function(){
     return{
@@ -30,8 +30,8 @@ export const trackerExportLatestDirective = [function(){
     }
 }];
 
-var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 
-    function ($scope: ng.IScope, $filter, ProgramService, UserService, EventExportService: EventExportService, DataStoreService) {
+var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 'SystemService', 
+    function ($scope: ng.IScope, $filter, ProgramService, UserService, EventExportService: EventExportService, DataStoreService, SystemService: SystemService) {
 
     const dataStoreKey: string = 'trackerexport';
 
@@ -86,33 +86,29 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
     
     $scope.submit = function() {
         $scope.exporting = true;
-        return UserService.getCurrentUserOrgunits()
-            .then( orgunits => EventExportService.exportEventsFromLastWithDependenciesInZip($scope.params.date, orgunits, getSelectedPrograms()) )
+        const startDate: Date = $scope.params.date;
+        var serverDate: Date;
+        return SystemService.getServerDateWithTimezone()
+            .then( date => serverDate = date )
+            .then( () => UserService.getCurrentUserOrgunits() )
+            .then( orgunits => EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), orgunits, getSelectedPrograms()) )
             .then( eventsZipFile => saveAs(eventsZipFile, $scope.params.filename + '.zip') )
-            .then( () => logExport() )
+            .then( () => logExport(startDate, serverDate) )
             .then( () => updateLastExportInfo() )
             .then( () => setLatestExportAsDefault() )
             .then( () => console.log("Everything done") )
             .finally( () => $scope.exporting = false );
     };
 
-    function logExport () {
+    function logExport (start: Date, end: Date) {
         return DataStoreService.getKeyValue(dataStoreKey).then( log => {
-            const current: TrackerDataExportLog = generateLog();
+            const current = new TrackerDataExportLog($scope.params.filename, start, end);
             log = log || {};
             $scope.getSelectedServices().map( service => {
                 log[service.code] = current;
             });
             return DataStoreService.setKeyValue(dataStoreKey, log);
         });
-    }
-
-    function generateLog (): TrackerDataExportLog {
-        return new TrackerDataExportLog(
-            $scope.params.filename,
-            (new Date($scope.params.date)).toISOString(),
-            (new Date()).toISOString()
-        )
     }
 
     $scope.getSelectedServices = function () {
