@@ -51,8 +51,9 @@ export class AnalyticsService {
     private buildAnalyticsParameters(orgunit, period, filters): AnalyticsParameters {
 
         var orgunits = "";
+        console.log(orgunit);
         if(orgunit instanceof Array){
-            orgunits = orgunit.map(function(value, index, array){return value.id;}).join(";")
+            orgunits = orgunit.map( (value, index, array) => value.id ).join(";")
         } else {
             orgunits = orgunit.id;
         }
@@ -70,7 +71,7 @@ export class AnalyticsService {
 
         if(filters !== null){
             var filterArray = [];
-            angular.forEach(filters, function(option, filterid){
+            angular.forEach(filters, (option, filterid) => {
                 filterArray.push(filterid + ":" + option.id);
             });
             parameters.filter = filterArray;
@@ -103,10 +104,8 @@ export class AnalyticsService {
      */
     formatAnalyticsResult(analytics, orgunitsInfo, hierarchy): AvailableDataItem[] {
         let orgunits: {[key: string]: AvailableDataItem} = {};
-        angular.forEach(analytics.metaData.dimensions.ou, function(orgunit) {
-                var fullName = hierarchy.map(function (parent) {
-                return analytics.metaData.items[parent].name;
-            }).join("/");
+        angular.forEach(analytics.metaData.dimensions.ou, (orgunit) => {
+            var fullName = hierarchy.map( (parent) => analytics.metaData.items[parent].name ).join("/");
 
             if(fullName == "") fullName = fullName.concat(analytics.metaData.items[orgunit].name);
             else fullName = fullName.concat("/" + analytics.metaData.items[orgunit].name);
@@ -126,7 +125,7 @@ export class AnalyticsService {
         });
 
         // Include data. Data is in "rows" attribute as an array with the syntax [orgunitid, period, value]
-        angular.forEach(analytics.rows, function(row){
+        angular.forEach(analytics.rows, (row) => {
             orgunits[row[0]].data[row[1]] = row[2];
         });
 

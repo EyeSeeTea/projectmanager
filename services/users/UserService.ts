@@ -33,10 +33,10 @@ export class UserService {
     private currentUserTree;
     private currentUserFields = {
         fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
-            "organisationUnits[id,level,name,children[id,name]],dataViewOrganisationUnits[id,level]"
+            "organisationUnits[id,level,name,children[id,name]],dataViewOrganisationUnits[id,level,children[id,level,children]]"
     };
     
-    getCurrentUser () {
+    getCurrentUser() {
         if (this.currentUser != null) {
             return this.$q.when(this.currentUser);
         } else {
