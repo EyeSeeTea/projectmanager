@@ -17,7 +17,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import * as angular from 'angular';
-import { OrgunitExtended } from '../../model/model';
+import { CurrentUser, OrgunitExtended } from '../../model/model';
 
 export class UserService {
 
@@ -29,14 +29,14 @@ export class UserService {
         private User
     ){}
  
-    private currentUser;
+    private currentUser: CurrentUser;
     private currentUserTree;
     private currentUserFields = {
-        fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
+        fields: "id,name,userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
             "organisationUnits[id,level,name,children[id,name]],dataViewOrganisationUnits[id,level,children[id,level,children]]"
     };
     
-    getCurrentUser() {
+    getCurrentUser(): ng.IPromise<CurrentUser> {
         if (this.currentUser != null) {
             return this.$q.when(this.currentUser);
         } else {
@@ -47,7 +47,7 @@ export class UserService {
         }
     }
 
-    getCurrentUserTree () {
+    getCurrentUserTree() {
         const currentUserFieldsTree = {
             fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
                 "organisationUnits[id,level,name,children],organisationUnitGroups[id]," + 
@@ -73,7 +73,7 @@ export class UserService {
      * It returns a promise that resolves to a boolean indicating if current user has the group or not
      * @param groupName Group name to evaluate
      */
-    currentUserHasGroup (groupName): ng.IPromise<Boolean> {
+    currentUserHasGroup(groupName): ng.IPromise<Boolean> {
         return this.getCurrentUser().then( me => me.userGroups.some( userGroup => userGroup.name === groupName ));
     }
 
@@ -81,7 +81,7 @@ export class UserService {
      * It returns a promise that resolves to a boolean indicating if current user has the role or not
      * @param roleName Role name to evaluate
      */
-    currentUserHasRole (roleName): ng.IPromise<Boolean> {
+    currentUserHasRole(roleName): ng.IPromise<Boolean> {
         return this.getCurrentUser().then( me => me.userCredentials.userRoles.some( userRole => userRole.name === roleName ));
     }
     
@@ -89,7 +89,7 @@ export class UserService {
      * It returns a promise that resolves to a list of users associated to a project and its health sites
      * @param project Orgunit object
      */
-    getProjectUsers (project) {
+    getProjectUsers(project) {
         var childrenIds = project.children.map( child => child.id );
 
         var projectFilter = {

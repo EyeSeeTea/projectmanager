@@ -1,3 +1,10 @@
+export class IdName {
+    constructor(
+        public id: string,
+        public name: string
+    ){}
+}
+
 export class CommonVariable {
     constructor(
         public url: string,
@@ -11,12 +18,7 @@ export class CommonVariable {
     ){}
 }
 
-export class Orgunit {
-    constructor(
-        public id: string,
-        public name: string
-    ){}
-}
+export class Orgunit extends IdName {}
 
 export class OrgunitExtended extends Orgunit {
     constructor(
@@ -120,5 +122,16 @@ export class MetadataSyncRecord {
         public project: string,
         public version: string,
         public created: Date
+    ){}
+}
+
+export class CurrentUser {
+    constructor(
+        public id: string,
+        public name: string,
+        public userCredentials: {usernameid: string, userRoles: IdName[]},
+        public userGroups: IdName[],
+        public organisationUnits: OrgunitExtended[],
+        public dataViewOrganisationUnits: {id: string, level: number, children:{id: string, level: number, children: string[]}[]}[]
     ){}
 }

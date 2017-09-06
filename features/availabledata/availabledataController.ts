@@ -17,8 +17,8 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import * as angular from 'angular';
-import { AvailableDataItem, ProgressStatus } from '../../model/model';
-import { AnalyticsService } from '../../services/services.module';
+import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
+import { AnalyticsService, UserService } from '../../services/services.module';
 
 export class AvailableData {
 
@@ -26,7 +26,7 @@ export class AvailableData {
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
 				private Organisationunit, private OrganisationUnitGroupSet,	private OrgunitGroupSetService,
-				private UserService, private userDataStoreService, private AnalyticsService: AnalyticsService
+				private UserService: UserService, private userDataStoreService, private AnalyticsService: AnalyticsService
 	){
 		// Initialize table
 		this.loadUserSettings()
