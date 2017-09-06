@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import {MetadataVersion} from '../../model/model';
+import { MetadataSyncRecord, MetadataVersion } from '../../model/model';
 
 export class MetadataSyncService {
 
@@ -87,15 +87,11 @@ export class MetadataSyncService {
     }
 
     private writeRegisterInRemoteServer (currentVersion) {
-        var register = {
-            metadata: currentVersion,
-            created: (new Date()).getTime()
-        };
-
         // Try PUT first. If failure, try POST to create a new entry in the namespace.
         return this.UserService.getCurrentUser()
             .then( user => {
                 var orgunitid = user.organisationUnits[0].id;
+                var register = new MetadataSyncRecord(orgunitid, currentVersion, new Date());
                 return this.RemoteApiService.executeRemoteQuery({
                     method: 'PUT',
                     resource: 'dataStore/' + this.serverStatusNamespace + '/' + orgunitid,

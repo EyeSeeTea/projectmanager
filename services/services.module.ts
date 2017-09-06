@@ -13,6 +13,7 @@ import { EventImportService } from './events/EventImportService';
 var metadataImportService = require('./metadata/MetadataImportService');
 import { MetadataSyncService } from './metadata/MetadataSyncService';
 import { orgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
+import { OrgunitService } from './orgunits/OrgunitService';
 import { SystemService } from './system/SystemService';
 import { ProgramService } from './programs/ProgramService';
 var remoteApiService = require('./metadata/RemoteApiService');
@@ -31,6 +32,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .factory('MetadataImportService', metadataImportService)
     .service('MetadataSyncService', MetadataSyncService)
     .factory('OrgunitGroupSetService', orgunitGroupSetService)
+    .service('OrgunitService', OrgunitService)
     .service('SystemService', SystemService)
     .service('ProgramService', ProgramService)
     .factory('RemoteApiService', remoteApiService)
@@ -44,6 +46,7 @@ export {
     EventImportService,
     MetadataSyncService,
     orgunitGroupSetService,
+    OrgunitService,
     ProgramService,
     SystemService,
     UserService

@@ -120,6 +120,10 @@
   	"HMIS_ADOPTION": "Adopción del HMIS",
 	"SHOW_LAST_MONTHS": "Mostrar los últimos meses",
 
+	"_____________METADATA":"MONITOR___________________",
+	"METADATA_MONITOR": "Monitor de Metadatos",
+	"METATADA_VERSION": "Versión de Metadatos",
+	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET":"Formulario",
 	"DATASET_LIST":"Seleccione un formulario",

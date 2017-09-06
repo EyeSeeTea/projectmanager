@@ -119,6 +119,10 @@
   	"_______________ HMIS":"Adoption_______________",
   	"HMIS_ADOPTION": "HMIS Adoption",
 	"SHOW_LAST_MONTHS": "Show last months",
+
+	"_____________METADATA":"MONITOR___________________",
+	"METADATA_MONITOR": "Metadata Monitor",
+	"METATADA_VERSION": "Metadata Version",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",

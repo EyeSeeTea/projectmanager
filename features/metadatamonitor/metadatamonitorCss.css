@@ -1,0 +1,12 @@
+.mission {
+    background-color: lightgray;
+}
+
+.project {
+    text-indent: 1em;
+}
+
+.table-row td {
+    padding: 2px 15px !important;
+    font-size: 0.9em;
+}
