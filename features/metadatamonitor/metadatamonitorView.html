@@ -22,7 +22,7 @@
 	<thead>
 		<tr>
 			<th class="orgunit">{{ 'ORGANISATIONUNIT_LABEL' | translate}}</th>
-			<th>{{ 'METATADA_VERSION' | translate }}</th>
+			<th>{{ 'METATADA_VERSION' | translate }}: {{ctrl.localMetadataVersion}}</th>
 		</tr>
 	</thead>
 	<tbody ng-repeat="mission in ctrl.missionSyncRecords | orderBy:'name'">

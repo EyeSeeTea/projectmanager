@@ -17,47 +17,61 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { MetadataSyncRecord, OrgunitExtended, ProgressStatus } from '../../model/model';
-import { OrgunitService } from '../../services/services.module';
+import { MetadataSyncService, OrgunitService } from '../../services/services.module';
 
 export class MetadataMonitor {
 
-	static $inject = ['$q', 'DataStoreService', 'OrgunitService']
+	static $inject = ['$q', 'DataStoreService', 'MetadataSyncService', 'OrgunitService']
 
     readonly namespace = "projectServers";
 
     missionSyncRecords: MissionSyncRecord[];
     monitorDisplayed: boolean = false;
     loadingStatus: ProgressStatus;
+    localMetadataVersion: string;
 
     constructor(
         private $q: ng.IQService,
         private DataStoreService,
+        private MetadataSyncService: MetadataSyncService,
         private OrgunitService: OrgunitService
     ){
         this.loadingStatus = ProgressStatus.initialWithoutProgress;
-        this.getSyncRecords()
-            .then( syncRecordMap => {
-                this.OrgunitService.getMissionsWithProjects()
-                    .then( missions => {
-                        this.missionSyncRecords = this.getMissionSyncRecords(missions, syncRecordMap);
-                        this.monitorDisplayed = true;
-                        this.loadingStatus = ProgressStatus.hidden;
-                    }
-        )})
+        
+        this.$q.all([this.loadLocalMetadataVersion(), this.loadSyncRecords()])
+            .then(() => {
+                this.monitorDisplayed = true;
+                this.loadingStatus = ProgressStatus.hidden;
+            });
     }
 
-    getSyncRecords() {
+    private loadSyncRecords() {
+        return this.$q.all([this.getSyncRecords(), this.OrgunitService.getMissionsWithProjects()])
+            .then( result => {
+                const syncRecordMap = result[0];
+                const missions = result[1]
+                return this.getMissionSyncRecords(missions, syncRecordMap);
+            })
+            .then( missionSyncRecords => this.missionSyncRecords = missionSyncRecords );
+    }
+
+    private getSyncRecords() {
         return this.DataStoreService.getNamespaceKeys(this.namespace)
             .then( keys => {
                 const promises = keys.map( key => this.DataStoreService.getNamespaceKeyValue(this.namespace, key) );
                 return this.$q.all(promises);
-            }).then( records => {
+            })
+            .then( records => {
                 var syncRecordMap = {};
                 records.forEach( (record: MetadataSyncRecord) => {
                     syncRecordMap[record.project] = record
                 });
                 return syncRecordMap;
             });
+    }
+
+    private loadLocalMetadataVersion(): ng.IPromise<string> {
+        return this.MetadataSyncService.getLocalMetadataVersion().then( version => this.localMetadataVersion = version );
     }
 
     private getMissionSyncRecords(missions: OrgunitExtended[], syncRecordMap): MissionSyncRecord[] {
