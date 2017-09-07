@@ -16,17 +16,18 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { UserService } from '../services.module'
+import { DataStoreNames, UserService } from '../services.module'
 
 export class DataStoreService {
 
     static $inject = ['DataStore', 'UserService'];
 
-    private namespace = "HMIS_Management";
-    private defaultArrayKey = "values";
+    private namespace = this.DataStoreNames.APP;
+    private defaultArrayKey = this.DataStoreNames.DEFAULT_ARRAY_KEY;
 
     constructor(
         private DataStore,
+        private DataStoreNames: DataStoreNames,
         private UserService: UserService
     ){}
 

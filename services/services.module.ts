@@ -5,6 +5,7 @@ require('../core/dhis2Api');
 import { AnalyticsService } from './analytics/AnalyticsService';
 var dataImportService = require('./data/DataImportService');
 var demographicsService = require('./demographics/DemographicsService');
+import { DataStoreNames } from './data-store/DataStoreNames';
 import { DataStoreService } from './data-store/DataStoreService';
 var userdataStoreService = require('./data-store/userDataStoreService');
 import { EventExportService } from './events/EventExportService';
@@ -24,6 +25,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('AnalyticsService', AnalyticsService)
     .factory('DataImportService', dataImportService)
     .factory('DemographicsService', demographicsService)
+    .service('DataStoreNames', DataStoreNames)
     .service('DataStoreService', DataStoreService)
     .factory('userDataStoreService', userdataStoreService)
     .service('EventExportService', EventExportService)
@@ -41,6 +43,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
 
 export {
     AnalyticsService,
+    DataStoreNames,
     DataStoreService,
     EventExportService,
     EventHelper,

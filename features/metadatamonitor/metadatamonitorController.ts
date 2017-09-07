@@ -17,13 +17,11 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { MetadataSyncRecord, OrgunitExtended, ProgressStatus } from '../../model/model';
-import { MetadataSyncService, OrgunitService } from '../../services/services.module';
+import { DataStoreNames, DataStoreService, MetadataSyncService, OrgunitService } from '../../services/services.module';
 
 export class MetadataMonitor {
 
-	static $inject = ['$q', 'DataStoreService', 'MetadataSyncService', 'OrgunitService']
-
-    readonly namespace = "projectServers";
+	static $inject = ['$q', 'DataStoreNames', 'DataStoreService', 'MetadataSyncService', 'OrgunitService']
 
     missionSyncRecords: MissionSyncRecord[];
     monitorDisplayed: boolean = false;
@@ -32,7 +30,8 @@ export class MetadataMonitor {
 
     constructor(
         private $q: ng.IQService,
-        private DataStoreService,
+        private DataStoreNames: DataStoreNames,
+        private DataStoreService: DataStoreService,
         private MetadataSyncService: MetadataSyncService,
         private OrgunitService: OrgunitService
     ){
@@ -56,9 +55,9 @@ export class MetadataMonitor {
     }
 
     private getSyncRecords() {
-        return this.DataStoreService.getNamespaceKeys(this.namespace)
+        return this.DataStoreService.getNamespaceKeys(this.DataStoreNames.PROJECT_SERVERS)
             .then( keys => {
-                const promises = keys.map( key => this.DataStoreService.getNamespaceKeyValue(this.namespace, key) );
+                const promises = keys.map( key => this.DataStoreService.getNamespaceKeyValue(this.DataStoreNames.PROJECT_SERVERS, key) );
                 return this.$q.all(promises);
             })
             .then( records => {
