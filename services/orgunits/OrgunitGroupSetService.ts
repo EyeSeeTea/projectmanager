@@ -18,8 +18,17 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import * as angular from 'angular';
+import { OrgunitGroupSet, IdName } from '../../model/model';
 
-export const orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationUnitGroup','$q', function(OrganisationUnitGroupSet, OrganisationUnitGroup, $q: ng.IQService) {
+export class OrgunitGroupSetService {
+
+    static $inject = ['$q', 'OrganisationUnitGroupSet','OrganisationUnitGroup'];
+
+    constructor(
+        private $q: ng.IQService,
+        private OrganisationUnitGroupSet,
+        private OrganisationUnitGroup
+    ){}
 
     /**
      * It returns and array of organisationUnitGroupsSets. The structure of each groupSet is the same that querying
@@ -28,28 +37,17 @@ export const orgunitGroupSetService = ['OrganisationUnitGroupSet','OrganisationU
      * @param groupSets - Array of organisationUnitGroupSets. OrgunitGroupSet = {"id": "ddslkfjdfsjk",...}
      * @returns {*} - Array of organisationUnitGroupSets with name and children[id, name]
      */
-    let getOrgunitGroupSets = function(groupSets){
-        let promiseArray = [];
-        angular.forEach(groupSets, (groupSet) => {
-            promiseArray.push(getTranslatedOrgunitGroupSet(groupSet));
-        });
-
-        return $q.all(promiseArray)
-            .then( data => data );
+    getOrgunitGroupSets(groupSets: IdName[]): ng.IPromise<OrgunitGroupSet[]> {
+        const promiseArray: ng.IPromise<OrgunitGroupSet>[] = groupSets.map(groupSet => this.getTranslatedOrgunitGroupSet(groupSet));
+        return this.$q.all(promiseArray);
     };
 
-    var getTranslatedOrgunitGroupSet = function(groupSet){
-        return OrganisationUnitGroupSet.get({
+    private getTranslatedOrgunitGroupSet(groupSet: IdName): ng.IPromise<OrgunitGroupSet> {
+        return this.OrganisationUnitGroupSet.get({
             groupsetid: groupSet.id,
             fields: "displayName|rename(name),id,organisationUnitGroups[id,displayName|rename(name)]",
             paging: false,
             translate: true
         }).$promise
-            .then( groupSetInfo => groupSetInfo);
     };
-
-    return {
-        getOrgunitGroupSets: getOrgunitGroupSets
-    }
-
-}];
+}

@@ -18,10 +18,11 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { MetadataSyncRecord, MetadataVersion } from '../../model/model';
+import { DataStoreNames, UserService } from '../../services/services.module';
 
 export class MetadataSyncService {
 
-    static $inject = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService'];
+    static $inject = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService', 'DataStoreNames'];
 
     constructor(
         private $q: ng.IQService,
@@ -29,11 +30,12 @@ export class MetadataSyncService {
         private MetadataVersion,
         private MetadataSync,
         private RemoteAvailability,
-        private UserService
+        private UserService: UserService,
+        private DataStoreNames: DataStoreNames
     ){}
 
     // Config variables
-    private serverStatusNamespace = 'projectServers';
+    private serverStatusNamespace = this.DataStoreNames.PROJECT_SERVERS;
 
     // Error messages
     private REMOTE_NOT_AVAILABLE = "REMOTE_NOT_AVAILABLE";

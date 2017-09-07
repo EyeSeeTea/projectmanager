@@ -3,16 +3,17 @@ import * as angular from 'angular';
 require('../core/dhis2Api');
 
 import { AnalyticsService } from './analytics/AnalyticsService';
-var dataImportService = require('./data/DataImportService');
+import { DataImportService } from './data/DataImportService';
 var demographicsService = require('./demographics/DemographicsService');
-var dataStoreService = require('./data-store/DataStoreService');
+import { DataStoreNames } from './data-store/DataStoreNames';
+import { DataStoreService } from './data-store/DataStoreService';
 var userdataStoreService = require('./data-store/userDataStoreService');
 import { EventExportService } from './events/EventExportService';
 import { EventHelper } from './events/EventHelper';
 import { EventImportService } from './events/EventImportService';
 var metadataImportService = require('./metadata/MetadataImportService');
 import { MetadataSyncService } from './metadata/MetadataSyncService';
-import { orgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
+import { OrgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
 import { OrgunitService } from './orgunits/OrgunitService';
 import { SystemService } from './system/SystemService';
 import { ProgramService } from './programs/ProgramService';
@@ -22,16 +23,17 @@ import { UserService } from './users/UserService';
 
 export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('AnalyticsService', AnalyticsService)
-    .factory('DataImportService', dataImportService)
+    .service('DataImportService', DataImportService)
     .factory('DemographicsService', demographicsService)
-    .factory('DataStoreService', dataStoreService)
+    .service('DataStoreNames', DataStoreNames)
+    .service('DataStoreService', DataStoreService)
     .factory('userDataStoreService', userdataStoreService)
     .service('EventExportService', EventExportService)
     .service('EventHelper', EventHelper)
     .service('EventImportService', EventImportService)
     .factory('MetadataImportService', metadataImportService)
     .service('MetadataSyncService', MetadataSyncService)
-    .factory('OrgunitGroupSetService', orgunitGroupSetService)
+    .service('OrgunitGroupSetService', OrgunitGroupSetService)
     .service('OrgunitService', OrgunitService)
     .service('SystemService', SystemService)
     .service('ProgramService', ProgramService)
@@ -41,11 +43,14 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
 
 export {
     AnalyticsService,
+    DataImportService,
+    DataStoreNames,
+    DataStoreService,
     EventExportService,
     EventHelper,
     EventImportService,
     MetadataSyncService,
-    orgunitGroupSetService,
+    OrgunitGroupSetService,
     OrgunitService,
     ProgramService,
     SystemService,

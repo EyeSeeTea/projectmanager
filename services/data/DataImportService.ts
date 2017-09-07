@@ -17,15 +17,10 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var dataImportService = [function() {
+export class DataImportService {
 
-    var formattedData = {}, formattedSummary = {};
-
-    var getFormattedData = function (){
-
-    };
-
-    var getFormattedSummary = function(rawData){
+    getFormattedSummary(rawData) {
+        let formattedSummary = {};
         for(var i = 0, len = rawData.length; i < len; i++){
             var value = {
                 dataElementId: rawData[i].dataElement,
@@ -41,13 +36,15 @@ var dataImportService = [function() {
             formattedSummary[rawData[i].orgUnit]['periods'][rawData[i].period]++;
         }
         return formattedSummary;
-    };
+    }
 
-    var classifyRawData = function(rawData){
+    getFormattedData() {
+    }
 
-    };
+    classifyRawData(rawData) {
+    }
 
-    var getPeriodType = function( periodId ){
+    private getPeriodType( periodId ) {
         // Daily, like '20160222'
         if( /^\d{8}$/.test( periodId ) ){ return 'Daily';}
         // Weekly, like '2016W12'
@@ -72,12 +69,5 @@ var dataImportService = [function() {
         else if( /^\d{4}Oct$/.test( periodId ) ){ return 'FinancialOct';}
         
         else{ return undefined;}
-    };
-
-    return {
-        getFormattedSummary: getFormattedSummary,
-        getPeriodType: getPeriodType
     }
-}];
-
-module.exports = dataImportService;
+}

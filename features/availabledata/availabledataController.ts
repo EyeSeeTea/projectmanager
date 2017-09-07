@@ -18,14 +18,14 @@
 
 import * as angular from 'angular';
 import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
-import { AnalyticsService, UserService } from '../../services/services.module';
+import { AnalyticsService, OrgunitGroupSetService, UserService } from '../../services/services.module';
 
 export class AvailableData {
 
 	static $inject = ["$q", "$http", "$parse", "Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "userDataStoreService", "AnalyticsService"];
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
-				private Organisationunit, private OrganisationUnitGroupSet,	private OrgunitGroupSetService,
+				private Organisationunit, private OrganisationUnitGroupSet,	private OrgunitGroupSetService: OrgunitGroupSetService,
 				private UserService: UserService, private userDataStoreService, private AnalyticsService: AnalyticsService
 	){
 		// Initialize table
@@ -47,11 +47,12 @@ export class AvailableData {
 		name: "Last 6 months"
 	};
 
-	availableFilters = [
-		{id:"BtFXTpKRl6n", name: "1. Health Service", selected: false}
+	activeFilters = [
+		{id:"BtFXTpKRl6n", name: "1. Health Service"}
 	];
-
+	availableFilters;
 	selectedFilters = {};
+	
 	orgunitsInfo = {};
 	periods;
 	tableRows: AvailableDataItem[] = [];
@@ -70,7 +71,7 @@ export class AvailableData {
 	}
 
 	loadFilters() {
-		return this.OrgunitGroupSetService.getOrgunitGroupSets(this.availableFilters)
+		return this.OrgunitGroupSetService.getOrgunitGroupSets(this.activeFilters)
 			.then(filters => {
 					this.availableFilters = filters;
 					// Preselect filters

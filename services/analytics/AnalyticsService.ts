@@ -51,7 +51,6 @@ export class AnalyticsService {
     private buildAnalyticsParameters(orgunit, period, filters): AnalyticsParameters {
 
         var orgunits = "";
-        console.log(orgunit);
         if(orgunit instanceof Array){
             orgunits = orgunit.map( (value, index, array) => value.id ).join(";")
         } else {

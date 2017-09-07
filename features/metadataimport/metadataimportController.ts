@@ -23,13 +23,12 @@ import { AnalyticsService, MetadataSyncService } from '../../services/services.m
 
 export class MetadataImport {
 
-	static $inject = ["$q", "commonvariable", "MetadataSyncService", "RemoteApiService", "DemographicsService", "AnalyticsService", "MetadataImportService"]
+	static $inject = ["$q", "commonvariable", "MetadataSyncService", "DemographicsService", "AnalyticsService", "MetadataImportService"]
 
 	constructor(
 		private $q: ng.IQService,
 		private commonvariable: CommonVariable,
 		private MetadataSyncService: MetadataSyncService,
-		private RemoteApiService,
 		private DemographicsService,
 		private AnalyticsService: AnalyticsService,
 		private MetadataImportService

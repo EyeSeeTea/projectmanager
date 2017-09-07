@@ -31,6 +31,14 @@ export class OrgunitExtended extends Orgunit {
     }
 }
 
+export class OrgunitGroupSet {
+    constructor(
+        public id: string,
+        public name: string,
+        public organisationUnitGroups: IdName[]        
+    ){}
+}
+
 export class Program {
     constructor(
         public id: string,
