@@ -13,7 +13,7 @@ import { EventHelper } from './events/EventHelper';
 import { EventImportService } from './events/EventImportService';
 var metadataImportService = require('./metadata/MetadataImportService');
 import { MetadataSyncService } from './metadata/MetadataSyncService';
-import { orgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
+import { OrgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
 import { OrgunitService } from './orgunits/OrgunitService';
 import { SystemService } from './system/SystemService';
 import { ProgramService } from './programs/ProgramService';
@@ -33,7 +33,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('EventImportService', EventImportService)
     .factory('MetadataImportService', metadataImportService)
     .service('MetadataSyncService', MetadataSyncService)
-    .factory('OrgunitGroupSetService', orgunitGroupSetService)
+    .service('OrgunitGroupSetService', OrgunitGroupSetService)
     .service('OrgunitService', OrgunitService)
     .service('SystemService', SystemService)
     .service('ProgramService', ProgramService)
@@ -49,7 +49,7 @@ export {
     EventHelper,
     EventImportService,
     MetadataSyncService,
-    orgunitGroupSetService,
+    OrgunitGroupSetService,
     OrgunitService,
     ProgramService,
     SystemService,

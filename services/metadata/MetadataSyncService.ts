@@ -22,7 +22,7 @@ import { DataStoreNames, UserService } from '../../services/services.module';
 
 export class MetadataSyncService {
 
-    static $inject = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService'];
+    static $inject = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService', 'DataStoreNames'];
 
     constructor(
         private $q: ng.IQService,

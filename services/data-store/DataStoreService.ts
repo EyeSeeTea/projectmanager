@@ -20,7 +20,7 @@ import { DataStoreNames, UserService } from '../services.module'
 
 export class DataStoreService {
 
-    static $inject = ['DataStore', 'UserService'];
+    static $inject = ['DataStore', 'DataStoreNames', 'UserService'];
 
     private namespace = this.DataStoreNames.APP;
     private defaultArrayKey = this.DataStoreNames.DEFAULT_ARRAY_KEY;
