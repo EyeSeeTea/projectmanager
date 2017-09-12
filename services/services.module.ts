@@ -7,7 +7,8 @@ import { DataImportService } from './data/DataImportService';
 var demographicsService = require('./demographics/DemographicsService');
 import { DataStoreNames } from './data-store/DataStoreNames';
 import { DataStoreService } from './data-store/DataStoreService';
-import { UserDataStoreService } from './data-store/UserDataStoreService'
+import { UserDataStoreService } from './data-store/UserDataStoreService';
+import { ProjectStatusRemoteDataStoreService } from './data-store/remote/ProjectStatusRemoteDataStoreService';
 import { EventExportService } from './events/EventExportService';
 import { EventHelper } from './events/EventHelper';
 import { EventImportService } from './events/EventImportService';
@@ -28,6 +29,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('DataStoreNames', DataStoreNames)
     .service('DataStoreService', DataStoreService)
     .service('UserDataStoreService', UserDataStoreService)
+    .service('ProjectStatusRemoteDataStoreService', ProjectStatusRemoteDataStoreService)
     .service('EventExportService', EventExportService)
     .service('EventHelper', EventHelper)
     .service('EventImportService', EventImportService)
@@ -53,6 +55,7 @@ export {
     OrgunitGroupSetService,
     OrgunitService,
     ProgramService,
+    ProjectStatusRemoteDataStoreService,
     RemoteApiService,
     SystemService,
     UserDataStoreService,

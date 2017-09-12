@@ -18,30 +18,22 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { MetadataSyncRecord, MetadataVersion } from '../../model/model';
-import { DataStoreNames, UserService } from '../../services/services.module';
+import { ProjectStatusRemoteDataStoreService, RemoteApiService, UserService } from '../../services/services.module';
 
 export class MetadataSyncService {
 
-    static $inject = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'RemoteAvailability', 'UserService', 'DataStoreNames'];
+    static $inject = ['$q', 'RemoteApiService', 'MetadataVersion', 'MetadataSync', 'UserService', 'ProjectStatusRemoteDataStoreService'];
 
     constructor(
         private $q: ng.IQService,
-        private RemoteApiService,
+        private RemoteApiService: RemoteApiService,
         private MetadataVersion,
         private MetadataSync,
-        private RemoteAvailability,
         private UserService: UserService,
-        private DataStoreNames: DataStoreNames
+        private ProjectStatusRemoteDataStoreService: ProjectStatusRemoteDataStoreService
     ){}
 
-    // Config variables
-    private serverStatusNamespace = this.DataStoreNames.PROJECT_SERVERS;
-
     // Error messages
-    private REMOTE_NOT_AVAILABLE = "REMOTE_NOT_AVAILABLE";
-    private REMOTE_NOT_CONFIGURED = "REMOTE_NOT_CONFIGURED";
-    private AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
-    private REMOTE_IS_AVAILABLE = "REMOTE_IS_AVAILABLE";
     private VERSION_CORRUPTED = "VERSION_CORRUPTED";
 
     private remoteMetadataVersion;
@@ -75,8 +67,13 @@ export class MetadataSyncService {
                             }
                         });
                         if (index + 1 === versionArray.length) deferred.resolve("Done");
-                    }).
-                    catch(error => deferred.reject(error));
+                    })
+                    .catch(error => {
+                        deferred.reject(error);
+                        // Return a promises that resolves to null to stop chaining 
+                        // http://blog.zeit.io/stop-a-promise-chain-without-using-reject-with-angular-s-q/
+                        return this.$q( () => null );
+                    });
             })
         }, this.$q.resolve("Start"));
 
@@ -94,20 +91,9 @@ export class MetadataSyncService {
             .then( user => {
                 var orgunitid = user.organisationUnits[0].id;
                 var register = new MetadataSyncRecord(orgunitid, currentVersion, new Date());
-                return this.RemoteApiService.executeRemoteQuery({
-                    method: 'PUT',
-                    resource: 'dataStore/' + this.serverStatusNamespace + '/' + orgunitid,
-                    data: register
-                }).then(
-                    success => currentVersion,
-                    error => this.RemoteApiService.executeRemoteQuery({
-                            method: 'POST',
-                            resource: 'dataStore/' + this.serverStatusNamespace + '/' + orgunitid,
-                            data: register
-                        })
-                            .then(success => currentVersion)
-                );
-            });
+                return this.ProjectStatusRemoteDataStoreService.setKeyValue(orgunitid, register)
+            })
+            .then( success => currentVersion );
     }
 
     /**
@@ -157,11 +143,7 @@ export class MetadataSyncService {
         if (this.remoteMetadataVersion) {
             return this.$q.resolve(this.remoteMetadataVersion);
         } else {
-            return this.RemoteApiService.executeRemoteQuery({
-                method: 'GET',
-                resource: 'metadata/version',
-                apiVersion: ''
-            })
+            return this.RemoteApiService.getMetadataVersion()
                 .then( version => {
                         this.remoteMetadataVersion = version.data.name;
                         return this.remoteMetadataVersion;
@@ -187,8 +169,7 @@ export class MetadataSyncService {
      * @returns {*} A promise that successes if remote is available, and fails if not. If failure, it returns a error message.
      */
     isRemoteServerAvailable() {
-        return this.RemoteAvailability.get().$promise
-            .then(response => this.handleAvailabilityResponse(response));
+        return this.RemoteApiService.isRemoteServerAvailable();
     }
 
     /**
@@ -205,13 +186,7 @@ export class MetadataSyncService {
 
     private updateVersionDiff(): ng.IPromise<MetadataVersion[]> {
         return this.getLocalMetadataVersion()
-            .then( localVersion  => {
-                return this.RemoteApiService.executeRemoteQuery({
-                    method: 'GET',
-                    resource: 'metadata/version/history?baseline=' + localVersion,
-                    apiVersion: ''
-                })
-            })
+            .then( localVersion  => this.RemoteApiService.getMetadataVersionDiff(localVersion) )
             .then( result => {
                 this.versionDiff = result.data == "" ? [] : result.data.metadataversions;
                 return this.versionDiff;
@@ -256,24 +231,6 @@ export class MetadataSyncService {
             return this.$q.reject(this.VERSION_CORRUPTED);
         }
         return this.$q.reject("Error")
-    }
-
-    private handleAvailabilityResponse(response) {
-        if (response.statusCode == 200) {
-            return this.$q.resolve(this.REMOTE_IS_AVAILABLE);
-        }
-        else if (response.statusCode == 502 && response.message == "Remote server is not configured") {
-            return this.$q.reject(this.REMOTE_NOT_CONFIGURED);
-        }
-        else if (response.statusCode == 502 && response.message == "Network is unreachable") {
-            return this.$q.reject(this.REMOTE_NOT_AVAILABLE);
-        }
-        else if (response.statusCode == 401 && response.message == "Authentication failed") {
-            return this.$q.reject(this.AUTHENTICATION_FAILED);
-        }
-        else {
-            return this.$q.reject(response.message);
-        }
     }
     
 }

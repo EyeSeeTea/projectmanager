@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { CommonVariable } from '../../model/model';
+import { CommonVariable, RemoteQuery } from '../../model/model';
 import { DataStoreService } from '../../services/services.module';
 
 export class RemoteApiService {
@@ -77,7 +77,7 @@ export class RemoteApiService {
             });
     };
     
-    executeRemoteQuery(remoteQuery) {
+    executeRemoteQuery(remoteQuery: RemoteQuery) {
        
         // Check if apiVersion is defined in remoteQuery (two digits).
         let apiVersion = remoteQuery.apiVersion == undefined ? '/' + this.defaultAPIVersion :
@@ -88,15 +88,14 @@ export class RemoteApiService {
                 success => {
                     // Choose authorization. Defaults to data authorization
                     var authorization = this.remoteSettings.loggerAuth;
-                       return this.$http({
+                    return this.$http({
                         method: remoteQuery.method,
                         url: this.remoteSettings.api + apiVersion + '/' + remoteQuery.resource,
                         data: remoteQuery.data,
                         headers: {
-                          Authorization: authorization
+                            Authorization: authorization
                         },
-                         
-                    })
+                    });
                 }
             )
             .catch((error) => this.handleRemoteErrors(error));
@@ -110,6 +109,22 @@ export class RemoteApiService {
         return this.RemoteAvailability.get().$promise
             .then((response) => this.handleAvailabilityResponse(response));
     };
+
+    getMetadataVersion() {
+        return this.executeRemoteQuery({
+            method: 'GET',
+            resource: 'metadata/version',
+            apiVersion: ''
+        });
+    }
+
+    getMetadataVersionDiff(baseline: string) {
+        return this.executeRemoteQuery({
+            method: 'GET',
+            resource: 'metadata/version/history?baseline=' + baseline,
+            apiVersion: ''
+        });
+    }
 
     private init() {
         if (this.remoteSettings != undefined){

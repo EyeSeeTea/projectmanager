@@ -143,3 +143,12 @@ export class CurrentUser {
         public dataViewOrganisationUnits: {id: string, level: number, children:{id: string, level: number, children: string[]}[]}[]
     ){}
 }
+
+export class RemoteQuery {
+    constructor(
+        public method: string,
+        public resource: string,
+        public apiVersion?: string,
+        public data?: any
+    ){}
+}
