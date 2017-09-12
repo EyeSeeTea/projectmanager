@@ -17,25 +17,30 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-var userdataStoreService = ['userDataStore', 'UserService', function(userDataStore, UserService) {
+import { DataStoreNames, UserService } from '../services.module';
 
-    var namespace = "availableData";
-    var defaultArrayKey = "values";
+export class UserDataStoreService {
+
+    static $inject = ['userDataStore', 'UserService', 'DataStoreNames'];
+
+    constructor(
+        private userDataStore,
+        private UserService: UserService,
+        private DataStoreNames: DataStoreNames
+    ){}
+
+    readonly namespace = this.DataStoreNames.AVAILABLE_DATA;
+    readonly defaultArrayKey = this.DataStoreNames.DEFAULT_ARRAY_KEY;
 
     
-    var getUserId = function() {
-        return UserService.getCurrentUser().then(function (user) {
-            return user.id;
-        });
-    };
+    getUserId() {
+        return this.UserService.getCurrentUser().then(user => user.id);
+    }
     
 
-    var getCurrentUserSettings = function() {
-        
-            return userDataStore.get({namespace: namespace}).$promise
-           
-        ;
-    };
+    getCurrentUserSettings() {
+        return this.userDataStore.get({namespace: this.namespace}).$promise;
+    }
 
     /**
      *
@@ -43,27 +48,25 @@ var userdataStoreService = ['userDataStore', 'UserService', function(userDataSto
      * @param property With the syntax {"key": "property-name", "value": "property-value"}
      * @returns {*}
      */
-    var updateCurrentUserSettings = function(module, property){
+    updateCurrentUserSettings(module, property) {
         var userSettings = {};
-        return getCurrentUserSettings()
-            .then(function(successResult){
+        return this.getCurrentUserSettings()
+            .then(successResult => {
                 userSettings = successResult;
                 // Update userSettings with new property, without modifying the others
                 if(userSettings[module] == undefined)
                     userSettings[module] = {};
                 userSettings[module][property.key] = property.value;
                 
-                    return userDataStore.put({namespace:namespace}, userSettings);
-                ;
+                return this.userDataStore.put({namespace:this.namespace}, userSettings);
             },
-            function(){
+            error => {
                 userSettings[module] = {};
                 userSettings[module][property.key] = property.value;
-                
-                    return userDataStore.save({namespace:namespace}, userSettings);
-                ;
+
+                return this.userDataStore.save({namespace:this.namespace}, userSettings);
             });
-    };
+    }
 
     /**
      * Set the value for the key and namespace provided.
@@ -72,25 +75,25 @@ var userdataStoreService = ['userDataStore', 'UserService', function(userDataSto
      * @param value New value
      * @returns {*} 
      */
-    var setNamespaceKeyValue = function (namespace, key, value) {
-        return getNamespaceKeyValue(namespace, key)
-            .then(function (currentValue) {
+    setNamespaceKeyValue(namespace, key, value) {
+        return this.getNamespaceKeyValue(namespace, key)
+            .then(currentValue => {
                 if (currentValue != undefined) {
-                    return userDataStore.put({namespace: namespace, key: key}, value);
+                    return this.userDataStore.put({namespace: namespace, key: key}, value);
                 } else {
-                    return userDataStore.save({namespace: namespace, key: key}, value);
+                    return this.userDataStore.save({namespace: namespace, key: key}, value);
                 }
             })
-    };
+    }
 
     /**
      * Set the value for the key provided in the default namespace.
      * @param key Name of the key
      * @param value New value
      */
-    var setKeyValue = function (key, value) {
-        return setNamespaceKeyValue(namespace, key, value);
-    };
+    setKeyValue(key, value) {
+        return this.setNamespaceKeyValue(this.namespace, key, value);
+    }
 
     /**
      * Introduces a new value in the array. This methods expects the value of the pair (namespace, key) to be an array.
@@ -100,19 +103,19 @@ var userdataStoreService = ['userDataStore', 'UserService', function(userDataSto
      * @param value New value to be pushed into the array
      * @returns {*} Promise with the result of the put/post method
      */
-    var updateNamespaceKeyArray = function(namespace, key, value){
-        return getNamespaceKeyValue(namespace, key)
-            .then(function(currentValue){
+    updateNamespaceKeyArray(namespace, key, value) {
+        return this.getNamespaceKeyValue(namespace, key)
+            .then( currentValue => {
                 if (currentValue != undefined) {
-                    currentValue[defaultArrayKey].push(value);
-                    return userDataStore.put({namespace: namespace, key: key}, currentValue);
+                    currentValue[this.defaultArrayKey].push(value);
+                    return this.userDataStore.put({namespace: namespace, key: key}, currentValue);
                 } else {
                     currentValue = {};
-                    currentValue[defaultArrayKey] = [value];
-                    return userDataStore.save({namespace: namespace, key: key}, currentValue);
+                    currentValue[this.defaultArrayKey] = [value];
+                    return this.userDataStore.save({namespace: namespace, key: key}, currentValue);
                 }
             });
-    };
+    }
 
     /**
      * Get currentValue for the pair (namespace, key)
@@ -120,27 +123,15 @@ var userdataStoreService = ['userDataStore', 'UserService', function(userDataSto
      * @param key Name of the key
      * @returns {*|g|n} Promise with the value of the pair (namespace, key)
      */
-    var getNamespaceKeyValue = function(namespace, key){
-        return userDataStore.get({namespace: namespace, key: key}).$promise.then(
-            function (data) {return data;},
-            function () {return undefined}
+    getNamespaceKeyValue(namespace, key){
+        return this.userDataStore.get({namespace: namespace, key: key}).$promise.then(
+            data => data,
+            error => undefined
         )
-    };
+    }
     
-    var getKeyValue = function (key) {
-        return getNamespaceKeyValue(namespace, key);
+    getKeyValue(key) {
+        return this.getNamespaceKeyValue(this.namespace, key);
     };
 
-    return {
-        getCurrentUserSettings: getCurrentUserSettings,
-        updateCurrentUserSettings: updateCurrentUserSettings,
-        getNamespaceKeyValue: getNamespaceKeyValue,
-        setNamespaceKeyValue: setNamespaceKeyValue,
-        updateNamespaceKeyArray: updateNamespaceKeyArray,
-        setKeyValue: setKeyValue,
-        getKeyValue: getKeyValue
-    };
-
-}];
-
-module.exports = userdataStoreService;
+}

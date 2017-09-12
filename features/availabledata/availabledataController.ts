@@ -18,15 +18,15 @@
 
 import * as angular from 'angular';
 import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
-import { AnalyticsService, OrgunitGroupSetService, UserService } from '../../services/services.module';
+import { AnalyticsService, OrgunitGroupSetService, UserDataStoreService, UserService } from '../../services/services.module';
 
 export class AvailableData {
 
-	static $inject = ["$q", "$http", "$parse", "Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "userDataStoreService", "AnalyticsService"];
+	static $inject = ["$q", "$http", "$parse", "Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "AnalyticsService"];
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
 				private Organisationunit, private OrganisationUnitGroupSet,	private OrgunitGroupSetService: OrgunitGroupSetService,
-				private UserService: UserService, private userDataStoreService, private AnalyticsService: AnalyticsService
+				private UserService: UserService, private UserDataStoreService: UserDataStoreService, private AnalyticsService: AnalyticsService
 	){
 		// Initialize table
 		this.loadUserSettings()
@@ -59,7 +59,7 @@ export class AvailableData {
 	tableDisplayed: boolean = false;
 
 	loadUserSettings() {
-		return this.userDataStoreService.getCurrentUserSettings().then(
+		return this.UserDataStoreService.getCurrentUserSettings().then(
 			userSettings => {
 				if(userSettings.availableData.period != null)
 					this.selectedPeriod = userSettings.availableData.period;
@@ -235,7 +235,7 @@ export class AvailableData {
 			"value": this.selectedPeriod
 		};
 
-		this.userDataStoreService.updateCurrentUserSettings("availableData", periodSetting)
+		this.UserDataStoreService.updateCurrentUserSettings("availableData", periodSetting)
 			.then(() => {});
 
 		this.loadTable();
