@@ -17,7 +17,7 @@ import { OrgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
 import { OrgunitService } from './orgunits/OrgunitService';
 import { SystemService } from './system/SystemService';
 import { ProgramService } from './programs/ProgramService';
-var remoteApiService = require('./metadata/RemoteApiService');
+import { RemoteApiService } from './metadata/RemoteApiService';
 var sqlService = require('./sql/SqlService');
 import { UserService } from './users/UserService';
 
@@ -37,7 +37,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('OrgunitService', OrgunitService)
     .service('SystemService', SystemService)
     .service('ProgramService', ProgramService)
-    .factory('RemoteApiService', remoteApiService)
+    .service('RemoteApiService', RemoteApiService)
     .factory('sqlService', sqlService)
     .service('UserService', UserService);
 
@@ -53,6 +53,7 @@ export {
     OrgunitGroupSetService,
     OrgunitService,
     ProgramService,
+    RemoteApiService,
     SystemService,
     UserService
 }
