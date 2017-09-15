@@ -12,6 +12,7 @@ import { ProjectStatusRemoteDataStoreService } from './data-store/remote/Project
 import { EventExportService } from './events/EventExportService';
 import { EventHelper } from './events/EventHelper';
 import { EventImportService } from './events/EventImportService';
+import { MessageService } from './messages/MessageService';
 var metadataImportService = require('./metadata/MetadataImportService');
 import { MetadataSyncService } from './metadata/MetadataSyncService';
 import { OrgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
@@ -33,6 +34,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('EventExportService', EventExportService)
     .service('EventHelper', EventHelper)
     .service('EventImportService', EventImportService)
+    .service('MessageService', MessageService)
     .factory('MetadataImportService', metadataImportService)
     .service('MetadataSyncService', MetadataSyncService)
     .service('OrgunitGroupSetService', OrgunitGroupSetService)
@@ -51,6 +53,7 @@ export {
     EventExportService,
     EventHelper,
     EventImportService,
+    MessageService,
     MetadataSyncService,
     OrgunitGroupSetService,
     OrgunitService,

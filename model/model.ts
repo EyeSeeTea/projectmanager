@@ -152,3 +152,11 @@ export class RemoteQuery {
         public data?: any
     ){}
 }
+
+export class MessageConversation {
+    constructor(
+        public subject: string,
+        public text: string,
+        public users: {id: string}[]
+    ){}
+}
