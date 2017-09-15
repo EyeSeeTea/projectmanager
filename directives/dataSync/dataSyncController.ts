@@ -17,6 +17,7 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { RESTUtil, ValidationRecord } from '../../model/model';
+import { DataStoreService, MessageService, RemoteApiService, UserService } from '../../services/services.module';
 
 export const datasyncDirective = [function () {
 	return {
@@ -29,8 +30,8 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisationunit",  "messageConversations", "RemoteApiService", "DataStoreService", 'UserService',
-	function ($scope, $q: ng.IQService, commonvariable, Info, Organisationunit, messageConversations, RemoteApiService, DataStoreService, UserService) {
+var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisationunit",  "MessageService", "RemoteApiService", "DataStoreService", 'UserService',
+	function ($scope, $q: ng.IQService, commonvariable, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService) {
 
 		var projectId = null;
 		var projectName = null;
@@ -132,14 +133,13 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 							projectName = user.organisationUnits[0].name;
 							getMedco(projectId).then(
 								medcos => {
-
 									var message = {
 										subject: "Data Validation Request - " + projectName,
 										text: "Data Validation Request: Date - " + register.lastDatePush,
 										users: medcos
 									}
 
-									sendMessageOnline(message);
+									MessageService.sendMessage(message);
 									$scope.validation_date = register.lastDatePush;
 								});
 
@@ -188,7 +188,7 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 										text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
 										users: medcos
 									}
-									sendMessage(message);
+									MessageService.sendRemoteMessage(message);
 								});
 						},
 						data_error => {
@@ -197,18 +197,6 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 				},
 				error => $scope.sync_result = error
 			);
-		}
-
-		function sendMessage(message) {
-			RemoteApiService.executeRemoteQuery({
-				method: 'POST',
-				resource: 'messageConversations',
-				data: message
-			})
-		}
-
-		function sendMessageOnline(message) {
-			messageConversations.post(message);
 		}
 
 		function getMedco(projectId) {
