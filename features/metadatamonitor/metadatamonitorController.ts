@@ -17,11 +17,11 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { MetadataSyncRecord, OrgunitExtended, ProgressStatus } from '../../model/model';
-import { DataStoreNames, DataStoreService, MetadataSyncService, OrgunitService } from '../../services/services.module';
+import { MetadataSyncService, OrgunitService, ProjectStatusDataStoreService } from '../../services/services.module';
 
 export class MetadataMonitor {
 
-	static $inject = ['$q', 'DataStoreNames', 'DataStoreService', 'MetadataSyncService', 'OrgunitService']
+	static $inject = ['$q', 'MetadataSyncService', 'OrgunitService', 'ProjectStatusDataStoreService']
 
     missionSyncRecords: MissionSyncRecord[];
     monitorDisplayed: boolean = false;
@@ -30,10 +30,9 @@ export class MetadataMonitor {
 
     constructor(
         private $q: ng.IQService,
-        private DataStoreNames: DataStoreNames,
-        private DataStoreService: DataStoreService,
         private MetadataSyncService: MetadataSyncService,
-        private OrgunitService: OrgunitService
+        private OrgunitService: OrgunitService,
+        private ProjectStatusDataStoreService: ProjectStatusDataStoreService
     ){
         this.loadingStatus = ProgressStatus.initialWithoutProgress;
         
@@ -55,9 +54,9 @@ export class MetadataMonitor {
     }
 
     private getSyncRecords() {
-        return this.DataStoreService.getNamespaceKeys(this.DataStoreNames.PROJECT_SERVERS)
+        return this.ProjectStatusDataStoreService.getKeys()
             .then( keys => {
-                const promises = keys.map( key => this.DataStoreService.getNamespaceKeyValue(this.DataStoreNames.PROJECT_SERVERS, key) );
+                const promises = keys.map( key => this.ProjectStatusDataStoreService.getKeyValue(key) );
                 return this.$q.all(promises);
             })
             .then( records => {
