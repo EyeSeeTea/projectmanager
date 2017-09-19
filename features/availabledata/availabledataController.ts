@@ -115,6 +115,8 @@ export class AvailableData {
 						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id]);
 						this.tableRows = this.tableRows.concat(parentRows).concat(childrenRows);
 						
+						console.log(this.tableRows );
+
 						// Make visible orgunits under dataViewOrgunit
 						this.orgunitsInfo[dataViewOrgUnit.id].clicked = true;
 
@@ -182,6 +184,7 @@ export class AvailableData {
 				childrenHierarchy.push(orgunit.id);
 				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy);
 				this.tableRows = this.tableRows.concat(childrenRows);
+				console.log(this.tableRows );
 			})
 			.finally( () => {
 				// Once finished, remove loadingIcon

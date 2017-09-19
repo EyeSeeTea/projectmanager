@@ -17,7 +17,7 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { RESTUtil, ValidationRecord } from '../../model/model';
-import { DataStoreService, MessageService, RemoteApiService, UserService } from '../../services/services.module';
+import { DataStoreService, MessageService, RemoteApiService, SystemService, UserService } from '../../services/services.module';
 
 export const datasyncDirective = [function () {
 	return {
@@ -30,8 +30,8 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisationunit",  "MessageService", "RemoteApiService", "DataStoreService", 'UserService',
-	function ($scope, $q: ng.IQService, commonvariable, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService) {
+var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisationunit",  "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
+	function ($scope, $q: ng.IQService, commonvariable, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
 
 		var projectId = null;
 		var projectName = null;
@@ -62,11 +62,11 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 			});
 
 
-		function writeRegisterInRemoteServer(projectId) {
+		function writeRegisterInRemoteServer(projectId,serverDate) {
 			var values = { values: [] }
 			Info.get().$promise.then(
 				info => {
-					lastDatePush = new Date(info.serverDate).getTime();
+					lastDatePush = serverDate.getTime();
 					register = {
 						lastDatePush: lastDatePush,
 						lastPushDateSaved: (lastDatePush - 60 * 24 * 60 * 60 * 1000)
@@ -121,10 +121,10 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 			let api_url = commonvariable.url + "/messageConversations";
 			var values = { values: [] }
 
-			Info.get().$promise.then(
-				info => {
+			serverDate => SystemService.getServerDateWithTimezone();
+				
 					register = {
-						lastDatePush: new Date(info.serverDate).getTime(),
+						lastDatePush: this.serverDate.getTime(),
 						lastPushDateSaved: lastPushDateSaved
 					};
 					UserService.getCurrentUser()
@@ -152,7 +152,7 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 									}
 								});
 						});
-				});
+				
 		}
 
 
@@ -163,11 +163,16 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 				.then(user => {
 					projectId = user.organisationUnits[0].id;
 					projectName = user.organisationUnits[0].name;
-
-				});
-
-			RemoteApiService.isRemoteServerAvailable().then(
-				data => {
+					return RemoteApiService.isRemoteServerAvailable();
+				})
+				.then( 
+					data => SystemService.getServerDateWithTimezone(),
+					error => {
+						$scope.sync_result = error;
+						return $q( () => null );;
+					}
+				)
+				.then( serverTime => {
 					let restUtil = new RESTUtil();
 					restUtil.requestPostData(api_url,
 						data => {
@@ -179,7 +184,7 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 								sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
 								$scope.sync_result = sync_result;
 							}
-							writeRegisterInRemoteServer(projectId)
+							writeRegisterInRemoteServer(projectId, serverTime)
 							// Enviar mensaje a medco messageConversations
 							getMedco(projectId).then(
 								medcos => {
@@ -194,9 +199,7 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 						data_error => {
 							console.log(data_error);
 						});
-				},
-				error => $scope.sync_result = error
-			);
+				});
 		}
 
 		function getMedco(projectId) {

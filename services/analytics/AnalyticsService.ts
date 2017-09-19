@@ -111,6 +111,8 @@ export class AnalyticsService {
 
             fullName = fullName.replace(/\ /g, "_");
 
+// añadir un item tipo "noValidated"
+
             orgunits[orgunit] = {
                 id: orgunit,
                 name: analytics.metaData.items[orgunit].name,

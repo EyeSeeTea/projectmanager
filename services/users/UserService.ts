@@ -47,7 +47,7 @@ export class UserService {
         }
     }
 
-    getCurrentUserTree() {
+    getCurrentUserTree(): ng.IPromise<CurrentUser> {
         const currentUserFieldsTree = {
             fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
                 "organisationUnits[id,level,name,children],organisationUnitGroups[id]," + 
