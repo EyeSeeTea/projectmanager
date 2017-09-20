@@ -84,3 +84,6 @@ th.orgunit {
 	animation: rotation infinite linear 0.5s;
 	text-indent: 0;
 }
+.noValidatedPeriod { 
+    background-color: orangered;
+}
