@@ -11,6 +11,7 @@ var projectSelector = require('./projectSelector/projectSelectorController');
 var treeorganisationunitDirective = require('./treeorganisationunit/organisationUnitTreeController');
 var containsDigitDirective = require('./validators/containsDigit');
 var containsUppercaseDirective = require('./validators/containsUppercase');
+var maxDateDirective = require('./validators/maxDate');
 
 import {dataexportmanualDirective} from  './dataexportmanual/dataexportmanualController';
 import {datasyncDirective} from  './datasync/datasyncController';
@@ -33,6 +34,7 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('d2Treeorganisationunit', treeorganisationunitDirective)
     .directive('containsDigit', containsDigitDirective)
     .directive('containsUppercase', containsUppercaseDirective)
+    .directive('maxDate', maxDateDirective)
     .directive('projectSelector', projectSelector)
     .directive('trackerExportDetailed', trackerExportDetailedDirective)
     .directive('trackerExportLatest', trackerExportLatestDirective)

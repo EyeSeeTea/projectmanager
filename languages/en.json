@@ -12,6 +12,7 @@
 	"VALIDATION_START_DATE": "Please, fill in a start date",
 	"VALIDATION_END_DATE": "Please, fill in an end date",
 	"VALIDATION_VALID_DATE": "Please, fill in a valid date",
+	"VALIDATION_MAX_DATE": "Date is greater than maximum date",
 	"TITLE_CAPITAL": "Capital",
 	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Project",

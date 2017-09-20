@@ -23,6 +23,7 @@
             <d2-messages type="danger" ng-show="latestForm.filename.$error.required" textmessage="{{ 'VALIDATION_FILE_NAME' | translate }}"></d2-messages>
             <d2-messages type="danger" ng-show="latestForm.date.$error.date || latestForm.date.$error.required"
                          textmessage="{{ 'VALIDATION_VALID_DATE' | translate }}"></d2-messages>
+            <d2-messages type="danger" ng-show="latestForm.date.$error.maxDate" textmessage="{{ 'VALIDATION_MAX_DATE' | translate }}"></d2-messages>
         </div>
     </div>
     <div class="row">
@@ -37,7 +38,7 @@
             <label>{{ 'EXPORT_TRACKER_FROM' | translate }}</label>
             <p class="col-md-4 input-group">
                 <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="params.date" is-open="dateopened"
-                       ng-required="true" close-text="Close" name="date" required/>
+                       ng-required="true" close-text="Close" name="date" datepicker-options="datePickerDateOptions" max-date="{{params.maxDate}}" required/>
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>

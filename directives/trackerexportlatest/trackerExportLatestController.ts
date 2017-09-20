@@ -17,8 +17,8 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { TrackerDataExportLog } from '../../model/model';
-import { EventExportService, SystemService } from '../../services/services.module';
+import { TrackerDataExportLog, ServiceWithPrograms } from '../../model/model';
+import { EventExportService, ProgramService, SystemService } from '../../services/services.module';
 
 export const trackerExportLatestDirective = [function(){
     return{
@@ -31,7 +31,7 @@ export const trackerExportLatestDirective = [function(){
 }];
 
 var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 'SystemService', 
-    function ($scope: ng.IScope, $filter, ProgramService, UserService, EventExportService: EventExportService, DataStoreService, SystemService: SystemService) {
+    function ($scope: ng.IScope, $filter, ProgramService: ProgramService, UserService, EventExportService: EventExportService, DataStoreService, SystemService: SystemService) {
 
     const dataStoreKey: string = 'trackerexport';
 
@@ -54,6 +54,7 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
                     service.lastExported = log[service.code];
                 });
             }
+            return "Done";
         });
     }
 
@@ -95,9 +96,11 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
             .then( eventsZipFile => saveAs(eventsZipFile, $scope.params.filename + '.zip') )
             .then( () => logExport(startDate, serverDate) )
             .then( () => updateLastExportInfo() )
-            .then( () => setLatestExportAsDefault() )
+            .then( () => evaluateAllServices($scope.services) )
             .then( () => console.log("Everything done") )
-            .finally( () => $scope.exporting = false );
+            .finally( () => $scope.exporting = false )
+            // It is necessary to introduce this delay because of maxDate validator.
+            .then( () => setTimeout(() => {setLatestExportAsDefault(); $scope.$apply()}, 200) );
     };
 
     function logExport (start: Date, end: Date) {
@@ -133,6 +136,11 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
             $scope.allServices.selected = newServices.reduce( (state, current) => {
                 return state && current.selected;
             }, true);
+            $scope.params.maxDate = newServices
+                .filter( service => service.selected && service.lastExported != undefined )
+                .map( service => service.lastExported.end )
+                .reduce((a, b) => a < b ? a : b , undefined);
+            console.log($scope.params.maxDate);
         }
     }
 
