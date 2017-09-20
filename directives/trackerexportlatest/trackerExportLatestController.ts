@@ -17,8 +17,8 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { TrackerDataExportLog } from '../../model/model';
-import { EventExportService, SystemService } from '../../services/services.module';
+import { TrackerDataExportLog, ServiceWithPrograms } from '../../model/model';
+import { EventExportService, ProgramService, SystemService } from '../../services/services.module';
 
 export const trackerExportLatestDirective = [function(){
     return{
@@ -31,7 +31,7 @@ export const trackerExportLatestDirective = [function(){
 }];
 
 var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 'SystemService', 
-    function ($scope: ng.IScope, $filter, ProgramService, UserService, EventExportService: EventExportService, DataStoreService, SystemService: SystemService) {
+    function ($scope: ng.IScope, $filter, ProgramService: ProgramService, UserService, EventExportService: EventExportService, DataStoreService, SystemService: SystemService) {
 
     const dataStoreKey: string = 'trackerexport';
 
@@ -133,7 +133,17 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
             $scope.allServices.selected = newServices.reduce( (state, current) => {
                 return state && current.selected;
             }, true);
+            $scope.minDate = newServices
+                .filter( service => service.selected )
+                .map( service => service.lastExported.end )
+                .reduce((a, b) => a < b ? a : b );
         }
+    }
+
+    function isInvalidExportDate(startDate: Date): boolean {
+        return $scope.services
+            .filter( service => service.selected )
+            .some( service => startDate > service.lastExported);
     }
 
 }];

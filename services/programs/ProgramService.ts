@@ -18,7 +18,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { UserService } from '../../services/services.module';
-import { Orgunit, Program } from '../../model/model';
+import { AttributeValue, Orgunit, Program, ServiceWithPrograms } from '../../model/model';
 
 export class ProgramService {
 
@@ -43,14 +43,14 @@ export class ProgramService {
             .then(programs => this.groupProgramsByService(programs));
     }
 
-    private getProgramsUnderHierarchy (orgunits: Orgunit[]) {
+    private getProgramsUnderHierarchy (orgunits: Orgunit[]): ProgramByOrgunit[] {
         const queryParams = {
             filter: orgunits.map( orgunit => 'path:like:' + orgunit.id ),
             rootJunction: 'OR',
             fields: 'programs[id,attributeValues]'
         };
 
-        return this.Organisationunit.get(queryParams).$promise.then( (data) => {
+        return this.Organisationunit.get(queryParams).$promise.then( data => {
             var includedPrograms = {};
             return data.organisationUnits
                 .reduce( (programArray, orgunit) => {
@@ -66,7 +66,7 @@ export class ProgramService {
         });
     }
 
-    private groupProgramsByService(programs) {
+    private groupProgramsByService(programs): ServiceWithPrograms[] {
         var codes = {};
         for (var i = 0; i < programs.length; i++){
             var serviceValue = programs[i].attributeValues.filter( (attributeValue) => attributeValue.attribute.id == this.serviceCodeId);
@@ -97,4 +97,17 @@ export class ProgramService {
         return this.Programs.get({uid: programId, fields: fields}).$promise;
     }
     
+}
+
+class OrgunitWithPrograms {
+    constructor(
+        programs: ProgramByOrgunit[]
+    ){}
+}
+
+class ProgramByOrgunit {
+    constructor(
+        id: string,
+        attributeValues: AttributeValue[]
+    ){}
 }
