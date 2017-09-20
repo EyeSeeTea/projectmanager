@@ -22,15 +22,16 @@ import { AvailableDataItem } from '../../model/model';
 
 export class AnalyticsService {
 
-    static $inject = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart'];
+    static $inject = ['$q', '$interval', 'AnalyticsEngine', 'Analytics', 'DataMart', 'ValidationService'];
 
     constructor(
         private $q: ng.IQService,
         private $interval: ng.IIntervalService,
         private AnalyticsEngine,
         private Analytics,
-        private DataMart
-    ){}
+        private DataMart,
+        private ValidationService
+    ) { }
 
     /**
      * Performs a query to analytics endpoint with the parameters provided.
@@ -51,8 +52,8 @@ export class AnalyticsService {
     private buildAnalyticsParameters(orgunit, period, filters): AnalyticsParameters {
 
         var orgunits = "";
-        if(orgunit instanceof Array){
-            orgunits = orgunit.map( (value, index, array) => value.id ).join(";")
+        if (orgunit instanceof Array) {
+            orgunits = orgunit.map((value, index, array) => value.id).join(";")
         } else {
             orgunits = orgunit.id;
         }
@@ -68,7 +69,7 @@ export class AnalyticsService {
             displayProperty: "NAME"
         };
 
-        if(filters !== null){
+        if (filters !== null) {
             var filterArray = [];
             angular.forEach(filters, (option, filterid) => {
                 filterArray.push(filterid + ":" + option.id);
@@ -101,17 +102,19 @@ export class AnalyticsService {
      * @param hierarchy - hierarchy arrya, like ["fiasdfl3fj","aldfkjlskf"] (parents). Only applicable if isRoot == false
      * @returns {*} - Result data structure
      */
-    formatAnalyticsResult(analytics, orgunitsInfo, hierarchy): AvailableDataItem[] {
-        let orgunits: {[key: string]: AvailableDataItem} = {};
-        angular.forEach(analytics.metaData.dimensions.ou, (orgunit) => {
-            var fullName = hierarchy.map( (parent) => analytics.metaData.items[parent].name ).join("/");
+    formatAnalyticsResult(analytics, orgunitsInfo, hierarchy, projectsDatastore): AvailableDataItem[] {
+        let orgunits: { [key: string]: AvailableDataItem } = {};
+        
+        var noValidatedPeriod = false;
+       
 
-            if(fullName == "") fullName = fullName.concat(analytics.metaData.items[orgunit].name);
+        angular.forEach(analytics.metaData.dimensions.ou, (orgunit) => {
+            var fullName = hierarchy.map((parent) => analytics.metaData.items[parent].name).join("/");
+
+            if (fullName == "") fullName = fullName.concat(analytics.metaData.items[orgunit].name);
             else fullName = fullName.concat("/" + analytics.metaData.items[orgunit].name);
 
             fullName = fullName.replace(/\ /g, "_");
-
-// añadir un item tipo "noValidated"
 
             orgunits[orgunit] = {
                 id: orgunit,
@@ -121,15 +124,54 @@ export class AnalyticsService {
                 level: orgunitsInfo[orgunit].level,
                 relativeLevel: hierarchy.length,
                 isLastLevel: orgunitsInfo[orgunit].children.length === 0,
+               
                 data: {}
             }
         });
 
         // Include data. Data is in "rows" attribute as an array with the syntax [orgunitid, period, value]
         angular.forEach(analytics.rows, (row) => {
-            orgunits[row[0]].data[row[1]] = row[2];
-        });
 
+
+            angular.forEach(projectsDatastore.datasets, function (dataset) {
+            if (  (row[0]=="zOyMxdCLXBM" || row[0]=="G7g4TvbjFlX") && dataset.period == row[1]) {
+                    noValidatedPeriod = true;
+                   
+                }
+
+                if (dataset.missionId == row[0] && dataset.period == row[1]) {
+                    noValidatedPeriod = true;
+                   // console.log("Mission " + dataset.period + " de " + dataset.missionId + " no validado: ")
+                }
+                if (dataset.siteId == row[0] && dataset.period == row[1]) {
+                    noValidatedPeriod = true;
+                   // console.log("Periodo " + dataset.period + " de " + dataset.siteName + " no validado: ")
+                }
+
+
+                if (dataset.project == row[0] && dataset.period == row[1]) {
+                    noValidatedPeriod = true;
+                    //console.log("Proyecto " + dataset.period + " de " + dataset.project + " no validado: ")
+                }
+
+                if (dataset.service == row[0] && dataset.period == row[1]) {
+                    noValidatedPeriod = true;
+                    //console.log("Service " + dataset.period + " de " + dataset.service + " no validado: ")
+                }
+
+            });
+
+
+
+
+            orgunits[row[0]].data[row[1]] = { value: row[2], noValidatedPeriod: noValidatedPeriod };
+
+            noValidatedPeriod = false;
+
+
+
+        });
+        
         return $.map(orgunits, (orgunit, id) => orgunit)
     };
 
@@ -140,7 +182,7 @@ export class AnalyticsService {
      * - notifies each message retrieved about the analytics execution
      * @returns {Promise}
      */
-    refreshAnalytics (params) {
+    refreshAnalytics(params) {
         var deferred = this.$q.defer();
 
         //Analytics.post(params,'');
@@ -148,44 +190,44 @@ export class AnalyticsService {
 
         var inputParameters = {};
         var previousMessage = "";
-        var checkStatus = this.$interval( () => {
+        var checkStatus = this.$interval(() => {
             var result = this.DataMart.query(inputParameters);
-            result.$promise.then( 
+            result.$promise.then(
                 data => {
                     var dataElement = data[0];
-                    if (dataElement != undefined){
-                        inputParameters = {lastId: dataElement.uid};
-                        if (dataElement.completed == true){
+                    if (dataElement != undefined) {
+                        inputParameters = { lastId: dataElement.uid };
+                        if (dataElement.completed == true) {
                             this.$interval.cancel(checkStatus);
                             deferred.notify(dataElement.message);
                             deferred.resolve("Done update analytics");
                         }
-                        if (previousMessage != dataElement.message){
+                        if (previousMessage != dataElement.message) {
                             deferred.notify(dataElement);
                             previousMessage = dataElement.message;
                         }
                     }
-                }, 
+                },
                 error => {
                     this.$interval.cancel(checkStatus);
                     deferred.reject("Error while refreshing analytics");
                 }
             );
         }, 200);
-        
+
         return deferred.promise;
     }
-    
-    refreshAllAnalytics () {
+
+    refreshAllAnalytics() {
         return this.refreshAnalytics({});
     }
 
-    refreshEventAnalytics () {
-        return this.refreshAnalytics({skipAggregate: true});
+    refreshEventAnalytics() {
+        return this.refreshAnalytics({ skipAggregate: true });
     }
 
-    refreshAggregateAnalytics () {
-        return this.refreshAnalytics({skipEvents: true});
+    refreshAggregateAnalytics() {
+        return this.refreshAnalytics({ skipEvents: true });
     }
 
 }
@@ -197,5 +239,5 @@ class AnalyticsParameters {
         public hierarchyMeta: string,
         public displayProperty: string,
         public filter?: any
-    ){}
+    ) { }
 }

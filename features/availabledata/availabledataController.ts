@@ -22,24 +22,25 @@ import { AnalyticsService, OrgunitGroupSetService, UserDataStoreService, UserSer
 
 export class AvailableData {
 
-	static $inject = ["$q", "$http", "$parse", "Organisationunit", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "AnalyticsService"];
+	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "AnalyticsService"];
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
-				private Organisationunit, private OrganisationUnitGroupSet,	private OrgunitGroupSetService: OrgunitGroupSetService,
-				private UserService: UserService, private UserDataStoreService: UserDataStoreService, private AnalyticsService: AnalyticsService
-	){
+		private Organisationunit, private ValidationService, private OrganisationUnitGroupSet, private OrgunitGroupSetService: OrgunitGroupSetService,
+		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private AnalyticsService: AnalyticsService
+	) {
 		// Initialize table
 		this.loadUserSettings()
 			.then(() => this.loadFilters())
+			.then(() => this.readDatastore())
 			.then(() => this.loadTable());
 	}
 
 	availableDataStatus = ProgressStatus.initialWithoutProgress;
 
 	availablePeriods = [
-		{id: "LAST_3_MONTHS", name: 3},
-		{id: "LAST_6_MONTHS", name: 6},
-		{id: "LAST_12_MONTHS", name: 12}
+		{ id: "LAST_3_MONTHS", name: 3 },
+		{ id: "LAST_6_MONTHS", name: 6 },
+		{ id: "LAST_12_MONTHS", name: 12 }
 	];
 
 	selectedPeriod = {
@@ -48,22 +49,29 @@ export class AvailableData {
 	};
 
 	activeFilters = [
-		{id:"BtFXTpKRl6n", name: "1. Health Service"}
+		{ id: "BtFXTpKRl6n", name: "1. Health Service" }
 	];
 	availableFilters;
+	projectsDatastore =[];
 	selectedFilters = {};
-	
+
 	orgunitsInfo = {};
 	periods;
 	tableRows: AvailableDataItem[] = [];
 	tableDisplayed: boolean = false;
+	readDatastore() {
+
+	return	this.ValidationService.readDatastore().then(
+                data => {this.projectsDatastore=data}
+	)}
+
 
 	loadUserSettings() {
 		return this.UserDataStoreService.getCurrentUserSettings().then(
 			userSettings => {
-				if(userSettings.availableData.period != null)
+				if (userSettings.availableData.period != null)
 					this.selectedPeriod = userSettings.availableData.period;
-				if(userSettings.availableData.filters != null)
+				if (userSettings.availableData.filters != null)
 					this.selectedFilters = userSettings.availableData.filters;
 			},
 			error => console.log("There are not settings for current user")
@@ -73,12 +81,12 @@ export class AvailableData {
 	loadFilters() {
 		return this.OrgunitGroupSetService.getOrgunitGroupSets(this.activeFilters)
 			.then(filters => {
-					this.availableFilters = filters;
-					// Preselect filters
-					angular.forEach(this.availableFilters, filter => {
-						filter.selected = this.selectedFilters[filter.id];
-					});
+				this.availableFilters = filters;
+				// Preselect filters
+				angular.forEach(this.availableFilters, filter => {
+					filter.selected = this.selectedFilters[filter.id];
 				});
+			});
 	}
 
 	loadTable() {
@@ -89,8 +97,8 @@ export class AvailableData {
 		// Initialize visibility of table and progressBar
 		this.tableDisplayed = false;
 		this.availableDataStatus = ProgressStatus.initialWithoutProgress;
-		
-		this.UserService.getCurrentUser().then( me => {
+
+		this.UserService.getCurrentUser().then(me => {
 			var dataViewOrgUnits = me.dataViewOrganisationUnits;
 
 			var k = dataViewOrgUnits.length;
@@ -101,27 +109,26 @@ export class AvailableData {
 
 				// Add orgunits to orgunitsInfo. That info will be required later.
 				this.orgunitsInfo[dataViewOrgUnit.id] = dataViewOrgUnit;
-				dataViewOrgUnit.children.map( child => this.orgunitsInfo[child.id] = child );
+				dataViewOrgUnit.children.map(child => this.orgunitsInfo[child.id] = child);
 
 				this.$q.all([parentPromise, childrenPromise])
-					.then( analyticsData => {
+					.then(analyticsData => {
 						const parentResult = analyticsData[0];
 						const childrenResult = analyticsData[1];
 
 						// Generate public period array. It is required for other functions
 						this.regenerateScopePeriodArray(parentResult);
 
-						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, []);
-						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id]);
+						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, [], this.projectsDatastore);
+						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id], this.projectsDatastore);
 						this.tableRows = this.tableRows.concat(parentRows).concat(childrenRows);
-						
-						console.log(this.tableRows );
 
-						// Make visible orgunits under dataViewOrgunit
+			
+					// Make visible orgunits under dataViewOrgunit
 						this.orgunitsInfo[dataViewOrgUnit.id].clicked = true;
 
 						// Check if last dataViewOrgunit
-						if(k === ++currentOu){  
+						if (k === ++currentOu) {
 							this.tableDisplayed = true;
 							this.availableDataStatus = ProgressStatus.hidden;
 						}
@@ -141,17 +148,17 @@ export class AvailableData {
 	}
 
 	isClicked(orgunitIds: string[]): boolean {
-		return orgunitIds.reduce( (result, orgunitId) => {
+		return orgunitIds.reduce((result, orgunitId) => {
 			return result && this.orgunitsInfo[orgunitId].clicked === true
 		}, true);
 	}
 
 	clickOrgunit(orgunit) {
-		if(this.orgunitsInfo[orgunit.id].clicked){
+		if (this.orgunitsInfo[orgunit.id].clicked) {
 			this.orgunitsInfo[orgunit.id].clicked = false;
 		} else {
 			this.orgunitsInfo[orgunit.id].clicked = true;
-			if(!this.childrenLoaded(orgunit.id)){
+			if (!this.childrenLoaded(orgunit.id)) {
 				this.loadChildren(orgunit);
 			}
 		}
@@ -164,14 +171,14 @@ export class AvailableData {
 		var childrenInfo = this.Organisationunit.get({
 			paging: false,
 			fields: "id,name,level,children",
-			filter: "id:in:[" + this.orgunitsInfo[orgunit.id].children.map( child => child.id ).join(",") + "]"
+			filter: "id:in:[" + this.orgunitsInfo[orgunit.id].children.map(child => child.id).join(",") + "]"
 		}).$promise;
 
 		var childrenQuery = this.AnalyticsService.queryAvailableData(this.orgunitsInfo[orgunit.id].children, this.selectedPeriod,
 			this.selectedFilters);
 
 		this.$q.all([childrenInfo, childrenQuery])
-			.then( data => {
+			.then(data => {
 				var childrenInfo = data[0].organisationUnits;
 				// Add children information to orgunitsInfo
 				$.map(childrenInfo, child => {
@@ -182,11 +189,11 @@ export class AvailableData {
 				var childrenResult = data[1];
 				var childrenHierarchy = orgunit.parents.slice(0);
 				childrenHierarchy.push(orgunit.id);
-				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy);
+				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy,this.projectsDatastore );
 				this.tableRows = this.tableRows.concat(childrenRows);
-				console.log(this.tableRows );
+				//console.log(this.tableRows);
 			})
-			.finally( () => {
+			.finally(() => {
 				// Once finished, remove loadingIcon
 				loadingIcon.remove();
 			});
@@ -194,7 +201,7 @@ export class AvailableData {
 
 	private childrenLoaded(orgunitId): boolean {
 		return this.orgunitsInfo[orgunitId].children
-			.some( child => this.orgunitsInfo[child.id] != undefined );
+			.some(child => this.orgunitsInfo[child.id] != undefined);
 	}
 
 	private addLoadingIcon(orgunitId) {
@@ -204,7 +211,7 @@ export class AvailableData {
 	}
 
 	modifyFilter(filter) {
-		if(filter.selected === undefined || filter.selected === null){
+		if (filter.selected === undefined || filter.selected === null) {
 			delete this.selectedFilters[filter.id];
 		} else {
 			// Update filter information
@@ -239,7 +246,7 @@ export class AvailableData {
 		};
 
 		this.UserDataStoreService.updateCurrentUserSettings("availableData", periodSetting)
-			.then(() => {});
+			.then(() => { });
 
 		this.loadTable();
 	}

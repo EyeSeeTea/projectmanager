@@ -45,7 +45,7 @@ export class ValidationService {
                                                             if (lastPushDateSaved != lastDatePush) {
                                                                 sites = this.getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
                                                                 services = this.getSiteServices(sites);
-                                                                return this.servicesValues(project, services, lastDatePush, lastPushDateSaved);
+                                                                return this.servicesValues(mission.id, project, services, lastDatePush, lastPushDateSaved);
                                                             }
                                                         } else { console.log("no hay datos importados"); }
                                                     }
@@ -83,19 +83,20 @@ export class ValidationService {
             /* Ponemos juntos todos los Services para luego buscar todos los datasets */
             angular.forEach(site.children, function (child) {
                 child.siteName = site.name;
+                child.siteId = site.id;
             });
             services = services.concat(site.children);
         });
         return services;
     }
 
-    private servicesValues(project, services, lastDatePush, lastPushDateSaved) {
+    private servicesValues(mission,project, services, lastDatePush, lastPushDateSaved) {
         return services.reduce((total2, service) => {
             return total2.then(
                 () => {
                     return this.getDatasets(service.id).then(
                         dataSets => {
-                            return this.dataSetsValues(dataSets, service, project, lastDatePush, lastPushDateSaved);
+                            return this.dataSetsValues(dataSets, service, mission,project, lastDatePush, lastPushDateSaved);
                         });
                 }
             );
@@ -112,18 +113,18 @@ export class ValidationService {
     }
 
 
-    private dataSetsValues(dataSets, service, project, lastDatePush, lastPushDateSaved) {
+    private dataSetsValues(dataSets, service, mission, project, lastDatePush, lastPushDateSaved) {
         return dataSets.reduce((total3, dataSet) => {
             return total3.then(
                 () => {
-                    if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
+                   // if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
                         return this.readDatasetValues(dataSet.id, service.id, new Date(lastPushDateSaved)).then(
                             dataValues => {
                                 if (dataValues != undefined) {
-                                    return this.updateDatastoreValues(dataValues, project.id, service, dataSet, lastDatePush, lastPushDateSaved);
+                                    return this.updateDatastoreValues(dataValues, mission, project.id, service, dataSet, lastDatePush, lastPushDateSaved);
                                 }
                             });
-                    }
+                   // }
                 });
         }, this.$q.when("Done total 3"));
     }
@@ -145,7 +146,7 @@ export class ValidationService {
 
 
 
-    private updateDatastoreValues(dataValues, project, service, dataSet, lastDatePush, lastPushDateSaved) {
+    private updateDatastoreValues(dataValues, mission, project, service, dataSet, lastDatePush, lastPushDateSaved) {
 
         var serversPushDatesNamespace = "ServersPushDates";
         var periods = [];
@@ -156,8 +157,11 @@ export class ValidationService {
 
         return uniquePeriods.reduce((total, period) => {
             var uniquePeriodRecord = {
+
+                missionId: mission,
                 project: project,
                 siteName: service.siteName,
+                siteId: service.siteId,
                 service: service.id,
                 serviceName: service.name,
                 dataSet: dataSet.id,
@@ -214,7 +218,7 @@ export class ValidationService {
                                                         data => {
                                                             datasets_scope = datasets_scope.concat(data.values);
 
-
+                                                            
                                                             //  $scope.datasets = datasets_scope;
                                                             project['datasets'] = data.values.length;
                                                             projects_scope.push(project);
@@ -345,6 +349,8 @@ class ProjectRecord {
         public lastDatePush: number,
         public missionName: string,
         public missionID: string,
+         public siteName: string,
+        
         public cellID: string,
         public datasets: number,
 

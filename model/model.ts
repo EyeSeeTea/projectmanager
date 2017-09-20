@@ -112,6 +112,7 @@ export class AvailableDataItem {
         public relativeLevel: number,
         public isLastLevel: boolean,
         public data: any
+        
     ){}
 }
 

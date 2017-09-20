@@ -169,7 +169,7 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 					data => SystemService.getServerDateWithTimezone(),
 					error => {
 						$scope.sync_result = error;
-						return $q( () => null );;
+						return $q( () => null );
 					}
 				)
 				.then( serverTime => {

@@ -61,9 +61,9 @@
 		<td id="ou_{{ou.id}}" class="level{{ ou.level }} relativelevel{{ou.relativeLevel}}">
 				<span class="ou-prefix glyphicon {{ou.isLastLevel ? 'glyphicon-chevron-right' :
 						(ctrl.isClicked([ou.id]) ? 'glyphicon-minus' : 'glyphicon-plus') }}"></span>
-			{{ ou.name }}
+			{{ ou.name }} 
 		</td>
-		<td ng-repeat="pe in ctrl.periods" title="{{ou.name}} - {{pe.name}}">{{ou.data[pe.id] | number:0}}</td>
+		<td ng-repeat="pe in ctrl.periods" title="{{ou.name}} - {{pe.name}}" class="{{ou.data[pe.id].noValidatedPeriod ? 'noValidatedPeriod':''}}">{{ou.data[pe.id].value | number:0}}</td>
 	</tr>
 	</tbody>
 </table>
