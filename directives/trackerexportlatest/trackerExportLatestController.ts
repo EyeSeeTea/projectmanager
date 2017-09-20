@@ -54,6 +54,7 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
                     service.lastExported = log[service.code];
                 });
             }
+            return "Done";
         });
     }
 
@@ -95,9 +96,11 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
             .then( eventsZipFile => saveAs(eventsZipFile, $scope.params.filename + '.zip') )
             .then( () => logExport(startDate, serverDate) )
             .then( () => updateLastExportInfo() )
-            .then( () => setLatestExportAsDefault() )
+            .then( () => evaluateAllServices($scope.services) )
             .then( () => console.log("Everything done") )
-            .finally( () => $scope.exporting = false );
+            .finally( () => $scope.exporting = false )
+            // It is necessary to introduce this delay because of maxDate validator.
+            .then( () => setTimeout(() => {setLatestExportAsDefault(); $scope.$apply()}, 200) );
     };
 
     function logExport (start: Date, end: Date) {
@@ -133,17 +136,12 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
             $scope.allServices.selected = newServices.reduce( (state, current) => {
                 return state && current.selected;
             }, true);
-            $scope.minDate = newServices
-                .filter( service => service.selected )
+            $scope.params.maxDate = newServices
+                .filter( service => service.selected && service.lastExported != undefined )
                 .map( service => service.lastExported.end )
-                .reduce((a, b) => a < b ? a : b );
+                .reduce((a, b) => a < b ? a : b , undefined);
+            console.log($scope.params.maxDate);
         }
-    }
-
-    function isInvalidExportDate(startDate: Date): boolean {
-        return $scope.services
-            .filter( service => service.selected )
-            .some( service => startDate > service.lastExported);
     }
 
 }];
