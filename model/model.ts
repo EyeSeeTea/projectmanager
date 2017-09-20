@@ -111,7 +111,7 @@ export class AvailableDataItem {
         public level: number,
         public relativeLevel: number,
         public isLastLevel: boolean,
-        public data: any
+        public data: {[key: string]: {value: string, noValidatedPeriod: boolean}}
         
     ){}
 }
