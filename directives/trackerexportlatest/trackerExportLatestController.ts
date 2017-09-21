@@ -140,7 +140,6 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
                 .filter( service => service.selected && service.lastExported != undefined )
                 .map( service => service.lastExported.end )
                 .reduce((a, b) => a < b ? a : b , undefined);
-            console.log($scope.params.maxDate);
         }
     }
 
