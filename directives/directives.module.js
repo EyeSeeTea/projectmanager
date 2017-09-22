@@ -7,7 +7,7 @@ var headerDirective = require('./header/headerController');
 var menuDirective = require('./menu/menuController');
 var messagesDirectives = require('./messages/messagesController');
 import {progressBarDynamic} from './progressBarDynamic/progressBarDynamicController';
-var projectSelector = require('./projectSelector/projectSelectorController');
+import { ProjectSelectorComponent } from './projectSelector/projectSelectorController';
 var treeorganisationunitDirective = require('./treeorganisationunit/organisationUnitTreeController');
 var containsDigitDirective = require('./validators/containsDigit');
 var containsUppercaseDirective = require('./validators/containsUppercase');
@@ -35,7 +35,7 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('containsDigit', containsDigitDirective)
     .directive('containsUppercase', containsUppercaseDirective)
     .directive('maxDate', maxDateDirective)
-    .directive('projectSelector', projectSelector)
+    .component('projectSelector', new ProjectSelectorComponent())
     .directive('trackerExportDetailed', trackerExportDetailedDirective)
     .directive('trackerExportLatest', trackerExportLatestDirective)
     .directive('aggregateDataExportManual', dataexportmanualDirective)
