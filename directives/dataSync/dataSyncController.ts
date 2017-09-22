@@ -18,6 +18,7 @@
 
 import { RESTUtil, ValidationRecord } from '../../model/model';
 import { DataStoreService, MessageService, RemoteApiService, SystemService, UserService } from '../../services/services.module';
+import { MetadataSyncService } from '../../services/metadata/MetadataSyncService';
 
 export const datasyncDirective = [function () {
 	return {
@@ -30,8 +31,8 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisationunit",  "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
-	function ($scope, $q: ng.IQService, commonvariable, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
+var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",  "MetadataSyncService", "Info", "Organisationunit", "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
+	function ($scope, $q: ng.IQService, commonvariable, RemoteInstanceUrl, MetadataSyncService, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
 
 		var projectId = null;
 		var projectName = null;
@@ -62,7 +63,7 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 			});
 
 
-		function writeRegisterInRemoteServer(projectId,serverDate) {
+		function writeRegisterInRemoteServer(projectId, serverDate) {
 			var values = { values: [] }
 			Info.get().$promise.then(
 				info => {
@@ -121,58 +122,76 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 			let api_url = commonvariable.url + "/messageConversations";
 			var values = { values: [] }
 
-			serverDate => SystemService.getServerDateWithTimezone();
-				
-					register = {
-						lastDatePush: this.serverDate.getTime(),
-						lastPushDateSaved: lastPushDateSaved
-					};
-					UserService.getCurrentUser()
-						.then(user => {
-							projectId = user.organisationUnits[0].id;
-							projectName = user.organisationUnits[0].name;
-							getMedco(projectId).then(
-								medcos => {
-									var message = {
-										subject: "Data Validation Request - " + projectName,
-										text: "Data Validation Request: Date - " + register.lastDatePush,
-										users: medcos
-									}
+			SystemService.getServerDateWithTimezone().then(serverDate => {
 
-									MessageService.sendMessage(message);
-									$scope.validation_date = register.lastDatePush;
-								});
+				register = {
+					lastDatePush: serverDate.getTime(),
+					lastPushDateSaved: lastPushDateSaved
+				};
+				UserService.getCurrentUser()
+					.then(user => {
+						projectId = user.organisationUnits[0].id;
+						projectName = user.organisationUnits[0].name;
+						getMedco(projectId).then(
+							medcos => {
+								var message = {
+									subject: "Data Validation Request - " + projectName,
+									text: "Data Validation Request: Date - " + register.lastDatePush,
+									users: medcos
+								}
 
-							DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
-							DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values")
-								.then(
-								currentValue => {
-									if (currentValue == undefined) {
-										DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values", values);
-									}
-								});
-						});
-				
+								MessageService.sendMessage(message);
+								$scope.validation_date = register.lastDatePush;
+							});
+
+						DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
+						DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values")
+							.then(
+							currentValue => {
+								if (currentValue == undefined) {
+									DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values", values);
+								}
+							});
+					});
+			});
 		}
 
 
 		$scope.submit_sync = function () {
 			var sync_result = null;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
-			UserService.getCurrentUser()
+
+ this.RemoteInstanceUrl.get().$promise
+            .then( remoteUrl => {
+
+console.log(remoteUrl);
+			});
+
+			MetadataSyncService.getVersionDifference().then(
+				metadataVersionDiff => {
+
+
+					console.log(metadataVersionDiff);
+
+					console.log(metadataVersionDiff.length);
+
+					if (metadataVersionDiff.length == 0) {
+						
+						
+						UserService.getCurrentUser()
 				.then(user => {
 					projectId = user.organisationUnits[0].id;
 					projectName = user.organisationUnits[0].name;
 					return RemoteApiService.isRemoteServerAvailable();
 				})
-				.then( 
-					data => SystemService.getServerDateWithTimezone(),
-					error => {
-						$scope.sync_result = error;
-						return $q( () => null );
-					}
+				.then(
+				data => SystemService.getServerDateWithTimezone(),
+				error => {
+					$scope.sync_result = error;
+					return $q(() => null);
+				}
 				)
-				.then( serverTime => {
+				.then(serverTime => {
 					let restUtil = new RESTUtil();
 					restUtil.requestPostData(api_url,
 						data => {
@@ -184,7 +203,7 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 								sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
 								$scope.sync_result = sync_result;
 							}
-							writeRegisterInRemoteServer(projectId, serverTime)
+							//writeRegisterInRemoteServer(projectId, serverTime)
 							// Enviar mensaje a medco messageConversations
 							getMedco(projectId).then(
 								medcos => {
@@ -200,6 +219,22 @@ var datasyncController = ["$scope", "$q",  "commonvariable", "Info", "Organisati
 							console.log(data_error);
 						});
 				});
+						
+						
+						
+						
+					
+				
+			} else {   
+				$scope.sync_result = "Different Metadata Versions. Please sync them first.";
+				console.log("Versiones de Metadata Diferentes")  }
+
+				});
+
+
+
+
+			
 		}
 
 		function getMedco(projectId) {

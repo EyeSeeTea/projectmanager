@@ -18,14 +18,14 @@
 
 import * as angular from 'angular';
 import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
-import { AnalyticsService, OrgunitGroupSetService, UserDataStoreService, UserService } from '../../services/services.module';
+import { AnalyticsService, OrgunitGroupSetService, UserDataStoreService, UserService, ValidationService } from '../../services/services.module';
 
 export class AvailableData {
 
 	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "AnalyticsService"];
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
-		private Organisationunit, private ValidationService, private OrganisationUnitGroupSet, private OrgunitGroupSetService: OrgunitGroupSetService,
+		private Organisationunit, private ValidationService: ValidationService, private OrganisationUnitGroupSet, private OrgunitGroupSetService: OrgunitGroupSetService,
 		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private AnalyticsService: AnalyticsService
 	) {
 		// Initialize table
@@ -52,18 +52,45 @@ export class AvailableData {
 		{ id: "BtFXTpKRl6n", name: "1. Health Service" }
 	];
 	availableFilters;
-	projectsDatastore =[];
+	projectsDatastore = [];
+	valuesDatastore = [];
+	datastoredRead: boolean = false;
 	selectedFilters = {};
+
 
 	orgunitsInfo = {};
 	periods;
 	tableRows: AvailableDataItem[] = [];
 	tableDisplayed: boolean = false;
+
 	readDatastore() {
 
-	return	this.ValidationService.readDatastore().then(
-                data => {this.projectsDatastore=data}
-	)}
+		if (this.datastoredRead == false) {
+			return this.ValidationService.readDatastore().then(
+				data => {
+
+					angular.forEach(data.datasets, dataset => {
+
+						if (!(this.valuesDatastore[dataset.missionId] instanceof Array)) { this.valuesDatastore[dataset.missionId] = [] }
+						if (!(this.valuesDatastore[dataset.siteId]! instanceof Array)) { this.valuesDatastore[dataset.siteId] = [] }
+						if (!(this.valuesDatastore[dataset.project]! instanceof Array)) { this.valuesDatastore[dataset.project] = [] }
+						if (!(this.valuesDatastore[dataset.service]! instanceof Array)) { this.valuesDatastore[dataset.service] = [] }
+						if (!(this.valuesDatastore['zOyMxdCLXBM']! instanceof Array)) { this.valuesDatastore['zOyMxdCLXBM'] = [] }
+						if (!(this.valuesDatastore['G7g4TvbjFlX']! instanceof Array)) { this.valuesDatastore['G7g4TvbjFlX'] = [] }
+
+						this.valuesDatastore[dataset.missionId]["'" + dataset.period + "'"] = true;
+						this.valuesDatastore[dataset.siteId]["'" + dataset.period + "'"] = true;
+						this.valuesDatastore[dataset.project]["'" + dataset.period + "'"] = true;
+						this.valuesDatastore[dataset.service]["'" + dataset.period + "'"] = true;
+						this.valuesDatastore['zOyMxdCLXBM']["'" + dataset.period + "'"] = true;
+						this.valuesDatastore['G7g4TvbjFlX']["'" + dataset.period + "'"] = true;
+
+					});
+					this.datastoredRead = true;
+				}
+			)
+		}
+	}
 
 
 	loadUserSettings() {
@@ -119,12 +146,12 @@ export class AvailableData {
 						// Generate public period array. It is required for other functions
 						this.regenerateScopePeriodArray(parentResult);
 
-						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, [], this.projectsDatastore);
-						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id], this.projectsDatastore);
+						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, [], this.valuesDatastore);
+						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id], this.valuesDatastore);
 						this.tableRows = this.tableRows.concat(parentRows).concat(childrenRows);
 
-			
-					// Make visible orgunits under dataViewOrgunit
+
+						// Make visible orgunits under dataViewOrgunit
 						this.orgunitsInfo[dataViewOrgUnit.id].clicked = true;
 
 						// Check if last dataViewOrgunit
@@ -189,7 +216,7 @@ export class AvailableData {
 				var childrenResult = data[1];
 				var childrenHierarchy = orgunit.parents.slice(0);
 				childrenHierarchy.push(orgunit.id);
-				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy,this.projectsDatastore );
+				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy, this.valuesDatastore);
 				this.tableRows = this.tableRows.concat(childrenRows);
 				//console.log(this.tableRows);
 			})
