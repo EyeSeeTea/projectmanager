@@ -17,10 +17,15 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
+export class sqlService {
 
-var sqlService = ["SqlView", "SqlViewData", function(SqlView, SqlViewData){
+ static $inject = ['SqlView', 'SqlViewData'];
 
-    var createPayload = function(sqlQuery) {
+ constructor( private SqlView, private SqlViewData){}
+
+//var sqlService = ["SqlView", "SqlViewData", function(SqlView, SqlViewData){
+
+  private   createPayload(sqlQuery) {
         // Generate a random name, based on a random integer.
         // Probability of duplicity: 1 / 100.000
         var name = "query" + Math.floor(Math.random() * 100000);
@@ -41,29 +46,31 @@ var sqlService = ["SqlView", "SqlViewData", function(SqlView, SqlViewData){
             "userGroupAccesses":[]}
     };
 
-    var sqlView = function(payload) {
-        return SqlView.save(payload).$promise.then( function(data) {
-            return data.response.lastImported;
+    private sqlView(payload) {
+        return this.SqlView.save(payload).$promise.then( data => {
+         
+            return data.response.uid;
         },{});
     };
 
-    var getSqlViewData = function(queryId) {
-        return SqlViewData.get({viewId:queryId}).$promise.then(function(queryResult) {
-            SqlView.delete({viewId:queryId});
+   private getSqlViewData(queryId) {
+                
+        return this.SqlViewData.get({id:queryId}).$promise.then( queryResult => {
+            this.SqlView.delete({id:queryId});
             return queryResult;
         })
     };
 
-    function executeSqlView(query) {
-        var payload = createPayload(query);
-        return sqlView(payload)
-            .then(getSqlViewData);
+    executeSqlView(query) {
+        var payload = this.createPayload(query);
+        return this.sqlView(payload)
+            .then(uid=>  this.getSqlViewData(uid));
     }
 
-    return {
-        executeSqlView: executeSqlView
-    };
+  //  return {
+  //      executeSqlView: executeSqlView
+   // };
 
-}];
+};
 
-module.exports = sqlService;
+//module.exports = sqlService;

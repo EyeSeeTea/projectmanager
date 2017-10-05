@@ -21,9 +21,10 @@ import { ProgramService } from './programs/ProgramService';
 import { ProjectStatusDataStoreService } from './data-store/ProjectStatusDataStoreService';
 import { ProjectStatusRemoteDataStoreService } from './data-store/remote/ProjectStatusRemoteDataStoreService';
 import { RemoteApiService } from './metadata/RemoteApiService';
-var sqlService = require('./sql/SqlService');
+//var sqlService = require('./sql/SqlService');
 import { UserService } from './users/UserService';
 import { ValidationService } from './Validation/ValidationService';
+import { sqlService } from './sql/SqlService';
 
 export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('AnalyticsService', AnalyticsService)
@@ -45,7 +46,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('ProjectStatusDataStoreService', ProjectStatusDataStoreService)
     .service('ProjectStatusRemoteDataStoreService', ProjectStatusRemoteDataStoreService)
     .service('RemoteApiService', RemoteApiService)
-    .factory('sqlService', sqlService)
+    .service('sqlService', sqlService)
     .service('UserService', UserService)
       .service('ValidationService', ValidationService);
 
@@ -68,5 +69,6 @@ export {
     SystemService,
     UserDataStoreService,
     UserService,
-    ValidationService
+    ValidationService,
+    sqlService
 }

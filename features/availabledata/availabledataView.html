@@ -34,7 +34,7 @@
 						</select>
 					</div>
 					<div class="col-md-4">
-						<label for="periodSelector">{{'NUMBER_OF_MONTHS' | translate}}:</label>
+						<label for="periodSelector">{{'PERIOD' | translate}}:</label>
 						<div id="periodSelector" class="btn-group" data-toggle="buttons">
 							<label ng-repeat="period in ctrl.availablePeriods" ng-click="ctrl.modifyPeriod(period)"
 								   class="btn btn-default {{period.id == ctrl.selectedPeriod.id ? 'active' : ''}}">
@@ -52,7 +52,7 @@
 	<thead>
 	<tr>
 		<th class="orgunit">{{ 'ORGANISATIONUNIT_LABEL' | translate}}</th>
-		<th ng-repeat="pe in ctrl.periods">{{ pe.name }}</th>
+		<th ng-repeat="pe in ctrl.periods" class="weeks{{ pe.weeks }}">{{ pe.name }}</th>
 	</tr>
 	</thead>
 	<tbody>
