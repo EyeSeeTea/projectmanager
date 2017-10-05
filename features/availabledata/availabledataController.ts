@@ -31,7 +31,7 @@ export class AvailableData {
 		// Initialize table
 		this.loadUserSettings()
 			.then(() => this.loadFilters())
-			.then(() => this.readDatastore())
+			.then(() => this.showValidationDatastore())
 			.then(() => this.loadTable());
 	}
 
@@ -40,7 +40,9 @@ export class AvailableData {
 	availablePeriods = [
 		{ id: "LAST_3_MONTHS", name: 3 },
 		{ id: "LAST_6_MONTHS", name: 6 },
-		{ id: "LAST_12_MONTHS", name: 12 }
+		{ id: "LAST_12_MONTHS", name: 12 },
+		{ id: "LAST_12_WEEKS", name: "12W" }
+	
 	];
 
 	selectedPeriod = {
@@ -63,7 +65,7 @@ export class AvailableData {
 	tableRows: AvailableDataItem[] = [];
 	tableDisplayed: boolean = false;
 
-	readDatastore() {
+	showValidationDatastore() {
 
 		if (this.datastoredRead == false) {
 			return this.ValidationService.readDatastore().then(

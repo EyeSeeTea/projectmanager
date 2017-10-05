@@ -26,8 +26,8 @@ export const dataexportmanualDirective = [function () {
 	}
 }];
 
-var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "Info", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", 'UserService', '$timeout',
-	function ($scope, $q: ng.IQService, $filter, commonvariable, Info, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, UserService, $timeout) {
+var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "SystemService","Info", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", 'UserService', '$timeout',
+	function ($scope, $q: ng.IQService, $filter, commonvariable, SystemService, Info, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, UserService, $timeout) {
 
 		// Set "zipped" to true by default
 		$scope.zipped = true;
@@ -135,15 +135,16 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 						orgUnits_filter + "&children=true";
 
 					let restUtil = new RESTUtil();
-					Info.get().$promise.then(
-						info => {
-							var serverDate = new Date(info.serverDate).getTime()
+					SystemService.getServerDateWithTimezone()
+						.then(serverTime => {
+				
+							var serverDate = new Date(serverTime).getTime()
 							restUtil.requestGetData(api_url,
 								data => {
 									if ($scope.zipped) {
 										let zip = new JSZip();
 										zip.file(fileName + '.json', JSON.stringify(data));
-										zip.file($scope.file_name + "_" + serverDate + '_project.txt', projects);
+										zip.file("OrgUnits_" + serverDate + '_project.txt', projects);
 										zip.generateAsync({ type: "blob", compression: "DEFLATE" })
 											.then(function (content) {
 												saveAs(content, fileName + '.json.zip');

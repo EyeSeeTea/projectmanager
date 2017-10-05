@@ -19,34 +19,34 @@
 
 <div class="row">
     <div class="col-md-6">
-        <d2-progressbar-dynamic status="validationDataStatus"></d2-progressbar-dynamic>
+        <d2-progressbar-dynamic status="$ctrl.validationDataStatus"></d2-progressbar-dynamic>
     </div>
 </div>
 
-<div class="row" ng-show="showHeader">
+<div class="row" ng-show="$ctrl.showHeader">
 	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<div class="row form-inline">
-						<div class="col-md-2" ng-show="showMissions">
+						<div class="col-md-2" ng-show="$ctrl.showMissions">
 						<label for="missionSelect">Mission</label>
 						<select id="missionSelect" class="filter-select form-control"
-								ng-model="filter.selected" ng-change="filterMission(filter)">
+								ng-model="$ctrl.filter.selected" ng-change="$ctrl.filterMission(filter)">
                                 <option value="">All</option>
-								<option ng-repeat="mission in missions" value="{{mission.id}}">{{mission.name}}</option>
+								<option ng-repeat="mission in $ctrl.missions" value="{{mission.id}}">{{mission.name}}</option>
                                 
 						</select>
 					</div>
-					<div class="col-md-4" ng-show="showMissions">
+					<div class="col-md-4" ng-show="$ctrl.showMissions">
 						<label for="cellSelector">{{'Cell' | translate}}:</label>
 						<div id="cellSelector" class="btn-group" data-toggle="buttons">
-							<label ng-repeat="cell in cells" ng-click="modifycell(cell)"
+							<label ng-repeat="cell in $ctrl.cells" ng-click="$ctrl.modifycell(cell)"
 								   class="btn btn-default {{cell.id == selectedCell.id ? 'active' : ''}}">
 								<input type="radio" name="options" autocomplete="off">
 								{{cell.name}}
 							</label>
 
-                            <label  ng-click="modifycell(cell)"  class="btn btn-default {{ selectedCell.id=='' ? 'active' : ''}}">
+                            <label  ng-click="$ctrl.modifycell(cell)"  class="btn btn-default {{ selectedCell.id=='' ? 'active' : ''}}">
 								<input type="radio" name="options" autocomplete="off">
 								{{'All'}}
 							</label>
@@ -59,7 +59,7 @@
 <label for="zeroSelector">{{'Show empty' | translate}}:</label>
 						<div id="zeroSelector" >
 						
-								   <input type="checkbox" ng-change="showZero(value)" ng-model="zero">
+								   <input type="checkbox" ng-change="$ctrl.showZero(value)" ng-model="$ctrl.zero">
 								
 								
 							
@@ -75,16 +75,16 @@
 </div>
 
 
-<table class="table table-bordered table-condensed table-hover" ng-show="showProjectsTable">
+<table class="table table-bordered table-condensed table-hover" ng-show="$ctrl.showProjectsTable">
 
     <tr>
-        <th><a href="#/dataimport" ng-click="orderByFieldProject='missionName'; reverseSortProject = !reverseSortProject">Mission</a></th>
-        <th><a href="#/dataimport" ng-click="orderByFieldProject='name'; reverseSortProject = !reverseSortProject">Project</a></th>
-        <th><a href="#/dataimport" ng-click="orderByFieldProject='lastDatePush'; reverseSortProject = !reverseSortProject">Last Sync</a></th>
-        <th><a href="#/dataimport" ng-click="orderByFieldProject='datasets'; reverseSortProject = !reverseSortProject">Datasets</a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByFieldProject='missionName'; $ctrl.reverseSortProject = !$ctrl.reverseSortProject">Mission</a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByFieldProject='name'; $ctrl.reverseSortProject = !$ctrl.reverseSortProject">Project</a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByFieldProject='lastDatePush'; $ctrl.reverseSortProject = !$ctrl.reverseSortProject">Last Sync</a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByFieldProject='datasets'; $ctrl.reverseSortProject = !$ctrl.reverseSortProject">Datasets</a></th>
         <th  > </th>
     </tr>
-    <tr ng-repeat="project in projects | filter:missionFilter | filter:cellFilter | filter:zeroShow | orderBy:orderByFieldProject:reverseSortProject">
+    <tr ng-repeat="project in $ctrl.projects | filter:$ctrl.missionFilter | filter:$ctrl.cellFilter | filter:$ctrl.zeroShow | orderBy:$ctrl.orderByFieldProject:$ctrl.reverseSortProject">
        
      
        
@@ -101,26 +101,26 @@
             {{ project.datasets }}
         </td>
         <td>
-            <button ng-click="show_details(project);">Details</button>
+            <button ng-click="$ctrl.show_details(project);">Details</button>
             <!-- <button  ng-if="isMedco" ng-click="submit_validate(project);">Validate</button> -->
         </td>
     </tr>
 
 </table>
 
-<table class="table table-bordered table-condensed table-hover" ng-show="showDetails">
+<table class="table table-bordered table-condensed table-hover" ng-show="$ctrl.showDetails">
 
     <tr>
      
-        <th><a href="#/dataimport" ng-click="orderByField='siteName'; reverseSort = !reverseSort">Site</a></th>
-        <th> <a href="#/dataimport" ng-click="orderByField='serviceName'; reverseSort = !reverseSort">Service </a></th>
-        <th><a href="#/dataimport" ng-click="orderByField='dataSetName'; reverseSort = !reverseSort">Dataset</a></th>
-        <th><a href="#/dataimport" ng-click="orderByField='period'; reverseSort = !reverseSort">Period</a></th>
-        <th><a href="#/dataimport" ng-click="orderByField='lastDatePush'; reverseSort = !reverseSort">Last Sync</a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByField='siteName'; $ctrl.reverseSort = !$ctrl.reverseSort">Site</a></th>
+        <th> <a href="#/dataimport" ng-click="$ctrl.orderByField='serviceName'; $ctrl.reverseSort = !$ctrl.reverseSort">Service </a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByField='dataSetName'; $ctrl.reverseSort = !$ctrl.reverseSort">Dataset</a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByField='period'; $ctrl.reverseSort = !$ctrl.reverseSort">Period</a></th>
+        <th><a href="#/dataimport" ng-click="$ctrl.orderByField='lastDatePush'; $ctrl.reverseSort = !$ctrl.reverseSort">Last Sync</a></th>
         <th></th>
     </tr>
 
-    <tr ng-repeat="dataset in datasets  | filter:searchText | orderBy:orderByField:reverseSort ">
+    <tr ng-repeat="dataset in $ctrl.datasets  | filter:$ctrl.searchText | orderBy:$ctrl.orderByField:$ctrl.reverseSort ">
 
         <td>
             {{ dataset.siteName }}
@@ -142,11 +142,29 @@
             {{ dataset.lastDatePush | date:'yyyy-MM-dd HH:mm:ss Z' }}
         </td>
         <td>
-            <button ng-click="show_details_dataset(dataset);">Preview</button>
-            <button  ng-if="isMedco" ng-click="submit_validate_dataset(dataset, $index);">Validate</button>
+            <button ng-click="$ctrl.show_details_dataset(dataset);">Preview</button>
+            <button  ng-if="$ctrl.isMedco" ng-click="$ctrl.submit_validate_dataset(dataset, $index);">Validate</button>
         </td>
     </tr>
 
 </table>
 
-<div id="dataset" ng-show="showDetails"></div>
+<div id="dataset" ng-show="$ctrl.showDetails"></div>
+
+
+<div class="modal" id="dataValueHistory" role="dialog">
+			<div class="modal-dialog">
+		    
+			   	<div class="modal-content">
+			   		<div class="modal-header">
+						<h4 class="modal-title">{{ 'DATAVALUE_HISTORY' | translate }}</h4>
+			    	</div>
+			  		<div class="modal-body">
+			  			<img ng-src="{{ $ctrl.datahistory }}" />
+			  		</div>
+			  		<div class="modal-footer">
+			  			<button type="button" class="btn btn-default" ng-click="$ctrl.hideHistory()">{{ 'CLOSE' | translate }}</button>
+			  		</div>
+			  	</div>
+		  	</div>
+		</div>

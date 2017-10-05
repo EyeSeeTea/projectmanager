@@ -31,7 +31,7 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",  "MetadataSyncService", "Info", "Organisationunit", "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
+var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl", "MetadataSyncService", "Info", "Organisationunit", "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
 	function ($scope, $q: ng.IQService, commonvariable, RemoteInstanceUrl, MetadataSyncService, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
 
 		var projectId = null;
@@ -160,81 +160,82 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 		$scope.submit_sync = function () {
 			var sync_result = null;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
+			var remoteVersion = "";
 
- this.RemoteInstanceUrl.get().$promise
-            .then( remoteUrl => {
+			RemoteApiService.executeRemoteQuery({
+				method: 'GET',
+				resource: '/system/info',
 
-console.log(remoteUrl);
-			});
+			}).then(
+				remoteInfo => {
+					remoteVersion = remoteInfo.data.version;
+					SystemService.getServerVersion().then(
+						localVersion => {
+							
+							if (remoteVersion == localVersion) {
 
-			MetadataSyncService.getVersionDifference().then(
-				metadataVersionDiff => {
+								console.log("Server version equal to local Version.")
+								MetadataSyncService.getVersionDifference().then(
+									metadataVersionDiff => {
 
+										if (metadataVersionDiff.length == 0) {
 
-					console.log(metadataVersionDiff);
+											UserService.getCurrentUser()
+												.then(user => {
+													projectId = user.organisationUnits[0].id;
+													projectName = user.organisationUnits[0].name;
+													return RemoteApiService.isRemoteServerAvailable();
+												})
+												.then(
+												() => SystemService.getServerDateWithTimezone(),
+												error => {
+													$scope.sync_result = error;
+													return $q(() => null);
+												}
+												)
+												.then(serverTime => {
+													let restUtil = new RESTUtil();
+													restUtil.requestPostData(api_url,
+														data => {
+															if (data == null) {
+																sync_result = "Import process completed successfully (No data updated)";
+																$scope.sync_result = sync_result;
+															}
+															else {
+																sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
+																$scope.sync_result = sync_result;
+															}
+															writeRegisterInRemoteServer(projectId, serverTime)
+															// Enviar mensaje a medco messageConversations
+															getMedco(projectId).then(
+																medcos => {
+																	var message = {
+																		subject: "Data Sync - " + projectName,
+																		text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
+																		users: medcos
+																	}
+																	MessageService.sendRemoteMessage(message);
+																});
+														},
+														data_error => {
+															console.log(data_error);
+														});
+												});
+										} else {
+											$scope.sync_result = "Different Metadata Versions. Please sync them first.";
+											console.log("Versiones de Metadata Diferentes")
+										}
 
-					console.log(metadataVersionDiff.length);
+									});
 
-					if (metadataVersionDiff.length == 0) {
-						
-						
-						UserService.getCurrentUser()
-				.then(user => {
-					projectId = user.organisationUnits[0].id;
-					projectName = user.organisationUnits[0].name;
-					return RemoteApiService.isRemoteServerAvailable();
-				})
-				.then(
-				data => SystemService.getServerDateWithTimezone(),
-				error => {
-					$scope.sync_result = error;
-					return $q(() => null);
-				}
-				)
-				.then(serverTime => {
-					let restUtil = new RESTUtil();
-					restUtil.requestPostData(api_url,
-						data => {
-							if (data == null) {
-								sync_result = "Import process completed successfully (No data updated)";
-								$scope.sync_result = sync_result;
+							} else {
+
+								$scope.sync_result = "Server version different from local Version. Please update.";
 							}
-							else {
-								sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
-								$scope.sync_result = sync_result;
-							}
-							//writeRegisterInRemoteServer(projectId, serverTime)
-							// Enviar mensaje a medco messageConversations
-							getMedco(projectId).then(
-								medcos => {
-									var message = {
-										subject: "Data Sync - " + projectName,
-										text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
-										users: medcos
-									}
-									MessageService.sendRemoteMessage(message);
-								});
-						},
-						data_error => {
-							console.log(data_error);
-						});
+
+						}
+					)
 				});
-						
-						
-						
-						
-					
-				
-			} else {   
-				$scope.sync_result = "Different Metadata Versions. Please sync them first.";
-				console.log("Versiones de Metadata Diferentes")  }
-
-				});
-
-
-
-
-			
 		}
 
 		function getMedco(projectId) {

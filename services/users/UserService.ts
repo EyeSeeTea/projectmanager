@@ -73,7 +73,7 @@ export class UserService {
      * It returns a promise that resolves to a boolean indicating if current user has the group or not
      * @param groupName Group name to evaluate
      */
-    currentUserHasGroup(groupName): ng.IPromise<Boolean> {
+    currentUserHasGroup(groupName): ng.IPromise<boolean> {
         return this.getCurrentUser().then( me => me.userGroups.some( userGroup => userGroup.name === groupName ));
     }
 
@@ -81,7 +81,7 @@ export class UserService {
      * It returns a promise that resolves to a boolean indicating if current user has the role or not
      * @param roleName Role name to evaluate
      */
-    currentUserHasRole(roleName): ng.IPromise<Boolean> {
+    currentUserHasRole(roleName): ng.IPromise<boolean> {
         return this.getCurrentUser().then( me => me.userCredentials.userRoles.some( userRole => userRole.name === roleName ));
     }
     

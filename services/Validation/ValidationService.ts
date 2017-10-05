@@ -342,7 +342,7 @@ export class ValidationService {
 
 class ProjectDatastoreRecord {
     constructor(
-        public misions: MisionRecord[],
+        public missions: MissionRecord[],
         public projects: ProjectRecord[],
         public datasets: datasetRecord[],
 
@@ -365,7 +365,7 @@ class ProjectRecord {
     ) { }
 }
 
-class MisionRecord {
+class MissionRecord {
     constructor(
         public missionID: string,
         public name: string,
