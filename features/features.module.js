@@ -10,7 +10,7 @@ import {dataimport} from './dataimport/dataimportController';
 var metadataExport = require('./metadataexport/metadataexportController');
 import {MetadataImport} from './metadataimport/metadataimportController';
 import {MetadataMonitor} from './metadatamonitor/metadatamonitorController';
-var resetPassword = require('./resetpasswd/resetpasswdController');
+import {ResetPassword} from './resetpasswd/resetpasswdController';
 import {TrackerDataExport} from './trackerdataexport/trackerDataExportController';
 import {TrackerDataImport} from './trackerdataimport/trackerDataImportController';
 
@@ -22,7 +22,7 @@ var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Serv
     .controller('metadataexportController', metadataExport)
     .controller('metadataimportController', MetadataImport)
     .controller('metadatamonitorController', MetadataMonitor)
-    .controller('resetpasswdController', resetPassword)
+    .controller('resetpasswdController', ResetPassword)
     .controller('trackerDataExportController', TrackerDataExport)
     .controller('trackerDataImportController', TrackerDataImport);
 
