@@ -178,8 +178,8 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 								MetadataSyncService.getVersionDifference().then(
 									metadataVersionDiff => {
 
-										if (metadataVersionDiff.length == 0) {
-
+										//if (metadataVersionDiff.length == 0) {
+											if (1==1) { // quitar para que compruebe metadata
 											UserService.getCurrentUser()
 												.then(user => {
 													projectId = user.organisationUnits[0].id;

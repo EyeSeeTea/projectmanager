@@ -87,24 +87,37 @@ export class AvailableData {
 						if (!(this.valuesDatastore['zOyMxdCLXBM']! instanceof Array)) { this.valuesDatastore['zOyMxdCLXBM'] = [] }
 						if (!(this.valuesDatastore['G7g4TvbjFlX']! instanceof Array)) { this.valuesDatastore['G7g4TvbjFlX'] = [] }
 
-						this.sqlService.executeSqlView("SELECT monthly FROM _dateperiodstructure WHERE quarterly='" + dataset.period + "' OR weekly='" + dataset.period + "'").then(data => {
-							console.log(data.rows[0]);
-
+						this.sqlService.executeSqlView("SELECT distinct(monthly) FROM _dateperiodstructure WHERE quarterly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
+						
+						.then(data => {
+							
 							angular.forEach(data.rows, row => {
 
 								if (row != undefined) {
 
-									this.fillValuesDatastore_months(dataset, row);
+									this.fillValuesDatastore(dataset, row,"months");
 
 
 								}
 							});
+					});
+					this.sqlService.executeSqlView("SELECT distinct(quarterly) FROM _dateperiodstructure WHERE monthly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
+						
+						.then(data => {
+							angular.forEach(data.rows, row => {
+
+								if (row != undefined) {
+
+									this.fillValuesDatastore(dataset, row,"months");
+
+
+								}
+							});
+					});
 
 
 
-
-						})
-						this.fillValuesDatastore(dataset, dataset.period);
+						this.fillValuesDatastore(dataset, dataset.period,"");
 
 
 					});
@@ -114,18 +127,20 @@ export class AvailableData {
 		}
 	}
 
-	fillValuesDatastore(dataset, period) {
+	fillValuesDatastore(dataset, period, type) {
 
 		this.valuesDatastore[dataset.missionId]["'" + period + "'"] = true;
 		this.valuesDatastore[dataset.siteId]["'" + period + "'"] = true;
 		this.valuesDatastore[dataset.project]["'" + period + "'"] = true;
-		this.valuesDatastore[dataset.service]["'" + period + "'"] = true;
+		
+		if (type !="months") {  this.valuesDatastore[dataset.service]["'" + period + "'"] = true}
+		
 		this.valuesDatastore['zOyMxdCLXBM']["'" + period + "'"] = true;
 		this.valuesDatastore['G7g4TvbjFlX']["'" + period + "'"] = true;
 
 	}
 
-
+/*
 	fillValuesDatastore_months(dataset, period) {
 
 		this.valuesDatastore[dataset.missionId]["'" + period + "'"] = true;
@@ -136,6 +151,7 @@ export class AvailableData {
 		this.valuesDatastore['G7g4TvbjFlX']["'" + period + "'"] = true;
 
 	}
+*/
 	loadUserSettings() {
 		return this.UserDataStoreService.getCurrentUserSettings().then(
 			userSettings => {

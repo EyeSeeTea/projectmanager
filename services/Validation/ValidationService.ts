@@ -245,14 +245,19 @@ export class ValidationService {
                     var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
                     if (diff > 30) { project['overdueSync'] = true }
                     return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_values").then(
+                       
+                       
                         data => {
-                           
+                            if (data != undefined) {
                          this.datasets= this.datasets.concat(data.values);
                         
                             project['datasets'] = data.values.length;
                             this.projects.push(project);
                            
                             return this.$q.resolve("Done project");
+                            } else {
+                    return this.$q.resolve("No data for this project")
+                }
                         });
                 } else {
                     return this.$q.resolve("No data for this project")
