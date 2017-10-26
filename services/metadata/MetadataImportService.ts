@@ -27,8 +27,6 @@ export class MetadataImportService {
                 private $http: ng.IHttpService, 
                 private commonvariable: CommonVariable) {}
 
-    fileContent;
-
     importMetadataFile (file) {
 
         var deferred = this.$q.defer();
