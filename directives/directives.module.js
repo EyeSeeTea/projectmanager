@@ -4,7 +4,7 @@ require('../services/services.module');
 var dataImportPreviewDirective = require('./dataimportpreview/dataimportpreviewController');
 var datasetEntryFormDirective = require('./dataimportpreview/datasetentryformController');
 var headerDirective = require('./header/headerController');
-var menuDirective = require('./menu/menuController');
+import { MenuComponent } from './menu/menuController.ts';
 var messagesDirectives = require('./messages/messagesController');
 import {progressBarDynamic} from './progressBarDynamic/progressBarDynamicController';
 import { ProjectSelectorComponent } from './projectSelector/projectSelectorController';
@@ -30,7 +30,7 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('d2Header', headerDirective)
     .directive('d2Messages', messagesDirectives)
     .directive('d2ProgressbarDynamic', progressBarDynamic)
-    .directive('d2Secondarymenu', menuDirective)
+    .component('d2Secondarymenu', new MenuComponent())
     .directive('d2Treeorganisationunit', treeorganisationunitDirective)
     .directive('containsDigit', containsDigitDirective)
     .directive('containsUppercase', containsUppercaseDirective)
