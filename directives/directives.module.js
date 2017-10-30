@@ -3,7 +3,7 @@ require('../services/services.module');
 
 var dataImportPreviewDirective = require('./dataimportpreview/dataimportpreviewController');
 var datasetEntryFormDirective = require('./dataimportpreview/datasetentryformController');
-var headerDirective = require('./header/headerController');
+import { HeaderComponent } from './header/headerController.ts';
 import { MenuComponent } from './menu/menuController.ts';
 var messagesDirectives = require('./messages/messagesController');
 import {progressBarDynamic} from './progressBarDynamic/progressBarDynamicController';
@@ -27,7 +27,7 @@ var orderObjectByFilter = require('./filters/orderObjectByFilter');
 var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('d2Dataimportpreview', dataImportPreviewDirective)
     .directive('d2DatasetEntryForm', datasetEntryFormDirective)
-    .directive('d2Header', headerDirective)
+    .component('d2Header', new HeaderComponent())
     .directive('d2Messages', messagesDirectives)
     .directive('d2ProgressbarDynamic', progressBarDynamic)
     .component('d2Secondarymenu', new MenuComponent())
