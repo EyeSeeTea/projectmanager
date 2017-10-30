@@ -287,13 +287,13 @@ Dhis2Api.factory("userDataStore",['$resource','commonvariable', function ($resou
 }]);
 
 Dhis2Api.factory("SqlView",['$resource', 'commonvariable', function($resource, commonvariable) {
-	return $resource( commonvariable.url + "sqlViews/:viewId",
-		{viewId:'@id'}, {post: {method: "POST"}});
+	return $resource( commonvariable.url + "sqlViews/:id",
+		{id:'@id'}, {post: {method: "POST"}});
 }]);
 
 Dhis2Api.factory("SqlViewData",['$resource', 'commonvariable', function($resource, commonvariable) {
-	return $resource( commonvariable.url + "sqlViews/:viewId/data.json",
-		{viewId:'viewId'});
+	return $resource( commonvariable.url + "sqlViews/:id/data.json",
+		{id:'id'});
 }]);
 
 Dhis2Api.factory("OrganisationUnitGroupSet",['$resource','commonvariable', function ($resource,commonvariable) {

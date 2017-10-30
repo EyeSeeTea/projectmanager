@@ -22,11 +22,16 @@
 
         <div class="form_group">
                 <button type="submit" id="submit_sync" class="btn btn-primary">{{ 'SYNC' | translate }}</button>
-
+                <div class="row">
+                <div class="col-md-6">
+                        <d2-progressbar-dynamic status="validationDataStatus"></d2-progressbar-dynamic>
+                </div>
+                </div>
         </div>
         <div>
-                <p>Result: {{sync_result}}</p>
-                <p>Last Sync Date: {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
+                <p>{{ 'LAST_SYNC_DATE' | translate }}: {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
+                <p>{{ 'RESULT' | translate }}: {{sync_result}}</p>
+               
         </div>
 </form>
 
@@ -35,11 +40,11 @@
 
         <div class="form_group">
 
-                <button type="submit" id="submitValidationRequest" class="btn btn-primary">{{ 'Validation Request' | translate }}</button>
+                <button type="submit" id="submitValidationRequest" class="btn btn-primary">{{ 'VALIDATION_REQUEST' | translate }}</button>
 
         </div>
         <div>
 
-                <p>Last Validation Date: {{validation_date | date:'yyyy-MM-dd HH:mm:ss Z' }}</p>
+                <p>{{ 'LAST_VALIDATION_REQUEST_DATE' | translate }}: {{validation_date | date:'yyyy-MM-dd HH:mm:ss Z' }}</p>
         </div>
 </form>

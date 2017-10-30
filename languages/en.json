@@ -56,8 +56,15 @@
 	"NO_LOCAL_VERSION": "No local version",
 	"NO_REMOTE_VERSION": "No remote version",
 	"SYNC_METADATA": "Sync metadata",
+	"AUTOMATIC_SYNC": "Automatic Sync",
+	"MANUAL_IMPORT": "Manual Import",
+	"UP_TO_DATE": "Up-to-date",
+	"UPDATES_AVAILABLE": "Updates available",
+	"REMOTE": "Remote",
 	
-	"_______________ Data ":" Import and Export_____________",
+	
+	
+	"_______________ Data":" Import and Export_____________",
 	"DATA_IMPORT": "Import data",
 	"IMPORT": "Import",
 	"DATA_EXPORT": "Export data",
@@ -82,6 +89,9 @@
 	"EMPTY_IMPORT_FILE": "The file contains no values",
   	"DETAILS": "Details",
 	"DEMOGRAPHIC_DATA": "Demographic data",
+	"MANUAL": "Manual",
+	"SYNC": "Online Sync",
+	
 
 	"____________Tracker Data Export":"__________",
 	"TRACKER_DATA_EXPORT": "Export individual data",
@@ -167,9 +177,43 @@
 	"NO_LOCAL_METADATA_VERSION": "Local server has not metadata version",
 	"NO_REMOTE_METADATA_VERSION": "Remote server has not metadata version",
 
-	"________________Service ": " Remote API___________",
+	"________________Service": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Logger user credentials are not correct.",
 	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{urlbase}}' in the whitelist.",
 	"NO_LOGGER_USER": "Logger user is not available.",
-	"INVALID_LOGGER_USER": "Logger user credentials are invalid."
+	"INVALID_LOGGER_USER": "Logger user credentials are invalid.",
+
+
+	"________________DataSync ": " Data Sync___________",
+	"LAST_SYNC_DATE": "Last Sync Date",
+	"RESULT": "Result",
+	"VALIDATION_REQUEST": "Validation Request",
+	"LAST_VALIDATION_REQUEST_DATE": "Last Validation Request Date",
+	
+
+		"________________Validation ": " Validation ___________",
+	"VALIDATION": "Validation",
+	"CELL": "Cell",
+	"ALL": "All",
+	"SHOW_EMPTY": "Show Empty",
+	"MISSION": "Mission",
+	"PROJECT": "Project",
+	"DATASETS": "Datasets",
+	"SITE": "Site",
+	"VALIDATE": "Validate"
+
+
+
+
+
+	
+
+
+
+
+
+	
+
+
+	
 }

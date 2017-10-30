@@ -59,4 +59,10 @@ export class SystemService {
         return deferred.promise;
     }
 
+      getServerVersion(): ng.IPromise<string> {
+        return this.Info.get().$promise.then(
+            (response) => response.version
+        )
+    }
+
 }

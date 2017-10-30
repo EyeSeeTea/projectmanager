@@ -17,7 +17,7 @@ import {dataexportmanualDirective} from  './dataexportmanual/dataexportmanualCon
 import {datasyncDirective} from  './datasync/datasyncController';
 
 import {importdatamanualDirective} from  './importdatamanual/importdatamanualController';
-import {importeddataDirective} from  './importeddata/importeddataController';
+import {ImportedDataComponent} from  './importeddata/importeddataController';
 
 import {trackerExportDetailedDirective} from './trackerexportdetailed/trackerExportDetailedController';
 import {trackerExportLatestDirective} from './trackerexportlatest/trackerExportLatestController';
@@ -41,7 +41,7 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('aggregateDataExportManual', dataexportmanualDirective)
     .directive('aggregateDataSync', datasyncDirective)
     .directive('importDataManual', importdatamanualDirective)
-    .directive('importedData', importeddataDirective)
+    .component('importedData', new ImportedDataComponent())
    
 
     .filter('orderObjectBy', orderObjectByFilter)

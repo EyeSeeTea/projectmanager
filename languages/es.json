@@ -52,12 +52,19 @@
 	"METADATA_IMPORT": "Importar Configuración",
 	"METADATA_EXPORT": "Exportar Configuración",
 	"METADATA_EXPORT_ZIP":"Comprimido?",
-	"CHECKING_REMOTE_STATUS": "",
-	"NO_LOCAL_VERSION": "",
-	"NO_REMOTE_VERSION": "",
-	"SYNC_METADATA": "",
-		
-	"_______________ Data ":" Import and Export_____________",
+	"CHECKING_REMOTE_STATUS": "Comprobando el estado del servidor remoto",
+	"NO_LOCAL_VERSION": "No hay versión local",
+	"NO_REMOTE_VERSION": "No hay versión remota",
+	"SYNC_METADATA": "Sincronizar metadatos",
+	"AUTOMATIC_SYNC": "Sincronización Automática",
+	"MANUAL_IMPORT": "Importación Manual",
+	"UP_TO_DATE": "Actuaizado",
+	"UPDATES_AVAILABLE": "Actualizaciones disponibles",
+	"REMOTE": "Remoto",
+	
+
+	
+	"_______________ Data":" Import and Export_____________",
 	"DATA_IMPORT": "Importar datos",
 	"IMPORT": "Importar",
 	"DATA_EXPORT": "Exportar datos",
@@ -82,6 +89,8 @@
 	"EMPTY_IMPORT_FILE":"El fichero no contiene valores",
   	"DETAILS": "Detalles",
 	"DEMOGRAPHIC_DATA": "Datos demográficos",
+	"MANUAL": "Manual",
+	"SYNC": "Sincronización online",
 
 	"____________Tracker Data Export":"__________",
 	"TRACKER_DATA_EXPORT": "Exportar datos individuales",
@@ -160,16 +169,36 @@
 	"PERIOD_SELECT_FINANCIAL_OCTOBER":"Seleccione un periodo financiero (Octubre)",
 
 	"________________Service ": " Metadata sync________",
-	"REMOTE_IS_AVAILABLE": "",
-	"REMOTE_NOT_AVAILABLE": "",
-	"REMOTE_NOT_CONFIGURED": "",
-	"AUTHENTICATION_FAILED": "",
-	"NO_LOCAL_METADATA_VERSION": "",
-	"NO_REMOTE_METADATA_VERSION": "",
+	"REMOTE_IS_AVAILABLE": "El servidor remoto está disponible",
+	"REMOTE_NOT_AVAILABLE": "EL servidor remoto no está disponible ",
+	"REMOTE_NOT_CONFIGURED": "Los parámetros del servidor remoto no están configurados",
+	"AUTHENTICATION_FAILED": "Las credenciales en el servidor remoto no son correctas",
+	"NO_LOCAL_METADATA_VERSION": "El servidor local no tiene versión de metaddatos",
+	"NO_REMOTE_METADATA_VERSION": "El servidor remoto no tiene versión de metadatos",
+
 
 	"________________Service ": " Remote API___________",
-	"LOGGER_USER_NOT_AUTHORIZED": "",
-	"NOT_IN_WHITELIST": "",
-	"NO_LOGGER_USER": "",
-	"INVALID_LOGGER_USER": ""
+	"LOGGER_USER_NOT_AUTHORIZED": "Las credenciales de usuario no son correctas",
+	"NOT_IN_WHITELIST": "Por favor, envia un correo a hmis@barcelona.msf.org y pide que incluyan '{{urlbase}}' en la lista blanca ",
+	"NO_LOGGER_USER": "El usuario no está disponible",
+	"INVALID_LOGGER_USER": "Las credenciales de usario son inválidas",
+
+	"________________DataSync ": " Data Sync___________",
+	"LAST_SYNC_DATE": "Última fecha de sincronizción",
+	"RESULT": "Resultado",
+	"VALIDATION_REQUEST": "Solicitud de Validación",
+	"LAST_VALIDATION_REQUEST_DATE": "Última fecha de solicitud de validación",
+
+
+
+		"________________Validation ": " Validation ___________",
+	"VALIDATION": "Validación",
+	"CELL": "Célula",
+	"ALL": "Todas",
+	"SHOW_EMPTY": "Mostrar Vacías",
+	"MISSION": "Misión",
+	"PROJECT": "Proyecto",
+	"DATASETS": "Formularios",
+	"SITE": "Sitio",
+	"VALIDATE": "Validar"
 }

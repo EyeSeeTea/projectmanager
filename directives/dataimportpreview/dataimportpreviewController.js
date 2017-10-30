@@ -67,7 +67,7 @@ var dataImportPreviewController =  ['$scope', "Organisationunit", function($scop
 			.then(function (fileData) {
 				var dataValues = JSON.parse(fileData).dataValues;
 				var data = {};
-console.log(dataValues);
+
 				if (dataValues == undefined){
 					$scope.msjEmptyFile = true;
 					$scope.importPreviewStatus.visible = false;

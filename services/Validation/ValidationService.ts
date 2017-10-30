@@ -7,67 +7,71 @@ import { Orgunit } from '../../model/model';
 
 
 export class ValidationService {
-
+ private projects;
+ private datasets;
     static $inject = ['$q', 'DataStoreService', 'UserService', 'Organisationunit', 'DataExport'];
 
-    constructor(private $q: ng.IQService, private DataStoreService: DataStoreService, private UserService: UserService, private Organisationunit, private DataExport) { }
+    constructor(private $q: ng.IQService, private DataStoreService: DataStoreService, private UserService: UserService, private Organisationunit, private DataExport) { 
 
+
+    }
 
 
     fillDatastore(): ng.IPromise<any> {
         var serversPushDatesNamespace = "ServersPushDates";
-        var lastPushDateSaved = null;
-        var lastDatePush = null;
-        var sites = [];
-        var services = [];
 
         return this.getProjectsDatastore(serversPushDatesNamespace).then(
             projectsDatastore => {
                 return this.getUserMissions().then(
                     missions => {
-                        return missions.reduce((total7, mission) => {
-                            return total7.then(
-                                /* Buscamos los proyectos para cada mision */
-                                () => {
-                                    return this.getMissionProjects(mission, projectsDatastore).reduce((total6, project) => {
-                                        //var projectArrayPromises = projects.map( project => getDatasets(project));
-                                        //$q.all(projectArrayPromises)
-                                        //    .then(result => "done")
 
-                                        return total6.then(
-                                            () => {
-                                                return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
-                                                    data => {
-                                                        lastDatePush = null;
-                                                        if (data != undefined) {
-                                                            lastDatePush = data.lastDatePush;
-                                                            lastPushDateSaved = data.lastPushDateSaved;
-                                                            if (lastPushDateSaved != lastDatePush) {
-                                                                sites = this.getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
-                                                                services = this.getSiteServices(sites);
-                                                                return this.servicesValues(mission.id, project, services, lastDatePush, lastPushDateSaved);
-                                                            }
-                                                        } else { console.log("no hay datos importados"); }
-                                                    }
-                                                ).then(
-                                                    () => {
-                                                        if ((lastDatePush != undefined) && (lastPushDateSaved != lastDatePush)) {
-                                                            return this.DataStoreService.updateNamespaceKeyArraylastPush(serversPushDatesNamespace, project.id + "_date", lastDatePush);
-                                                        }
-                                                    });
-                                            });
-                                    }, this.$q.when("Done total 6"));
-                                });
-                        }, this.$q.when("Done total 7"));
+                        var missionArrayPromises = missions.map(mission => this.fillDatastoreMissions(mission, projectsDatastore));
+                       return this.$q.all(missionArrayPromises)
+                            .then(result => "done")
+
                     }
                 )
             }
         )
     }
 
+    private fillDatastoreMissions(mission, projectsDatastore) {
+        var projects = [];
+        projects = this.getMissionProjects(mission, projectsDatastore);
+        var projectArrayPromises = projects.map(project => this.fillDatastoreProjects(mission, project));
+        return this.$q.all(projectArrayPromises)
+            .then(result => "done")
 
 
+    }
 
+    private fillDatastoreProjects(mission, project) {
+
+        var serversPushDatesNamespace = "ServersPushDates";
+        var lastPushDateSaved = null;
+        var lastDatePush = null;
+        var sites = [];
+        var services = [];
+        return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
+            data => {
+                lastDatePush = null;
+                if (data != undefined) {
+                    lastDatePush = data.lastDatePush;
+                    lastPushDateSaved = data.lastPushDateSaved;
+                    if (lastPushDateSaved != lastDatePush) {
+                        sites = this.getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
+                        services = this.getSiteServices(sites);
+                        return this.servicesValues(mission.id, project, services, lastDatePush, lastPushDateSaved);
+                    }
+                } else { console.log("No hay datos importados"); }
+            }
+        ).then(
+            () => {
+                if ((lastDatePush != undefined) && (lastPushDateSaved != lastDatePush)) {
+                    return this.DataStoreService.updateNamespaceKeyArraylastPush(serversPushDatesNamespace, project.id + "_date", lastDatePush);
+                }
+            });
+    }
 
 
     private getProjectSites(project) {
@@ -90,13 +94,13 @@ export class ValidationService {
         return services;
     }
 
-    private servicesValues(mission,project, services, lastDatePush, lastPushDateSaved) {
+    private servicesValues(mission, project, services, lastDatePush, lastPushDateSaved) {
         return services.reduce((total2, service) => {
             return total2.then(
                 () => {
                     return this.getDatasets(service.id).then(
                         dataSets => {
-                            return this.dataSetsValues(dataSets, service, mission,project, lastDatePush, lastPushDateSaved);
+                            return this.dataSetsValues(dataSets, service, mission, project, lastDatePush, lastPushDateSaved);
                         });
                 }
             );
@@ -117,14 +121,14 @@ export class ValidationService {
         return dataSets.reduce((total3, dataSet) => {
             return total3.then(
                 () => {
-                   // if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
+                    if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
                         return this.readDatasetValues(dataSet.id, service.id, new Date(lastPushDateSaved)).then(
                             dataValues => {
                                 if (dataValues != undefined) {
                                     return this.updateDatastoreValues(dataValues, mission, project.id, service, dataSet, lastDatePush, lastPushDateSaved);
                                 }
                             });
-                   // }
+                    }
                 });
         }, this.$q.when("Done total 3"));
     }
@@ -183,10 +187,9 @@ export class ValidationService {
         var lastPushDateSaved = null;
         var lastDatePush = null;
         var missions = [];
-        var projects = [];
 
-        var projects_scope = [];
-        var datasets_scope = [];
+        this.datasets= [];
+        this.projects = [];
 
 
 
@@ -196,53 +199,72 @@ export class ValidationService {
                 return this.getUserMissions().then(
                     UserMissions => {
 
-                        var missionPromises = UserMissions.map(mission => {
+                        var missionArrayPromises = UserMissions.map(mission => {
                             mission['missionID'] = mission.id;
                             mission['cellID'] = this.getOrgunitCell(mission);
-                            return this.getMissionProjects(mission, projectsDatastore).reduce((total6, project) => {
-                                return total6.then(
-                                    () => {
-                                        return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
-                                            data => {
-                                                if (data != undefined) {
-                                                    lastDatePush = data.lastDatePush;
-                                                    lastPushDateSaved = data.lastPushDateSaved;
-                                                    project['lastDatePush'] = data.lastDatePush;
-                                                    project['missionName'] = mission.name;
-                                                    project['missionID'] = mission.id;
-                                                    project['cellID'] = this.getOrgunitCell(project);
-                                                    var today = new Date().getTime();
-                                                    var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
-                                                    if (diff > 30) { project['overdueSync'] = true }
-                                                    return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_values").then(
-                                                        data => {
-                                                            datasets_scope = datasets_scope.concat(data.values);
-
-                                                            
-                                                            //  $scope.datasets = datasets_scope;
-                                                            project['datasets'] = data.values.length;
-                                                            projects_scope.push(project);
-                                                            //  $scope.projects = projects_scope;
-                                                            return this.$q.resolve("Done project");
-                                                        });
-                                                } else {
-                                                    return this.$q.resolve("No data for this project")
-                                                }
-                                            }
-                                        )
-                                    })
-                            }, this.$q.when("Done total 6"))
-
+                            return this.readDatastoreMissions(mission, projectsDatastore)
                         });
                         missions = UserMissions;
-                        return this.$q.all(missionPromises);
+                        return this.$q.all(missionArrayPromises)
+                            .then(result => "done");
                     }).then(() => {
+                      
 
-                        return { missions: missions, projects: projects_scope, datasets: datasets_scope };
+                        return { missions: missions, projects: this.projects, datasets: this.datasets };
                     });
             });
     }
 
+
+    private readDatastoreMissions(mission, projectsDatastore) {
+       
+        var projects = this.getMissionProjects(mission, projectsDatastore);
+        var projectArrayPromises = projects.map(project => this.readDatastoreProject(mission, project));
+        return this.$q.all(projectArrayPromises)
+            .then(result => "done")
+    }
+
+
+
+    private readDatastoreProject(mission, project) {
+
+        var serversPushDatesNamespace = "ServersPushDates";
+        var lastPushDateSaved = null;
+        var lastDatePush = null;
+       
+        return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
+            data => {
+                if (data != undefined) {
+                    lastDatePush = data.lastDatePush;
+                    lastPushDateSaved = data.lastPushDateSaved;
+                    project['lastDatePush'] = data.lastDatePush;
+                    project['missionName'] = mission.name;
+                    project['missionID'] = mission.id;
+                    project['cellID'] = this.getOrgunitCell(project);
+                    var today = new Date().getTime();
+                    var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
+                    if (diff > 30) { project['overdueSync'] = true }
+                    return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_values").then(
+                       
+                       
+                        data => {
+                            if (data != undefined) {
+                         this.datasets= this.datasets.concat(data.values);
+                        
+                            project['datasets'] = data.values.length;
+                            this.projects.push(project);
+                           
+                            return this.$q.resolve("Done project");
+                            } else {
+                    return this.$q.resolve("No data for this project")
+                }
+                        });
+                } else {
+                    return this.$q.resolve("No data for this project")
+                }
+            }
+        )
+    }
 
     private getProjectsDatastore(namespace) {
         var projects = [];
@@ -261,13 +283,6 @@ export class ValidationService {
             var missions = [];
             missions = me.dataViewOrganisationUnits;
 
-            /*
-            $scope.isMedco = false;
-            angular.forEach(me.userCredentials.userRoles, function (userRole) {
-                $scope.isMedco = userRole.name === "MedCo" ? true : $scope.isMedco;
-            });
-    
-    */
 
             if (missions[0].level == 1) {
                 missions = missions[0].children[1].children;
@@ -322,18 +337,17 @@ export class ValidationService {
         return value.indexOf("date") > -1
     }
 
-validateDataset (dataset) {
-  var serversPushDatesNamespace = "ServersPushDates";
-        
+    validateDataset(dataset) {
+        var serversPushDatesNamespace = "ServersPushDates";
         return this.DataStoreService.deleteNamespaceKeyValue(serversPushDatesNamespace, dataset.project + "_values", dataset);
-           
 
-}
+
+    }
 }
 
 class ProjectDatastoreRecord {
     constructor(
-        public misions: MisionRecord[],
+        public missions: MissionRecord[],
         public projects: ProjectRecord[],
         public datasets: datasetRecord[],
 
@@ -349,17 +363,15 @@ class ProjectRecord {
         public lastDatePush: number,
         public missionName: string,
         public missionID: string,
-         public siteName: string,
-        
+        public siteName: string,
         public cellID: string,
         public datasets: number,
 
     ) { }
 }
 
-class MisionRecord {
+class MissionRecord {
     constructor(
-
         public missionID: string,
         public name: string,
         public cellID: string
@@ -369,13 +381,14 @@ class MisionRecord {
 
 class datasetRecord {
     constructor(
-
-
         public serviceName: string,
         public dataSetName: string,
-
         public period: string,
-        public lastDatePush: number
+        public lastDatePush: number,
+        public missionId: string,
+        public siteId:string,
+        public project:string,
+        public service: string
 
     ) { }
 }
