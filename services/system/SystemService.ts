@@ -41,9 +41,15 @@ export class SystemService {
      * for example, the server is located at UTC+2 and it is 14:00. It will return "2017-08-03T14:00:00.000" (instead of 2017-08-03T12:00:00.000Z).
      * It returns a promise that resolves to the string.
      */
-    getServerDateWithoutTimezone(): ng.IPromise<String> {
+    getServerDateWithoutTimezone(): ng.IPromise<string> {
         return this.Info.get().$promise.then(
             (response) => response.serverDate
+        )
+    }
+
+    getSystemName(): ng.IPromise<string> {
+        return this.Info.get().$promise.then(
+            (response) => response.systemName
         )
     }
 
