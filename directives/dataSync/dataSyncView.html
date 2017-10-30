@@ -22,7 +22,11 @@
 
         <div class="form_group">
                 <button type="submit" id="submit_sync" class="btn btn-primary">{{ 'SYNC' | translate }}</button>
-
+                <div class="row">
+                <div class="col-md-6">
+                        <d2-progressbar-dynamic status="validationDataStatus"></d2-progressbar-dynamic>
+                </div>
+                </div>
         </div>
         <div>
                 <p>{{ 'LAST_SYNC_DATE' | translate }}: {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>

@@ -16,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { RESTUtil, ValidationRecord } from '../../model/model';
+import { RESTUtil, ValidationRecord, ProgressStatus } from '../../model/model';
 import { DataStoreService, MessageService, RemoteApiService, SystemService, UserService } from '../../services/services.module';
 import { MetadataSyncService } from '../../services/metadata/MetadataSyncService';
 
@@ -41,7 +41,8 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 		var lastDatePush = null;
 		var lastPushDateSaved = null;
 		var serversPushDatesNamespace = "ServersPushDates";
-
+		$scope.validationDataStatus = ProgressStatus.initialWithoutProgress;
+		$scope.validationDataStatus.visible = false;
 		var register: ValidationRecord = new ValidationRecord(null, null);
 
 		UserService.getCurrentUser()
@@ -161,7 +162,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 			var sync_result = null;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
 			var remoteVersion = "";
-
+	$scope.validationDataStatus.visible = true;
 			RemoteApiService.executeRemoteQuery({
 				method: 'GET',
 				resource: '/system/info',
@@ -216,6 +217,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 																	}
 																	MessageService.sendRemoteMessage(message);
 																});
+																$scope.validationDataStatus.visible = false;
 														},
 														data_error => {
 															console.log(data_error);
@@ -223,7 +225,8 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 												});
 										} else {
 											$scope.sync_result = "Different Metadata Versions. Please sync them first.";
-											console.log("Versiones de Metadata Diferentes")
+											console.log("Versiones de Metadata Diferentes");
+											$scope.validationDataStatus.visible = false;
 										}
 
 									});
@@ -231,6 +234,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 							} else {
 
 								$scope.sync_result = "Server version different from local Version. Please update.";
+								$scope.validationDataStatus.visible = false;
 							}
 
 						}
