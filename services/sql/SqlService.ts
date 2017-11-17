@@ -44,23 +44,36 @@ export class sqlService {
             "userGroupAccesses":[]}
     };
 
-    private sqlView(payload) {
+    private createSqlView(payload) {
         return this.SqlView.save(payload).$promise.then( data => {
                  return data.response.uid;
         },{});
     };
 
     private getSqlViewData(queryId) {
-        return this.SqlViewData.get({id:queryId}).$promise.then( queryResult => {
+        return this.executeSqlView(queryId).then( queryResult => {
             this.SqlView.delete({id:queryId});
             return queryResult;
         })
     };
 
-    executeSqlView(query) {
+    /**
+     * This method executes an SQL code. To do that, it creates, executes and deletes an auxiliary SQL View. 
+     * It returns a promise that resolves with its result.
+     * @param query SQL query to execute.
+     */
+    executeSqlQuery(query: string) {
         var payload = this.createPayload(query);
-        return this.sqlView(payload)
-            .then(uid=>  this.getSqlViewData(uid));
+        return this.createSqlView(payload)
+            .then( uid => this.getSqlViewData(uid) )
+    }
+
+    /**
+     * This methods executes an existing SQL View and returns a promise that resolves with its result.
+     * @param queryId SQLView uid to execute.
+     */
+    executeSqlView(queryId: string) {
+        return this.SqlViewData.get({id:queryId}).$promise
     }
 
 }
