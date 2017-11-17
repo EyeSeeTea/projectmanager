@@ -16,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
 
-<form name="latestForm" ng-submit="latestForm.$valid && submit()" novalidate>
+<form name="latestForm" ng-submit="latestForm.$valid && $ctrl.submit()" novalidate>
     <br/>
     <div class="row" ng-show="latestForm.$submitted">
         <div class="col-md-12">
@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-md-6">
             <label for="filename_latest"> {{ 'FILE_NAME' | translate }} </label>
-            <input id="filename_latest" type="text" class="form-control" ng-model="params.filename" name="filename" required/>
+            <input id="filename_latest" type="text" class="form-control" ng-model="$ctrl.params.filename" name="filename" required/>
         </div>
     </div>
     <br/>
@@ -37,10 +37,13 @@
         <div class="col-md-12">
             <label>{{ 'EXPORT_TRACKER_FROM' | translate }}</label>
             <p class="col-md-4 input-group">
-                <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="params.date" is-open="dateopened"
-                       ng-required="true" close-text="Close" name="date" datepicker-options="datePickerDateOptions" max-date="{{params.maxDate}}" required/>
+                <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
+                       ng-required="true" close-text="Close" name="date" datepicker-options="datePickerDateOptions" required/>
+                <!--<input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
+                       ng-required="true" close-text="Close" name="date" datepicker-options="datePickerDateOptions" max-date="$ctrl.params.maxDate" required/>
+                -->
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    <button type="button" class="btn btn-default" ng-click="$ctrl.openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
             </p>
         </div>
@@ -54,21 +57,21 @@
                         <span>{{ 'SERVICE' | translate }}</span>
                         <span class="pull-right">{{ 'LAST_EXPORT' | translate }}</span>
                     </li>
-                    <li class="list-group-item service-sub-header service-item" ng-show="services.length == 0">
+                    <li class="list-group-item service-sub-header service-item" ng-show="$ctrl.services.length == 0">
                         <span>{{ 'NO_SERVICES_AVAILABLE' | translate }}</span>
                     </li>
-                    <li class="list-group-item service-sub-header service-item" ng-click="clickAllServices()" ng-show="services.length != 0">
-                        <input type="checkbox" ng-model="allServices.selected">
+                    <li class="list-group-item service-sub-header service-item" ng-click="$ctrl.clickAllServices()" ng-show="$ctrl.services.length != 0">
+                        <input type="checkbox" ng-model="$ctrl.allServices.selected">
                         <span>{{ 'ALL_SERVICES' | translate }}</span>
                         <span class="pull-right">{{allServices.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
                     </li>
-                    <li ng-repeat="service in services | orderBy:'name'" ng-show="services"
-                        class="list-group-item service-item" ng-click="service.selected = !service.selected">
+                    <li ng-repeat="service in $ctrl.services | orderBy:'name'" ng-show="$ctrl.services"
+                        class="list-group-item service-item" ng-click="$ctrl.clickService(service)">
                         <input type="checkbox" ng-model="service.selected">
                         <span>{{service.name}}</span>
                         <span class="pull-right">{{service.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
                     </li>
-                    <li class="list-group-item" ng-hide="services">
+                    <li class="list-group-item" ng-hide="$ctrl.services">
                         <span class='glyphicon glyphicon-repeat animation-rotation'></span>
                     </li>
                 </ul>
@@ -77,9 +80,9 @@
     </div>
     <br/>
     <div class="form_group">
-        <button type="submit" id="submit" class="btn btn-primary" ng-disabled="services.length == 0 || exporting || getSelectedServices().length == 0">
+        <button type="submit" id="submit" class="btn btn-primary" ng-disabled="$ctrl.services.length == 0 || $ctrl.exporting || $ctrl.getSelectedServices().length == 0">
             {{ 'EXPORT' | translate }}
         </button>
-        <span ng-show="exporting" class='glyphicon glyphicon-repeat animation-rotation'></span>
+        <span ng-show="$ctrl.exporting" class='glyphicon glyphicon-repeat animation-rotation'></span>
     </div>
 </form>

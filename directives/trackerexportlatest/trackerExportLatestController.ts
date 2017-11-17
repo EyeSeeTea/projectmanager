@@ -18,39 +18,50 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { TrackerDataExportLog, ServiceWithPrograms } from '../../model/model';
-import { EventExportService, ProgramService, SystemService } from '../../services/services.module';
+import { DataStoreService, EventExportService, ProgramService, SystemService, UserService } from '../../services/services.module';
+import { TrackerDataExport } from '../../features/trackerdataexport/trackerDataExportController';
 
-export const trackerExportLatestDirective = [function(){
-    return{
-        restrict: 'E',
-        controller: trackerExportLatestController,
-        css: require('./trackerExportLatestCss.css'),
-        template: require('./trackerExportLatestView.html'),
-        scope: {}
+export class TrackerExportLatestComponent implements ng.IComponentOptions {
+    public controller: any;
+    public template: string;
+    public css: string;
+
+    constructor() {
+        this.controller = TrackerExportLatestController;
+        this.template = require('./trackerExportLatestView.html');
+        this.css = require('./trackerExportLatestCss.css');
     }
-}];
+}
 
-var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 'SystemService', 
-    function ($scope: ng.IScope, $filter, ProgramService: ProgramService, UserService, EventExportService: EventExportService, DataStoreService, SystemService: SystemService) {
+class TrackerExportLatestController {
 
-    const dataStoreKey: string = 'trackerexport';
+    params = { date: null, maxDate: null, filename: ""};
+    services = null;
+    allServices = { lastExported: "", selected: false};
+    exporting = false;
+    dateopened = false;
+    dataStoreKey: string = 'trackerexport';
 
-    $scope.params = {};
-    $scope.allServices = {};
-    $scope.exporting = false;
+    static $inject = ['$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 'SystemService'];
 
-    ProgramService.getProgramsUnderUserHierarchyByService()
-        .then( data => {
-            $scope.services = data;
-            $scope.clickAllServices();
-        })
-        .then( () => updateLastExportInfo() )
-        .then( () => setLatestExportAsDefault() );
+    constructor(private $filter, private ProgramService: ProgramService, private UserService: UserService, 
+                private EventExportService: EventExportService, private DataStoreService: DataStoreService,
+                private SystemService: SystemService) {}
 
-    function updateLastExportInfo () {
-        return DataStoreService.getKeyValue(dataStoreKey).then( log => {
+    $onInit() {
+        this.ProgramService.getProgramsUnderUserHierarchyByService()
+            .then( data => {
+                this.services = data;
+                this.clickAllServices();
+            })
+            .then( () => this.updateLastExportInfo() )
+            .then( () => this.setLatestExportAsDefault() );
+    }
+
+    updateLastExportInfo () {
+        return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
             if (log != undefined) {
-                $scope.services.map( service => {
+                this.services.map( service => {
                     service.lastExported = log[service.code];
                 });
             }
@@ -58,8 +69,8 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
         });
     }
 
-    function setLatestExportAsDefault () {
-        const latest = $scope.services.reduce( (previous, current) => {
+    setLatestExportAsDefault () {
+        const latest = this.services.reduce( (previous, current) => {
             if (previous.lastExported === undefined || current.lastExported === undefined) {
                 return {lastExported: undefined};
             } else if (previous.lastExported.end < current.lastExported.end) {
@@ -68,79 +79,81 @@ var trackerExportLatestController = ['$scope', '$filter', 'ProgramService', 'Use
                 return current;
             }
         }, {lastExported: {end:null}});
-        $scope.allServices.lastExported = latest.lastExported;
-        $scope.params.date  = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
+        this.allServices.lastExported = latest.lastExported;
+        this.params.date  = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
+        this.params.maxDate = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
     }
     
-    $scope.openLastUpdated = function ($event) {
+    openLastUpdated ($event) {
         $event.preventDefault();
         $event.stopPropagation();
-        $scope.dateopened = true;
+        this.dateopened = true;
     };
+
+    clickService (service) {
+        service.selected = !service.selected;
+        this.evaluateAllServices();
+    }
     
-    $scope.clickAllServices = function () {
-        $scope.allServices.selected = !$scope.allServices.selected;
-        $scope.services.map( service => {
-            service.selected = $scope.allServices.selected;
+    clickAllServices () {
+        this.allServices.selected = !this.allServices.selected;
+        this.services.map( service => {
+            service.selected = this.allServices.selected;
         });
     };
     
-    $scope.submit = function() {
-        $scope.exporting = true;
-        const startDate: Date = $scope.params.date;
+    submit () {
+        this.exporting = true;
+        const startDate: Date = this.params.date;
         var serverDate: Date;
-        return SystemService.getServerDateWithTimezone()
+        return this.SystemService.getServerDateWithTimezone()
             .then( date => serverDate = date )
-            .then( () => UserService.getCurrentUserOrgunits() )
-            .then( orgunits => EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), orgunits, getSelectedPrograms()) )
-            .then( eventsZipFile => saveAs(eventsZipFile, $scope.params.filename + '.zip') )
-            .then( () => logExport(startDate, serverDate) )
-            .then( () => updateLastExportInfo() )
-            .then( () => evaluateAllServices($scope.services) )
+            .then( () => this.UserService.getCurrentUserOrgunits() )
+            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), orgunits, this.getSelectedPrograms()) )
+            .then( eventsZipFile => saveAs(eventsZipFile, this.params.filename + '.zip') )
+            .then( () => this.logExport(startDate, serverDate) )
+            .then( () => this.updateLastExportInfo() )
             .then( () => console.log("Everything done") )
-            .finally( () => $scope.exporting = false )
+            .finally( () => this.exporting = false )
             // It is necessary to introduce this delay because of maxDate validator.
-            .then( () => setTimeout(() => {setLatestExportAsDefault(); $scope.$apply()}, 200) );
+            .then( () => this.setLatestExportAsDefault() )
     };
 
-    function logExport (start: Date, end: Date) {
-        return DataStoreService.getKeyValue(dataStoreKey).then( log => {
-            const current = new TrackerDataExportLog($scope.params.filename, start, end);
+    logExport (start: Date, end: Date) {
+        return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
+            const current = new TrackerDataExportLog(this.params.filename, start, end);
             log = log || {};
-            $scope.getSelectedServices().map( service => {
+            this.getSelectedServices().map( service => {
                 log[service.code] = current;
             });
-            return DataStoreService.setKeyValue(dataStoreKey, log);
+            return this.DataStoreService.setKeyValue(this.dataStoreKey, log);
         });
     }
 
-    $scope.getSelectedServices = function () {
-        return !$scope.services ? [] :
-            $scope.services.filter( service => service.selected );
+    getSelectedServices () {
+        return !this.services ? [] :
+            this.services.filter( service => service.selected );
     };
 
-    function getSelectedPrograms () {
-        return $scope.getSelectedServices().reduce( (array, service) => {
+    getSelectedPrograms () {
+        return this.getSelectedServices().reduce( (array, service) => {
             return array.concat(service.programs);
         }, []);
     }
 
-    $scope.$watch(
-        () => $scope.services,
-        (newServices) => evaluateAllServices(newServices),
-        true
-    );
-
-    function evaluateAllServices (newServices) {
-        if(newServices != undefined) {
-            $scope.allServices.selected = newServices.reduce( (state, current) => {
+    evaluateAllServices () {
+        if(this.services != undefined) {
+            this.allServices.selected = this.services.reduce( (state, current) => {
                 return state && current.selected;
             }, true);
-            $scope.params.maxDate = newServices
+            // Commented because of some problems with refresh times
+            /**
+            this.params.maxDate = this.services
                 .filter( service => service.selected && service.lastExported != undefined )
                 .map( service => service.lastExported.end )
                 .reduce((a, b) => a < b ? a : b , undefined);
+            */
         }
     }
 
-}];
+}

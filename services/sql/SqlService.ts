@@ -19,13 +19,11 @@
 
 export class sqlService {
 
- static $inject = ['SqlView', 'SqlViewData'];
+    static $inject = ['SqlView', 'SqlViewData'];
 
- constructor( private SqlView, private SqlViewData){}
+    constructor( private SqlView, private SqlViewData){}
 
-//var sqlService = ["SqlView", "SqlViewData", function(SqlView, SqlViewData){
-
-  private   createPayload(sqlQuery) {
+    private createPayload(sqlQuery) {
         // Generate a random name, based on a random integer.
         // Probability of duplicity: 1 / 100.000
         var name = "query" + Math.floor(Math.random() * 100000);
@@ -48,13 +46,11 @@ export class sqlService {
 
     private sqlView(payload) {
         return this.SqlView.save(payload).$promise.then( data => {
-         
-            return data.response.uid;
+                 return data.response.uid;
         },{});
     };
 
-   private getSqlViewData(queryId) {
-                
+    private getSqlViewData(queryId) {
         return this.SqlViewData.get({id:queryId}).$promise.then( queryResult => {
             this.SqlView.delete({id:queryId});
             return queryResult;
@@ -67,10 +63,4 @@ export class sqlService {
             .then(uid=>  this.getSqlViewData(uid));
     }
 
-  //  return {
-  //      executeSqlView: executeSqlView
-   // };
-
-};
-
-//module.exports = sqlService;
+}
