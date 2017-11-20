@@ -30,4 +30,9 @@ export class EventHelper {
     public EVENTS_JSON = this. EVENTS + '.json';
     public EVENTS_ZIP = this.EVENTS + '.zip';
 
+    // SQL Views to execute
+    public PROGRAM_RULES_COMMON_FUNCTIONS = 'I8hzoc338oW';
+    public PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
+    public PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
+
 };

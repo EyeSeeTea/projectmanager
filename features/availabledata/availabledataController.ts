@@ -18,18 +18,18 @@
 
 import * as angular from 'angular';
 import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
-import { AnalyticsService, sqlService, OrgunitGroupSetService, UserDataStoreService, UserService, ValidationService } from '../../services/services.module';
+import { AnalyticsService, SqlService, OrgunitGroupSetService, UserDataStoreService, UserService, ValidationService } from '../../services/services.module';
 
 
 
 
 export class AvailableData {
 
-	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "sqlService", "AnalyticsService"];
+	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "SqlService", "AnalyticsService"];
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
 		private Organisationunit, private ValidationService: ValidationService, private OrganisationUnitGroupSet, private OrgunitGroupSetService: OrgunitGroupSetService,
-		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private sqlService: sqlService, private AnalyticsService: AnalyticsService
+		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private SqlService: SqlService, private AnalyticsService: AnalyticsService
 	) {
 		// Initialize table
 		this.loadUserSettings()
@@ -87,7 +87,7 @@ export class AvailableData {
 						if (!(this.valuesDatastore['zOyMxdCLXBM']! instanceof Array)) { this.valuesDatastore['zOyMxdCLXBM'] = [] }
 						if (!(this.valuesDatastore['G7g4TvbjFlX']! instanceof Array)) { this.valuesDatastore['G7g4TvbjFlX'] = [] }
 
-						this.sqlService.executeSqlView("SELECT distinct(monthly) FROM _dateperiodstructure WHERE quarterly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
+						this.SqlService.executeSqlCode("SELECT distinct(monthly) FROM _dateperiodstructure WHERE quarterly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
 						
 						.then(data => {
 							
@@ -101,7 +101,7 @@ export class AvailableData {
 								}
 							});
 					});
-					this.sqlService.executeSqlView("SELECT distinct(quarterly) FROM _dateperiodstructure WHERE monthly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
+					this.SqlService.executeSqlCode("SELECT distinct(quarterly) FROM _dateperiodstructure WHERE monthly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
 						
 						.then(data => {
 							angular.forEach(data.rows, row => {

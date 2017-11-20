@@ -17,15 +17,13 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-export class sqlService {
+export class SqlService {
 
- static $inject = ['SqlView', 'SqlViewData'];
+    static $inject = ['SqlView', 'SqlViewData'];
 
- constructor( private SqlView, private SqlViewData){}
+    constructor( private SqlView, private SqlViewData ){}
 
-//var sqlService = ["SqlView", "SqlViewData", function(SqlView, SqlViewData){
-
-  private   createPayload(sqlQuery) {
+    private createSqlQueryPayload(sqlQuery) {
         // Generate a random name, based on a random integer.
         // Probability of duplicity: 1 / 100.000
         var name = "query" + Math.floor(Math.random() * 100000);
@@ -46,31 +44,37 @@ export class sqlService {
             "userGroupAccesses":[]}
     };
 
-    private sqlView(payload) {
+    private createSqlQuery(payload) {
         return this.SqlView.save(payload).$promise.then( data => {
-         
-            return data.response.uid;
+                 return data.response.uid;
         },{});
     };
 
-   private getSqlViewData(queryId) {
-                
-        return this.SqlViewData.get({id:queryId}).$promise.then( queryResult => {
+    private getSqlQueryData(queryId) {
+        return this.executeSqlQuery(queryId).then( queryResult => {
             this.SqlView.delete({id:queryId});
             return queryResult;
         })
     };
 
-    executeSqlView(query) {
-        var payload = this.createPayload(query);
-        return this.sqlView(payload)
-            .then(uid=>  this.getSqlViewData(uid));
+    /**
+     * This method executes an SQL code. To do that, it creates, executes and deletes an auxiliary SQL Query. 
+     * It returns a promise that resolves with its result.
+     * @param sqlCode SQL code to execute.
+     */
+    executeSqlCode(sqlCode: string) {
+        var payload = this.createSqlQueryPayload(sqlCode);
+        return this.createSqlQuery(payload)
+            .then( uid => this.getSqlQueryData(uid) )
     }
 
-  //  return {
-  //      executeSqlView: executeSqlView
-   // };
+    /**
+     * This methods executes an existing SQL View of type SQL Query and returns a promise that resolves with its result.
+     * IMPORTANT: It must be an SQL View of type SQL Query.
+     * @param queryId SQLView uid to execute.
+     */
+    executeSqlQuery(queryId: string) {
+        return this.SqlViewData.get({id:queryId}).$promise;
+    }
 
-};
-
-//module.exports = sqlService;
+}
