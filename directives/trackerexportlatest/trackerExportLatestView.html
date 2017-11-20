@@ -63,7 +63,7 @@
                     <li class="list-group-item service-sub-header service-item" ng-click="$ctrl.clickAllServices()" ng-show="$ctrl.services.length != 0">
                         <input type="checkbox" ng-model="$ctrl.allServices.selected">
                         <span>{{ 'ALL_SERVICES' | translate }}</span>
-                        <span class="pull-right">{{allServices.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
+                        <span class="pull-right">{{$ctrl.allServices.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
                     </li>
                     <li ng-repeat="service in $ctrl.services | orderBy:'name'" ng-show="$ctrl.services"
                         class="list-group-item service-item" ng-click="$ctrl.clickService(service)">

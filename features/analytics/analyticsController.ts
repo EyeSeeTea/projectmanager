@@ -16,16 +16,17 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { AnalyticsService } from '../../services/services.module';
+import { AnalyticsService, EventService } from '../../services/services.module';
 import { ProgressStatus } from '../../model/model';
 
 export class Analytics {
 
-	static $inject = ["AnalyticsService", "DemographicsService"];
+	static $inject = ["AnalyticsService", "DemographicsService", "EventService"];
 
 	constructor(
 		private AnalyticsService: AnalyticsService,
-		private DemographicsService
+		private DemographicsService,
+		private EventService: EventService
 	){}
 
 	progressStatus: ProgressStatus;
@@ -39,6 +40,7 @@ export class Analytics {
 		this.notifications = [];
 
 		this.DemographicsService.updateDemographicData()
+			.then( () => this.EventService.updateEventData())
 			.then( () => this.AnalyticsService.refreshAllAnalytics() )
 			.then(  
 				success => this.progressStatus = ProgressStatus.doneSuccessful,

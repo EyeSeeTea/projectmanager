@@ -18,8 +18,7 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { TrackerDataExportLog, ServiceWithPrograms } from '../../model/model';
-import { DataStoreService, EventExportService, ProgramService, SystemService, UserService } from '../../services/services.module';
-import { TrackerDataExport } from '../../features/trackerdataexport/trackerDataExportController';
+import { DataStoreService, EventExportService, EventService, ProgramService, SystemService, UserService } from '../../services/services.module';
 
 export class TrackerExportLatestComponent implements ng.IComponentOptions {
     public controller: any;
@@ -42,11 +41,11 @@ class TrackerExportLatestController {
     dateopened = false;
     dataStoreKey: string = 'trackerexport';
 
-    static $inject = ['$filter', 'ProgramService', 'UserService', 'EventExportService', 'DataStoreService', 'SystemService'];
+    static $inject = ['$filter', 'ProgramService', 'UserService', 'EventExportService', 'EventService', 'DataStoreService', 'SystemService'];
 
     constructor(private $filter, private ProgramService: ProgramService, private UserService: UserService, 
-                private EventExportService: EventExportService, private DataStoreService: DataStoreService,
-                private SystemService: SystemService) {}
+                private EventExportService: EventExportService, private EventService: EventService, 
+                private DataStoreService: DataStoreService, private SystemService: SystemService) {}
 
     $onInit() {
         this.ProgramService.getProgramsUnderUserHierarchyByService()
@@ -108,6 +107,7 @@ class TrackerExportLatestController {
         var serverDate: Date;
         return this.SystemService.getServerDateWithTimezone()
             .then( date => serverDate = date )
+            .then( () => this.EventService.updateEventData() )
             .then( () => this.UserService.getCurrentUserOrgunits() )
             .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), orgunits, this.getSelectedPrograms()) )
             .then( eventsZipFile => saveAs(eventsZipFile, this.params.filename + '.zip') )
