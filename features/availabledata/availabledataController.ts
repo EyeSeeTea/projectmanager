@@ -41,9 +41,9 @@ export class AvailableData {
 	availableDataStatus = ProgressStatus.initialWithoutProgress;
 
 	availablePeriods = [
-		{ id: "LAST_3_MONTHS", name: 3 },
-		{ id: "LAST_6_MONTHS", name: 6 },
-		{ id: "LAST_12_MONTHS", name: 12 },
+		{ id: "LAST_3_MONTHS", name: "3M" },
+		{ id: "LAST_6_MONTHS", name: "6M" },
+		{ id: "LAST_12_MONTHS", name: "12M" },
 		{ id: "LAST_4_WEEKS", name: "4W" },
 		{ id: "LAST_12_WEEKS", name: "12W" },
 		{ id: "LAST_52_WEEKS", name: "52W" },

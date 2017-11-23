@@ -38,12 +38,15 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 		var projectName = null;
 		$scope.sync_result = "";
 		$scope.sync_result_date = "";
+		$scope.resultVisible=false;
 		var lastDatePush = null;
 		var lastPushDateSaved = null;
 		var serversPushDatesNamespace = "ServersPushDates";
 		$scope.validationDataStatus = ProgressStatus.initialWithoutProgress;
 		$scope.validationDataStatus.visible = false;
 		var register: ValidationRecord = new ValidationRecord(null, null);
+		$scope.progressStatus = ProgressStatus;
+		$scope.syncStatus = ProgressStatus;
 
 		UserService.getCurrentUser()
 			.then(user => {
@@ -160,9 +163,10 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 
 		$scope.submit_sync = function () {
 			var sync_result = null;
+			$scope.resultVisible=true;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
 			var remoteVersion = "";
-	$scope.validationDataStatus.visible = true;
+
 			RemoteApiService.executeRemoteQuery({
 				method: 'GET',
 				resource: '/system/info',
@@ -172,62 +176,81 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 					remoteVersion = remoteInfo.data.version;
 					SystemService.getServerVersion().then(
 						localVersion => {
-							
+
 							if (remoteVersion == localVersion) {
-
 								console.log("Server version equal to local Version.")
-								MetadataSyncService.getVersionDifference().then(
+								this.syncStatus = ProgressStatus.initialWithProgress;
+								MetadataSyncService.executeMetadataSyncDiff()
+									.then(
+									(success) => {
+										this.syncStatus = ProgressStatus.doneSuccessful;
+										console.log("Metadata synchronization done");
+										/*return this.initMetadataSyncInfo();*/
+									},
+									(error) => {
+										this.syncStatus = ProgressStatus.doneWithFailure;
+										console.log("Error in automatic metadata sync");
+										throw "Metadata sync failed";
+									},
+									(status) => {
+										/*this.setLocalMetadataVersion(status.currentVersion);*/
+										this.syncStatus.value = (status.progress.updated / status.progress.total) * 100;
+									}
+									).then(
+									//MetadataSyncService.getVersionDifference().then(
 									metadataVersionDiff => {
-
+										//this.syncStatus.visible = false;
+										$scope.validationDataStatus.visible = true;
 										//if (metadataVersionDiff.length == 0) {
-											if (1==1) { // quitar para que compruebe metadata
-											UserService.getCurrentUser()
-												.then(user => {
-													projectId = user.organisationUnits[0].id;
-													projectName = user.organisationUnits[0].name;
-													return RemoteApiService.isRemoteServerAvailable();
-												})
-												.then(
-												() => SystemService.getServerDateWithTimezone(),
-												error => {
-													$scope.sync_result = error;
-													return $q(() => null);
-												}
-												)
-												.then(serverTime => {
-													let restUtil = new RESTUtil();
-													restUtil.requestPostData(api_url,
-														data => {
-															if (data == null) {
-																sync_result = "Import process completed successfully (No data updated)";
-																$scope.sync_result = sync_result;
-															}
-															else {
-																sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
-																$scope.sync_result = sync_result;
-															}
-															writeRegisterInRemoteServer(projectId, serverTime)
-															// Enviar mensaje a medco messageConversations
-															getMedco(projectId).then(
-																medcos => {
-																	var message = {
-																		subject: "Data Sync - " + projectName,
-																		text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
-																		users: medcos
-																	}
-																	MessageService.sendRemoteMessage(message);
-																});
-																$scope.validationDataStatus.visible = false;
-														},
-														data_error => {
-															console.log(data_error);
-														});
-												});
-										} else {
-											$scope.sync_result = "Different Metadata Versions. Please sync them first.";
-											console.log("Versiones de Metadata Diferentes");
-											$scope.validationDataStatus.visible = false;
-										}
+
+										UserService.getCurrentUser()
+											.then(user => {
+												projectId = user.organisationUnits[0].id;
+												projectName = user.organisationUnits[0].name;
+												return RemoteApiService.isRemoteServerAvailable();
+											})
+											.then(
+											() => SystemService.getServerDateWithTimezone(),
+											error => {
+												$scope.sync_result = error;
+												return $q(() => null);
+											}
+											)
+											.then(serverTime => {
+												let restUtil = new RESTUtil();
+												restUtil.requestPostData(api_url,
+													data => {
+														if (data == null) {
+															sync_result = "Import process completed successfully (No data updated)";
+															$scope.sync_result = sync_result;
+														}
+														else {
+															sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
+															$scope.sync_result = sync_result;
+														}
+														writeRegisterInRemoteServer(projectId, serverTime)
+														// Enviar mensaje a medco messageConversations
+														getMedco(projectId).then(
+															medcos => {
+																var message = {
+																	subject: "Data Sync - " + projectName,
+																	text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
+																	users: medcos
+																}
+																MessageService.sendRemoteMessage(message);
+															});
+														//$scope.validationDataStatus.visible = false;
+														$scope.validationDataStatus=ProgressStatus.doneSuccessful;
+													},
+													data_error => {
+														console.log(data_error);
+													});
+											});
+										/*	} else {
+												$scope.sync_result = "Different Metadata Versions. Please sync them first.";
+												console.log("Versiones de Metadata Diferentes");
+												$scope.validationDataStatus.visible = false;
+											}*/
 
 									});
 
@@ -239,7 +262,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 
 						}
 					)
-				});
+				}, error => { $scope.sync_result = "Connection Failed (/system/info): " + error });
 		}
 
 		function getMedco(projectId) {

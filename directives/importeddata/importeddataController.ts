@@ -29,12 +29,13 @@ export class ImportedDataComponent implements ng.IComponentOptions {
         this.template = require('./importeddataView.html');
         this.css = require('./importeddataController.css');
         this.controller = ImportedDataController
+
     }
 }
 
 class ImportedDataController {
 
-    static $inject = ["$q", "commonvariable", "ValidationService", "DataSetEntryForm",  "UserService", "DataExport"];
+    static $inject = ["$q", "commonvariable", "ValidationService", "DataSetEntryForm", "UserService", "DataExport"];
 
     private datasets: any[] = [];
     private showProjectsTable: boolean = false;
@@ -50,21 +51,21 @@ class ImportedDataController {
     private reverseSort = false;
     private reverseSortProject = false;
 
-    private filter: {selected: string} = {
+    private filter: { selected: string } = {
         selected: null
     };
-    private missionFilter: {missionID?: string} = {};
-    private cellFilter: {cellID?: string} = {};
+    private missionFilter: { missionID?: string } = {};
+    private cellFilter: { cellID?: string } = {};
 
-    private searchText: {project?: string} = {}
+    private searchText: { project?: string } = {}
     private datahistory;
 
     private cells: Orgunit[] = [
-        { name: "Cell1", id: "kZZv93qYHHE" }, 
-        { name: "Cell2", id: "S2TjYXvvixI" }, 
-        { name: "Cell3", id: "HtTAwt3tb2J" }, 
-        { name: "Cell4", id: "WwsadBUxD0X" }, 
-        { name: "Cell5", id: "LZBm2f3o63Q" }, 
+        { name: "Cell1", id: "kZZv93qYHHE" },
+        { name: "Cell2", id: "S2TjYXvvixI" },
+        { name: "Cell3", id: "HtTAwt3tb2J" },
+        { name: "Cell4", id: "WwsadBUxD0X" },
+        { name: "Cell5", id: "LZBm2f3o63Q" },
         { name: "UE", id: "pI3jvvIVWed" }
     ];
     private projects;
@@ -79,12 +80,13 @@ class ImportedDataController {
         private DataSetEntryForm,
         private UserService: UserService,
         private DataExport
-    ){
+    ) {
         this.fillDatastore().then(() => this.readDatastore());
     }
 
     filterMission(filter) {
-        this.missionFilter.missionID = filter.selected;
+       
+        this.missionFilter.missionID = this.filter.selected;
         this.cellFilter.cellID = ""
         this.showDetails = false;
     }
@@ -92,7 +94,7 @@ class ImportedDataController {
     modifycell(cell: Orgunit) {
         if (cell != undefined) {
             this.cellFilter.cellID = cell.id;
-        } else { 
+        } else {
             this.cellFilter.cellID = "";
         }
         this.missionFilter.missionID = "";
@@ -108,6 +110,7 @@ class ImportedDataController {
     show_details_mission(mission) {
         this.missionFilter.missionID = mission.id;
         this.showProjectsTable = true;
+
     }
 
     submit_validate_dataset(dataset) {
@@ -152,7 +155,7 @@ class ImportedDataController {
     private previewDataset(dataValues, lastPushDateSaved) {
         angular.forEach(dataValues, datavalue => {
             console.log(datavalue);
-            var valueCell = $("#" + datavalue.dataElement + "-" + datavalue.categoryOptionCombo +"-val");
+            var valueCell = $("#" + datavalue.dataElement + "-" + datavalue.categoryOptionCombo + "-val");
             if (new Date(datavalue.lastUpdated).getTime() > lastPushDateSaved) { valueCell.addClass("newValue") }
 
             valueCell.val(datavalue.value);
@@ -190,19 +193,19 @@ class ImportedDataController {
 
         // Add click event listeners to entryfields
         $(".entryfield").click((event) => {
-            var idtokens =event.target.id.split("-");
+            var idtokens = event.target.id.split("-");
             var de = idtokens[0];
             var co = idtokens[1];
-           // var cp = idtokens[2];
+            // var cp = idtokens[2];
 
             // TODO Assign orgunit and periodId values
             // TODO And import HTML modal
             this.datahistory = this.commonvariable.url + "charts/history/data.png?de=" + de + "&co=" + co + "&ou="
-               + dataset.service + "&pe=" + dataset.period+"&cp=AOPzxwWACxk";
+                + dataset.service + "&pe=" + dataset.period + "&cp=AOPzxwWACxk";
 
-        var element = angular.element($('.entryfield'));
-             element.scope().$apply();
-           // $scope.$apply();
+            var element = angular.element($('.entryfield'));
+            element.scope().$apply();
+            // $scope.$apply();
             $("#dataValueHistory").modal();
         });
     };
@@ -214,7 +217,7 @@ class ImportedDataController {
             period: period,
             includeDeleted: true
         }).$promise
-            .then( result => result.dataValues );
+            .then(result => result.dataValues);
     }
 
     readDatastore() {
@@ -238,10 +241,18 @@ class ImportedDataController {
         this.showMissions = false;
 
 
-        this.UserService.currentUserHasRole("MedCo").then(medCo => { this.isMedco = medCo });
-        this.UserService.currentUserHasRole("TesaCo").then(value => { this.showMissions = value });
-        this.UserService.currentUserHasRole("superuser").then(value => { this.showMissions = value });
-        
+        this.UserService.currentUserHasRole("MedCo").then(medCo => {
+            if (medCo == true) { this.isMedco = true }
+            this.isMedco = medCo
+        });
+        this.UserService.currentUserHasRole("TesaCo").then(value => {
+            if (value == true) { this.showMissions = true }
+        });
+
+        this.UserService.currentUserHasRole("superuser").then(value => {
+            if (value == true) { this.showMissions = true }
+        });
+
         this.ValidationService.readDatastore().then(
             data => {
                 this.datasets = data.datasets;
@@ -254,5 +265,5 @@ class ImportedDataController {
         this.validationDataStatus.visible = true;
         return this.ValidationService.fillDatastore();
     }
-    
+
 }

@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<div class="row" ng-show="$ctrl.showHeader">
+<div class="row" >
 	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -37,7 +37,7 @@
                                 
 						</select>
 					</div>
-					<div class="col-md-4" ng-show="$ctrl.showMissions">
+					<div class="col-md-4"  ng-show="$ctrl.showMissions">
 						<label for="cellSelector">{{'CELL' | translate}}:</label>
 						<div id="cellSelector" class="btn-group" data-toggle="buttons">
 							<label ng-repeat="cell in $ctrl.cells" ng-click="$ctrl.modifycell(cell)"
@@ -58,11 +58,8 @@
 
 <label for="zeroSelector">{{'SHOW_EMPTY' | translate}}:</label>
 						<div id="zeroSelector" >
-						
-								   <input type="checkbox" ng-change="$ctrl.showZero(value)" ng-model="$ctrl.zero">
-								
-								
-							
+						   <input type="checkbox" ng-change="$ctrl.showZero(value)" ng-model="$ctrl.zero">
+													
 						</div>
 
     <div>
