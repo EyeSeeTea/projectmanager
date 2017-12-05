@@ -41,6 +41,8 @@ class ImportedDataController {
     private showProjectsTable: boolean = false;
     private showHeader: boolean = false;
     private showDetails: boolean = false;
+    private showPreview: boolean = false;
+    
     private zero: boolean = true;
     private zeroShow;
     private isMedco: boolean;
@@ -89,6 +91,7 @@ class ImportedDataController {
         this.missionFilter.missionID = this.filter.selected;
         this.cellFilter.cellID = ""
         this.showDetails = false;
+        this.showPreview=false;
     }
 
     modifycell(cell: Orgunit) {
@@ -100,20 +103,25 @@ class ImportedDataController {
         this.missionFilter.missionID = "";
         this.filter.selected = "";
         this.showDetails = false;
+         this.showPreview=false;
     }
 
     show_details(project) {
         this.searchText.project = project.id;
         this.showDetails = true;
+        this.showPreview=false;
+        
     }
-
+/*
     show_details_mission(mission) {
         this.missionFilter.missionID = mission.id;
         this.showProjectsTable = true;
+         this.showPreview=false;
 
     }
-
+*/
     submit_validate_dataset(dataset) {
+        this.showPreview=false;
         this.ValidationService.validateDataset(dataset).then(
             () => {
                 var index = this.datasets.indexOf(dataset);
@@ -140,7 +148,7 @@ class ImportedDataController {
     }
 
     show_details_dataset(dataset) {
-        console.log(dataset);
+          this.showPreview=true;
         this.DataSetEntryForm.get({ dataSetId: dataset.dataSet }).$promise.then(dataSetHtml => {
             var codeHtml = dataSetHtml.codeHtml;
             codeHtml = codeHtml.replace(/id="tabs"/g, 'id="tabs-' + dataset.dataSet + '"');
@@ -243,13 +251,14 @@ class ImportedDataController {
 
         this.UserService.currentUserHasRole("MedCo").then(medCo => {
             if (medCo == true) { this.isMedco = true }
-            this.isMedco = medCo
+            
         });
         this.UserService.currentUserHasRole("TesaCo").then(value => {
             if (value == true) { this.showMissions = true }
         });
 
-        this.UserService.currentUserHasRole("superuser").then(value => {
+        this.UserService.currentUserHasRole("Superuser").then(value => {
+         
             if (value == true) { this.showMissions = true }
         });
 
@@ -263,6 +272,8 @@ class ImportedDataController {
 
     fillDatastore() {
         this.validationDataStatus.visible = true;
+        this.showHeader = false;
+        
         return this.ValidationService.fillDatastore();
     }
 

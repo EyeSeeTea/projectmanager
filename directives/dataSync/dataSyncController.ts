@@ -31,14 +31,14 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl", "MetadataSyncService", "Info", "Organisationunit", "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
-	function ($scope, $q: ng.IQService, commonvariable, RemoteInstanceUrl, MetadataSyncService, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
+var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl", "MetadataSyncService", "systemsetting", "Info", "Organisationunit", "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
+	function ($scope, $q: ng.IQService, commonvariable, RemoteInstanceUrl, MetadataSyncService, systemsetting, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
 
 		var projectId = null;
 		var projectName = null;
 		$scope.sync_result = "";
 		$scope.sync_result_date = "";
-		$scope.resultVisible=false;
+		$scope.resultVisible = false;
 		var lastDatePush = null;
 		var lastPushDateSaved = null;
 		var serversPushDatesNamespace = "ServersPushDates";
@@ -67,57 +67,59 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 			});
 
 
-		function writeRegisterInRemoteServer(projectId, serverDate) {
+		function writeRegisterInRemoteServer(projectId, serverDate, lastSyncDate) {
 			var values = { values: [] }
-			Info.get().$promise.then(
-				info => {
-					lastDatePush = serverDate.getTime();
-					register = {
-						lastDatePush: lastDatePush,
-						lastPushDateSaved: (lastDatePush - 60 * 24 * 60 * 60 * 1000)
-					};
 
+
+			lastDatePush = serverDate.getTime();
+			register = {
+				lastDatePush: lastDatePush,
+				lastPushDateSaved: new Date(lastSyncDate).getTime()  //lastSyncDate es la fecha "keyLastSuccessfulDataSynch"
+				// en el caso del primer datasync la fecha de lastDatePush es en la que realizamos ese datasync
+				// la fecha en lastPushDateSaved es la fecha de corte que se usará para rellenar la tabla de Validacion
+				// en el caso del primero seria la de la release
+				//(lastDatePush - 30 * 24 * 60 * 60 * 1000)
+			};
+
+			RemoteApiService.executeRemoteQuery({
+				method: 'GET',
+				resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
+
+			}).then(function success(dates) {
+
+				if (dates.data.lastPushDateSaved != undefined) {
+					register.lastPushDateSaved = dates.data.lastPushDateSaved
+				}
+
+			}, function error() { }
+				).then(
+				() => {
 					RemoteApiService.executeRemoteQuery({
-						method: 'GET',
+						method: 'PUT',
 						resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
-
-					}).then(function success(dates) {
-
-						if (dates.data.lastPushDateSaved != undefined) {
-							register.lastPushDateSaved = dates.data.lastPushDateSaved
-						}
-
-					}, function error() { }
-						).then(
-						() => {
-							RemoteApiService.executeRemoteQuery({
-								method: 'PUT',
+						data: register
+					})
+						.then(function success() {
+							$scope.sync_result_date = register.lastDatePush;
+						}, function error() {
+							return RemoteApiService.executeRemoteQuery({
+								method: 'POST',
 								resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
 								data: register
 							})
 								.then(function success() {
-									$scope.sync_result_date = register.lastDatePush;
-								}, function error() {
 									return RemoteApiService.executeRemoteQuery({
 										method: 'POST',
-										resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
-										data: register
+										resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_values",
+										data: values
 									})
-										.then(function success() {
-											return RemoteApiService.executeRemoteQuery({
-												method: 'POST',
-												resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_values",
-												data: values
-											})
-										});
-								}).then(
-								() => {
-									DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
 								});
-							$scope.sync_result_date = register.lastDatePush;
-						})
-				}
-			);
+						}).then(
+						() => {
+							DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
+						});
+					$scope.sync_result_date = register.lastDatePush;
+				})
 		}
 
 		$scope.submitValidationRequest = function () {
@@ -163,7 +165,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 
 		$scope.submit_sync = function () {
 			var sync_result = null;
-			$scope.resultVisible=true;
+			$scope.resultVisible = true;
 			let api_url = commonvariable.url + "/synchronization/dataPush";
 			var remoteVersion = "";
 
@@ -218,32 +220,37 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 											)
 											.then(serverTime => {
 												let restUtil = new RESTUtil();
-												restUtil.requestPostData(api_url,
-													data => {
-														if (data == null) {
-															sync_result = "Import process completed successfully (No data updated)";
-															$scope.sync_result = sync_result;
-														}
-														else {
-															sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
-															$scope.sync_result = sync_result;
-														}
-														writeRegisterInRemoteServer(projectId, serverTime)
-														// Enviar mensaje a medco messageConversations
-														getMedco(projectId).then(
-															medcos => {
-																var message = {
-																	subject: "Data Sync - " + projectName,
-																	text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
-																	users: medcos
+												SystemService.getServerLastSyncDate().then(
+													lastSyncDate => {
+														console.log(lastSyncDate);
+														restUtil.requestPostData(api_url,
+															data => {
+																if (data == null) {
+																	sync_result = "Import process completed successfully (No data updated)";
+																	$scope.sync_result = sync_result;
 																}
-																MessageService.sendRemoteMessage(message);
+																else {
+																	sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
+																	$scope.sync_result = sync_result;
+																}
+
+																writeRegisterInRemoteServer(projectId, serverTime, lastSyncDate);
+																// Enviar mensaje a medco messageConversations
+																getMedco(projectId).then(
+																	medcos => {
+																		var message = {
+																			subject: "Data Sync - " + projectName,
+																			text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
+																			users: medcos
+																		}
+																		MessageService.sendRemoteMessage(message);
+																	});
+																//$scope.validationDataStatus.visible = false;
+																$scope.validationDataStatus = ProgressStatus.doneSuccessful;
+															},
+															data_error => {
+																console.log(data_error);
 															});
-														//$scope.validationDataStatus.visible = false;
-														$scope.validationDataStatus=ProgressStatus.doneSuccessful;
-													},
-													data_error => {
-														console.log(data_error);
 													});
 											});
 										/*	} else {
