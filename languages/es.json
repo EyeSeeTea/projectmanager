@@ -119,7 +119,7 @@
 	"RESET_BUTTON":"Resetear Contraseñas",
 	"MESSAGE_RESET":"Usuarios con la contraseña actualizada: ",
 	"NEW_PASSWORD": "Nueva contraseña",
-	"NEW_PASSWORD_HINT": "La contraseña debe contener al menos una letra mayúscula y un dígito y debe tener entre 8 y 35 caracteres de longitud.",
+	"NEW_PASSWORD_HINT": "La contraseña debe contener al menos una letra mayúscula, un dígito, un caracter especial y debe tener entre 8 y 35 caracteres de longitud.",
 
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Datos disponibles",

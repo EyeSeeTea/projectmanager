@@ -26,7 +26,8 @@ export class ProjectSelectorComponent implements ng.IComponentOptions {
 
     constructor() {
         this.bindings = {
-            project: '='
+            project: '=',
+            callback: '&'
         };
         this.controller = ProjectSelectorController;
         this.template = require('./projectSelectorView.html');
@@ -35,11 +36,13 @@ export class ProjectSelectorComponent implements ng.IComponentOptions {
 
 interface IProjectSelectorController {
     project: Orgunit;
+    callback: ({project}) => any;
 }
 
 class ProjectSelectorController implements IProjectSelectorController {
     
-    project: Orgunit;
+    public project: Orgunit;
+    public callback: ({project}) => any;
     missions: Orgunit[];
     projects: Orgunit[];
     selection: {mission: Orgunit, project: Orgunit};
@@ -64,5 +67,6 @@ class ProjectSelectorController implements IProjectSelectorController {
 
     modifyProject() {
         this.project = this.selection.project;
+        this.callback({project: this.project});
     };
 }

@@ -79,7 +79,7 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/resetpasswd', {
 		template: require('./features/resetpasswd/resetpasswdView.html'),
-		controller: 'resetpasswdController',
+		controller: 'resetpasswdController as ctrl',
 		css: require('./features/resetpasswd/resetpasswdCss.css')
 	});
 	$routeProvider.when('/availabledata', {

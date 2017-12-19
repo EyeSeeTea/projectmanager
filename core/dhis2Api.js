@@ -239,7 +239,7 @@ Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commo
             get: {
                 method: "GET",
                 params: {
-                    fields: ':all,userCredentials[id,name,username,created,userRoles]',
+                    fields: ':all,userCredentials[id,name,username,userInfo,created,userRoles]',
                     paging: false
                 }
             },
