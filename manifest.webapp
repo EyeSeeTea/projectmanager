@@ -17,8 +17,7 @@
 	"default_locale":"en",
 	"activities": {
 	  "dhis": {
-	  	"href": "*",
-	  	"namespace": "HMIS_Management"
+	  	"href": "*"
 	  }
 	}
 }

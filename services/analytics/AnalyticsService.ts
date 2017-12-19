@@ -102,11 +102,10 @@ export class AnalyticsService {
      * @param hierarchy - hierarchy arrya, like ["fiasdfl3fj","aldfkjlskf"] (parents). Only applicable if isRoot == false
      * @returns {*} - Result data structure
      */
-    formatAnalyticsResult(analytics, orgunitsInfo, hierarchy, projectsDatastore): AvailableDataItem[] {
+    formatAnalyticsResult(analytics, orgunitsInfo, hierarchy, valuesDatastore): AvailableDataItem[] {
         let orgunits: { [key: string]: AvailableDataItem } = {};
-        
+
         var noValidatedPeriod = false;
-       
 
         angular.forEach(analytics.metaData.dimensions.ou, (orgunit) => {
             var fullName = hierarchy.map((parent) => analytics.metaData.items[parent].name).join("/");
@@ -124,7 +123,7 @@ export class AnalyticsService {
                 level: orgunitsInfo[orgunit].level,
                 relativeLevel: hierarchy.length,
                 isLastLevel: orgunitsInfo[orgunit].children.length === 0,
-               
+
                 data: {}
             }
         });
@@ -132,46 +131,13 @@ export class AnalyticsService {
         // Include data. Data is in "rows" attribute as an array with the syntax [orgunitid, period, value]
         angular.forEach(analytics.rows, (row) => {
 
-
-            angular.forEach(projectsDatastore.datasets, function (dataset) {
-            if (  (row[0]=="zOyMxdCLXBM" || row[0]=="G7g4TvbjFlX") && dataset.period == row[1]) {
-                    noValidatedPeriod = true;
-                   
-                }
-
-                if (dataset.missionId == row[0] && dataset.period == row[1]) {
-                    noValidatedPeriod = true;
-                   // console.log("Mission " + dataset.period + " de " + dataset.missionId + " no validado: ")
-                }
-                if (dataset.siteId == row[0] && dataset.period == row[1]) {
-                    noValidatedPeriod = true;
-                   // console.log("Periodo " + dataset.period + " de " + dataset.siteName + " no validado: ")
-                }
-
-
-                if (dataset.project == row[0] && dataset.period == row[1]) {
-                    noValidatedPeriod = true;
-                    //console.log("Proyecto " + dataset.period + " de " + dataset.project + " no validado: ")
-                }
-
-                if (dataset.service == row[0] && dataset.period == row[1]) {
-                    noValidatedPeriod = true;
-                    //console.log("Service " + dataset.period + " de " + dataset.service + " no validado: ")
-                }
-
-            });
-
-
-
+            noValidatedPeriod = false;
+            if (valuesDatastore[row[0]] != undefined) { noValidatedPeriod = valuesDatastore[row[0]]["'" + row[1] + "'"]}
 
             orgunits[row[0]].data[row[1]] = { value: row[2], noValidatedPeriod: noValidatedPeriod };
 
-            noValidatedPeriod = false;
-
-
-
         });
-        
+
         return $.map(orgunits, (orgunit, id) => orgunit)
     };
 

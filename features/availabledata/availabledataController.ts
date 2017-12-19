@@ -18,20 +18,23 @@
 
 import * as angular from 'angular';
 import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
-import { AnalyticsService, OrgunitGroupSetService, UserDataStoreService, UserService } from '../../services/services.module';
+import { AnalyticsService, SqlService, OrgunitGroupSetService, UserDataStoreService, UserService, ValidationService } from '../../services/services.module';
+
+
+
 
 export class AvailableData {
 
-	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "AnalyticsService"];
+	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "SqlService", "AnalyticsService"];
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
-		private Organisationunit, private ValidationService, private OrganisationUnitGroupSet, private OrgunitGroupSetService: OrgunitGroupSetService,
-		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private AnalyticsService: AnalyticsService
+		private Organisationunit, private ValidationService: ValidationService, private OrganisationUnitGroupSet, private OrgunitGroupSetService: OrgunitGroupSetService,
+		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private SqlService: SqlService, private AnalyticsService: AnalyticsService
 	) {
 		// Initialize table
 		this.loadUserSettings()
 			.then(() => this.loadFilters())
-			.then(() => this.readDatastore())
+			.then(() => this.showValidationDatastore())
 			.then(() => this.loadTable());
 	}
 
@@ -40,7 +43,13 @@ export class AvailableData {
 	availablePeriods = [
 		{ id: "LAST_3_MONTHS", name: 3 },
 		{ id: "LAST_6_MONTHS", name: 6 },
-		{ id: "LAST_12_MONTHS", name: 12 }
+		{ id: "LAST_12_MONTHS", name: 12 },
+		{ id: "LAST_4_WEEKS", name: "4W" },
+		{ id: "LAST_12_WEEKS", name: "12W" },
+		{ id: "LAST_52_WEEKS", name: "52W" },
+		{ id: "LAST_4_QUARTERS", name: "4Q" },
+		{ id: "QUARTERS_LAST_YEAR", name: "Last Year Quarters" }
+
 	];
 
 	selectedPeriod = {
@@ -52,20 +61,97 @@ export class AvailableData {
 		{ id: "BtFXTpKRl6n", name: "1. Health Service" }
 	];
 	availableFilters;
-	projectsDatastore =[];
+	projectsDatastore = [];
+	valuesDatastore = [];
+	datastoredRead: boolean = false;
 	selectedFilters = {};
+
 
 	orgunitsInfo = {};
 	periods;
 	tableRows: AvailableDataItem[] = [];
 	tableDisplayed: boolean = false;
-	readDatastore() {
 
-	return	this.ValidationService.readDatastore().then(
-                data => {this.projectsDatastore=data}
-	)}
+	showValidationDatastore() {
+
+		if (this.datastoredRead == false) {
+			return this.ValidationService.readDatastore().then(
+				data => {
+
+					angular.forEach(data.datasets, dataset => {
+
+						if (!(this.valuesDatastore[dataset.missionId] instanceof Array)) { this.valuesDatastore[dataset.missionId] = [] }
+						if (!(this.valuesDatastore[dataset.siteId]! instanceof Array)) { this.valuesDatastore[dataset.siteId] = [] }
+						if (!(this.valuesDatastore[dataset.project]! instanceof Array)) { this.valuesDatastore[dataset.project] = [] }
+						if (!(this.valuesDatastore[dataset.service]! instanceof Array)) { this.valuesDatastore[dataset.service] = [] }
+						if (!(this.valuesDatastore['zOyMxdCLXBM']! instanceof Array)) { this.valuesDatastore['zOyMxdCLXBM'] = [] }
+						if (!(this.valuesDatastore['G7g4TvbjFlX']! instanceof Array)) { this.valuesDatastore['G7g4TvbjFlX'] = [] }
+
+						this.SqlService.executeSqlCode("SELECT distinct(monthly) FROM _dateperiodstructure WHERE quarterly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
+						
+						.then(data => {
+							
+							angular.forEach(data.rows, row => {
+
+								if (row != undefined) {
+
+									this.fillValuesDatastore(dataset, row,"months");
 
 
+								}
+							});
+					});
+					this.SqlService.executeSqlCode("SELECT distinct(quarterly) FROM _dateperiodstructure WHERE monthly='" + dataset.period + "' OR weekly='" + dataset.period + "'")
+						
+						.then(data => {
+							angular.forEach(data.rows, row => {
+
+								if (row != undefined) {
+
+									this.fillValuesDatastore(dataset, row,"months");
+
+
+								}
+							});
+					});
+
+
+
+						this.fillValuesDatastore(dataset, dataset.period,"");
+
+
+					});
+					this.datastoredRead = true;
+				}
+			)
+		}
+	}
+
+	fillValuesDatastore(dataset, period, type) {
+
+		this.valuesDatastore[dataset.missionId]["'" + period + "'"] = true;
+		this.valuesDatastore[dataset.siteId]["'" + period + "'"] = true;
+		this.valuesDatastore[dataset.project]["'" + period + "'"] = true;
+		
+		if (type !="months") {  this.valuesDatastore[dataset.service]["'" + period + "'"] = true}
+		
+		this.valuesDatastore['zOyMxdCLXBM']["'" + period + "'"] = true;
+		this.valuesDatastore['G7g4TvbjFlX']["'" + period + "'"] = true;
+
+	}
+
+/*
+	fillValuesDatastore_months(dataset, period) {
+
+		this.valuesDatastore[dataset.missionId]["'" + period + "'"] = true;
+		this.valuesDatastore[dataset.siteId]["'" + period + "'"] = true;
+		this.valuesDatastore[dataset.project]["'" + period + "'"] = true;
+
+		this.valuesDatastore['zOyMxdCLXBM']["'" + period + "'"] = true;
+		this.valuesDatastore['G7g4TvbjFlX']["'" + period + "'"] = true;
+
+	}
+*/
 	loadUserSettings() {
 		return this.UserDataStoreService.getCurrentUserSettings().then(
 			userSettings => {
@@ -119,12 +205,14 @@ export class AvailableData {
 						// Generate public period array. It is required for other functions
 						this.regenerateScopePeriodArray(parentResult);
 
-						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, [], this.projectsDatastore);
-						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id], this.projectsDatastore);
+						
+
+						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, [], this.valuesDatastore);
+						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id], this.valuesDatastore);
 						this.tableRows = this.tableRows.concat(parentRows).concat(childrenRows);
 
-			
-					// Make visible orgunits under dataViewOrgunit
+
+						// Make visible orgunits under dataViewOrgunit
 						this.orgunitsInfo[dataViewOrgUnit.id].clicked = true;
 
 						// Check if last dataViewOrgunit
@@ -139,14 +227,52 @@ export class AvailableData {
 
 	private regenerateScopePeriodArray(analyticsResponse) {
 		this.periods = analyticsResponse.metaData.dimensions.pe.map(period => {
-			return {
-				id: period,
-				//name: "period"
-				name: analyticsResponse.metaData.items[period].name
-			}
-		});
-	}
 
+
+			//var sql = "select  monthly, count(*) from ( select  distinct(monthly, weekly) as mo, weekly, monthly  from _dateperiodstructure where monthly='" + period + "' ) as M  group by monthly;"
+			var weeks = null;
+			//this.sqlService.executeSqlView(sql).then(data => {
+
+weeks=this.calculteWeeks(period);
+				//weeks = data.rows[0][1];
+				
+
+				return {
+					id: period,
+					weeks: weeks,
+					name: analyticsResponse.metaData.items[period].name // + " " + weeks
+				}
+			//});
+		}
+		);
+
+	}
+calculteWeeks(period) {
+
+var year=period.substr(0, 4);
+var month=period.substr(4,2);
+var weeks=this.getThursdaysInMonth(month, year);
+return weeks;
+
+}
+
+
+getThursdaysInMonth(month, year) {
+  var thursdays = 0;
+	var numOfDays = new Date(year, month, 0).getDate();
+
+for(var i=0;i<numOfDays;i++)
+{
+    
+	if (new Date(year,month-1,i+1).getDay()==4) { thursdays+=1;} //4 = thursday        
+}
+
+     
+	
+   
+     
+     return thursdays;
+}
 	isClicked(orgunitIds: string[]): boolean {
 		return orgunitIds.reduce((result, orgunitId) => {
 			return result && this.orgunitsInfo[orgunitId].clicked === true
@@ -189,7 +315,7 @@ export class AvailableData {
 				var childrenResult = data[1];
 				var childrenHierarchy = orgunit.parents.slice(0);
 				childrenHierarchy.push(orgunit.id);
-				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy,this.projectsDatastore );
+				var childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, childrenHierarchy, this.valuesDatastore);
 				this.tableRows = this.tableRows.concat(childrenRows);
 				//console.log(this.tableRows);
 			})
