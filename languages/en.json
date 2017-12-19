@@ -120,7 +120,7 @@
 	"RESET_BUTTON":"Reset Passwords",
 	"MESSAGE_RESET":"Users with password updated: ",
 	"NEW_PASSWORD": "New password",
-	"NEW_PASSWORD_HINT": "Password must contain at least one capital letter and one digit and must be between 8 and 35 characters long.",
+	"NEW_PASSWORD_HINT": "Password must contain at least one capital letter, one digit, one special character and must be between 8 and 35 characters long.",
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",

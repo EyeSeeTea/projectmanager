@@ -44,7 +44,7 @@
                 <form name="individualUpdate" ng-submit="ctrl.resetProjectPassword()">
                     <h3>{{ 'NEW_PASSWORD' | translate }}</h3>
                     <input name="password" type="text" class="form-control" ng-model="ctrl.password.new"
-                           minlength="8" maxlength="35" contains-digit contains-uppercase required/>
+                           minlength="8" maxlength="35" contains-digit contains-uppercase contains-special required/>
                     <div><i>{{ 'NEW_PASSWORD_HINT' | translate }}</i></div>
                     <br/>
                     <div class="form_group">
