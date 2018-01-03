@@ -34,15 +34,8 @@ export class EventImportService {
     importEventFile (file) {
         // It is required to wrap the return into a deferred object. If not, the following promises are not notified
         var deferred = this.$q.defer();
-        this.readEventZipFile(file).then( (content) => {
-            if (content.isEmpty) {
-                return deferred.reject("The file does not contain event data.");
-            } else {
-                return this.readEventFile(content.elements);
-            }
-        })
-            .then( eventFile => {
-                console.log(eventFile);
+        this.readEventZipFile(file).then( 
+            (eventFile: EventDataWrapper) => {
                 return this.getAndUploadEventFileElement(eventFile, this.EventHelper.TEIS)
                     .then( () => this.getAndUploadEnrollmentsAsActive(eventFile) )
                     .then( () => this.getAndUploadEventFileElement(eventFile, this.EventHelper.EVENTS) )
@@ -51,8 +44,9 @@ export class EventImportService {
                         () => deferred.resolve("Done"),
                         (error) => deferred.reject(error)
                 );
-            
-        });
+            },
+            (error) => deferred.reject("The file does not contain event data.")
+        );
         return deferred.promise;
     };
 
@@ -60,28 +54,25 @@ export class EventImportService {
         return (new JSZip()).loadAsync(file)
     }
 
-    private readEventZipFile (file) {
+    private readEventZipFile (file): Promise<EventDataWrapper> {
         return this.readZipFile(file).then( (content) => {
             var encryptedFile = content.file(this.EventHelper.EVENTS);
 
-            return {
-                isEmpty: encryptedFile == undefined,
-                elements: encryptedFile
-            }
+            if (encryptedFile == undefined) {
+                return this.$q.reject("No events file");
+            } 
+
+            return encryptedFile.async("string")
+                .then(encrpyted => this.EventHelper.decryptObject(encrpyted));
         });
     }
 
-    private readEventFile (file) {
-        return file.async("string")
-            .then(encrpyted => this.EventHelper.decryptObject(encrpyted));
-    }
-
-    private getAndUploadEventFileElement (content, element) {
+    private getAndUploadEventFileElement (content: EventDataWrapper, element: string) {
         return this.zipFileElement(content, element)
             .then( (data) => this.uploadFile(element, data) );
     }
 
-    private getAndUploadEnrollmentsAsActive (content) {
+    private getAndUploadEnrollmentsAsActive (content: EventDataWrapper) {
         const activeEnrollments = content.enrollments.map( (enrollment) => {
             let copy = Object.assign({}, enrollment);
             copy.status = "ACTIVE";
@@ -124,28 +115,14 @@ export class EventImportService {
     previewEventFile (file) {
         // It is required to wrap the return into a deferred object. If not, the following promises are not notified
         var deferred = this.$q.defer();
-        this.extractEvents(file)
-            .then((events) => this.classifyEventsByProgramAndStage(events))
+        this.readEventZipFile(file)
+            .then((eventFile) => this.classifyEventsByProgramAndStage(eventFile.events))
             .then((programs) => this.addNameToProgramsAndStages(programs))
             .then(
                 (summary) => deferred.resolve(summary),
                 (error) => deferred.reject(error)
             );
         return deferred.promise;
-    }
-
-    private extractEvents (file) {
-        return this.readEventZipFile(file)
-            .then((content) => {
-                if (content.elements[this.EventHelper.EVENTS] != undefined) {
-                    return content.elements[this.EventHelper.EVENTS].async("arraybuffer")
-                } else {
-                    return this.$q.reject("No events");
-                }
-            })
-            .then((zipFile) => (new JSZip()).loadAsync(zipFile))
-            .then((eventsFile) => eventsFile.file(this.EventHelper.EVENTS_JSON).async("string"))
-            .then((eventsRaw) => JSON.parse(eventsRaw).events);
     }
 
     private classifyEventsByProgramAndStage (events) {
