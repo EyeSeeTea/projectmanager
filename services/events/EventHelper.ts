@@ -17,22 +17,37 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
+var AES = require('crypto-js/aes');
+var EncUTF8 = require('crypto-js/enc-utf8');
+
 export class EventHelper {
 
     // Constants to keep common names between EventExportService and EventImportService
-    public TEIS = 'trackedEntityInstances';
-    public TEIS_JSON = this.TEIS + ".json";
-    public TEIS_ZIP = this.TEIS + ".zip";
-    public ENROLLMENTS = 'enrollments';
-    public ENROLLMENTS_JSON = this.ENROLLMENTS + '.json';
-    public ENROLLMENTS_ZIP = this.ENROLLMENTS + '.zip';
-    public EVENTS = 'events';
-    public EVENTS_JSON = this. EVENTS + '.json';
-    public EVENTS_ZIP = this.EVENTS + '.zip';
+    public readonly TEIS = 'trackedEntityInstances';
+    public readonly TEIS_JSON = this.TEIS + ".json";
+    public readonly TEIS_ZIP = this.TEIS + ".zip";
+    public readonly ENROLLMENTS = 'enrollments';
+    public readonly ENROLLMENTS_JSON = this.ENROLLMENTS + '.json';
+    public readonly ENROLLMENTS_ZIP = this.ENROLLMENTS + '.zip';
+    public readonly EVENTS = 'events';
+    public readonly EVENTS_JSON = this. EVENTS + '.json';
+    public readonly EVENTS_ZIP = this.EVENTS + '.zip';
 
     // SQL Views to execute
-    public PROGRAM_RULES_COMMON_FUNCTIONS = 'I8hzoc338oW';
-    public PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
-    public PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
+    public readonly PROGRAM_RULES_COMMON_FUNCTIONS = 'I8hzoc338oW';
+    public readonly PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
+    public readonly PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
+
+    private encryptationPassword = "SamplePassword23!";
+
+    encryptObject(object: Object) {
+        var asString = JSON.stringify(object);
+        return AES.encrypt(asString, this.encryptationPassword).toString();
+    }
+
+    decryptObject(encrypted) {
+        var decrypted = AES.decrypt(encrypted, this.encryptationPassword);
+        return JSON.parse(decrypted.toString(EncUTF8));
+    }
 
 };

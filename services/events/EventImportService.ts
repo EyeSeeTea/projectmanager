@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { CommonVariable, Program } from '../../model/model';
+import { CommonVariable, EventDataWrapper, Program } from '../../model/model';
 import { EventHelper, ProgramService } from '../services.module';
 
 export class EventImportService {
@@ -38,15 +38,20 @@ export class EventImportService {
             if (content.isEmpty) {
                 return deferred.reject("The file does not contain event data.");
             } else {
-                return this.getAndUploadEventFileElement(content, this.EventHelper.TEIS)
-                    .then( () => this.getAndUploadEnrollmentsAsActive(content) )
-                    .then( () => this.getAndUploadEventFileElement(content, this.EventHelper.EVENTS) )
-                    .then( () => this.getAndUploadEventFileElement(content, this.EventHelper.ENROLLMENTS) )
+                return this.readEventFile(content.elements);
+            }
+        })
+            .then( eventFile => {
+                console.log(eventFile);
+                return this.getAndUploadEventFileElement(eventFile, this.EventHelper.TEIS)
+                    .then( () => this.getAndUploadEnrollmentsAsActive(eventFile) )
+                    .then( () => this.getAndUploadEventFileElement(eventFile, this.EventHelper.EVENTS) )
+                    .then( () => this.getAndUploadEventFileElement(eventFile, this.EventHelper.ENROLLMENTS) )
                     .then(
                         () => deferred.resolve("Done"),
                         (error) => deferred.reject(error)
                 );
-            }
+            
         });
         return deferred.promise;
     };
@@ -57,52 +62,46 @@ export class EventImportService {
 
     private readEventZipFile (file) {
         return this.readZipFile(file).then( (content) => {
-
-            let elements = {};
-            elements[this.EventHelper.TEIS] = content.file(this.EventHelper.TEIS_ZIP);
-            elements[this.EventHelper.ENROLLMENTS] = content.file(this.EventHelper.ENROLLMENTS_ZIP);
-            elements[this.EventHelper.EVENTS] = content.file(this.EventHelper.EVENTS_ZIP);
-
-            const isEmpty = elements[this.EventHelper.TEIS] == undefined &&
-                elements[this.EventHelper.ENROLLMENTS] == undefined &&
-                elements[this.EventHelper.EVENTS] == undefined;
+            var encryptedFile = content.file(this.EventHelper.EVENTS);
 
             return {
-                isEmpty: isEmpty,
-                elements: elements
+                isEmpty: encryptedFile == undefined,
+                elements: encryptedFile
             }
         });
     }
 
+    private readEventFile (file) {
+        return file.async("string")
+            .then(encrpyted => this.EventHelper.decryptObject(encrpyted));
+    }
+
     private getAndUploadEventFileElement (content, element) {
-        return this.getEventZipFileElement(content, element)
-                .then( (data) => this.uploadFile(element, data) );
+        return this.zipFileElement(content, element)
+            .then( (data) => this.uploadFile(element, data) );
     }
 
     private getAndUploadEnrollmentsAsActive (content) {
-        return content.elements[this.EventHelper.ENROLLMENTS].async("arraybuffer")
-            .then( (zipFile) => (new JSZip()).loadAsync(zipFile) )
-            .then( (enrollmentsFile) => enrollmentsFile.file(this.EventHelper.ENROLLMENTS_JSON).async("string") )
-            .then( (enrollmentsRaw) => {
-                const activeEnrollments = JSON.parse(enrollmentsRaw).enrollments.map( (enrollment) => {
-                    enrollment.status = "ACTIVE";
-                    return enrollment;
-                });
-                return  (new JSZip()).file(
-                    this.EventHelper.ENROLLMENTS_JSON,
-                    JSON.stringify({"enrollments": activeEnrollments})
-                )
-                    .generateAsync({type: "uint8array", compression: "DEFLATE"});
-            })
-            .then( (enrollmentsAsActiveInZip) => this.uploadFile(this.EventHelper.ENROLLMENTS, enrollmentsAsActiveInZip) );
+        const activeEnrollments = content.enrollments.map( (enrollment) => {
+            let copy = Object.assign({}, enrollment);
+            copy.status = "ACTIVE";
+            return copy;
+        });
+        return  (new JSZip()).file(
+            this.EventHelper.ENROLLMENTS_JSON,
+            JSON.stringify({"enrollments": activeEnrollments})
+        )
+        .generateAsync({type: "uint8array", compression: "DEFLATE"})
+        .then( (enrollmentsAsActiveInZip) => this.uploadFile(this.EventHelper.ENROLLMENTS, enrollmentsAsActiveInZip) );
     }
 
-    private getEventZipFileElement (content, element) {
-        if (content.elements[element] != undefined) {
-            return content.elements[element].async("uint8array");
-        } else {
-            return this.$q.resolve(undefined);
-        }
+    private zipFileElement (content, element) {
+        var object = new Object();
+        object[element] = content[element];
+
+        return  (new JSZip())
+            .file(element, JSON.stringify(object))
+            .generateAsync({type: "uint8array", compression: "DEFLATE"});
     }
 
     private uploadFile (endpoint, file) {
@@ -118,7 +117,7 @@ export class EventImportService {
                 transformRequest: {}
             });
         } else {
-            this.$q.resolve("Nothing to upload");
+            return this.$q.resolve("Nothing to upload");
         }
     }
 

@@ -20,6 +20,7 @@
 import * as angular from 'angular';
 import { Orgunit, Program } from '../../model/model';
 import { EventHelper, SystemService } from '../services.module';
+import { EventList, EnrollmentList, TrackedEntityInstanceList, EventDataWrapper } from '../../model/model';
 
 export class EventExportService {
 
@@ -47,6 +48,7 @@ export class EventExportService {
      */
     exportEventsWithDependenciesInZip (startDate: string, endDate: string, orgunits: Orgunit[], programs?: Program[]) {
         return this.exportEventsWithDependencies(startDate, endDate, orgunits, programs)
+            .then(wrapper => this.EventHelper.encryptObject(wrapper))
             .then(file => this.compressFileByElementType(file));
     };
 
@@ -59,6 +61,7 @@ export class EventExportService {
      */
     exportEventsFromLastWithDependenciesInZip (lastUpdated: string, orgunits: Orgunit[], programs?: Program[]) {
         return this.exportEventsFromLastWithDependencies(lastUpdated, orgunits, programs)
+            .then(wrapper => this.EventHelper.encryptObject(wrapper))
             .then(file => this.compressFileByElementType(file));
     };
 
@@ -296,24 +299,8 @@ export class EventExportService {
     
     private compressFileByElementType (file) {
         let zip: JSZip = new JSZip();
-
-        let events = (new JSZip()).file(this.EventHelper.EVENTS_JSON, JSON.stringify({"events": file[this.EventHelper.EVENTS]}));
-        let teis = (new JSZip()).file(this.EventHelper.TEIS_JSON, JSON.stringify({"trackedEntityInstances": file[this.EventHelper.TEIS]}));
-        let enrolls = (new JSZip()).file(this.EventHelper.ENROLLMENTS_JSON, JSON.stringify({"enrollments": file[this.EventHelper.ENROLLMENTS]}));
-
-        return events.generateAsync({type: "blob", compression: "DEFLATE"})
-            .then( (content) => {
-                zip.file(this.EventHelper.EVENTS_ZIP, content);
-                return teis.generateAsync({type: "blob", compression: "DEFLATE"});
-            })
-            .then( (content) => {
-                zip.file(this.EventHelper.TEIS_ZIP, content);
-                return enrolls.generateAsync({type: "blob", compression: "DEFLATE"});
-            })
-            .then( (content) => {
-                zip.file(this.EventHelper.ENROLLMENTS_ZIP, content);
-                return zip.generateAsync({type: "blob", compression: "DEFLATE"});
-            });
+        zip.file(this.EventHelper.EVENTS, file);
+        return zip.generateAsync({type: "blob", compression: "DEFLATE"});
     }
 
     // Util functions
@@ -353,50 +340,6 @@ export class EventExportService {
     }
     
 };
-
-class EventList {
-    constructor(
-        public events: any[]
-    ){}
-
-    static empty = new EventList([]);
-}
-
-class EnrollmentList {
-    constructor(
-        public enrollments: any[]
-    ){}
-
-    static empty = new EnrollmentList([]);
-}
-
-class TrackedEntityInstanceList {
-    constructor(
-        public trackedEntityInstances: any[]
-    ){}
-
-    static empty = new TrackedEntityInstanceList([]);
-}
-
-class EventDataWrapper {
-    constructor(
-        public events: any[],
-        public enrollments: any[],
-        public trackedEntityInstances: any[]
-    ){}
-
-    addEvents(events: any[]) {
-        this.events = this.events.concat(events);
-    }
-
-    addTrackedEntityInstances(trackedEntityInstances: any[]) {
-        this.trackedEntityInstances = this.trackedEntityInstances.concat(trackedEntityInstances);
-    }
-
-    addEnrollments(enrollments: any[]) {
-        this.enrollments = this.enrollments.concat(enrollments);
-    }
-}
 
 class OrgunitProgramComboItem {
     constructor(
