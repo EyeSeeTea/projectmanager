@@ -78,15 +78,12 @@ export class EventImportService {
             copy.status = "ACTIVE";
             return copy;
         });
-        return  (new JSZip()).file(
-            this.EventHelper.ENROLLMENTS_JSON,
-            JSON.stringify({"enrollments": activeEnrollments})
-        )
-        .generateAsync({type: "uint8array", compression: "DEFLATE"})
-        .then( (enrollmentsAsActiveInZip) => this.uploadFile(this.EventHelper.ENROLLMENTS, enrollmentsAsActiveInZip) );
+        return this.getAndUploadEventFileElement( 
+            new EventDataWrapper(null, activeEnrollments, null), 
+            this.EventHelper.ENROLLMENTS);
     }
 
-    private zipFileElement (content, element) {
+    private zipFileElement (content, element: string) {
         var object = new Object();
         object[element] = content[element];
 
@@ -95,7 +92,7 @@ export class EventImportService {
             .generateAsync({type: "uint8array", compression: "DEFLATE"});
     }
 
-    private uploadFile (endpoint, file) {
+    private uploadFile (endpoint: string, file) {
         if (file != undefined) {
             return this.$http({
                 method: 'POST',
@@ -118,10 +115,8 @@ export class EventImportService {
         this.readEventZipFile(file)
             .then((eventFile) => this.classifyEventsByProgramAndStage(eventFile.events))
             .then((programs) => this.addNameToProgramsAndStages(programs))
-            .then(
-                (summary) => deferred.resolve(summary),
-                (error) => deferred.reject(error)
-            );
+            .then((summary) => deferred.resolve(summary))
+            .catch((error) => deferred.reject(error));
         return deferred.promise;
     }
 
