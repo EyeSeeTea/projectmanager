@@ -375,4 +375,12 @@ Dhis2Api.factory("Info", ['$resource', 'commonvariable', function ($resource, co
 	return $resource( commonvariable.url + "system/info");
 }]);
 
+
+Dhis2Api.factory("systemsetting", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "systemSettings");
+}]);
+
+
+
+
 module.exports = Dhis2Api;

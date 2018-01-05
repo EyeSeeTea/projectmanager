@@ -7,11 +7,11 @@ import { Orgunit } from '../../model/model';
 
 
 export class ValidationService {
- private projects;
- private datasets;
+    private projects;
+    private datasets;
     static $inject = ['$q', 'DataStoreService', 'UserService', 'Organisationunit', 'DataExport'];
 
-    constructor(private $q: ng.IQService, private DataStoreService: DataStoreService, private UserService: UserService, private Organisationunit, private DataExport) { 
+    constructor(private $q: ng.IQService, private DataStoreService: DataStoreService, private UserService: UserService, private Organisationunit, private DataExport) {
 
 
     }
@@ -26,7 +26,7 @@ export class ValidationService {
                     missions => {
 
                         var missionArrayPromises = missions.map(mission => this.fillDatastoreMissions(mission, projectsDatastore));
-                       return this.$q.all(missionArrayPromises)
+                        return this.$q.all(missionArrayPromises)
                             .then(result => "done")
 
                     }
@@ -188,36 +188,36 @@ export class ValidationService {
         var lastDatePush = null;
         var missions = [];
 
-        this.datasets= [];
+        this.datasets = [];
         this.projects = [];
 
+   
+                return this.getProjectsDatastore(serversPushDatesNamespace).then(
+
+                    projectsDatastore => {
+                        return this.getUserMissions().then(
+                            UserMissions => {
+
+                                var missionArrayPromises = UserMissions.map(mission => {
+                                    mission['missionID'] = mission.id;
+                                    mission['cellID'] = this.getOrgunitCell(mission);
+                                    return this.readDatastoreMissions(mission, projectsDatastore)
+                                });
+                                missions = UserMissions;
+                                return this.$q.all(missionArrayPromises)
+                                    .then(result => "done");
+                            }).then(() => {
 
 
-        return this.getProjectsDatastore(serversPushDatesNamespace).then(
-
-            projectsDatastore => {
-                return this.getUserMissions().then(
-                    UserMissions => {
-
-                        var missionArrayPromises = UserMissions.map(mission => {
-                            mission['missionID'] = mission.id;
-                            mission['cellID'] = this.getOrgunitCell(mission);
-                            return this.readDatastoreMissions(mission, projectsDatastore)
-                        });
-                        missions = UserMissions;
-                        return this.$q.all(missionArrayPromises)
-                            .then(result => "done");
-                    }).then(() => {
-                      
-
-                        return { missions: missions, projects: this.projects, datasets: this.datasets };
+                                return { missions: missions, projects: this.projects, datasets: this.datasets };
+                            });
                     });
-            });
+       
     }
 
 
     private readDatastoreMissions(mission, projectsDatastore) {
-       
+
         var projects = this.getMissionProjects(mission, projectsDatastore);
         var projectArrayPromises = projects.map(project => this.readDatastoreProject(mission, project));
         return this.$q.all(projectArrayPromises)
@@ -231,7 +231,7 @@ export class ValidationService {
         var serversPushDatesNamespace = "ServersPushDates";
         var lastPushDateSaved = null;
         var lastDatePush = null;
-       
+
         return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
             data => {
                 if (data != undefined) {
@@ -245,19 +245,19 @@ export class ValidationService {
                     var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
                     if (diff > 30) { project['overdueSync'] = true }
                     return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_values").then(
-                       
-                       
+
+
                         data => {
                             if (data != undefined) {
-                         this.datasets= this.datasets.concat(data.values);
-                        
-                            project['datasets'] = data.values.length;
-                            this.projects.push(project);
-                           
-                            return this.$q.resolve("Done project");
+                                this.datasets = this.datasets.concat(data.values);
+
+                                project['datasets'] = data.values.length;
+                                this.projects.push(project);
+
+                                return this.$q.resolve("Done project");
                             } else {
-                    return this.$q.resolve("No data for this project")
-                }
+                                return this.$q.resolve("No data for this project")
+                            }
                         });
                 } else {
                     return this.$q.resolve("No data for this project")
@@ -270,8 +270,10 @@ export class ValidationService {
         var projects = [];
         return this.DataStoreService.getNamespaceKeys(namespace).then(
             data => {
+                if (data != undefined) {
                 projects = data.filter(this.projectsFilter);
                 projects.forEach(this.projectsRemoveText);
+                }
                 return projects;
             });
     }
@@ -386,8 +388,8 @@ class datasetRecord {
         public period: string,
         public lastDatePush: number,
         public missionId: string,
-        public siteId:string,
-        public project:string,
+        public siteId: string,
+        public project: string,
         public service: string
 
     ) { }

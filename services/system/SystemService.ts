@@ -21,9 +21,9 @@ import { Orgunit, Program } from '../../model/model';
 
 export class SystemService {
 
-    static $inject = ['$q', 'Info', 'Ping'];
+    static $inject = ['$q', 'Info', 'Ping', 'systemsetting'];
 
-    constructor(private $q: ng.IQService, private Info, private Ping){}
+    constructor(private $q: ng.IQService, private Info, private Ping, private systemsetting){}
 
     /**
      * This method gives you the server date with time zone. It is obtained checking the http headers in the response.
@@ -63,6 +63,13 @@ export class SystemService {
         return this.Info.get().$promise.then(
             (response) => response.version
         )
+    }
+
+    getServerLastSyncDate(): ng.IPromise<string> {
+        return this.systemsetting.get().$promise.then(
+            (response) => response.keyLastSuccessfulDataSynch
+        )
+
     }
 
 }

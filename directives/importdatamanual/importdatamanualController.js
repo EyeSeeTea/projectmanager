@@ -27,7 +27,7 @@ export const importdatamanualDirective = [function () {
 }];
 
 
-var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "UserService", "DataImportService", "AnalyticsService", function ($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, UserService, DataImportService, AnalyticsService) {
+var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "SystemService", "UserService", "DataImportService", "AnalyticsService", function ($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, SystemService, UserService, DataImportService, AnalyticsService) {
 
 	$scope.dataImportStatus = {
 		visible: false,
@@ -35,10 +35,12 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 		value: 100,
 		active: true
 	};
+		
 	$scope.undefinedFile = false;
-
+	var projectVersion = "";
+	//var serverVersion ="";
 	var $file;//single file 
-
+	$scope.errorVisible = false;
 	var compress = false;
 	var fileContent;
 	var fileContentJSON;
@@ -57,11 +59,12 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 		$scope.analyticsLog = [];
 		$scope.previewDataImport = false;
 		$("#importConfirmation").modal("hide");
-
+		$scope.errorVersiones ="";
 		$scope.dataImportStatus.visible = true;
 		$scope.importFailed = false;
 
 		compress = getExtension($file.name) == "zip";
+
 
 		var fileReader = new FileReader();
 		fileReader.readAsArrayBuffer($file);
@@ -73,70 +76,99 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 			if (compress) {
 
 				//var zip = new JSZip(e.target.result);
-				JSZip.loadAsync($file)
-					.then(function (zip) {
+				SystemService.getServerVersion()
 
-						zip.forEach(function (relativePath, zipEntry) {
+					.then(
+					serverVersion =>
+						JSZip.loadAsync($file)
 
-							console.log(zipEntry.name);
-							if (zipEntry.name.indexOf('project') == -1) {
+							.then(function (zip) {
 
+								zip.forEach(function (relativePath, zipEntry) {
 
-								zipEntry.async("text").then(
-									data => {
-										
-										fileContent = data;
-										upload();
-									})
+									if (zipEntry.name.indexOf('settings') > -1) {
+										zipEntry.async("text").then(
+											data => {
 
-							} else {
+												fileContent = data;
+												projectVersion = JSON.parse(fileContent).version
 
-								zipEntry.async("string").then(
-									data => {
-										
-										//var projects2 = data.replace(/['"]+/g, '');
-										var projects = data.split(";");
-										var dateExport = zipEntry.name.split("_");
-										dateExport = parseInt(dateExport[1]);
+												if (projectVersion == serverVersion) {
+													zip.forEach(function (relativePath, zipEntry) {
+
+														if (zipEntry.name.indexOf('project') == -1) {
 
 
-										var register = {
-											lastDatePush: dateExport,
-											lastPushDateSaved: parseInt(dateExport - 60 * 24 * 60 * 60 * 1000)
-										};
-										var values = { values: [] };
+															zipEntry.async("text").then(
+																data => {
 
-										for (var i in projects) {
-											if (projects[i] != "") {
+																	fileContent = data;
+																	upload();
+																})
 
-												var project = projects[i];
-												DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_date")
-													.then(
-													dates => {
-														
-														if (dates.lastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePush }
-														if (dates.lastPushDateSaved != undefined) {
-															register.lastPushDateSaved = dates.lastPushDateSaved
+														} else {
+
+															zipEntry.async("string").then(
+																data => {
+
+																	//var projects2 = data.replace(/['"]+/g, '');
+																	var projects = data.split(";");
+																	var dateExport = zipEntry.name.split("_");
+																	dateExport = parseInt(dateExport[1]);
+
+
+																	var register = {
+																		lastDatePush: dateExport,
+																		lastPushDateSaved: parseInt(dateExport - 30 * 24 * 60 * 60 * 1000)
+																	};
+																	var values = { values: [] };
+
+																	for (var i in projects) {
+																		if (projects[i] != "") {
+
+																			var project = projects[i];
+																			DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_date")
+																				.then(
+																				dates => {
+
+																					if (dates.lastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePush }
+																					if (dates.lastPushDateSaved != undefined) {
+																						register.lastPushDateSaved = dates.lastPushDateSaved
+																					}
+																					DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_date", register);
+																				}
+
+																				);
+
+																			DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_values")
+																				.then(
+																				currentValue => {
+																					if (currentValue == undefined) {
+																						DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_values", { values: [] });
+																					}
+																				});
+
+																		}
+																	}
+																})
 														}
-														DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_date", register);
 													}
 
 													);
+												} else {
+													$scope.errorVisible = true;
+													$scope.errorVersiones ="Different Versions, please Update: Server:" + serverVersion + ", Project:" + projectVersion;
+													console.log($scope.errorVersiones);
+												}
 
-												DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_values")
-													.then(
-													currentValue => {
-														if (currentValue == undefined) {
-															DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_values", { values: [] });
-														}
-													});
 
-											}
-										}
-									})
-							}
-						});
-					});
+
+											})
+
+									}
+								});
+
+							}))
 			}
 		};
 
@@ -153,7 +185,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 		}).progress(function (ev) {
 			console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
 		}).success(function (data) {
-			console.log(data);
+			//console.log(data);
 			/*
 						AnalyticsService.refreshAllAnalytics()
 							.then(
@@ -222,7 +254,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 
 	$scope.generateSummary = function (data) {
 		var gt218 = commonvariable.version > "2.18";
-		
+
 		for (var dataGroup in data) {
 			if ((dataGroup == 'dataValueCount' && !gt218) || (dataGroup == 'importCount' && gt218)) {
 				for (var dataElement in data[dataGroup]) {
