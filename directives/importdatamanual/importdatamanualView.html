@@ -17,8 +17,6 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
 
-<h2>{{ 'DATA_IMPORT' | translate }}</h2>
-
 <div class="row" ng-show="undefinedFile">
   	<div class="col-md-12">
 		<d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
@@ -30,12 +28,18 @@
 		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
 		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" required=""/>
 	</div>
+	 
 	<div ng-show="form.$submitted">
       <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>
     </div>
 </div>
   
 	<br/>
+	<div class="row">
+		<div class="col-md-6">
+		{{errorVersiones}}
+			</div>
+		</div>
 
 <div class="row">
 	<div class="col-md-6">
