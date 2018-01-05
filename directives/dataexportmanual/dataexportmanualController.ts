@@ -31,7 +31,9 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 
 		// Set "zipped" to true by default
 		$scope.zipped = true;
-
+		let version:string ="";
+ 			var start_date;
+			var end_date;			
 		$scope.demographicsSelected = false;
 		let currentYear: number = (new Date()).getFullYear();
 		$scope.availableYears = [currentYear - 3, currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
@@ -102,17 +104,18 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 		$scope.submit = function () {
 
 			$scope.dataExportStatus.visible = true;
-
+			
 			let api_url = commonvariable.url + "/dataValueSets.json?";
-
+		
 			const boundDates: BoundDates = getBoundDates();
 			const fileName: string = getFilename();
 			let orgUnits = commonvariable.OrganisationUnitList;
 
 			updateDemographicIfNeeded()
+				.then(getVersion)
 				.then(getDatasets)
 				.then(dataSets => {
-
+					let settings: Settings=getSettings();
 					const dataset_filter = dataSets.reduce(function (list, dataset) {
 						return list + "dataSet=" + dataset.id + "&";
 					}, "");
@@ -129,7 +132,8 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 					}, "");
 
 
-
+					
+				
 					api_url = api_url + dataset_filter +
 						"startDate=" + boundDates.start + "&endDate=" + boundDates.end +
 						orgUnits_filter + "&children=true";
@@ -143,8 +147,10 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 								data => {
 									if ($scope.zipped) {
 										let zip = new JSZip();
+										zip.file('System_settings.txt', JSON.stringify(settings));
 										zip.file(fileName + '.json', JSON.stringify(data));
 										zip.file("OrgUnits_" + serverDate + '_project.txt', projects);
+										
 										zip.generateAsync({ type: "blob", compression: "DEFLATE" })
 											.then(function (content) {
 												saveAs(content, fileName + '.json.zip');
@@ -197,17 +203,44 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 					$scope.demographicsYear + "-01-01",
 					$scope.demographicsYear + "-12-31");
 			} else {
+				 start_date = $scope.start_date.setDate($scope.start_date.getDate() -7); 
+				 end_date = $scope.end_date.setDate($scope.end_date.getDate() +7); 
 				return new BoundDates(
-					$filter('date')($scope.start_date, 'yyyy-MM-dd'),
-					$filter('date')($scope.end_date, 'yyyy-MM-dd'));
+					
+					$filter('date')(start_date, 'yyyy-MM-dd'),
+					$filter('date')(end_date, 'yyyy-MM-dd'));
 			}
 		};
+		var getSettings = function (): Settings {
+								
+				return new Settings(
+			
+			 version,
+			$filter('date')(start_date, 'yyyy-MM-dd'),
+			$filter('date')(end_date, 'yyyy-MM-dd')
+		)
+		}
+	var getVersion = function() {
+
+		SystemService.getServerVersion().then (data => { version=data})
 	}
+		
+	}
+	
+	
 ];
 
 class BoundDates {
 	constructor(
 		public start: string,
 		public end: string
+	) { }
+};
+class Settings {
+	constructor(
+		public version: string,
+		public start: string,
+		public end: string
+		
 	) { }
 };

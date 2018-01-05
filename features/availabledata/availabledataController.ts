@@ -75,6 +75,7 @@ export class AvailableData {
 	showValidationDatastore() {
 
 		if (this.datastoredRead == false) {
+			return this.ValidationService.fillDatastore().then(()=>{
 			return this.ValidationService.readDatastore().then(
 				data => {
 
@@ -123,7 +124,9 @@ export class AvailableData {
 					});
 					this.datastoredRead = true;
 				}
+			
 			)
+			})
 		}
 	}
 

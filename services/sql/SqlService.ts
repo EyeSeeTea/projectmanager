@@ -28,7 +28,7 @@ export class sqlService {
   private   createPayload(sqlQuery) {
         // Generate a random name, based on a random integer.
         // Probability of duplicity: 1 / 100.000
-        var name = "query" + Math.floor(Math.random() * 100000);
+        var name = "query" +Math.floor(Math.random() * 1000)+ Math.floor(Math.random() * 100000);
 
         return {"name":name,"sqlQuery":sqlQuery,
             "displayName":name,
