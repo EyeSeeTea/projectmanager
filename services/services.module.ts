@@ -11,8 +11,9 @@ import { UserDataStoreService } from './data-store/UserDataStoreService';
 import { EventExportService } from './events/EventExportService';
 import { EventHelper } from './events/EventHelper';
 import { EventImportService } from './events/EventImportService';
+import { EventService } from './events/EventService';
 import { MessageService } from './messages/MessageService';
-var metadataImportService = require('./metadata/MetadataImportService');
+import { MetadataImportService } from './metadata/MetadataImportService';
 import { MetadataSyncService } from './metadata/MetadataSyncService';
 import { OrgunitGroupSetService } from './orgunits/OrgunitGroupSetService';
 import { OrgunitService } from './orgunits/OrgunitService';
@@ -21,10 +22,9 @@ import { ProgramService } from './programs/ProgramService';
 import { ProjectStatusDataStoreService } from './data-store/ProjectStatusDataStoreService';
 import { ProjectStatusRemoteDataStoreService } from './data-store/remote/ProjectStatusRemoteDataStoreService';
 import { RemoteApiService } from './metadata/RemoteApiService';
-//var sqlService = require('./sql/SqlService');
+import { SqlService } from './sql/SqlService';
 import { UserService } from './users/UserService';
 import { ValidationService } from './Validation/ValidationService';
-import { sqlService } from './sql/SqlService';
 
 export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('AnalyticsService', AnalyticsService)
@@ -36,8 +36,9 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('EventExportService', EventExportService)
     .service('EventHelper', EventHelper)
     .service('EventImportService', EventImportService)
+    .service('EventService', EventService)
     .service('MessageService', MessageService)
-    .factory('MetadataImportService', metadataImportService)
+    .service('MetadataImportService', MetadataImportService)
     .service('MetadataSyncService', MetadataSyncService)
     .service('OrgunitGroupSetService', OrgunitGroupSetService)
     .service('OrgunitService', OrgunitService)
@@ -46,9 +47,9 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('ProjectStatusDataStoreService', ProjectStatusDataStoreService)
     .service('ProjectStatusRemoteDataStoreService', ProjectStatusRemoteDataStoreService)
     .service('RemoteApiService', RemoteApiService)
-    .service('sqlService', sqlService)
+    .service('SqlService', SqlService)
     .service('UserService', UserService)
-      .service('ValidationService', ValidationService);
+    .service('ValidationService', ValidationService);
 
 export {
     AnalyticsService,
@@ -58,7 +59,9 @@ export {
     EventExportService,
     EventHelper,
     EventImportService,
+    EventService,
     MessageService,
+    MetadataImportService,
     MetadataSyncService,
     OrgunitGroupSetService,
     OrgunitService,
@@ -66,9 +69,9 @@ export {
     ProjectStatusDataStoreService,
     ProjectStatusRemoteDataStoreService,
     RemoteApiService,
+    SqlService,
     SystemService,
     UserDataStoreService,
     UserService,
-    ValidationService,
-    sqlService
+    ValidationService
 }

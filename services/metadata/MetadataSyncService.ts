@@ -83,7 +83,28 @@ export class MetadataSyncService {
 
     private metadataSync (versionName) {
         return this.MetadataSync.get({versionName: versionName}).$promise
+            .catch(response => this.evaluateIfBestEffort(response.data))
             .then(() => this.updateLocalMetadataVersion());
+    }
+
+    /**
+     * This method is used to interpretate as correct the rejection thrown by the API when there is a warning in BEST_EFFORT strategy.
+     * It is risky because it could hide other errors, but it is the only way to go on.
+     * @param log 
+     */
+    private evaluateIfBestEffort (log: SyncLog): ng.IPromise<string> {
+        try {
+            if (log.response.importReport.status == "WARNING" &&
+                    log.response.metadataVersion.type == "BEST_EFFORT") {
+                console.log(`${log.response.metadataVersion.displayName}: Skipping warning with BEST_EFFORT strategy`);
+                return this.$q.resolve("Warning with BEST_EFFORT is acceptable.")
+            } else {
+                return this.$q.reject("Error when synch'ing metadata version")
+            }
+        } catch (error) {
+            console.log("Rejecting because of unhandled exception");
+            return this.$q.reject("Unexpected error when synch'ing metadata version.");
+        }
     }
 
     private writeRegisterInRemoteServer (currentVersion) {
@@ -234,4 +255,20 @@ export class MetadataSyncService {
         return this.$q.reject("Error")
     }
     
+}
+
+class SyncLog {
+    constructor(
+        public httpStatus: string,
+        public httpStatusCode: string,
+        public status: string,
+        public response: SyncResponse
+    ){}
+}
+
+class SyncResponse {
+    constructor(
+        public importReport: {status: string},
+        public metadataVersion: {type: string, displayName: string}
+    ){}
 }

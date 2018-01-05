@@ -19,20 +19,20 @@
 
 <h2>{{ 'RESET_PASSWD' | translate }}</h2>
 
-	<div ng-if="!user.project.id" class="row">
-		<project-selector project="user.project"></project-selector>
+	<div ng-if="!ctrl.user.project.id" class="row">
+		<project-selector project="ctrl.user.project" callback="ctrl.loadProjectUsers(project)"></project-selector>
 	</div>
 
-	<div ng-if="user.project.id" class="row">
+	<div ng-if="ctrl.user.project.id" class="row">
 		<div class="col-md-12">
-			<h2> {{ user.project.name }} </h2>
+			<h2> {{ ctrl.user.project.name }} </h2>
 		</div>
 		<div class="col-md-12 row">
             <div class="col-md-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">{{ 'USERS' | translate }}</div>
                     <ul class="list-group user-list">
-                        <li ng-repeat="user in projectUsers | orderBy:'userCredentials.username'"
+                        <li ng-repeat="user in ctrl.projectUsers | orderBy:'userCredentials.username'"
                             class="list-group-item" ng-click="user.selected = !user.selected">
                             <input type="checkbox" ng-model="user.selected">
                             {{user.userCredentials.username}}
@@ -41,10 +41,10 @@
                 </div>
             </div>
             <div class="col-md-5">
-                <form name="individualUpdate" ng-submit="resetProjectPassword()">
+                <form name="individualUpdate" ng-submit="ctrl.resetProjectPassword()">
                     <h3>{{ 'NEW_PASSWORD' | translate }}</h3>
-                    <input name="password" type="text" class="form-control" ng-model="password.new"
-                           minlength="8" maxlength="35" contains-digit contains-uppercase required/>
+                    <input name="password" type="text" class="form-control" ng-model="ctrl.password.new"
+                           minlength="8" maxlength="35" contains-digit contains-uppercase contains-special required/>
                     <div><i>{{ 'NEW_PASSWORD_HINT' | translate }}</i></div>
                     <br/>
                     <div class="form_group">
@@ -54,11 +54,11 @@
                     </div>
                 </form>
                 <br/>
-                <span ng-show="progressbarDisplayed">
-                    {{resetPasswordResult.updated}} / {{resetPasswordResult.total}}
+                <span ng-show="ctrl.progressbarDisplayed">
+                    {{ctrl.resetPasswordResult.updated}} / {{ctrl.resetPasswordResult.total}}
                 </span>
-                <d2-progressbar-dynamic status="individualProgressStatus"></d2-progressbar-dynamic>
-                </div>
+                <d2-progressbar-dynamic status="ctrl.individualProgressStatus"></d2-progressbar-dynamic>
+            </div>
 		</div>
 	</div>
 

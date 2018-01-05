@@ -161,3 +161,18 @@ export class MessageConversation {
         public users: {id: string}[]
     ){}
 }
+
+export class AttributeValue {
+    constructor(
+        value: string,
+        attribute: {id: string}
+    ){}
+}
+
+export class ServiceWithPrograms {
+    constructor(
+        name: string,
+        code: string,
+        programs: string            //Code
+    ){}
+}
