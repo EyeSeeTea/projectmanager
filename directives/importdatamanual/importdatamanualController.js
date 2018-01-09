@@ -27,7 +27,7 @@ export const importdatamanualDirective = [function () {
 }];
 
 
-var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "ServerPushDatesDataStoreService", "SystemService", "UserService", "DataImportService", "AnalyticsService", function ($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, ServerPushDatesDataStoreService, SystemService, UserService, DataImportService, AnalyticsService) {
+var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "ServerPushDatesDataStoreService", "SystemService", "UserService", "DataImportService", "AnalyticsService", function ($scope, $interval, $http, $filter, commonvariable, Analytics, DataMart, DataStoreService, ServerPushDatesDataStoreService, SystemService, UserService, DataImportService, AnalyticsService) {
 
 	$scope.dataImportStatus = {
 		visible: false,
@@ -156,49 +156,48 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 	};
 
 
-
-
-	function upload(fileContent) {
-		$upload.http({
-			url: commonvariable.url + "dataValueSets",
-			headers: { 'Content-Type': 'application/json' },
-			data: fileContent
-		}).progress(function (ev) {
-			console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
-		}).success(function (data) {
-			AnalyticsService.refreshAllAnalytics()
-				.then(
-					function (success) {
-						$scope.dataImportStatus.type = 'success';
-						$scope.dataImportStatus.active = false;
-					},
-					function (error) {
-						$scope.dataImportStatus.type = 'danger';
-						$scope.dataImportStatus.active = false;
-						console.log(error);
-					},
-					function (notification) {
-						$scope.analyticsLog.push(notification);
-					}
-				);
-			$scope.generateSummary(data);
-			$scope.summaryDisplayed = true;
-			logDataimport($file.name, data);
-
-			console.log("File upload SUCCESS");
-		}).error(function (data) {
-			$scope.dataImportStatus.visible = false;
-			$scope.importFailed = true;
-
-			console.log("File upload FAILED");//error
-		});
-
+	function zipDataValuesFile(fileContent) {
+		return (new JSZip()).file("dataValues.json", fileContent).generateAsync({type: "uint8array", compression: "DEFLATE"});
 	}
 
+	function upload(fileContent) {
+		return zipDataValuesFile(fileContent).then( zip => {
+			$http({
+				method: 'POST',
+                url: commonvariable.url + "dataValueSets",
+                data: new Uint8Array(zip),
+                headers: {'Content-Type': 'application/json'},
+				transformRequest: {}
+			}).then(
+				httpResponse => {
+					AnalyticsService.refreshAllAnalytics()
+						.then(
+							success => {
+								$scope.dataImportStatus.type = 'success';
+								$scope.dataImportStatus.active = false;
+							},
+							error => {
+								$scope.dataImportStatus.type = 'danger';
+								$scope.dataImportStatus.active = false;
+								console.log(error);
+							},
+							notification => $scope.analyticsLog.push(notification)
+						);
+					$scope.generateSummary(httpResponse.data);
+					$scope.summaryDisplayed = true;
+					logDataimport($file.name, httpResponse.data);
 
+					console.log("File upload SUCCESS");
+				},
+				error => {
+					$scope.dataImportStatus.visible = false;
+					$scope.importFailed = true;
 
-
-
+					console.log("File upload FAILED");//error
+				}
+			);
+		})
+	}
 
 	$scope.previewFiles = function () {
 
