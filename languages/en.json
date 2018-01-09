@@ -91,6 +91,8 @@
 	"DEMOGRAPHIC_DATA": "Demographic data",
 	"MANUAL": "Manual",
 	"SYNC": "Online Sync",
+	"DIFFERENT_VERSIONS": "Different HMIS versions. Please ask the project to update",
+	"NO_SETTINGS_FILE": "The file has not the right format",
 	
 
 	"____________Tracker Data Export":"__________",
