@@ -19,6 +19,7 @@
 
 var AES = require('crypto-js/aes');
 var EncUTF8 = require('crypto-js/enc-utf8');
+import { SqlService } from '../services.module';
 
 export class EventHelper {
 
@@ -38,16 +39,37 @@ export class EventHelper {
     public readonly PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
     public readonly PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
 
-    private encryptationPassword = "SamplePassword23!";
+    private encryptationPassword;
+
+    static $inject = ['SqlService'];
+
+    constructor(private SqlService: SqlService){}
 
     encryptObject(object: Object) {
-        var asString = JSON.stringify(object);
-        return AES.encrypt(asString, this.encryptationPassword).toString();
+        return this.getEncryptationPassword().then(password => {
+            var asString = JSON.stringify(object);
+            return AES.encrypt(asString, password).toString();
+        })
     }
 
     decryptObject(encrypted) {
-        var decrypted = AES.decrypt(encrypted, this.encryptationPassword);
-        return JSON.parse(decrypted.toString(EncUTF8));
+        return this.getEncryptationPassword().then(password => {
+            var decrypted = AES.decrypt(encrypted, password);
+            return JSON.parse(decrypted.toString(EncUTF8));            
+        })
+        
+    }
+
+    private getEncryptationPassword() {
+        if (this.encryptationPassword != undefined) {
+            return Promise.resolve(this.encryptationPassword);
+        } else {
+            const sqlQuery = "SELECT value FROM hmisocba.hmissetting WHERE name = 'trackerExportPassword'";
+            return this.SqlService.executeSqlCode(sqlQuery).then(result => {
+                this.encryptationPassword = result.rows[0][0];
+                return this.encryptationPassword;
+            });
+        }
     }
 
 };
