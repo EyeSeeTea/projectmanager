@@ -142,7 +142,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 							medcos => {
 								var message = {
 									subject: "Data Validation Request - " + projectName,
-									text: "Data Validation Request: Date - " + register.lastDatePush,
+									text: "Data Validation Request: Date - " + new Date(register.lastDatePush).toISOString(),
 									users: medcos
 								}
 
@@ -192,6 +192,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 									(error) => {
 										this.syncStatus = ProgressStatus.doneWithFailure;
 										console.log("Error in automatic metadata sync");
+										$scope.sync_result="Error in automatic metadata sync"+error;
 										throw "Metadata sync failed";
 									},
 									(status) => {

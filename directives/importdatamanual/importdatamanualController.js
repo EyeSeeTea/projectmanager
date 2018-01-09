@@ -80,6 +80,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 
 					.then(
 					serverVersion =>
+					console.log(serverVersion);
 						JSZip.loadAsync($file)
 
 							.then(function (zip) {
