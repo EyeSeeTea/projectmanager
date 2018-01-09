@@ -19,6 +19,8 @@
 
 export class DataImportService {
 
+    constructor(){}
+
     getFormattedSummary(rawData) {
         let formattedSummary = {};
         for(var i = 0, len = rawData.length; i < len; i++){

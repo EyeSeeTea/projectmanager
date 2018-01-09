@@ -16,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { AnalyticsService, EventService } from '../../services/services.module';
+import { AnalyticsService, DemographicsService, EventService } from '../../services/services.module';
 import { ProgressStatus } from '../../model/model';
 
 export class Analytics {
@@ -25,7 +25,7 @@ export class Analytics {
 
 	constructor(
 		private AnalyticsService: AnalyticsService,
-		private DemographicsService,
+		private DemographicsService: DemographicsService,
 		private EventService: EventService
 	){}
 

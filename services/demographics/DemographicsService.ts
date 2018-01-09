@@ -1,3 +1,4 @@
+
 /*
  Copyright (c) 2015.
 
@@ -16,11 +17,21 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-export class DataStoreNames {
-    readonly APP = "HMIS_Management";
-    readonly AVAILABLE_DATA = "availableData";
-    readonly PROJECT_SERVERS = "projectServers";
-    readonly SERVER_PUSH_DATES = "ServersPushDates";
+import { SqlService } from '../services.module';
 
-    readonly DEFAULT_ARRAY_KEY = "values";
+export class DemographicsService {
+
+    static $inject = ['SqlService'];
+
+    // SQL views to execute
+    private readonly DEMOGRAPHICS_FUNCTIONS = 'yScFNRSITtm';
+    private readonly DEMOGRAPHICS_MAIN = 'EA9VVZdAMJ3';
+    
+    constructor(private SqlService: SqlService){}
+
+    updateDemographicData () {
+        return this.SqlService.executeSqlQuery(this.DEMOGRAPHICS_FUNCTIONS)
+            .then( () => this.SqlService.executeSqlQuery(this.DEMOGRAPHICS_MAIN))
+    }
+
 }

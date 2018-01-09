@@ -34,12 +34,12 @@
     </div>
 </div>
   
-	<br/>
-	<div class="row">
-		<div class="col-md-6">
-		{{errorVersiones}}
-			</div>
-		</div>
+<br/>
+<div class="row" ng-show="errorVisible">
+	<div class="col-md-6">
+		<d2-messages type="danger" textmessage="{{ errorInFile | translate }}"></d2-messages>
+	</div>
+</div>
 
 <div class="row">
 	<div class="col-md-6">

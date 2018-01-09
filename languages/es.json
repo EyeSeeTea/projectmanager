@@ -91,6 +91,9 @@
 	"DEMOGRAPHIC_DATA": "Datos demográficos",
 	"MANUAL": "Manual",
 	"SYNC": "Sincronización online",
+	"DIFFERENT_VERSIONS": "Versiones diferentes. Por favor solicita al proyecto que actualice",
+	"NO_SETTINGS_FILE": "El fichero no tiene el formato correcto",
+
 
 	"____________Tracker Data Export":"__________",
 	"TRACKER_DATA_EXPORT": "Exportar datos individuales",
