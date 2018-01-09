@@ -90,7 +90,7 @@
 	"MANUAL": "Manuelle",
 	"SYNC": "Synchronisation en ligne",
 	"DIFFERENT_VERSIONS": "Différentes versions du HMIS. Veuillez demander au projet de mettre à jour",
-	"NO_SETTINGS_FILE": "",
+	"NO_SETTINGS_FILE": "Le fichier n'a pas le bon format",
 
 
 	"____________Tracker Data Export":"__________",
