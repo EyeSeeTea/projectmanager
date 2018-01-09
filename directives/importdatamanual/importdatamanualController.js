@@ -73,7 +73,6 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 					.then(function (zip) {
 						var settingsEntry = undefined;
 						zip.forEach(function (relativePath, zipEntry) {
-
 							if (zipEntry.name.indexOf('settings.txt') > -1) {
 								settingsEntry = zipEntry;
 							}
