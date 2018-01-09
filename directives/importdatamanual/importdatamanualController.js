@@ -121,15 +121,14 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 										var project = projects[i];
 										ServerPushDatesDataStoreService.getKeyValue(project + "_date")
 											.then( dates => {
-												if (dates == undefined) {
-													//TODO
-												} else {
+												if (dates != undefined) {
+													
 													if (dates.lastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePush }
 													if (dates.lastPushDateSaved != undefined) {
 														register.lastPushDateSaved = dates.lastPushDateSaved
 													}
-													ServerPushDatesDataStoreService.setKeyValue(project + "_date", register);
 												}
+												ServerPushDatesDataStoreService.setKeyValue(project + "_date", register);
 											})
 
 										ServerPushDatesDataStoreService.getKeyValue(project + "_values")
@@ -148,7 +147,6 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 				success => console.log(success),
 				error => {
 					$scope.errorVisible = true;
-					//$scope.errorInFile = "Different Versions, please Update: Server:" + serverVersion + ", Project:" + projectVersion;
 					$scope.errorInFile = error;
 					$scope.dataImportStatus.visible = false;
 					$scope.importFailed = true;
@@ -168,24 +166,21 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 		}).progress(function (ev) {
 			console.log('progress: ' + parseInt(100.0 * ev.loaded / ev.total));
 		}).success(function (data) {
-			//console.log(data);
-			/*
-						AnalyticsService.refreshAllAnalytics()
-							.then(
-							function (success) {
-								$scope.dataImportStatus.type = 'success';
-								$scope.dataImportStatus.active = false;
-							},
-							function (error) {
-								$scope.dataImportStatus.type = 'danger';
-								$scope.dataImportStatus.active = false;
-								console.log(error);
-							},
-							function (notification) {
-								$scope.analyticsLog.push(notification);
-							}
-							);
-			*/
+			AnalyticsService.refreshAllAnalytics()
+				.then(
+					function (success) {
+						$scope.dataImportStatus.type = 'success';
+						$scope.dataImportStatus.active = false;
+					},
+					function (error) {
+						$scope.dataImportStatus.type = 'danger';
+						$scope.dataImportStatus.active = false;
+						console.log(error);
+					},
+					function (notification) {
+						$scope.analyticsLog.push(notification);
+					}
+				);
 			$scope.generateSummary(data);
 			$scope.summaryDisplayed = true;
 			logDataimport($file.name, data);
