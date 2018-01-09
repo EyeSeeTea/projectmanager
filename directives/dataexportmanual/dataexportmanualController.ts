@@ -29,11 +29,9 @@ export const dataexportmanualDirective = [function () {
 var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "SystemService","Info", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", 'UserService', '$timeout',
 	function ($scope, $q: ng.IQService, $filter, commonvariable, SystemService, Info, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, UserService, $timeout) {
 
-		// Set "zipped" to true by default
-		$scope.zipped = true;
 		let version:string ="";
- 			var start_date;
-			var end_date;			
+ 		var start_date;
+		var end_date;			
 		$scope.demographicsSelected = false;
 		let currentYear: number = (new Date()).getFullYear();
 		$scope.availableYears = [currentYear - 3, currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
@@ -145,21 +143,15 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 							var serverDate = new Date(serverTime).getTime()
 							restUtil.requestGetData(api_url,
 								data => {
-									if ($scope.zipped) {
-										let zip = new JSZip();
-										zip.file('System_settings.txt', JSON.stringify(settings));
-										zip.file(fileName + '.json', JSON.stringify(data));
-										zip.file("OrgUnits_" + serverDate + '_project.txt', projects);
-										
-										zip.generateAsync({ type: "blob", compression: "DEFLATE" })
-											.then(function (content) {
-												saveAs(content, fileName + '.json.zip');
-											});
-									}
-									else {
-										let file = new Blob([JSON.stringify(data)], { type: 'application/json' });
-										saveAs(file, fileName + '.json');
-									}
+									let zip = new JSZip();
+									zip.file('System_settings.txt', JSON.stringify(settings));
+									zip.file(fileName + '.json', JSON.stringify(data));
+									zip.file("OrgUnits_" + serverDate + '_project.txt', projects);
+									
+									zip.generateAsync({ type: "blob", compression: "DEFLATE" })
+										.then(function (content) {
+											saveAs(content, fileName + '.json.zip');
+										});
 									$timeout(updateprocess, 5);
 								},
 								() => { });
