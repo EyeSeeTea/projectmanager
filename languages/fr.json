@@ -89,6 +89,9 @@
 	"DEMOGRAPHIC_DATA": "Données démographiques",
 	"MANUAL": "Manuelle",
 	"SYNC": "Synchronisation en ligne",
+	"DIFFERENT_VERSIONS": "Différentes versions du HMIS. Veuillez demander au projet de mettre à jour",
+	"NO_SETTINGS_FILE": "",
+
 
 	"____________Tracker Data Export":"__________",
 	"TRACKER_DATA_EXPORT": "Exporter des données individuelles",

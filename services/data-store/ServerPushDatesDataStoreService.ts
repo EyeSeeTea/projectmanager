@@ -1,3 +1,4 @@
+
 /*
  Copyright (c) 2015.
 
@@ -16,11 +17,10 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-export class DataStoreNames {
-    readonly APP = "HMIS_Management";
-    readonly AVAILABLE_DATA = "availableData";
-    readonly PROJECT_SERVERS = "projectServers";
-    readonly SERVER_PUSH_DATES = "ServersPushDates";
+import { AbstractDataStoreService } from './AbstractDataStoreService';
 
-    readonly DEFAULT_ARRAY_KEY = "values";
+export class ServerPushDatesDataStoreService extends AbstractDataStoreService {
+
+    protected namespace = this.DataStoreNames.SERVER_PUSH_DATES;
+
 }

@@ -27,7 +27,7 @@ export const importdatamanualDirective = [function () {
 }];
 
 
-var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "SystemService", "UserService", "DataImportService", "AnalyticsService", function ($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, SystemService, UserService, DataImportService, AnalyticsService) {
+var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "commonvariable", "Analytics", "DataMart", "DataStoreService", "ServerPushDatesDataStoreService", "SystemService", "UserService", "DataImportService", "AnalyticsService", function ($scope, $interval, $upload, $filter, commonvariable, Analytics, DataMart, DataStoreService, ServerPushDatesDataStoreService, SystemService, UserService, DataImportService, AnalyticsService) {
 
 	$scope.dataImportStatus = {
 		visible: false,
@@ -41,10 +41,6 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 	//var serverVersion ="";
 	var $file;//single file 
 	$scope.errorVisible = false;
-	var compress = false;
-	var fileContent;
-	var fileContentJSON;
-	var serversPushDatesNamespace = "ServersPushDates"
 
 	$scope.showImportDialog = function () {
 
@@ -63,121 +59,108 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 		$scope.dataImportStatus.visible = true;
 		$scope.importFailed = false;
 
-		compress = getExtension($file.name) == "zip";
+		var compress = getExtension($file.name) == "zip";
 
+		// Only manage compressed files
+		if (!compress) return;
 
-		var fileReader = new FileReader();
-		fileReader.readAsArrayBuffer($file);
-		fileReader.onload = function (e) {
+		//var zip = new JSZip(e.target.result);
+		SystemService.getServerVersion()
+			.then(
+			serverVersion => {
+				return JSZip.loadAsync($file)
 
-			//fileContent = e.target.result;
-			//TODO Fix summary
+					.then(function (zip) {
+						var settingsEntry = undefined;
+						zip.forEach(function (relativePath, zipEntry) {
 
-			if (compress) {
+							if (zipEntry.name.indexOf('settings.txt') > -1) {
+								settingsEntry = zipEntry;
+							}
+						})
 
-				//var zip = new JSZip(e.target.result);
-				SystemService.getServerVersion()
+						if (settingsEntry) {
+							return settingsEntry.async("text").then(
+								data => {
+									projectVersion = JSON.parse(data).version;
+									if (projectVersion == serverVersion) {
+										return Promise.resolve(zip);
+									} else {
+										return Promise.reject("DIFFERENT_VERSIONS");
+									}
+								}
+							)
+						} else {
+							return Promise.reject("NO_SETTINGS_FILE");
+						}
+					})
+				}
+			)
+			.then( zip => {
+				zip.forEach(function (relativePath, zipEntry) {
+					if (zipEntry.name.indexOf('.json') > -1) {
+						zipEntry.async("text").then( data => upload(data) )
+					} else if (zipEntry.name.indexOf('project.txt') > -1) {
+						zipEntry.async("string").then(
+							data => {
 
-					.then(
-					serverVersion =>
-						JSZip.loadAsync($file)
+								//var projects2 = data.replace(/['"]+/g, '');
+								var projects = data.split(";");
+								var dateExport = zipEntry.name.split("_");
+								dateExport = parseInt(dateExport[1]);
 
-							.then(function (zip) {
+								var register = {
+									lastDatePush: dateExport,
+									lastPushDateSaved: parseInt(dateExport - 30 * 24 * 60 * 60 * 1000)
+								};
+								var values = { values: [] };
 
-								zip.forEach(function (relativePath, zipEntry) {
+								for (var i in projects) {
+									if (projects[i] != "") {
 
-									if (zipEntry.name.indexOf('settings') > -1) {
-										zipEntry.async("text").then(
-											data => {
-
-												fileContent = data;
-												projectVersion = JSON.parse(fileContent).version
-
-												if (projectVersion == serverVersion) {
-													zip.forEach(function (relativePath, zipEntry) {
-
-														if (zipEntry.name.indexOf('project') == -1) {
-
-
-															zipEntry.async("text").then(
-																data => {
-
-																	fileContent = data;
-																	upload();
-																})
-
-														} else {
-
-															zipEntry.async("string").then(
-																data => {
-
-																	//var projects2 = data.replace(/['"]+/g, '');
-																	var projects = data.split(";");
-																	var dateExport = zipEntry.name.split("_");
-																	dateExport = parseInt(dateExport[1]);
-
-
-																	var register = {
-																		lastDatePush: dateExport,
-																		lastPushDateSaved: parseInt(dateExport - 30 * 24 * 60 * 60 * 1000)
-																	};
-																	var values = { values: [] };
-
-																	for (var i in projects) {
-																		if (projects[i] != "") {
-
-																			var project = projects[i];
-																			DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_date")
-																				.then(
-																				dates => {
-
-																					if (dates.lastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePush }
-																					if (dates.lastPushDateSaved != undefined) {
-																						register.lastPushDateSaved = dates.lastPushDateSaved
-																					}
-																					DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_date", register);
-																				}
-
-																				);
-
-																			DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project + "_values")
-																				.then(
-																				currentValue => {
-																					if (currentValue == undefined) {
-																						DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, project + "_values", { values: [] });
-																					}
-																				});
-
-																		}
-																	}
-																})
-														}
-													}
-
-													);
+										var project = projects[i];
+										ServerPushDatesDataStoreService.getKeyValue(project + "_date")
+											.then( dates => {
+												if (dates == undefined) {
+													//TODO
 												} else {
-													$scope.errorVisible = true;
-													$scope.errorVersiones ="Different Versions, please Update: Server:" + serverVersion + ", Project:" + projectVersion;
-													console.log($scope.errorVersiones);
+													if (dates.lastDatePush > register.lastDatePush) { register.lastDatePush = dates.lastDatePush }
+													if (dates.lastPushDateSaved != undefined) {
+														register.lastPushDateSaved = dates.lastPushDateSaved
+													}
+													ServerPushDatesDataStoreService.setKeyValue(project + "_date", register);
 												}
-
-
-
 											})
 
+										ServerPushDatesDataStoreService.getKeyValue(project + "_values")
+											.then( currentValue => {
+												if (currentValue == undefined) {
+													ServerPushDatesDataStoreService.setKeyValue(project + "_values", { values: [] });
+												}
+											});
 									}
-								});
-
-							}))
-			}
-		};
-
+								}
+							})
+					}
+				})
+			})
+			.then(
+				success => console.log(success),
+				error => {
+					$scope.errorVisible = true;
+					//$scope.errorInFile = "Different Versions, please Update: Server:" + serverVersion + ", Project:" + projectVersion;
+					$scope.errorInFile = error;
+					$scope.dataImportStatus.visible = false;
+					$scope.importFailed = true;
+					console.log($scope.errorInFile);
+				}
+			)
 	};
 
 
 
 
-	function upload() {
+	function upload(fileContent) {
 		$upload.http({
 			url: commonvariable.url + "dataValueSets",
 			headers: { 'Content-Type': 'application/json' },
@@ -248,6 +231,7 @@ var importdatamanualController = ["$scope", '$interval', '$upload', '$filter', "
 			$file = $files[i];//set a single file
 			$scope.undefinedFile = false;
 			$scope.importFailed = false;
+			$scope.errorVisible = false;
 		}
 		$scope.previewDataImport = false;
 	};
