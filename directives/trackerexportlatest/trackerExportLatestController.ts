@@ -39,6 +39,7 @@ class TrackerExportLatestController {
     allServices = { lastExported: "", selected: false};
     exporting = false;
     dateopened = false;
+    exportError;
     dataStoreKey: string = 'trackerexport';
 
     static $inject = ['$filter', 'ProgramService', 'UserService', 'EventExportService', 'EventService', 'DataStoreService', 'SystemService'];
@@ -103,6 +104,7 @@ class TrackerExportLatestController {
     
     submit () {
         this.exporting = true;
+        this.exportError = undefined;
         const startDate: Date = this.params.date;
         var serverDate: Date;
         return this.SystemService.getServerDateWithTimezone()
@@ -114,6 +116,7 @@ class TrackerExportLatestController {
             .then( () => this.logExport(startDate, serverDate) )
             .then( () => this.updateLastExportInfo() )
             .then( () => console.log("Everything done") )
+            .catch( error => this.exportError = error )
             .finally( () => this.exporting = false )
             // It is necessary to introduce this delay because of maxDate validator.
             .then( () => this.setLatestExportAsDefault() )

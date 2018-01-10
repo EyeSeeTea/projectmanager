@@ -103,6 +103,7 @@
 	"LAST_EXPORT": "Last export",
 	"PREVIEW_FILE_SUMMARY": "Preview summary",
 	"EVENT_COUNT": "Number of visits",
+	"NO_ENCRYPTATION_PASSWORD": "Tracker export is not properly configured. Please contact hmis@barcelona.msf.org",
 
 	"____________Tracker Data Import":"__________",
 	"TRACKER_DATA_IMPORT": "Import individual data",

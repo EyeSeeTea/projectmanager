@@ -85,4 +85,10 @@
         </button>
         <span ng-show="$ctrl.exporting" class='glyphicon glyphicon-repeat animation-rotation'></span>
     </div>
+    <br/>
+    <div class="row" ng-show="$ctrl.exportError">
+        <div class="col-md-6">
+            <d2-messages type="danger" textmessage="{{ $ctrl.exportError | translate }}"></d2-messages>
+        </div>
+    </div>
 </form>

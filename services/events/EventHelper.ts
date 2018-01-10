@@ -39,6 +39,9 @@ export class EventHelper {
     public readonly PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
     public readonly PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
 
+    // Errors
+    public readonly NO_ENCRYPTATION_PASSWORD = "NO_ENCRYPTATION_PASSWORD";
+
     private encryptationPassword;
 
     static $inject = ['HmisSettingService'];
@@ -66,7 +69,7 @@ export class EventHelper {
         } else {
             return this.HmisSettingService.getTrackerDataEncryptationPassword().then(password => {
                 if (password == undefined) {
-                    return Promise.reject("NO_ENCRYPTATION_PASSWORD");
+                    return Promise.reject(this.NO_ENCRYPTATION_PASSWORD);
                 }
                 this.encryptationPassword = password;
                 return this.encryptationPassword;
