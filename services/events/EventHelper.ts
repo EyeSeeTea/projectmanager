@@ -19,7 +19,7 @@
 
 var AES = require('crypto-js/aes');
 var EncUTF8 = require('crypto-js/enc-utf8');
-import { SqlService } from '../services.module';
+import { HmisSettingService } from '../services.module';
 
 export class EventHelper {
 
@@ -41,9 +41,9 @@ export class EventHelper {
 
     private encryptationPassword;
 
-    static $inject = ['SqlService'];
+    static $inject = ['HmisSettingService'];
 
-    constructor(private SqlService: SqlService){}
+    constructor(private HmisSettingService: HmisSettingService){}
 
     encryptObject(object: Object) {
         return this.getEncryptationPassword().then(password => {
@@ -64,9 +64,11 @@ export class EventHelper {
         if (this.encryptationPassword != undefined) {
             return Promise.resolve(this.encryptationPassword);
         } else {
-            const sqlQuery = "SELECT value FROM hmisocba.hmissetting WHERE name = 'trackerExportPassword'";
-            return this.SqlService.executeSqlCode(sqlQuery).then(result => {
-                this.encryptationPassword = result.rows[0][0];
+            return this.HmisSettingService.getTrackerDataEncryptationPassword().then(password => {
+                if (password == undefined) {
+                    return Promise.reject("NO_ENCRYPTATION_PASSWORD");
+                }
+                this.encryptationPassword = password;
                 return this.encryptationPassword;
             });
         }
