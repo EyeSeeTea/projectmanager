@@ -176,3 +176,47 @@ export class ServiceWithPrograms {
         programs: string            //Code
     ){}
 }
+
+export class EventList {
+    constructor(
+        public events: any[]
+    ){}
+
+    static empty = new EventList([]);
+}
+
+export class EnrollmentList {
+    constructor(
+        public enrollments: any[]
+    ){}
+
+    static empty = new EnrollmentList([]);
+}
+
+export class TrackedEntityInstanceList {
+    constructor(
+        public trackedEntityInstances: any[]
+    ){}
+
+    static empty = new TrackedEntityInstanceList([]);
+}
+
+export class EventDataWrapper {
+    constructor(
+        public events: any[],
+        public enrollments: any[],
+        public trackedEntityInstances: any[]
+    ){}
+
+    addEvents(events: any[]) {
+        this.events = this.events.concat(events);
+    }
+
+    addTrackedEntityInstances(trackedEntityInstances: any[]) {
+        this.trackedEntityInstances = this.trackedEntityInstances.concat(trackedEntityInstances);
+    }
+
+    addEnrollments(enrollments: any[]) {
+        this.enrollments = this.enrollments.concat(enrollments);
+    }
+}

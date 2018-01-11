@@ -15,18 +15,16 @@ module.exports = {
             filename: 'index.html',
             inject: 'head'
         }),
-        new AddAssetHtmlPlugin({
+        new AddAssetHtmlPlugin([{
             filepath: require.resolve('./node_modules/jquery/dist/jquery.min'),
             includeSourcemap: false
-        }),
-        new AddAssetHtmlPlugin({
+        },{
             filepath: require.resolve('./node_modules/file-saver/FileSaver.min'),
             includeSourcemap: false
-        }),
-        new AddAssetHtmlPlugin({
+        },{
             filepath: require.resolve('./node_modules/jszip/dist/jszip.min.js'),
             includeSourcemap: false
-        })
+        }])
     ],
     module: {
         rules: [

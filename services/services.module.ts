@@ -12,6 +12,7 @@ import { EventExportService } from './events/EventExportService';
 import { EventHelper } from './events/EventHelper';
 import { EventImportService } from './events/EventImportService';
 import { EventService } from './events/EventService';
+import { HmisSettingService } from './system/HmisSettingService';
 import { MessageService } from './messages/MessageService';
 import { MetadataImportService } from './metadata/MetadataImportService';
 import { MetadataSyncService } from './metadata/MetadataSyncService';
@@ -38,6 +39,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('EventHelper', EventHelper)
     .service('EventImportService', EventImportService)
     .service('EventService', EventService)
+    .service('HmisSettingService', HmisSettingService)
     .service('MessageService', MessageService)
     .service('MetadataImportService', MetadataImportService)
     .service('MetadataSyncService', MetadataSyncService)
@@ -63,6 +65,7 @@ export {
     EventHelper,
     EventImportService,
     EventService,
+    HmisSettingService,
     MessageService,
     MetadataImportService,
     MetadataSyncService,

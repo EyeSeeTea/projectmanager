@@ -17,22 +17,64 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
+var AES = require('crypto-js/aes');
+var EncUTF8 = require('crypto-js/enc-utf8');
+import { HmisSettingService } from '../services.module';
+
 export class EventHelper {
 
     // Constants to keep common names between EventExportService and EventImportService
-    public TEIS = 'trackedEntityInstances';
-    public TEIS_JSON = this.TEIS + ".json";
-    public TEIS_ZIP = this.TEIS + ".zip";
-    public ENROLLMENTS = 'enrollments';
-    public ENROLLMENTS_JSON = this.ENROLLMENTS + '.json';
-    public ENROLLMENTS_ZIP = this.ENROLLMENTS + '.zip';
-    public EVENTS = 'events';
-    public EVENTS_JSON = this. EVENTS + '.json';
-    public EVENTS_ZIP = this.EVENTS + '.zip';
+    public readonly TEIS = 'trackedEntityInstances';
+    public readonly TEIS_JSON = this.TEIS + ".json";
+    public readonly TEIS_ZIP = this.TEIS + ".zip";
+    public readonly ENROLLMENTS = 'enrollments';
+    public readonly ENROLLMENTS_JSON = this.ENROLLMENTS + '.json';
+    public readonly ENROLLMENTS_ZIP = this.ENROLLMENTS + '.zip';
+    public readonly EVENTS = 'events';
+    public readonly EVENTS_JSON = this. EVENTS + '.json';
+    public readonly EVENTS_ZIP = this.EVENTS + '.zip';
 
     // SQL Views to execute
-    public PROGRAM_RULES_COMMON_FUNCTIONS = 'I8hzoc338oW';
-    public PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
-    public PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
+    public readonly PROGRAM_RULES_COMMON_FUNCTIONS = 'I8hzoc338oW';
+    public readonly PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
+    public readonly PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
+
+    // Errors
+    public readonly NO_ENCRYPTATION_PASSWORD = "NO_ENCRYPTATION_PASSWORD";
+
+    private encryptationPassword;
+
+    static $inject = ['HmisSettingService'];
+
+    constructor(private HmisSettingService: HmisSettingService){}
+
+    encryptObject(object: Object) {
+        return this.getEncryptationPassword().then(password => {
+            var asString = JSON.stringify(object);
+            return AES.encrypt(asString, password).toString();
+        })
+    }
+
+    decryptObject(encrypted) {
+        return this.getEncryptationPassword().then(password => {
+            var decrypted = AES.decrypt(encrypted, password);
+            return JSON.parse(decrypted.toString(EncUTF8));            
+        })
+        
+    }
+
+    private getEncryptationPassword() {
+        if (this.encryptationPassword != undefined) {
+            return Promise.resolve(this.encryptationPassword);
+        } else {
+            return this.HmisSettingService.getTrackerDataEncryptationPassword().then(password => {
+                if (password == undefined) {
+                    return Promise.reject(this.NO_ENCRYPTATION_PASSWORD);
+                }
+                this.encryptationPassword = password;
+                return this.encryptationPassword;
+            });
+        }
+    }
 
 };
