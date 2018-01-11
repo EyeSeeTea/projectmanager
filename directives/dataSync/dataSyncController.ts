@@ -72,6 +72,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 
 
 			lastDatePush = serverDate.getTime();
+			console.log(serverDate);
 			register = {
 				lastDatePush: lastDatePush,
 				lastPushDateSaved: new Date(lastSyncDate).getTime()  //lastSyncDate es la fecha "keyLastSuccessfulDataSynch"
