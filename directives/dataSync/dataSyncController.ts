@@ -92,10 +92,11 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 				.then(() => ServerPushDatesRemoteDataStoreService.setKeyValue(projectId + "_date", register))
 				.then(() => ServerPushDatesRemoteDataStoreService.getKeyValue(projectId + "_values"))
 				.then((currentValues) => {
-					if (currentValues == undefined) 
-						return ServerPushDatesRemoteDataStoreService.setKeyValue(projectId + "_values", {})
-					else 
+					if (currentValues == undefined) {
+						return ServerPushDatesRemoteDataStoreService.setKeyValue(projectId + "_values", { values: [] });
+					} else {
 						return "Done";
+					}
 				})
 				.then(() => {
 					$scope.sync_result_date = register.lastDatePush;
