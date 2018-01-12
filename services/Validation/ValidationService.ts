@@ -1,26 +1,21 @@
 
 import * as angular from 'angular';
 
-import { UserService } from '../users/UserService';
-import { DataStoreService } from '../data-store/DataStoreService';
+import { ServerPushDatesDataStoreService, UserService } from '../services.module'
 import { Orgunit } from '../../model/model';
-
 
 export class ValidationService {
     private projects;
     private datasets;
-    static $inject = ['$q', 'DataStoreService', 'UserService', 'Organisationunit', 'DataExport'];
+    static $inject = ['$q', 'UserService', 'Organisationunit', 'DataExport', 'ServerPushDatesDataStoreService'];
 
-    constructor(private $q: ng.IQService, private DataStoreService: DataStoreService, private UserService: UserService, private Organisationunit, private DataExport) {
-
-
-    }
+    constructor(private $q: ng.IQService, private UserService: UserService, 
+                private Organisationunit, private DataExport,
+                private ServerPushDatesDataStoreService: ServerPushDatesDataStoreService) {}
 
 
     fillDatastore(): ng.IPromise<any> {
-        var serversPushDatesNamespace = "ServersPushDates";
-
-        return this.getProjectsDatastore(serversPushDatesNamespace).then(
+        return this.getProjectsDatastore().then(
             projectsDatastore => {
                 return this.getUserMissions().then(
                     missions => {
@@ -47,12 +42,11 @@ export class ValidationService {
 
     private fillDatastoreProjects(mission, project) {
 
-        var serversPushDatesNamespace = "ServersPushDates";
         var lastPushDateSaved = null;
         var lastDatePush = null;
         var sites = [];
         var services = [];
-        return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
+        return this.ServerPushDatesDataStoreService.getKeyValue(project.id + "_date").then(
             data => {
                 lastDatePush = null;
                 if (data != undefined) {
@@ -68,7 +62,7 @@ export class ValidationService {
         ).then(
             () => {
                 if ((lastDatePush != undefined) && (lastPushDateSaved != lastDatePush)) {
-                    return this.DataStoreService.updateNamespaceKeyArraylastPush(serversPushDatesNamespace, project.id + "_date", lastDatePush);
+                    return this.ServerPushDatesDataStoreService.updateNamespaceKeyArraylastPush(project.id + "_date", lastDatePush);
                 }
             });
     }
@@ -152,7 +146,6 @@ export class ValidationService {
 
     private updateDatastoreValues(dataValues, mission, project, service, dataSet, lastDatePush, lastPushDateSaved) {
 
-        var serversPushDatesNamespace = "ServersPushDates";
         var periods = [];
         for (var i in dataValues) {
             periods.push(dataValues[i].period);
@@ -176,23 +169,21 @@ export class ValidationService {
             };
             return total.then(
                 () => {
-                    return this.DataStoreService.updateNamespaceKeyArrayPeriod(serversPushDatesNamespace, project + "_values", uniquePeriodRecord)
+                    return this.ServerPushDatesDataStoreService.updateNamespaceKeyArrayPeriod(project + "_values", uniquePeriodRecord);
                 })
         }, this.$q.when("Done total"));
     }
 
 
     readDatastore(): ng.IPromise<ProjectDatastoreRecord> {
-        var serversPushDatesNamespace = "ServersPushDates";
         var lastPushDateSaved = null;
         var lastDatePush = null;
         var missions = [];
 
         this.datasets = [];
         this.projects = [];
-
    
-                return this.getProjectsDatastore(serversPushDatesNamespace).then(
+                return this.getProjectsDatastore().then(
 
                     projectsDatastore => {
                         return this.getUserMissions().then(
@@ -228,11 +219,10 @@ export class ValidationService {
 
     private readDatastoreProject(mission, project) {
 
-        var serversPushDatesNamespace = "ServersPushDates";
         var lastPushDateSaved = null;
         var lastDatePush = null;
 
-        return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_date").then(
+        return this.ServerPushDatesDataStoreService.getKeyValue(project.id + "_date").then(
             data => {
                 if (data != undefined) {
                     lastDatePush = data.lastDatePush;
@@ -244,9 +234,7 @@ export class ValidationService {
                     var today = new Date().getTime();
                     var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
                     if (diff > 30) { project['overdueSync'] = true }
-                    return this.DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, project.id + "_values").then(
-
-
+                    return this.ServerPushDatesDataStoreService.getKeyValue(project.id + "_values").then(
                         data => {
                             if (data != undefined) {
                                 this.datasets = this.datasets.concat(data.values);
@@ -266,13 +254,13 @@ export class ValidationService {
         )
     }
 
-    private getProjectsDatastore(namespace) {
+    private getProjectsDatastore() {
         var projects = [];
-        return this.DataStoreService.getNamespaceKeys(namespace).then(
+        return this.ServerPushDatesDataStoreService.getKeys().then(
             data => {
                 if (data != undefined) {
-                projects = data.filter(this.projectsFilter);
-                projects.forEach(this.projectsRemoveText);
+                    projects = data.filter(this.projectsFilter);
+                    projects.forEach(this.projectsRemoveText);
                 }
                 return projects;
             });
@@ -340,10 +328,7 @@ export class ValidationService {
     }
 
     validateDataset(dataset) {
-        var serversPushDatesNamespace = "ServersPushDates";
-        return this.DataStoreService.deleteNamespaceKeyValue(serversPushDatesNamespace, dataset.project + "_values", dataset);
-
-
+        return this.ServerPushDatesDataStoreService.deleteNamespaceKeyValue(dataset.project + "_values", dataset);
     }
 }
 
