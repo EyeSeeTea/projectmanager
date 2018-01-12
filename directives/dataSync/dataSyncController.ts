@@ -17,8 +17,8 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { RESTUtil, ValidationRecord, ProgressStatus } from '../../model/model';
-import { DataStoreService, MessageService, RemoteApiService, SystemService, UserService } from '../../services/services.module';
-import { MetadataSyncService } from '../../services/metadata/MetadataSyncService';
+import { MetadataSyncService, MessageService, RemoteApiService, ServerPushDatesDataStoreService, 
+		SystemService, UserService } from '../../services/services.module';
 
 export const datasyncDirective = [function () {
 	return {
@@ -31,8 +31,8 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl", "MetadataSyncService", "systemsetting", "Info", "Organisationunit", "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
-	function ($scope, $q: ng.IQService, commonvariable, RemoteInstanceUrl, MetadataSyncService, systemsetting, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
+var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService", "Organisationunit", "MessageService", "RemoteApiService", 'UserService', 'SystemService', 'ServerPushDatesDataStoreService',
+	function ($scope, $q: ng.IQService, commonvariable, MetadataSyncService: MetadataSyncService, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, UserService: UserService, SystemService: SystemService, ServerPushDatesDataStoreService: ServerPushDatesDataStoreService) {
 
 		var projectId = null;
 		var projectName = null;
@@ -53,7 +53,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 				$scope.isOnline = commonvariable.isOnline
 				projectId = user.organisationUnits[0].id;
 				projectName = user.organisationUnits[0].name;
-				DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date").then(
+				ServerPushDatesDataStoreService.getKeyValue(projectId + "_date").then(
 					(data: ValidationRecord) => {
 						lastDatePush = data.lastDatePush;
 						lastPushDateSaved = data.lastPushDateSaved;
@@ -117,7 +117,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 								});
 						}).then(
 						() => {
-							DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
+							ServerPushDatesDataStoreService.setKeyValue(projectId + "_date", register);
 						});
 					$scope.sync_result_date = register.lastDatePush;
 				})
@@ -151,12 +151,12 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 								$scope.validation_date = register.lastDatePush;
 							});
 
-						DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
-						DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values")
+						ServerPushDatesDataStoreService.setKeyValue(projectId + "_date", register);
+						ServerPushDatesDataStoreService.getKeyValue(projectId + "_values")
 							.then(
 							currentValue => {
 								if (currentValue == undefined) {
-									DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values", values);
+									ServerPushDatesDataStoreService.setKeyValue(projectId + "_values", values);
 								}
 							});
 					});
