@@ -22,13 +22,13 @@
     <li></li>
     <li class="navbar-brand">{{ 'TITLE_CAPITAL' | translate }}</li>
     <!--<li data-toggle="pill"><a href="#/metadataexport">{{ 'METADATA_EXPORT' | translate }}</a></li>-->
-    <li data-toggle="pill"><a href="#/dataimport">{{ 'DATA_IMPORT' | translate }}</a></li>
-    <li data-toggle="pill"><a href="#/trackerdataimport">{{ 'TRACKER_DATA_IMPORT' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showDataImport"><a href="#/dataimport">{{ 'DATA_IMPORT' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showTrackerImport"><a href="#/trackerdataimport">{{ 'TRACKER_DATA_IMPORT' | translate }}</a></li>
     <!-- <li><a href="#/dataapproval">{{ 'DATA_APPROVAL' | translate }}</a></li> -->
     <li class="navbar-brand">{{ 'TITLE_PROJECT' | translate }}</li>
     <li data-toggle="pill" ng-if="!$ctrl.isOnline"><a href="#/metadataimport">{{ 'METADATA_IMPORT' | translate }}</a></li>
     <li data-toggle="pill"><a href="#/dataexport">{{ 'DATA_EXPORT' | translate }}</a></li>
-    <li data-toggle="pill"><a href="#/trackerdataexport">{{ 'TRACKER_DATA_EXPORT' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showTrackerExport"><a href="#/trackerdataexport">{{ 'TRACKER_DATA_EXPORT' | translate }}</a></li>
     <li class="navbar-brand">{{ 'TITLE_COMMON' | translate }}</li>
     <li data-toggle="pill" ng-if="!$ctrl.isOnline"><a href="#/analytics">{{ 'ANALYTICS' | translate }}</a></li>
     <li data-toggle="pill"><a href="#/availabledata">{{ 'AVAILABLE_DATA' | translate }}</a></li>
