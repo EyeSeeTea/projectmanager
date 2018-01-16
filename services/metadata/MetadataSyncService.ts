@@ -47,8 +47,7 @@ export class MetadataSyncService {
      */
     executeMetadataSyncDiff () {
         return this.getVersionDifference()
-            .then((diff) => { 
-                this.metadataSyncDiffRecursive(diff)})
+            .then((diff) => this.metadataSyncDiffRecursive(diff))
             .then(() => this.updateVersionDiff());
     }
 
