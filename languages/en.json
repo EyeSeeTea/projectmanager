@@ -127,7 +127,9 @@
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",
-	"NUMBER_OF_MONTHS": "Number of months",
+	"LAST_MONTHS": "Last months",
+	"LAST_QUARTERS": "Last quarters",
+	"LAST_WEEKS": "Last weeks",
 	"ORGANISATIONUNIT_LABEL": "Organisation Unit",
 
   	"_______________ HMIS":"Adoption_______________",

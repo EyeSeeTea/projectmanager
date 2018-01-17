@@ -39,25 +39,25 @@ export class AvailableData {
 
 	availablePeriods = [
 		{
-			"name": "WEEKS",
+			"name": "LAST_WEEKS",
 			"periods": [
-				{ id: "LAST_4_WEEKS", name: "4W" },
-				{ id: "LAST_12_WEEKS", name: "12W" },
-				{ id: "LAST_52_WEEKS", name: "52W" }
+				{ id: "LAST_4_WEEKS", name: "4" },
+				{ id: "LAST_12_WEEKS", name: "12" },
+				{ id: "LAST_52_WEEKS", name: "52" }
 			]
 		},
 		{
-			"name": "MONTHS",
+			"name": "LAST_MONTHS",
 			"periods": [
-				{ id: "LAST_3_MONTHS", name: "3M" },
-				{ id: "LAST_6_MONTHS", name: "6M" },
-				{ id: "LAST_12_MONTHS", name: "12M" }
+				{ id: "LAST_3_MONTHS", name: "3" },
+				{ id: "LAST_6_MONTHS", name: "6" },
+				{ id: "LAST_12_MONTHS", name: "12" }
 			]
 		},
 		{
-			"name": "QUARTERS",
+			"name": "LAST_QUARTERS",
 			"periods": [
-				{ id: "LAST_4_QUARTERS", name: "4Q" },
+				{ id: "LAST_4_QUARTERS", name: "4" },
 				{ id: "QUARTERS_LAST_YEAR", name: "Last Year Quarters" }
 			]
 		}
