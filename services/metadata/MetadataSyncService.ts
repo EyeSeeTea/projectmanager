@@ -52,6 +52,10 @@ export class MetadataSyncService {
     }
 
     private metadataSyncDiffRecursive(versionArray: MetadataVersion[]) {
+        if (versionArray.length == 0) {
+            return this.$q.resolve("No version diff");
+        }
+
         var deferred = this.$q.defer();
 
         versionArray.reduce( (previousPromise, version, index) => {
