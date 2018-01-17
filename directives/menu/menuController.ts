@@ -35,12 +35,28 @@ class MenuController {
     static $inject = ['commonvariable', 'UserService'];
 
 	isOnline: boolean;
-	isAdministrator: boolean = false;
+    isAdministrator: boolean = false;
+    showDataImport: boolean = false;
+    showTrackerExport: boolean = false;
+    showTrackerImport: boolean = false;
 
-    constructor(private commonvariable: CommonVariable, private UserService: UserService) {
+    constructor(private commonvariable: CommonVariable, 
+                private UserService: UserService) {}
+
+    $onInit() {
         this.isOnline = this.commonvariable.isOnline;
-		this.UserService.getCurrentUser().then( me => {
-			this.isAdministrator = me.userGroups.some( userGroup => userGroup.name === 'Administrators' );
-		});
+        
+        this.UserService.getCurrentUser().then(me => {
+            const isMedco = me.userCredentials.userRoles.some(role => role.name == 'MedCo');
+            const isMFP = me.userCredentials.userRoles.some(role => role.name == 'Medical Focal Point')
+            const hasTrackerRoles = me.userCredentials.userRoles.some(role => /Individual Data/i.test(role.name));
+
+            this.isAdministrator = me.userGroups.some(group => group.name == 'Administrators');
+
+            this.showDataImport = this.isAdministrator || isMedco || isMFP;
+
+            this.showTrackerExport = this.isAdministrator || (isMFP && hasTrackerRoles);
+            this.showTrackerImport = this.isAdministrator || isMedco;
+        });
     }
 }
