@@ -23,6 +23,7 @@ import { ProgramService } from './programs/ProgramService';
 import { ProjectStatusDataStoreService } from './data-store/ProjectStatusDataStoreService';
 import { ProjectStatusRemoteDataStoreService } from './data-store/remote/ProjectStatusRemoteDataStoreService';
 import { ServerPushDatesDataStoreService } from './data-store/ServerPushDatesDataStoreService';
+import { ServerPushDatesRemoteDataStoreService } from './data-store/remote/ServerPushDatesRemoteDataStoreService';
 import { RemoteApiService } from './metadata/RemoteApiService';
 import { SqlService } from './sql/SqlService';
 import { UserService } from './users/UserService';
@@ -50,6 +51,7 @@ export const servicesModule = angular.module('Services', ['Dhis2Api'])
     .service('ProjectStatusDataStoreService', ProjectStatusDataStoreService)
     .service('ProjectStatusRemoteDataStoreService', ProjectStatusRemoteDataStoreService)
     .service('ServerPushDatesDataStoreService', ServerPushDatesDataStoreService)
+    .service('ServerPushDatesRemoteDataStoreService', ServerPushDatesRemoteDataStoreService)
     .service('RemoteApiService', RemoteApiService)
     .service('SqlService', SqlService)
     .service('UserService', UserService)
@@ -75,6 +77,7 @@ export {
     ProjectStatusDataStoreService,
     ProjectStatusRemoteDataStoreService,
     ServerPushDatesDataStoreService,
+    ServerPushDatesRemoteDataStoreService,
     RemoteApiService,
     SqlService,
     SystemService,

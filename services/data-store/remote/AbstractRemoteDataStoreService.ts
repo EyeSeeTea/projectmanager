@@ -44,4 +44,14 @@ export abstract class AbstractRemoteDataStoreService {
                         })
                 );
     }
+
+    getKeyValue(key) {
+        return this.RemoteApiService.executeRemoteQuery({
+            method: 'GET',
+            resource: 'dataStore/' + this.namespace + '/' + key
+        }).then(
+            success => success,
+            error => undefined
+        );
+    }
 }

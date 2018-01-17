@@ -17,8 +17,8 @@
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { RESTUtil, ValidationRecord, ProgressStatus } from '../../model/model';
-import { DataStoreService, MessageService, RemoteApiService, SystemService, UserService } from '../../services/services.module';
-import { MetadataSyncService } from '../../services/metadata/MetadataSyncService';
+import { MetadataSyncService, MessageService, RemoteApiService, ServerPushDatesDataStoreService, 
+		ServerPushDatesRemoteDataStoreService, SystemService, UserService } from '../../services/services.module';
 
 export const datasyncDirective = [function () {
 	return {
@@ -31,8 +31,12 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl", "MetadataSyncService", "systemsetting", "Info", "Organisationunit", "MessageService", "RemoteApiService", "DataStoreService", 'UserService', 'SystemService',
-	function ($scope, $q: ng.IQService, commonvariable, RemoteInstanceUrl, MetadataSyncService, systemsetting, Info, Organisationunit, MessageService: MessageService, RemoteApiService: RemoteApiService, DataStoreService: DataStoreService, UserService: UserService, SystemService: SystemService) {
+var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService", "Organisationunit", "MessageService", 
+							"RemoteApiService", 'UserService', 'SystemService', 
+							'ServerPushDatesDataStoreService', 'ServerPushDatesRemoteDataStoreService',
+	function ($scope, $q: ng.IQService, commonvariable, MetadataSyncService: MetadataSyncService, Organisationunit, 
+			MessageService: MessageService, RemoteApiService: RemoteApiService, UserService: UserService, SystemService: SystemService, 
+			ServerPushDatesDataStoreService: ServerPushDatesDataStoreService, ServerPushDatesRemoteDataStoreService: ServerPushDatesRemoteDataStoreService) {		
 
 		var projectId = null;
 		var projectName = null;
@@ -41,7 +45,6 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 		$scope.resultVisible = false;
 		var lastDatePush = null;
 		var lastPushDateSaved = null;
-		var serversPushDatesNamespace = "ServersPushDates";
 		$scope.validationDataStatus = ProgressStatus.initialWithoutProgress;
 		$scope.validationDataStatus.visible = false;
 		var register: ValidationRecord = new ValidationRecord(null, null);
@@ -53,7 +56,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 				$scope.isOnline = commonvariable.isOnline
 				projectId = user.organisationUnits[0].id;
 				projectName = user.organisationUnits[0].name;
-				DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date").then(
+				ServerPushDatesDataStoreService.getKeyValue(projectId + "_date").then(
 					(data: ValidationRecord) => {
 						lastDatePush = data.lastDatePush;
 						lastPushDateSaved = data.lastPushDateSaved;
@@ -68,8 +71,6 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 
 
 		function writeRegisterInRemoteServer(projectId, serverDate, lastSyncDate) {
-			var values = { values: [] }
-
 
 			lastDatePush = serverDate.getTime();
 			console.log(serverDate);
@@ -82,45 +83,26 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 				//(lastDatePush - 30 * 24 * 60 * 60 * 1000)
 			};
 
-			RemoteApiService.executeRemoteQuery({
-				method: 'GET',
-				resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
-
-			}).then(function success(dates) {
-
-				if (dates.data.lastPushDateSaved != undefined) {
-					register.lastPushDateSaved = dates.data.lastPushDateSaved
-				}
-
-			}, function error() { }
-				).then(
-				() => {
-					RemoteApiService.executeRemoteQuery({
-						method: 'PUT',
-						resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
-						data: register
-					})
-						.then(function success() {
-							$scope.sync_result_date = register.lastDatePush;
-						}, function error() {
-							return RemoteApiService.executeRemoteQuery({
-								method: 'POST',
-								resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_date",
-								data: register
-							})
-								.then(function success() {
-									return RemoteApiService.executeRemoteQuery({
-										method: 'POST',
-										resource: 'dataStore/' + serversPushDatesNamespace + '/' + projectId + "_values",
-										data: values
-									})
-								});
-						}).then(
-						() => {
-							DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
-						});
-					$scope.sync_result_date = register.lastDatePush;
+			return ServerPushDatesRemoteDataStoreService.getKeyValue(projectId + "_date")
+				.then(dates => {
+					if (dates != undefined && dates.data.lastPushDateSaved != undefined) {
+						register.lastPushDateSaved = dates.data.lastPushDateSaved
+					}
 				})
+				.then(() => ServerPushDatesRemoteDataStoreService.setKeyValue(projectId + "_date", register))
+				.then(() => ServerPushDatesRemoteDataStoreService.getKeyValue(projectId + "_values"))
+				.then((currentValues) => {
+					if (currentValues == undefined) {
+						return ServerPushDatesRemoteDataStoreService.setKeyValue(projectId + "_values", { values: [] });
+					} else {
+						return "Done";
+					}
+				})
+				.then(() => {
+					$scope.sync_result_date = register.lastDatePush;
+					return ServerPushDatesDataStoreService.setKeyValue(projectId + "_date", register);
+				})
+
 		}
 
 		$scope.submitValidationRequest = function () {
@@ -151,12 +133,12 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 								$scope.validation_date = register.lastDatePush;
 							});
 
-						DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_date", register);
-						DataStoreService.getNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values")
+						ServerPushDatesDataStoreService.setKeyValue(projectId + "_date", register);
+						ServerPushDatesDataStoreService.getKeyValue(projectId + "_values")
 							.then(
 							currentValue => {
 								if (currentValue == undefined) {
-									DataStoreService.setNamespaceKeyValue(serversPushDatesNamespace, projectId + "_values", values);
+									ServerPushDatesDataStoreService.setKeyValue(projectId + "_values", values);
 								}
 							});
 					});
@@ -294,27 +276,19 @@ var datasyncController = ["$scope", "$q", "commonvariable", "RemoteInstanceUrl",
 		}
 
 		function getMission(projectId) {
-			return $q(function (resolve) {
-				resolve(
-					Organisationunit.get({ filter: 'id:eq:' + projectId, fields: 'id,parent, organisationUnits[id, parent]' }).$promise.then(
-						project => {
-							return project.organisationUnits[0].parent.id;
-						}
-					)
-				);
-			});
+			return Organisationunit.get({ filter: 'id:eq:' + projectId, fields: 'id,parent, organisationUnits[id, parent]' }).$promise.then(
+				project => {
+					return project.organisationUnits[0].parent.id;
+				}
+			)
 		}
 
 		function getUsersMissions(mission) {
-			return $q(function (resolve) {
-				resolve(
-					Organisationunit.get({ filter: 'id:eq:' + mission, fields: 'id,name,users[id,userCredentials[userRoles[id]]]' }).$promise.then(
-						mission => {
-							return mission.organisationUnits[0].users;
-						}
-					)
-				);
-			});
+			return Organisationunit.get({ filter: 'id:eq:' + mission, fields: 'id,name,users[id,userCredentials[userRoles[id]]]' }).$promise.then(
+				mission => {
+					return mission.organisationUnits[0].users;
+				}
+			)
 		}
 	}
 ];
