@@ -95,3 +95,8 @@ th.orgunit {
 .weeks5 {
 	background-color: #E19A9A;
 }
+
+.period-selector-label {
+	display: inline-block;
+    vertical-align: top;
+}
