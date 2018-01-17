@@ -57,8 +57,8 @@ export class AvailableData {
 		{
 			"name": "LAST_QUARTERS",
 			"periods": [
-				{ id: "LAST_4_QUARTERS", name: "4" },
-				{ id: "QUARTERS_LAST_YEAR", name: "Last Year Quarters" }
+				{ id: "LAST_QUARTER", name: "1" },
+				{ id: "LAST_4_QUARTERS", name: "4" }
 			]
 		}
 	];
