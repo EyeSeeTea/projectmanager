@@ -1,4 +1,3 @@
-
 /* 
  Copyright (c) 2015.
 
@@ -17,17 +16,23 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-export const dataExport = ['$scope', 'commonvariable', 'UserService', function ($scope, commonvariable, UserService) {
+import { UserService } from '../../services/services.module';
+
+export const dataExport = ['$scope', 'commonvariable', 'UserService', function ($scope, commonvariable, UserService: UserService) {
     
-    $scope.activeTab = 1;
+    $scope.activeTab = 2;
+    $scope.isMFP = false;
     
     $scope.setActiveTab = function (item) {
         $scope.activeTab = item;
     };
-    	$scope.isMfp=false;
        
-        UserService.currentUserHasRole("Medical Focal Point").then(
-            role =>  $scope.isMfp=role);
-        
+    UserService.currentUserHasRole("Medical Focal Point")
+        .then( isMFP => {
+            if (isMFP) {
+                $scope.isMfp = isMFP;
+                $scope.setActiveTab(1);
+            }
+        });
     
 }];
