@@ -16,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { RESTUtil, ValidationRecord, ProgressStatus } from '../../model/model';
+import { RESTUtil, ValidationRecord, ProgressStatus, CommonVariable } from '../../model/model';
 import { MetadataSyncService, MessageService, RemoteApiService, ServerPushDatesDataStoreService, 
 		ServerPushDatesRemoteDataStoreService, SystemService, UserService } from '../../services/services.module';
 
@@ -34,7 +34,7 @@ export const datasyncDirective = [function () {
 var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService", "Organisationunit", "MessageService", 
 							"RemoteApiService", 'UserService', 'SystemService', 
 							'ServerPushDatesDataStoreService', 'ServerPushDatesRemoteDataStoreService',
-	function ($scope, $q: ng.IQService, commonvariable, MetadataSyncService: MetadataSyncService, Organisationunit, 
+	function ($scope, $q: ng.IQService, commonvariable: CommonVariable, MetadataSyncService: MetadataSyncService, Organisationunit, 
 			MessageService: MessageService, RemoteApiService: RemoteApiService, UserService: UserService, SystemService: SystemService, 
 			ServerPushDatesDataStoreService: ServerPushDatesDataStoreService, ServerPushDatesRemoteDataStoreService: ServerPushDatesRemoteDataStoreService) {		
 
@@ -253,7 +253,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 
 						}
 					)
-				}, error => { $scope.sync_result = "Connection Failed (/system/info): " + error });
+				}, error => $scope.metadataSyncError = error );
 		}
 
 		function getMedco(projectId) {

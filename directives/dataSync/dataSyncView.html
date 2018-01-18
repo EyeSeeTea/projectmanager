@@ -8,52 +8,48 @@
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
  
-   Project Manager is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+ Project Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have
+received a copy of the GNU General Public License along with Project Manager. If not, see
+<http://www.gnu.org/licenses/>. -->
 
 <form name="form_sync" ng-submit="submit_sync()" ng-hide="isOnline" novalidate>
 
-
-
+    <div class="row container">
         <div class="form_group">
-                <br />
-                <button type="submit" ng-class="{disabled: resultVisible}" id="submit_sync" class="btn btn-primary">{{ 'SYNC' | translate }}</button>
-
+            <br />
+            <button type="submit" ng-class="{disabled: resultVisible}" id="submit_sync" class="btn btn-primary">{{ 'SYNC' | translate }}</button>
         </div>
+    </div>
+    <div class="row container">
+        <div class="col-md-6" ng-show="syncStatus.visible">
+            {{ 'UPDATING_CONFIGURATION' | translate }}
+            <d2-progressbar-dynamic status="syncStatus"></d2-progressbar-dynamic>
         </div>
-        <div class="row">
-                <div class="col-md-6"  ng-show="syncStatus.visible">
-                     Metadata<d2-progressbar-dynamic status="syncStatus"></d2-progressbar-dynamic>
-                </div>
+    </div>
+    <div class="row container">
+        <div class="col-md-6" ng-show="validationDataStatus.visible">
+            {{ 'SENDING_DATA' | translate }}
+            <d2-progressbar-dynamic status="validationDataStatus"></d2-progressbar-dynamic>
         </div>
-        
-        <div class="row">
-                <div class="col-md-6" ng-show="validationDataStatus.visible">
-                      Data<d2-progressbar-dynamic status="validationDataStatus"></d2-progressbar-dynamic>
-                </div>
-        </div>
-        <div>
-                <p style=margin-left:30px>{{ 'LAST_SYNC_DATE' | translate }}: {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
-                <p ng-show="resultVisible" style=margin-left:30px>{{ 'RESULT' | translate }}: {{sync_result}}</p>
-
-        </div>
+    </div>
+    <div>
+        <p style=margin-left:30px><b>{{ 'LAST_SYNC_DATE' | translate }}:</b> {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
+        <p ng-show="resultVisible" style=margin-left:30px><b>{{ 'RESULT' | translate }}:</b> {{sync_result}}</p>
+    </div>
 </form>
 
 <form name="form_validation" ng-submit="submitValidationRequest()" ng-show="isOnline" novalidate>
-
-
-        <div class="form_group">
-
-                <button type="submit" id="submitValidationRequest" class="btn btn-primary">{{ 'VALIDATION_REQUEST' | translate }}</button>
-
-        </div>
-        <div>
-
-                <p>{{ 'LAST_VALIDATION_REQUEST_DATE' | translate }}: {{validation_date | date:'yyyy-MM-dd HH:mm:ss Z' }}</p>
-        </div>
+    <div class="form_group">
+        <button type="submit" id="submitValidationRequest" class="btn btn-primary">{{ 'VALIDATION_REQUEST' | translate }}</button>
+    </div>
+    <div>
+        <p>{{ 'LAST_VALIDATION_REQUEST_DATE' | translate }}: {{validation_date | date:'yyyy-MM-dd HH:mm:ss Z' }}</p>
+    </div>
 </form>
+
+<div class="row col-md-8">
+    <div ng-if="metadataSyncError" class="alert alert-danger" role="alert">
+        <span>{{ metadataSyncError | translate:commonvariable }}</span>
+    </div>
+</div>
