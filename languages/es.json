@@ -192,6 +192,7 @@
 	"RESULT": "Resultado",
 	"VALIDATION_REQUEST": "Solicitud de Validación",
 	"LAST_VALIDATION_REQUEST_DATE": "Última fecha de solicitud de validación",
+    "DIFFERENT_VERSIONS_UPDATE_REQUEST": "La versión del servidor es diferente a la local. Por favor actualiza.",
     "SENDING_DATA": "Enviando datos",
     "UPDATING_CONFIGURATION": "Actualizando configuración",
 

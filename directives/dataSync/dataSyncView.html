@@ -49,7 +49,7 @@ received a copy of the GNU General Public License along with Project Manager. If
 </form>
 
 <div class="row col-md-8">
-    <div ng-if="metadataSyncError" class="alert alert-danger" role="alert">
-        <span>{{ metadataSyncError | translate:commonvariable }}</span>
+    <div ng-if="syncError" class="alert alert-danger" role="alert">
+        <span>{{ syncError | translate:commonvariable }}</span>
     </div>
 </div>

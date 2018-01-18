@@ -62,8 +62,6 @@
 	"UPDATES_AVAILABLE": "Updates available",
 	"REMOTE": "Remote",
 	
-	
-	
 	"_______________ Data":" Import and Export_____________",
 	"DATA_IMPORT": "Import data",
 	"IMPORT": "Import",
@@ -192,6 +190,7 @@
 	"RESULT": "Result",
 	"VALIDATION_REQUEST": "Validation Request",
     "LAST_VALIDATION_REQUEST_DATE": "Last Validation Request Date",
+    "DIFFERENT_VERSIONS_UPDATE_REQUEST": "Server version different from local Version. Please update.",
     "SENDING_DATA": "Sending data",
     "UPDATING_CONFIGURATION": "Updating configuration",
 
@@ -205,19 +204,4 @@
 	"DATASETS": "Datasets",
 	"SITE": "Site",
 	"VALIDATE": "Validate"
-
-
-
-
-
-	
-
-
-
-
-
-	
-
-
-	
 }

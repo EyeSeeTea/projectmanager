@@ -210,7 +210,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 														restUtil.requestPostData(api_url,
 															data => {
 																if (data == null) {
-																	sync_result = "Import process completed successfully (No data updated)";
+																	sync_result =  "Import process completed successfully (No data updated)";
 																	$scope.sync_result = sync_result;
 																}
 																else {
@@ -246,14 +246,13 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 									});
 
 							} else {
-
-								$scope.sync_result = "Server version different from local Version. Please update.";
+								$scope.syncError = "DIFFERENT_VERSIONS_UPDATE_REQUEST";
 								$scope.validationDataStatus.visible = false;
 							}
 
 						}
 					)
-				}, error => $scope.metadataSyncError = error );
+				}, error => $scope.syncError = error );
 		}
 
 		function getMedco(projectId) {

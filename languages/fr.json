@@ -189,6 +189,7 @@
 	"RESULT": "Résultat",
 	"VALIDATION_REQUEST": "Demande de validation",
 	"LAST_VALIDATION_REQUEST_DATE": "Date de la dernière demande de validation",
+    "DIFFERENT_VERSIONS_UPDATE_REQUEST": "Version du serveur différente de la version locale. Veuillez mettre à jour.",
     "SENDING_DATA": "Envoi de données",
     "UPDATING_CONFIGURATION": "Mise à jour de la configuration",
 
@@ -202,5 +203,4 @@
 	"DATASETS": "Ensembles de données",
 	"SITE": "Site",
 	"VALIDATE": "Valider"
-
 }
