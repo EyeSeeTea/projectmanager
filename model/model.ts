@@ -158,7 +158,8 @@ export class MessageConversation {
     constructor(
         public subject: string,
         public text: string,
-        public users: {id: string}[]
+        public users?: {id: string}[],
+        public userGroups?: {id: string}[]
     ){}
 }
 

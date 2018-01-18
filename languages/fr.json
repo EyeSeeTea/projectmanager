@@ -19,6 +19,10 @@
 	"TITLE_COMMON": "Commun",
 	"ALL_SERVICES": "Tous les services",
 	"PROGRAM": "Programme",
+    "IMPORTED": "Importés",
+    "UPDATED": "Actualisés",
+    "DELETED": "Supprimés",
+    "IGNORED": "Ignorés",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Valider les données",
@@ -191,7 +195,11 @@
 	"RESULT": "Résultat",
 	"VALIDATION_REQUEST": "Demande de validation",
 	"LAST_VALIDATION_REQUEST_DATE": "Date de la dernière demande de validation",
-	
+    "DIFFERENT_VERSIONS_UPDATE_REQUEST": "Version du serveur différente de la version locale. Veuillez mettre à jour.",
+    "SENDING_DATA": "Envoi de données",
+    "UPDATING_CONFIGURATION": "Mise à jour de la configuration",
+    "SYNC_SUCCESS_NO_DATA": "Processus d'envoi terminé avec succès (pas de données mises à jour)",
+    "SYNC_SUCCESS": "Processus d'envoi terminé avec succès",
 
 		"________________Validation ": " Validation ___________",
 	"VALIDATION": "Validation",
@@ -203,5 +211,4 @@
 	"DATASETS": "Ensembles de données",
 	"SITE": "Site",
 	"VALIDATE": "Valider"
-
 }

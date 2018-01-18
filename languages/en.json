@@ -18,7 +18,11 @@
 	"TITLE_PROJECT": "Project",
 	"TITLE_COMMON": "Common",
 	"ALL_SERVICES": "All services",
-	"PROGRAM": "Program",
+    "PROGRAM": "Program",
+    "IMPORTED": "Imported",
+    "UPDATED": "Updated",
+    "DELETED": "Deleted",
+    "IGNORED": "Ignored",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Validate Data",
@@ -61,8 +65,6 @@
 	"UP_TO_DATE": "Up-to-date",
 	"UPDATES_AVAILABLE": "Updates available",
 	"REMOTE": "Remote",
-	
-	
 	
 	"_______________ Data":" Import and Export_____________",
 	"DATA_IMPORT": "Import data",
@@ -193,8 +195,12 @@
 	"LAST_SYNC_DATE": "Last Sync Date",
 	"RESULT": "Result",
 	"VALIDATION_REQUEST": "Validation Request",
-	"LAST_VALIDATION_REQUEST_DATE": "Last Validation Request Date",
-	
+    "LAST_VALIDATION_REQUEST_DATE": "Last Validation Request Date",
+    "DIFFERENT_VERSIONS_UPDATE_REQUEST": "Server version different from local Version. Please update.",
+    "SENDING_DATA": "Sending data",
+    "UPDATING_CONFIGURATION": "Updating configuration",
+    "SYNC_SUCCESS_NO_DATA": "Import process completed successfully (No data updated)",
+    "SYNC_SUCCESS": "Import process completed successfully",
 
 		"________________Validation ": " Validation ___________",
 	"VALIDATION": "Validation",
@@ -206,19 +212,4 @@
 	"DATASETS": "Datasets",
 	"SITE": "Site",
 	"VALIDATE": "Validate"
-
-
-
-
-
-	
-
-
-
-
-
-	
-
-
-	
 }

@@ -16,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { RESTUtil, ValidationRecord, ProgressStatus } from '../../model/model';
+import { RESTUtil, ValidationRecord, ProgressStatus, CommonVariable, MessageConversation } from '../../model/model';
 import { MetadataSyncService, MessageService, RemoteApiService, ServerPushDatesDataStoreService, 
 		ServerPushDatesRemoteDataStoreService, SystemService, UserService } from '../../services/services.module';
 
@@ -34,13 +34,14 @@ export const datasyncDirective = [function () {
 var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService", "Organisationunit", "MessageService", 
 							"RemoteApiService", 'UserService', 'SystemService', 
 							'ServerPushDatesDataStoreService', 'ServerPushDatesRemoteDataStoreService',
-	function ($scope, $q: ng.IQService, commonvariable, MetadataSyncService: MetadataSyncService, Organisationunit, 
+	function ($scope, $q: ng.IQService, commonvariable: CommonVariable, MetadataSyncService: MetadataSyncService, Organisationunit, 
 			MessageService: MessageService, RemoteApiService: RemoteApiService, UserService: UserService, SystemService: SystemService, 
 			ServerPushDatesDataStoreService: ServerPushDatesDataStoreService, ServerPushDatesRemoteDataStoreService: ServerPushDatesRemoteDataStoreService) {		
 
+        const adminGroup = 'LjRqO9XzQPs';
 		var projectId = null;
 		var projectName = null;
-		$scope.sync_result = "";
+		$scope.sync_result = null;
 		$scope.sync_result_date = "";
 		$scope.resultVisible = false;
 		var lastDatePush = null;
@@ -49,7 +50,8 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 		$scope.validationDataStatus.visible = false;
 		var register: ValidationRecord = new ValidationRecord(null, null);
 		$scope.progressStatus = ProgressStatus;
-		$scope.syncStatus = ProgressStatus;
+        $scope.syncStatus = ProgressStatus;
+        $scope.commonvariable = commonvariable;
 
 		UserService.getCurrentUser()
 			.then(user => {
@@ -175,7 +177,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 									(error) => {
 										this.syncStatus = ProgressStatus.doneWithFailure;
 										console.log("Error in automatic metadata sync");
-										$scope.sync_result="Error in automatic metadata sync"+error;
+										$scope.syncError = error;
 										throw "Metadata sync failed";
 									},
 									(status) => {
@@ -209,32 +211,13 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 														console.log(lastSyncDate);
 														restUtil.requestPostData(api_url,
 															data => {
-																if (data == null) {
-																	sync_result = "Import process completed successfully (No data updated)";
-																	$scope.sync_result = sync_result;
-																}
-																else {
-																	sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
-																	$scope.sync_result = sync_result;
-																}
-
+                                                                processDataPushResponse(data, projectId, projectName).then(() => {
+                                                                    $scope.validationDataStatus = ProgressStatus.doneSuccessful;
+                                                                })
 																writeRegisterInRemoteServer(projectId, serverTime, lastSyncDate);
-																// Enviar mensaje a medco messageConversations
-																getMedco(projectId).then(
-																	medcos => {
-																		var message = {
-																			subject: "Data Sync - " + projectName,
-																			text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
-																			users: medcos
-																		}
-																		MessageService.sendRemoteMessage(message);
-																	});
-																//$scope.validationDataStatus.visible = false;
-																$scope.validationDataStatus = ProgressStatus.doneSuccessful;
 															},
-															data_error => {
-																console.log(data_error);
-															});
+                                                            data_error => $scope.syncError = data_error
+                                                        );
 													});
 											});
 										/*	} else {
@@ -246,15 +229,44 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 									});
 
 							} else {
-
-								$scope.sync_result = "Server version different from local Version. Please update.";
+								$scope.syncError = "DIFFERENT_VERSIONS_UPDATE_REQUEST";
 								$scope.validationDataStatus.visible = false;
 							}
-
 						}
 					)
-				}, error => { $scope.sync_result = "Connection Failed (/system/info): " + error });
-		}
+				}, error => $scope.syncError = error );
+        }
+        
+        function processDataPushResponse(data, projectId, projectName) {
+            if (data == null) {
+                $scope.sync_result = "SYNC_SUCCESS_NO_DATA";
+                return $q.resolve("No data updated");
+            }
+            else {
+                $scope.sync_result = "SYNC_SUCCESS";
+                $scope.importCount = data.importCount;
+                
+                if (data.status == "WARNING") {
+                    var message = {
+                        subject: `Data Sync warning in ${projectName} (${projectId})`,
+                        text: JSON.stringify(data),
+                        userGroups: [{ id: adminGroup }]
+                    }
+                    MessageService.sendRemoteMessage(message);
+                }
+
+                //Send message to medcos
+                return getMedco(projectId).then(
+                    medcos => {
+                        var message = {
+                            subject: "Data Sync - " + projectName,
+                            text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + $scope.importCount,
+                            users: medcos
+                        }
+                        return MessageService.sendRemoteMessage(message);
+                    });
+            }
+        }
 
 		function getMedco(projectId) {
 			var medco = [];
