@@ -18,7 +18,11 @@
 	"TITLE_PROJECT": "Project",
 	"TITLE_COMMON": "Common",
 	"ALL_SERVICES": "All services",
-	"PROGRAM": "Program",
+    "PROGRAM": "Program",
+    "IMPORTED": "Imported",
+    "UPDATED": "Updated",
+    "DELETED": "Deleted",
+    "IGNORED": "Ignored",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Validate Data",

@@ -19,6 +19,10 @@
 	"TITLE_COMMON": "Común",
 	"ALL_SERVICES": "Todos los servicios",
 	"PROGRAM": "Programa",
+    "IMPORTED": "Importados",
+    "UPDATED": "Actualizados",
+    "DELETED": "Borrados",
+    "IGNORED": "Ignorados",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Aprobar datos",

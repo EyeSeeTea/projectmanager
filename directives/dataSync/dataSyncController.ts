@@ -41,7 +41,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
         const adminGroup = 'LjRqO9XzQPs';
 		var projectId = null;
 		var projectName = null;
-		$scope.sync_result = "";
+		$scope.sync_result = null;
 		$scope.sync_result_date = "";
 		$scope.resultVisible = false;
 		var lastDatePush = null;
@@ -50,7 +50,8 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 		$scope.validationDataStatus.visible = false;
 		var register: ValidationRecord = new ValidationRecord(null, null);
 		$scope.progressStatus = ProgressStatus;
-		$scope.syncStatus = ProgressStatus;
+        $scope.syncStatus = ProgressStatus;
+        $scope.commonvariable = commonvariable;
 
 		UserService.getCurrentUser()
 			.then(user => {

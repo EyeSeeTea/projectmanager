@@ -33,9 +33,19 @@ received a copy of the GNU General Public License along with Project Manager. If
             <d2-progressbar-dynamic status="validationDataStatus"></d2-progressbar-dynamic>
         </div>
     </div>
-    <div>
-        <p style=margin-left:30px><b>{{ 'LAST_SYNC_DATE' | translate }}:</b> {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
-        <p ng-show="resultVisible" style=margin-left:30px><b>{{ 'RESULT' | translate }}:</b> {{sync_result}}</p>
+    
+    <br />
+    <div class="row container">
+        <p class="margin-left-30"><b>{{ 'LAST_SYNC_DATE' | translate }}:</b> {{sync_result_date | date:'yyyy-MM-dd HH:mm:ss Z'}}</p>
+        <div ng-show="sync_result != undefined">
+            <p class="margin-left-30"><b>{{ 'RESULT' | translate }}:</b> {{ sync_result | translate }}</p>
+            <div ng-show="importCount != undefined" id="importSummary">
+                <p>{{ 'IMPORTED' | translate }}: {{ importCount.imported }}</p>
+                <p>{{ 'UPDATED' | translate }}: {{ importCount.updated }}</p>
+                <p>{{ 'DELETED' | translate }}: {{ importCount.deleted }}</p>
+                <p>{{ 'IGNORED' | translate }}: {{ importCount.ignored }}</p>        
+            </div>
+        </div>
     </div>
 </form>
 
