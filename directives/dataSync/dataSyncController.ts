@@ -211,20 +211,10 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 														console.log(lastSyncDate);
 														restUtil.requestPostData(api_url,
 															data => {
-																processDataPushResponse(data, projectId);
-
+                                                                processDataPushResponse(data, projectId, projectName).then(() => {
+                                                                    $scope.validationDataStatus = ProgressStatus.doneSuccessful;
+                                                                })
 																writeRegisterInRemoteServer(projectId, serverTime, lastSyncDate);
-																// Enviar mensaje a medco messageConversations
-																getMedco(projectId).then(
-																	medcos => {
-																		var message = {
-																			subject: "Data Sync - " + projectName,
-																			text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + sync_result,
-																			users: medcos
-																		}
-																		MessageService.sendRemoteMessage(message);
-																	});
-																$scope.validationDataStatus = ProgressStatus.doneSuccessful;
 															},
                                                             data_error => $scope.syncError = data_error
                                                         );
@@ -247,9 +237,10 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 				}, error => $scope.syncError = error );
         }
         
-        function processDataPushResponse(data, projectId) {
+        function processDataPushResponse(data, projectId, projectName) {
             if (data == null) {
                 $scope.sync_result = "SYNC_SUCCESS_NO_DATA";
+                return $q.resolve("No data updated");
             }
             else {
                 $scope.sync_result = "SYNC_SUCCESS";
@@ -257,12 +248,23 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
                 
                 if (data.status == "WARNING") {
                     var message = {
-                        subject: "Data Sync warning in " + projectId,
+                        subject: `Data Sync warning in ${projectName} (${projectId})`,
                         text: JSON.stringify(data),
                         userGroups: [{ id: adminGroup }]
                     }
                     MessageService.sendRemoteMessage(message);
                 }
+
+                //Send message to medcos
+                return getMedco(projectId).then(
+                    medcos => {
+                        var message = {
+                            subject: "Data Sync - " + projectName,
+                            text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + $scope.importCount,
+                            users: medcos
+                        }
+                        return MessageService.sendRemoteMessage(message);
+                    });
             }
         }
 
