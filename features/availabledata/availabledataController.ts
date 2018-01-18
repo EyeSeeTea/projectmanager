@@ -20,9 +20,6 @@ import * as angular from 'angular';
 import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
 import { AnalyticsService, SqlService, OrgunitGroupSetService, UserDataStoreService, UserService, ValidationService } from '../../services/services.module';
 
-
-
-
 export class AvailableData {
 
 	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "SqlService", "AnalyticsService"];
@@ -41,15 +38,29 @@ export class AvailableData {
 	availableDataStatus = ProgressStatus.initialWithoutProgress;
 
 	availablePeriods = [
-		{ id: "LAST_3_MONTHS", name: "3M" },
-		{ id: "LAST_6_MONTHS", name: "6M" },
-		{ id: "LAST_12_MONTHS", name: "12M" },
-		{ id: "LAST_4_WEEKS", name: "4W" },
-		{ id: "LAST_12_WEEKS", name: "12W" },
-		{ id: "LAST_52_WEEKS", name: "52W" },
-		{ id: "LAST_4_QUARTERS", name: "4Q" },
-		{ id: "QUARTERS_LAST_YEAR", name: "Last Year Quarters" }
-
+		{
+			"name": "LAST_WEEKS",
+			"periods": [
+				{ id: "LAST_4_WEEKS", name: "4" },
+				{ id: "LAST_12_WEEKS", name: "12" },
+				{ id: "LAST_52_WEEKS", name: "52" }
+			]
+		},
+		{
+			"name": "LAST_MONTHS",
+			"periods": [
+				{ id: "LAST_3_MONTHS", name: "3" },
+				{ id: "LAST_6_MONTHS", name: "6" },
+				{ id: "LAST_12_MONTHS", name: "12" }
+			]
+		},
+		{
+			"name": "LAST_QUARTERS",
+			"periods": [
+				{ id: "LAST_QUARTER", name: "1" },
+				{ id: "LAST_4_QUARTERS", name: "4" }
+			]
+		}
 	];
 
 	selectedPeriod = {

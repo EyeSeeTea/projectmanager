@@ -24,8 +24,8 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<div class="row form-inline">
-					<div class="col-md-8" ng-repeat="filter in ctrl.availableFilters">
-						<label for="{{filter.id}}">{{filter.name}}</label>
+					<div class="col-md-5" ng-repeat="filter in ctrl.availableFilters">
+						<label class="medium-size" for="{{filter.id}}">{{filter.name}}</label>
 						<select id="{{filter.id}}" class="filter-select form-control"
 								ng-model="filter.selected" ng-change="ctrl.modifyFilter(filter)"
 								ng-options="option as option.name for option in filter.organisationUnitGroups
@@ -33,15 +33,29 @@
 							<option value="">-</option>
 						</select>
 					</div>
-					<div class="col-md-4">
-						<label for="periodSelector">{{'PERIOD' | translate}}:</label>
-						<div id="periodSelector" class="btn-group" data-toggle="buttons">
-							<label ng-repeat="period in ctrl.availablePeriods" ng-click="ctrl.modifyPeriod(period)"
-								   class="btn btn-default {{period.id == ctrl.selectedPeriod.id ? 'active' : ''}}">
-								<input type="radio" name="options" autocomplete="off">
-								{{period.name}}
-							</label>
+					<div class="col-md-7">
+						<div class="container-fluid">
+							<div class="row container-fluid">
+								<div class="container-fluid period-selector-label">
+									<label class="medium-size" for="periodSelector">{{'PERIOD' | translate}}:</label>								
+								</div>
+								<div id="periodSelector" class="container-fluid btn-group" data-toggle="buttons">
+									<table id="periodSelectorTable">
+										<tr ng-repeat="periodGroup in ctrl.availablePeriods">
+											<td><label>{{periodGroup.name | translate}}:</label></td>
+											<td>
+												<label ng-repeat="period in periodGroup.periods" ng-click="ctrl.modifyPeriod(period)"
+														class="btn btn-default {{period.id == ctrl.selectedPeriod.id ? 'active' : ''}}">
+													<input type="radio" name="options" autocomplete="off">
+													{{period.name | translate}}
+												</label>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>		
 						</div>
+						
 					</div>
 				</div>
 			</div>

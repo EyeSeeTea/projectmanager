@@ -95,3 +95,24 @@ th.orgunit {
 .weeks5 {
 	background-color: #E19A9A;
 }
+
+.period-selector-label {
+	display: inline-block;
+    vertical-align: top;
+}
+
+.medium-size {
+	font-size: medium
+}
+
+#periodSelectorTable tr {
+	height: 2em
+}
+
+#periodSelectorTable label {
+	font-size: small
+}
+
+.filter-select {
+	max-width: -webkit-fill-available;
+}
