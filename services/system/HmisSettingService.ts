@@ -23,7 +23,7 @@ export class HmisSettingService {
 
     // HMIS setting sql view
     // We expect that the table has two columns: name (charvar[255]) and value (text)
-    private readonly HMIS_SETTINGS = 'ncrRm5ywUFP';
+    private readonly HMIS_SETTINGS = 'MAd7IN5UJLv';
 
     // Keys
     private readonly TRACKER_EXPORT_ENCRYPT_PASSWORD = "trackerExportPassword";
