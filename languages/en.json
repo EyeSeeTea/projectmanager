@@ -193,6 +193,8 @@
     "DIFFERENT_VERSIONS_UPDATE_REQUEST": "Server version different from local Version. Please update.",
     "SENDING_DATA": "Sending data",
     "UPDATING_CONFIGURATION": "Updating configuration",
+    "SYNC_SUCCESS_NO_DATA": "Import process completed successfully (No data updated)",
+    "SYNC_SUCCESS": "Import process completed successfully",
 
 		"________________Validation ": " Validation ___________",
 	"VALIDATION": "Validation",

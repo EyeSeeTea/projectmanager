@@ -195,6 +195,8 @@
     "DIFFERENT_VERSIONS_UPDATE_REQUEST": "La versión del servidor es diferente a la local. Por favor actualiza.",
     "SENDING_DATA": "Enviando datos",
     "UPDATING_CONFIGURATION": "Actualizando configuración",
+    "SYNC_SUCCESS_NO_DATA": "Proceso de envío completado con éxito (no hay datos actualizados)",
+    "SYNC_SUCCESS": "Proceso de envío completado con éxito",
 
 		"________________Validation ": " Validation ___________",
 	"VALIDATION": "Validación",

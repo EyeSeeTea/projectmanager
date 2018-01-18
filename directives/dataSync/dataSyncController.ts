@@ -16,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { RESTUtil, ValidationRecord, ProgressStatus, CommonVariable } from '../../model/model';
+import { RESTUtil, ValidationRecord, ProgressStatus, CommonVariable, MessageConversation } from '../../model/model';
 import { MetadataSyncService, MessageService, RemoteApiService, ServerPushDatesDataStoreService, 
 		ServerPushDatesRemoteDataStoreService, SystemService, UserService } from '../../services/services.module';
 
@@ -38,6 +38,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 			MessageService: MessageService, RemoteApiService: RemoteApiService, UserService: UserService, SystemService: SystemService, 
 			ServerPushDatesDataStoreService: ServerPushDatesDataStoreService, ServerPushDatesRemoteDataStoreService: ServerPushDatesRemoteDataStoreService) {		
 
+        const adminGroup = 'LjRqO9XzQPs';
 		var projectId = null;
 		var projectName = null;
 		$scope.sync_result = "";
@@ -175,7 +176,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 									(error) => {
 										this.syncStatus = ProgressStatus.doneWithFailure;
 										console.log("Error in automatic metadata sync");
-										$scope.sync_result="Error in automatic metadata sync"+error;
+										$scope.syncError = error;
 										throw "Metadata sync failed";
 									},
 									(status) => {
@@ -209,14 +210,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 														console.log(lastSyncDate);
 														restUtil.requestPostData(api_url,
 															data => {
-																if (data == null) {
-																	sync_result =  "Import process completed successfully (No data updated)";
-																	$scope.sync_result = sync_result;
-																}
-																else {
-																	sync_result = data.description + "( Updated: " + data.importCount.updated + ", Imported: " + data.importCount.imported + ", Ignored: " + data.importCount.ignored + ", Deleted: " + data.importCount.deleted + ")";
-																	$scope.sync_result = sync_result;
-																}
+																processDataPushResponse(data, projectId);
 
 																writeRegisterInRemoteServer(projectId, serverTime, lastSyncDate);
 																// Enviar mensaje a medco messageConversations
@@ -229,12 +223,10 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 																		}
 																		MessageService.sendRemoteMessage(message);
 																	});
-																//$scope.validationDataStatus.visible = false;
 																$scope.validationDataStatus = ProgressStatus.doneSuccessful;
 															},
-															data_error => {
-																console.log(data_error);
-															});
+                                                            data_error => $scope.syncError = data_error
+                                                        );
 													});
 											});
 										/*	} else {
@@ -249,11 +241,29 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 								$scope.syncError = "DIFFERENT_VERSIONS_UPDATE_REQUEST";
 								$scope.validationDataStatus.visible = false;
 							}
-
 						}
 					)
 				}, error => $scope.syncError = error );
-		}
+        }
+        
+        function processDataPushResponse(data, projectId) {
+            if (data == null) {
+                $scope.sync_result = "SYNC_SUCCESS_NO_DATA";
+            }
+            else {
+                $scope.sync_result = "SYNC_SUCCESS";
+                $scope.importCount = data.importCount;
+                
+                if (data.status == "WARNING") {
+                    var message = {
+                        subject: "Data Sync warning in " + projectId,
+                        text: JSON.stringify(data),
+                        userGroups: [{ id: adminGroup }]
+                    }
+                    MessageService.sendRemoteMessage(message);
+                }
+            }
+        }
 
 		function getMedco(projectId) {
 			var medco = [];
