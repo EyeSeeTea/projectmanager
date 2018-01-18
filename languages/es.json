@@ -192,8 +192,8 @@
 	"RESULT": "Resultado",
 	"VALIDATION_REQUEST": "Solicitud de Validación",
 	"LAST_VALIDATION_REQUEST_DATE": "Última fecha de solicitud de validación",
-
-
+    "SENDING_DATA": "Enviando datos",
+    "UPDATING_CONFIGURATION": "Actualizando configuración",
 
 		"________________Validation ": " Validation ___________",
 	"VALIDATION": "Validación",

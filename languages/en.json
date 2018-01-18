@@ -191,8 +191,9 @@
 	"LAST_SYNC_DATE": "Last Sync Date",
 	"RESULT": "Result",
 	"VALIDATION_REQUEST": "Validation Request",
-	"LAST_VALIDATION_REQUEST_DATE": "Last Validation Request Date",
-	
+    "LAST_VALIDATION_REQUEST_DATE": "Last Validation Request Date",
+    "SENDING_DATA": "Sending data",
+    "UPDATING_CONFIGURATION": "Updating configuration",
 
 		"________________Validation ": " Validation ___________",
 	"VALIDATION": "Validation",

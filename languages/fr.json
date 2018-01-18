@@ -189,7 +189,8 @@
 	"RESULT": "Résultat",
 	"VALIDATION_REQUEST": "Demande de validation",
 	"LAST_VALIDATION_REQUEST_DATE": "Date de la dernière demande de validation",
-	
+    "SENDING_DATA": "Envoi de données",
+    "UPDATING_CONFIGURATION": "Mise à jour de la configuration",
 
 		"________________Validation ": " Validation ___________",
 	"VALIDATION": "Validation",
