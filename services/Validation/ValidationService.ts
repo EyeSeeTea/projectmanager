@@ -247,7 +247,7 @@ export class ValidationService {
                     project['lastDatePush'] = data.lastDatePush;
                     project['missionName'] = mission.name;
                     project['missionID'] = mission.id;
-                    project['cellID'] = this.getOrgunitCell(project);
+                    project['cellID'] = mission.cellID; //this.getOrgunitCell(project);
                     var today = new Date().getTime();
                     var diff = (today - lastDatePush) / (1000 * 60 * 60 * 24);
                     if (diff > 30) { project['overdueSync'] = true }
@@ -308,7 +308,7 @@ export class ValidationService {
     private getOrgunitCell(project) {
         var cell = "";
         var cells = [{ name: "Cell1", id: "kZZv93qYHHE" }, { name: "Cell2", id: "S2TjYXvvixI" }, { name: "Cell3", id: "HtTAwt3tb2J" }, { name: "Cell4", id: "WwsadBUxD0X" }, { name: "Cell5", id: "LZBm2f3o63Q" }, { name: "UE", id: "pI3jvvIVWed" }];
-
+        console.log(project);
         for (var i in project.organisationUnitGroups) {
             for (var z in cells) {
                 if (project.organisationUnitGroups[i].id == cells[z].id) {
