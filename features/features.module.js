@@ -7,6 +7,7 @@ import {Analytics} from './analytics/analyticsController';
 import {AvailableData} from './availabledata/availabledataController';
 import {dataExport} from './dataexport/dataexportController';
 import {dataimport} from './dataimport/dataimportController';
+import {ImportedDataController} from './validation/importeddataController';
 var metadataExport = require('./metadataexport/metadataexportController');
 import {MetadataImport} from './metadataimport/metadataimportController';
 import {MetadataMonitor} from './metadatamonitor/metadatamonitorController';
@@ -19,6 +20,7 @@ var featuresModule = angular.module('Features', ['Dhis2Api', 'Directives', 'Serv
     .controller('availabledataController', AvailableData)
     .controller('dataexportController', dataExport)
     .controller('dataimportController', dataimport)
+    .controller('importeddataController', ImportedDataController)
     .controller('metadataexportController', metadataExport)
     .controller('metadataimportController', MetadataImport)
     .controller('metadatamonitorController', MetadataMonitor)

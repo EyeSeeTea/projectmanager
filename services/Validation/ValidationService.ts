@@ -308,7 +308,7 @@ export class ValidationService {
     private getOrgunitCell(project) {
         var cell = "";
         var cells = [{ name: "Cell1", id: "kZZv93qYHHE" }, { name: "Cell2", id: "S2TjYXvvixI" }, { name: "Cell3", id: "HtTAwt3tb2J" }, { name: "Cell4", id: "WwsadBUxD0X" }, { name: "Cell5", id: "LZBm2f3o63Q" }, { name: "UE", id: "pI3jvvIVWed" }];
-        console.log(project);
+        //console.log(project);
         for (var i in project.organisationUnitGroups) {
             for (var z in cells) {
                 if (project.organisationUnitGroups[i].id == cells[z].id) {

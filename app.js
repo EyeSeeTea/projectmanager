@@ -63,6 +63,10 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 		template: require('./features/dataimport/dataimportView.html'),
 		controller: 'dataimportController'
 	});
+	$routeProvider.when('/validation', {
+		template: require('./features/validation/importeddataView.html'),
+		controller: 'importeddataController as ctrl'
+	});
 	$routeProvider.when('/dataexport', {
 		template: require('./features/dataexport/dataexportView.html'),
 		controller: 'dataexportController',

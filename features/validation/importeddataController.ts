@@ -33,7 +33,7 @@ export class ImportedDataComponent implements ng.IComponentOptions {
     }
 }
 
-class ImportedDataController {
+export class ImportedDataController {
 
     static $inject = ["$q", "commonvariable", "ValidationService", "DataSetEntryForm", "UserService", "DataExport"];
 
@@ -82,6 +82,7 @@ class ImportedDataController {
         private DataSetEntryForm,
         private UserService: UserService,
         private DataExport
+        
     ) {
         this.fillDatastore().then(() => this.readDatastore());
     }
@@ -163,7 +164,7 @@ class ImportedDataController {
 
     private previewDataset(dataValues, lastPushDateSaved) {
         angular.forEach(dataValues, datavalue => {
-            console.log(datavalue);
+            //console.log(datavalue);
             var valueCell = $("#" + datavalue.dataElement + "-" + datavalue.categoryOptionCombo + "-val");
             if (new Date(datavalue.lastUpdated).getTime() > lastPushDateSaved) { valueCell.addClass("newValue") }
 
