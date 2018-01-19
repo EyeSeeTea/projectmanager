@@ -39,6 +39,7 @@ class MenuController {
     showDataImport: boolean = false;
     showTrackerExport: boolean = false;
     showTrackerImport: boolean = false;
+    showValidation: boolean = false;
 
     constructor(private commonvariable: CommonVariable, 
                 private UserService: UserService) {}
@@ -48,13 +49,15 @@ class MenuController {
         
         this.UserService.getCurrentUser().then(me => {
             const isMedco = me.userCredentials.userRoles.some(role => role.name == 'MedCo');
+            const isTESACO = me.userCredentials.userRoles.some(role => role.name == 'TesaCo');
             const isMFP = me.userCredentials.userRoles.some(role => role.name == 'Medical Focal Point')
             const hasTrackerRoles = me.userCredentials.userRoles.some(role => /Individual Data/i.test(role.name));
 
             this.isAdministrator = me.userGroups.some(group => group.name == 'Administrators');
 
             this.showDataImport = this.isAdministrator || isMedco || isMFP;
-
+            this.showValidation = this.isAdministrator || isMedco || isTESACO ;
+            
             this.showTrackerExport = this.isAdministrator || (isMFP && hasTrackerRoles);
             this.showTrackerImport = this.isAdministrator || isMedco;
         });
