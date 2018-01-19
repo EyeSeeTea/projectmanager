@@ -17,16 +17,17 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import * as angular from 'angular';
-import { AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
+import {CommonVariable, AvailableDataItem, CurrentUser, ProgressStatus } from '../../model/model';
 import { AnalyticsService, SqlService, OrgunitGroupSetService, UserDataStoreService, UserService, ValidationService } from '../../services/services.module';
 
 export class AvailableData {
 
-	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "SqlService", "AnalyticsService"];
+	static $inject = ["$q", "$http", "$parse", "Organisationunit", "ValidationService", "OrganisationUnitGroupSet", "OrgunitGroupSetService", "UserService", "UserDataStoreService", "SqlService", "AnalyticsService", "commonvariable"];
 
 	constructor(private $q: ng.IQService, private $http: ng.IHttpService, private $parse: ng.IParseService,
 		private Organisationunit, private ValidationService: ValidationService, private OrganisationUnitGroupSet, private OrgunitGroupSetService: OrgunitGroupSetService,
-		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private SqlService: SqlService, private AnalyticsService: AnalyticsService
+		private UserService: UserService, private UserDataStoreService: UserDataStoreService, private SqlService: SqlService, private AnalyticsService: AnalyticsService,
+		private commonvariable: CommonVariable
 	) {
 		// Initialize table
 		this.loadUserSettings()
@@ -34,7 +35,7 @@ export class AvailableData {
 			.then(() => this.showValidationDatastore())
 			.then(() => this.loadTable());
 	}
-
+	isOnline = this.commonvariable.isOnline;
 	availableDataStatus = ProgressStatus.initialWithoutProgress;
 
 	availablePeriods = [
@@ -85,7 +86,7 @@ export class AvailableData {
 
 	showValidationDatastore() {
 
-		if (this.datastoredRead == false) {
+		if (this.datastoredRead == false && this.isOnline) {
 			return this.ValidationService.fillDatastore().then(()=>{
 			return this.ValidationService.readDatastore().then(
 				data => {
