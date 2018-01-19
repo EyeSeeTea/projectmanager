@@ -121,7 +121,7 @@ class ImportedDataController {
     }
 */
     submit_validate_dataset(dataset) {
-        this.showPreview=false;
+        
         this.ValidationService.validateDataset(dataset).then(
             () => {
                 var index = this.datasets.indexOf(dataset);
@@ -130,6 +130,7 @@ class ImportedDataController {
                     if (this.projects[i].id == dataset.project) { this.projects[i].datasets-- }
                 }
             });
+            this.showPreview=false;
     }
 
     showZero(value) {
@@ -247,6 +248,7 @@ class ImportedDataController {
         this.showHeader = true;
         this.isMedco = false;
         this.showMissions = false;
+        this.showPreview=false;
 
 
         this.UserService.currentUserHasRole("MedCo").then(medCo => {
