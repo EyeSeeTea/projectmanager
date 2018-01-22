@@ -260,7 +260,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
                     medcos => {
                         var message = {
                             subject: "Data Sync - " + projectName,
-                            text: "Data Sync: Date - " + $scope.sync_result_date + ". Result: " + $scope.importCount,
+                            text: "Data Sync: Date - " + new Date($scope.sync_result_date) + ". Result: " + JSON.stringify($scope.importCount),
                             users: medcos
                         }
                         return MessageService.sendRemoteMessage(message);
