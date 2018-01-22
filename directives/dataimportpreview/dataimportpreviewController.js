@@ -17,21 +17,20 @@
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-
-
-Dhis2Api.directive('d2Dataimportpreview', function(){
+var dataImportPreviewDirective = [function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/dataimportpreview/dataimportpreviewView.html',
-		css: 'directives/dataimportpreview/dataimportpreviewCss.css',
+		template: require('./dataimportpreviewView.html'),
+		css: require('./dataimportpreviewCss.css'),
+		controller: dataImportPreviewController,
 		scope: {
 			importFile: '=',
 			isCompress: '='
 		}
 	};
-});
+}];
 
-Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationunit", function($scope, Organisationunit){
+var dataImportPreviewController =  ['$scope', "Organisationunit", function($scope, Organisationunit){
 		
 	$scope.importPreviewStatus = {
 		visible: true,
@@ -172,12 +171,6 @@ Dhis2Api.controller('d2DataimportpreviewController', ['$scope', "Organisationuni
 		}
 	};
 	
-}]);
+}];
 
-Dhis2Api.filter('d2FormatPeriod', function() {
-	return function(original){
-		var year = original.substring(0,4);
-		var period = original.replace(year, '');
-		return year + " - " + period;
-	};
-});
+module.exports = dataImportPreviewDirective;

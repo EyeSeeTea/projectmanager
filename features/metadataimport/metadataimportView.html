@@ -1,0 +1,133 @@
+
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+<h2>{{ 'METADATA_IMPORT' | translate }}</h2>
+
+<div class="row">
+
+    
+    <div class="col-md-6 right-border">
+        <div class="margin-20">
+            <h3>{{ 'AUTOMATIC_SYNC' | translate }}</h3>
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{ 'TITLE_PROJECT' | translate }}</div>
+                        <div class="panel-body">
+                            <span ng-show="ctrl.localMetadataVersion">
+                                {{ctrl.localMetadataVersion}}
+                                <span ng-show="ctrl.syncStatus.active" class='glyphicon glyphicon-repeat animation-rotation'></span>
+                            </span>
+                            <span ng-hide="ctrl.localMetadataVersion">{{ 'NO_LOCAL_VERSION' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span ng-show="ctrl.versionDiffNumber == 0">{{ 'UP_TO_DATE' | translate }}</span>
+                    <span ng-show="ctrl.versionDiffNumber > 0">{{ctrl.versionDiffNumber}} {{ 'UPDATES_AVAILABLE' | translate }}</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{ 'REMOTE' | translate }}</div>
+                        <div class="panel-body">
+                            <span ng-show="ctrl.remoteMetadataVersion">{{ctrl.remoteMetadataVersion}}</span>
+                            <span ng-show="!ctrl.remoteMetadataVersion && !ctrl.metadataSyncError" class='glyphicon glyphicon-repeat animation-rotation'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form_group">
+                    <button class="btn btn-primary" ng-click='ctrl.metadataSync()'
+                            ng-class="{disabled: !ctrl.remoteMetadataVersion || !ctrl.localMetadataVersion || ctrl.versionDiffNumber == 0 || ctrl.syncStatus.active}">
+                        {{ 'SYNC_METADATA' | translate }}
+                    </button>
+                </div>
+            </div>
+            <br/>
+            <d2-progressbar-dynamic status="ctrl.syncStatus"></d2-progressbar-dynamic>
+            <div class="row col-md-8">
+                <div ng-if="ctrl.metadataSyncError" class="alert alert-danger" role="alert">
+                    <span>{{ ctrl.metadataSyncError | translate:ctrl.commonvariable }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+	<div class="col-md-6">
+        <div class="margin-20">
+            <h3>  {{ 'MANUAL_IMPORT' | translate }}</h3>
+            <div class="row" ng-show="ctrl.undefinedFile">
+                <div class="col-md-12">
+                    <d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
+                </div>
+            </div>
+            <div class="row">
+                <label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
+                <input type="file" class="form-control" ng-file-select="ctrl.onFileSelect($files)" name="file_search"  required=""/>
+            </div>
+            <br/>
+            <div class="form_group">
+                <button class="btn btn-primary" ng-click='ctrl.sendFiles()'>{{ 'IMPORT' | translate }}</button>
+            </div>
+            <div id="summary" ng-show="ctrl.summaryDisplayed">
+                <h3>{{ 'IMPORT_SUMMARY' | translate }}</h3>
+
+                <h4>>{{ 'IMPORT_COUNT' | translate }}</h4>
+                <div id="importCount"></div>
+
+                <!--
+                <h4>Type Summary</h4>
+                <table id="typeSummary">
+                    <thead>
+                    <tr>
+                        <td>Type</td>
+                        <td>Imported</td>
+                        <td>Updated</td>
+                        <td>Ignored</td>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                -->
+            </div>
+        </div>
+    </div>
+</div>
+  
+<br/>
+<div class="row">
+    <div class="col-md-6">
+        <d2-progressbar-dynamic status="ctrl.progressStatus"></d2-progressbar-dynamic>
+    </div>
+</div>
+
+<div id="summary" ng-show="ctrl.analyticsLog.length > 0">
+    <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
+
+    <table data-toggle="table" id="notificationTable" class="notificationTable" style="">
+        <tbody>
+        <tr ng-repeat="notification in ctrl.analyticsLog | orderBy:'-time'">
+            <td>{{notification.time}}</td>
+            <td>: {{notification.message}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

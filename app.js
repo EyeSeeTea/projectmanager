@@ -16,69 +16,99 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+require('./node_modules/angular/angular.min');
+require('./node_modules/angular-route/angular-route.min');
+require('./node_modules/angular-resource/angular-resource.min');
+require('./node_modules/angular-translate/dist/angular-translate.min');
+require('./node_modules/angular-translate-loader-static-files/angular-translate-loader-static-files.min');
+require('./node_modules/angular-sanitize/angular-sanitize.min');
+require('./node_modules/ng-file-upload/dist/angular-file-upload.min');
+require('./node_modules/ng-file-upload/dist/angular-file-upload-shim.min');
+require('./node_modules/angular-css/angular-css.min');
 
+require('./node_modules/bootstrap/dist/js/bootstrap.min');
+require('./node_modules/bootstrap/dist/css/bootstrap.min.css');
+require('./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls');
 
-var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
+require('./include/angular.treeview/angular.treeview');
+require('./include/angular.treeview/css/angular.treeview.css');
 
-appManagerMSF.config(function($routeProvider) {
+require('./core/dhis2Api');
+require('./directives/directives.module');
+require('./features/features.module');
+require('./app.css');
+
+var appManagerMSF = angular.module("appManagerMSF", ['ngRoute','Dhis2Api','Directives', 'Features', 'pascalprecht.translate','ui.bootstrap','d2Menu', 'angularFileUpload','angularTreeview','angularCSS']);
+
+appManagerMSF.config(['$routeProvider', function($routeProvider) {
  
 	$routeProvider.when('/dataapproval', {
-		templateUrl: "modules/dataapproval/dataapprovalView.html",
+		templateUrl: "features/dataapproval/dataapprovalView.html",
 		controller: "dataapprovalController"
 	});
 	$routeProvider.when('/metadataimport', {
-		templateUrl: "modules/metadataimport/metadataimportView.html",
-		controller: "metadataimportController",
-		css: "modules/metadataimport/metadataimportCss.css"
+		template: require('./features/metadataimport/metadataimportView.html'),
+		controller: 'metadataimportController as ctrl',
+		css: require('./features/metadataimport/metadataimportCss.css')
 	});
 	$routeProvider.when('/metadataexport', {
-		templateUrl: "modules/metadataexport/metadataexportView.html",
-		controller: "metadataexportController"
+		template: require('./features/metadataexport/metadataexportView.html'),
+		controller: 'metadataexportController'
 	});
 	$routeProvider.when('/analytics', {
-		templateUrl: "modules/analytics/analyticsView.html",
-		controller: "analyticsController"
+		template: require('./features/analytics/analyticsView.html'),
+		controller: 'analyticsController as ctrl'
 	});
 	$routeProvider.when('/dataimport', {
-		templateUrl: "modules/dataimport/dataimportView.html",
-		controller: "dataimportController"
+		template: require('./features/dataimport/dataimportView.html'),
+		controller: 'dataimportController'
+	});
+	$routeProvider.when('/validation', {
+		template: require('./features/validation/importeddataView.html'),
+		controller: 'importeddataController as ctrl',
+		css: require('./features/validation/importeddataController.css')
 	});
 	$routeProvider.when('/dataexport', {
-		templateUrl: "modules/dataexport/dataexportView.html",
-		controller: "dataexportController",
-		css: "modules/dataexport/dataexportCss.css"
+		template: require('./features/dataexport/dataexportView.html'),
+		controller: 'dataexportController',
+		css: require('./features/dataexport/dataexportCss.css')
 	});
 	$routeProvider.when('/trackerdataimport', {
-		templateUrl: "modules/trackerdataimport/trackerDataImportView.html",
-		controller: "trackerDataImportController",
-		css: "modules/trackerdataimport/trackerDataImportCss.css"
+		template: require('./features/trackerdataimport/trackerDataImportView.html'),
+		controller: 'trackerDataImportController as ctrl',
+		css: require('./features/trackerdataimport/trackerDataImportCss.css')
 	});
 	$routeProvider.when('/trackerdataexport', {
-		templateUrl: "modules/trackerdataexport/trackerDataExportView.html",
-		controller: "trackerDataExportController"
+		template: require('./features/trackerdataexport/trackerDataExportView.html'),
+		controller: 'trackerDataExportController as ctrl'
 	});
 	$routeProvider.when('/resetpasswd', {
-		templateUrl: "modules/resetpasswd/resetpasswdView.html",
-		controller: "resetpasswdController",
-		css: "modules/resetpasswd/resetpasswdCss.css"
+		template: require('./features/resetpasswd/resetpasswdView.html'),
+		controller: 'resetpasswdController as ctrl',
+		css: require('./features/resetpasswd/resetpasswdCss.css')
 	});
 	$routeProvider.when('/availabledata', {
-		templateUrl: "modules/availabledata/availabledataView.html",
-		controller: "availabledataController",
-		css: "modules/availabledata/availabledataCss.css"
+		template: require('./features/availabledata/availabledataView.html'),
+		controller: 'availabledataController as ctrl',
+		css: require('./features/availabledata/availabledataCss.css')
 	});
 	$routeProvider.when('/hmisadoption', {
-		templateUrl: "modules/hmisadoption/hmisadoptionView.html",
+		templateUrl: "features/hmisadoption/hmisadoptionView.html",
 		controller: "hmisadoptionController",
-		css: "modules/hmisadoption/hmisadoptionCss.css"
+		css: "features/hmisadoption/hmisadoptionCss.css"
+	});
+	$routeProvider.when('/metadatamonitor', {
+		template: require("./features/metadatamonitor/metadatamonitorView.html"),
+		controller: "metadatamonitorController as ctrl",
+		css: require("./features/metadatamonitor/metadatamonitorCss.css")
 	});
 	$routeProvider.otherwise({
 		redirectTo: '/'
 	});
 
-});
+}]);
 
-appManagerMSF.config(function ($translateProvider, urlApi) {
+appManagerMSF.config(['$translateProvider', 'urlApi', function ($translateProvider, urlApi) {
   
 	  $translateProvider.useStaticFilesLoader({
           prefix: 'languages/',
@@ -107,8 +137,8 @@ appManagerMSF.config(function ($translateProvider, urlApi) {
       }).fail(function () {
     	  $translateProvider.determinePreferredLanguage();
 	  });
-});
+}]);
 
-appManagerMSF.config(function (uibDatepickerConfig) {
+appManagerMSF.config(['uibDatepickerConfig', function (uibDatepickerConfig) {
 	uibDatepickerConfig.startingDay = 1;
-});
+}]);

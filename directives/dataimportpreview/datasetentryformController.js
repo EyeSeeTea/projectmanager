@@ -16,13 +16,13 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+require('../../services/data/DataImportService');
 
-
-
-Dhis2Api.directive('d2DatasetEntryForm', function(){
+var datasetEntryFormDirective = [function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/dataimportpreview/datasetentryformView.html',
+		template: require('./datasetentryformView.html'),
+		controller: datasetEntryFormController,
 		scope: {
 			periodId: '=',
 			datavalues: '=',
@@ -30,9 +30,9 @@ Dhis2Api.directive('d2DatasetEntryForm', function(){
 			orgunit: '='
 		}
 	};
-});
+}];
 
-Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm', 'commonvariable', 'DataImportService', 
+var datasetEntryFormController = ['$scope', 'DataSetEntryForm', 'commonvariable', 'DataImportService',
 	function($scope, DataSetEntryForm, commonvariable, DataImportService){
 	
 	function init(){
@@ -113,7 +113,7 @@ Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm'
 	$scope.hideHistory = function(){
 		$scope.datahistory = null;
 		$("#dataValueHistory").modal("hide");
-	}
+	};
 	
 	$scope.fillDatavalues = function(){
 		angular.forEach($scope.datavalues, function(datavalue){
@@ -134,7 +134,9 @@ Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm'
 	
 	$scope.clickDataset = function(datasetId){
 		$scope.selectedDataset = datasetId;
-	}
+	};
 	
 	init();
-}]);
+}];
+
+module.exports = datasetEntryFormDirective;

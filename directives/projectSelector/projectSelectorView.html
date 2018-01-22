@@ -5,8 +5,8 @@
                 <div class="col-md-5">
                     <label for="missions">{{ 'TITLE_MISSION' | translate }}</label>
                     <select id="missions" class="filter-select form-control"
-                            ng-model="selection.mission" ng-change="modifyMission()"
-                            ng-options="mission as mission.name for mission in missions
+                            ng-model="$ctrl.selection.mission" ng-change="$ctrl.modifyMission()"
+                            ng-options="mission as mission.name for mission in $ctrl.missions
 									| orderBy:'name' track by mission.id">
                         <option value="">-</option>
                     </select>
@@ -14,8 +14,8 @@
                 <div class="col-md-5">
                     <label for="projects">{{ 'TITLE_PROJECT' | translate }}</label>
                     <select id="projects" class="filter-select form-control"
-                            ng-model="selection.project" ng-change="modifyProject()"
-                            ng-options="project as project.name for project in projects
+                            ng-model="$ctrl.selection.project" ng-change="$ctrl.modifyProject()"
+                            ng-options="project as project.name for project in $ctrl.projects
 									| orderBy:'name' track by project.id">
                         <option value="">-</option>
                     </select>

@@ -12,12 +12,17 @@
 	"VALIDATION_START_DATE": "Please, fill in a start date",
 	"VALIDATION_END_DATE": "Please, fill in an end date",
 	"VALIDATION_VALID_DATE": "Please, fill in a valid date",
+	"VALIDATION_MAX_DATE": "Date is greater than maximum date",
 	"TITLE_CAPITAL": "Capital",
 	"TITLE_MISSION": "Mission",
 	"TITLE_PROJECT": "Project",
 	"TITLE_COMMON": "Common",
 	"ALL_SERVICES": "All services",
-	"PROGRAM": "Program",
+    "PROGRAM": "Program",
+    "IMPORTED": "Imported",
+    "UPDATED": "Updated",
+    "DELETED": "Deleted",
+    "IGNORED": "Ignored",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Validate Data",
@@ -55,8 +60,13 @@
 	"NO_LOCAL_VERSION": "No local version",
 	"NO_REMOTE_VERSION": "No remote version",
 	"SYNC_METADATA": "Sync metadata",
+	"AUTOMATIC_SYNC": "Automatic Sync",
+	"MANUAL_IMPORT": "Manual Import",
+	"UP_TO_DATE": "Up-to-date",
+	"UPDATES_AVAILABLE": "Updates available",
+	"REMOTE": "Remote",
 	
-	"_______________ Data ":" Import and Export_____________",
+	"_______________ Data":" Import and Export_____________",
 	"DATA_IMPORT": "Import data",
 	"IMPORT": "Import",
 	"DATA_EXPORT": "Export data",
@@ -71,7 +81,7 @@
 	"ELEMENT":"Element",
 	"DESCRIPTION":"Description",
 	"CONFIRM_IMPORT_TITLE": "Are you sure you want to import this file?",
-	"CONFIRM_IMPORT_BODY": "Important: import the file implies the validation of the data.",
+	"CONFIRM_IMPORT_BODY": "Important: remember to validate the data in Validation module.",
 	"PREVIEW":"Preview",
 	"HEALTH_FACILITY":"Health Facility",
 	"SERVICE":"Service",
@@ -81,6 +91,11 @@
 	"EMPTY_IMPORT_FILE": "The file contains no values",
   	"DETAILS": "Details",
 	"DEMOGRAPHIC_DATA": "Demographic data",
+	"MANUAL": "Manual",
+	"SYNC": "Online Sync",
+	"DIFFERENT_VERSIONS": "Different HMIS versions. Please ask the project to update",
+	"NO_SETTINGS_FILE": "The file has not the right format",
+	
 
 	"____________Tracker Data Export":"__________",
 	"TRACKER_DATA_EXPORT": "Export individual data",
@@ -92,6 +107,7 @@
 	"LAST_EXPORT": "Last export",
 	"PREVIEW_FILE_SUMMARY": "Preview summary",
 	"EVENT_COUNT": "Number of visits",
+	"NO_ENCRYPTATION_PASSWORD": "Tracker export is not properly configured. Please contact hmis@barcelona.msf.org",
 
 	"____________Tracker Data Import":"__________",
 	"TRACKER_DATA_IMPORT": "Import individual data",
@@ -109,16 +125,24 @@
 	"RESET_BUTTON":"Reset Passwords",
 	"MESSAGE_RESET":"Users with password updated: ",
 	"NEW_PASSWORD": "New password",
-	"NEW_PASSWORD_HINT": "Password must contain at least one capital letter and one digit and must be between 8 and 35 characters long.",
+	"NEW_PASSWORD_HINT": "Password must contain at least one capital letter, one digit, one special character and must be between 8 and 35 characters long.",
 	
 	"_______________ Available":" data_____________",
 	"AVAILABLE_DATA":"Available Data",
-	"NUMBER_OF_MONTHS": "Number of months",
+	"LAST_MONTHS": "Last months",
+	"LAST_QUARTERS": "Last quarters",
+	"LAST_WEEKS": "Last weeks",
 	"ORGANISATIONUNIT_LABEL": "Organisation Unit",
+	"5-Weeks": "5-Week Month",
+	"4-Weeks": "4-Week Month",
 
   	"_______________ HMIS":"Adoption_______________",
   	"HMIS_ADOPTION": "HMIS Adoption",
 	"SHOW_LAST_MONTHS": "Show last months",
+
+	"_____________METADATA":"MONITOR___________________",
+	"METADATA_MONITOR": "Metadata Monitor",
+	"METATADA_VERSION": "Metadata Version",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",
@@ -162,9 +186,34 @@
 	"NO_LOCAL_METADATA_VERSION": "Local server has not metadata version",
 	"NO_REMOTE_METADATA_VERSION": "Remote server has not metadata version",
 
-	"________________Service ": " Remote API___________",
+	"________________Service": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Logger user credentials are not correct.",
-	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{url}}' in the whitelist.",
+	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{urlbase}}' in the whitelist.",
 	"NO_LOGGER_USER": "Logger user is not available.",
-	"INVALID_LOGGER_USER": "Logger user credentials are invalid."
+	"INVALID_LOGGER_USER": "Logger user credentials are invalid.",
+
+
+	"________________DataSync ": " Data Sync___________",
+	"LAST_SYNC_DATE": "Last Sync Date",
+	"RESULT": "Result",
+	"VALIDATION_REQUEST": "Validation Request",
+    "LAST_VALIDATION_REQUEST_DATE": "Last Validation Request Date",
+    "DIFFERENT_VERSIONS_UPDATE_REQUEST": "Server version different from local Version. Please update.",
+    "SENDING_DATA": "Sending data",
+    "UPDATING_CONFIGURATION": "Updating configuration",
+    "SYNC_SUCCESS_NO_DATA": "Import process completed successfully (No data updated)",
+    "SYNC_SUCCESS": "Import process completed successfully",
+
+		"________________Validation ": " Validation ___________",
+	"VALIDATION": "Validation",
+	"CELL": "Cell",
+	"ALL": "All",
+	"SHOW_EMPTY": "Show Empty",
+	"MISSION": "Mission",
+	"PROJECT": "Project",
+	"DATASETS": "Datasets",
+	"SITE": "Site",
+	"VALIDATE": "Validate"
+
+
 }
