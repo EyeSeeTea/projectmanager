@@ -81,7 +81,7 @@
 	"ELEMENT":"Élément",
 	"DESCRIPTION":"Description",
 	"CONFIRM_IMPORT_TITLE": "Êtes vous sûr de vouloir importer ce fichier?",
-	"CONFIRM_IMPORT_BODY": "Important: L'importer implique la validation des donnés.",
+	"CONFIRM_IMPORT_BODY": "Important: n'oubliez pas de valider les données dans le module Validation.",
 	"PREVIEW":"Previsualiser",
 	"HEALTH_FACILITY":"Établissement de santé",
 	"SERVICE":"Service",
