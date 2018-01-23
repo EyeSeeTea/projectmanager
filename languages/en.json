@@ -94,7 +94,7 @@
 	"MANUAL": "Manual",
 	"SYNC": "Online Sync",
 	"DIFFERENT_VERSIONS": "Different HMIS versions. Please ask the project to update",
-	"NO_SETTINGS_FILE": "The file has not the right format",
+	"NO_SETTINGS_FILE": "The file has not the right format. Probably it was exported with a previous version. Please ask the project to update",
 	
 
 	"____________Tracker Data Export":"__________",

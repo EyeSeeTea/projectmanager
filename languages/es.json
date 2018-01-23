@@ -96,7 +96,7 @@
 	"MANUAL": "Manual",
 	"SYNC": "Sincronización online",
 	"DIFFERENT_VERSIONS": "Versiones diferentes. Por favor solicita al proyecto que actualice",
-	"NO_SETTINGS_FILE": "El fichero no tiene el formato correcto",
+	"NO_SETTINGS_FILE": "El fichero no tiene el formato correcto. Probablemente fue exportado con una versión antigua. Por favor solicita al proyecto que actualice",
 
 
 	"____________Tracker Data Export":"__________",
