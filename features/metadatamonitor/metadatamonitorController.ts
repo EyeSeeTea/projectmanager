@@ -56,8 +56,12 @@ export class MetadataMonitor {
     private getSyncRecords() {
         return this.ProjectStatusDataStoreService.getKeys()
             .then( keys => {
-                const promises = keys.map( key => this.ProjectStatusDataStoreService.getKeyValue(key) );
-                return this.$q.all(promises);
+                if (keys) {
+                    const promises = keys.map( key => this.ProjectStatusDataStoreService.getKeyValue(key) );
+                    return this.$q.all(promises);    
+                } else {
+                    return this.$q.resolve([]);
+                }
             })
             .then( records => {
                 var syncRecordMap = {};
@@ -69,7 +73,11 @@ export class MetadataMonitor {
     }
 
     private loadLocalMetadataVersion(): ng.IPromise<string> {
-        return this.MetadataSyncService.getLocalMetadataVersion().then( version => this.localMetadataVersion = version );
+        return this.MetadataSyncService.getLocalMetadataVersion()
+            .then( 
+                version => this.localMetadataVersion = version,
+                error => this.localMetadataVersion = undefined 
+            );
     }
 
     private getMissionSyncRecords(missions: OrgunitExtended[], syncRecordMap): MissionSyncRecord[] {
