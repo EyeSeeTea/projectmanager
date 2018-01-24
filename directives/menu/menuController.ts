@@ -56,7 +56,7 @@ class MenuController {
             this.isAdministrator = me.userGroups.some(group => group.name == 'Administrators');
 
             this.showDataImport = this.isAdministrator || isMedco || isMFP;
-            this.showValidation = this.isAdministrator || isMedco || isTESACO ;
+            this.showValidation = this.isOnline && (this.isAdministrator || isMedco || isTESACO);
             
             this.showTrackerExport = this.isAdministrator || (isMFP && hasTrackerRoles);
             this.showTrackerImport = this.isAdministrator || isMedco;
