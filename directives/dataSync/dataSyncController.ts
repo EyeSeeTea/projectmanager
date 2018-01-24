@@ -166,7 +166,8 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 
 							if (remoteVersion == localVersion) {
 								console.log("Server version equal to local Version.")
-								this.syncStatus = ProgressStatus.initialWithProgress;
+                                this.syncStatus = ProgressStatus.initialWithProgress;
+                                this.syncStatus.value = 3;
 								MetadataSyncService.executeMetadataSyncDiff()
 									.then(
 									(success) => {

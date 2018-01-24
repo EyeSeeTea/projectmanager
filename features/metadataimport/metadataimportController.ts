@@ -77,7 +77,8 @@ export class MetadataImport {
 	}
 
 	metadataSync() {
-		this.syncStatus = ProgressStatus.initialWithProgress;
+        this.syncStatus = ProgressStatus.initialWithProgress;
+        this.syncStatus.value = 3;
 		
 		this.MetadataSyncService.executeMetadataSyncDiff()
 			.then(
