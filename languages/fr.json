@@ -143,6 +143,8 @@
 	"_____________METADATA":"MONITOR___________________",
 	"METADATA_MONITOR": "Moniteur de métadonnées",
 	"METATADA_VERSION": "Version de métadonnées",
+    "OPENING_DATE": "Date d'ouverture",
+    "CLOSED_DATE": "Date de clôture",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Ensemble de données",

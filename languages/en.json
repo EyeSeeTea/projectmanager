@@ -142,7 +142,9 @@
 
 	"_____________METADATA":"MONITOR___________________",
 	"METADATA_MONITOR": "Metadata Monitor",
-	"METATADA_VERSION": "Metadata Version",
+    "METATADA_VERSION": "Metadata Version",
+    "OPENING_DATE": "Opening date",
+    "CLOSED_DATE": "Closing date",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",

@@ -31,6 +31,20 @@ export class OrgunitExtended extends Orgunit {
     }
 }
 
+export class OrgunitStatus extends OrgunitExtended {
+    constructor(
+        public id: string,
+        public name: string,
+        public level: number,
+        public openingDate: Date,
+        public closedDate: Date,
+        public attributeValues: AttributeValue[],
+        public children: OrgunitStatus[]
+    ){
+        super(id, name, level, children);
+    }
+}
+
 export class OrgunitGroupSet {
     constructor(
         public id: string,
@@ -165,16 +179,16 @@ export class MessageConversation {
 
 export class AttributeValue {
     constructor(
-        value: string,
-        attribute: {id: string}
+        public value: string,
+        public attribute: {id: string}
     ){}
 }
 
 export class ServiceWithPrograms {
     constructor(
-        name: string,
-        code: string,
-        programs: string            //Code
+        public name: string,
+        public code: string,
+        public programs: string            //Code
     ){}
 }
 
