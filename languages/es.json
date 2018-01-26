@@ -145,6 +145,8 @@
 	"_____________METADATA":"MONITOR___________________",
 	"METADATA_MONITOR": "Monitor de Metadatos",
 	"METATADA_VERSION": "Versión de Metadatos",
+    "OPENING_DATE": "Fecha apertura",
+    "CLOSED_DATE": "Fecha cierre",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET":"Formulario",

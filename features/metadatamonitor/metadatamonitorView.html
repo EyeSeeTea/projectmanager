@@ -23,16 +23,23 @@
 		<tr>
 			<th class="orgunit">{{ 'ORGANISATIONUNIT_LABEL' | translate}}</th>
 			<th>{{ 'METATADA_VERSION' | translate }}: {{ctrl.localMetadataVersion}}</th>
+            <th>{{ 'OPENING_DATE' | translate }}</th>
+            <th>{{ 'CLOSED_DATE' | translate }}</th>
 		</tr>
 	</thead>
-	<tbody ng-repeat="mission in ctrl.missionSyncRecords | orderBy:'name'">
+	<tbody ng-repeat="mission in ctrl.missionStatusRecords | orderBy:'name'">
 		<tr class="table-row">
 			<td class="mission">{{ mission.name }}</td>
-			<td></td>
+            <td></td>
+            <td></td>
+            <td></td>
 		</tr>
 		<tr class="table-row" ng-repeat="project in mission.projects | orderBy:'name'">
-			<td class="project">{{ project.name }}</td>
-			<td>{{ project.record.version }}
+            <td class="project">{{ project.name }}</td>
+            <td ng-if="!project.isOnline">{{ project.metadata.version }}</td>
+            <td ng-if="project.isOnline" class="online-project">{{ 'ONLINE' | translate }}</td>
+            <td>{{ project.openingDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ project.closedDate | date:'yyyy-MM-dd' }}</td>
 		</tr>
 	</tbody>
 </table>
