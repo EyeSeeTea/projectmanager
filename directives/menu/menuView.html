@@ -35,5 +35,5 @@
     <li data-toggle="pill"><a href="#/availabledata">{{ 'AVAILABLE_DATA' | translate }}</a></li>
     <li data-toggle="pill" ng-if="!$ctrl.isOnline"><a href="#/resetpasswd">{{ 'RESET_PASSWD' | translate }}</a></li>
     <!--<li data-toggle="pill" ng-if="$ctrl.isAdministrator"><a href="#/hmisadoption">{{'HMIS_ADOPTION' | translate}}</a></li>-->
-    <li data-toggle="pill" ng-if="$ctrl.isAdministrator"><a href="#/metadatamonitor">{{'METADATA_MONITOR' | translate}}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showMetadataMonitor"><a href="#/metadatamonitor">{{'METADATA_MONITOR' | translate}}</a></li>
 </ul>
