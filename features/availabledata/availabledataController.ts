@@ -237,51 +237,39 @@ export class AvailableData {
 	private regenerateScopePeriodArray(analyticsResponse) {
 		this.periods = analyticsResponse.metaData.dimensions.pe.map(period => {
 
-
 			//var sql = "select  monthly, count(*) from ( select  distinct(monthly, weekly) as mo, weekly, monthly  from _dateperiodstructure where monthly='" + period + "' ) as M  group by monthly;"
 			var weeks = null;
 			//this.sqlService.executeSqlView(sql).then(data => {
 
-weeks=this.calculteWeeks(period);
+            weeks=this.calculteWeeks(period);
 				//weeks = data.rows[0][1];
 				
-
-				return {
-					id: period,
-					weeks: weeks,
-					name: analyticsResponse.metaData.items[period].name // + " " + weeks
-				}
-			//});
-		}
-		);
-
-	}
-calculteWeeks(period) {
-
-var year=period.substr(0, 4);
-var month=period.substr(4,2);
-var weeks=this.getThursdaysInMonth(month, year);
-return weeks;
-
-}
-
-
-getThursdaysInMonth(month, year) {
-  var thursdays = 0;
-	var numOfDays = new Date(year, month, 0).getDate();
-
-for(var i=0;i<numOfDays;i++)
-{
+        	return {
+				id: period,
+                weeks: weeks,					
+                name: analyticsResponse.metaData.items[period].name // + " " + weeks
+			}
+		});
+    }
     
-	if (new Date(year,month-1,i+1).getDay()==4) { thursdays+=1;} //4 = thursday        
-}
+    calculteWeeks(period) {
+        var year = period.substr(0, 4);
+        var month = period.substr(4,2);
+        var weeks = this.getThursdaysInMonth(month, year);
+        return weeks;
+    }
 
-     
-	
-   
-     
-     return thursdays;
-}
+
+    getThursdaysInMonth(month, year) {
+        var thursdays = 0;
+	    var numOfDays = new Date(year, month, 0).getDate();
+
+        for (var i=0; i<numOfDays; i++) {
+            if (new Date(year,month-1,i+1).getDay()==4) { thursdays+=1;} //4 = thursday
+        }
+        return thursdays;
+    }
+    
 	isClicked(orgunitIds: string[]): boolean {
 		return orgunitIds.reduce((result, orgunitId) => {
 			return result && this.orgunitsInfo[orgunitId].clicked === true
