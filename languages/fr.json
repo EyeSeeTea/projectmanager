@@ -145,6 +145,7 @@
 	"METATADA_VERSION": "Version de métadonnées",
     "OPENING_DATE": "Date d'ouverture",
     "CLOSED_DATE": "Date de clôture",
+    "SHOW_CLOSED": "Montrer fermés",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Ensemble de données",

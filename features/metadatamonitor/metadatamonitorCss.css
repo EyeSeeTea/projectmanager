@@ -14,3 +14,11 @@
 .online-project {
     background-color: #d8e7f1;
 }
+
+.closed {
+    background-color: #f1c2c2;
+}
+
+.show-closed-label {
+    padding-top: 35px;
+}

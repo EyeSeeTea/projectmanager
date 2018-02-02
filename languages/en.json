@@ -145,6 +145,7 @@
     "METATADA_VERSION": "Metadata Version",
     "OPENING_DATE": "Opening date",
     "CLOSED_DATE": "Closing date",
+    "SHOW_CLOSED": "Show closed",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET": "Data Set",
