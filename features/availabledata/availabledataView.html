@@ -24,15 +24,17 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<div class="row form-inline">
-					<div class="col-md-5" ng-repeat="filter in ctrl.availableFilters">
-						<label class="medium-size" for="{{filter.id}}">{{filter.name}}</label>
-						<select id="{{filter.id}}" class="filter-select form-control"
-								ng-model="filter.selected" ng-change="ctrl.modifyFilter(filter)"
-								ng-options="option as option.name for option in filter.organisationUnitGroups
-									| orderBy:'name' track by option.id">
-							<option value="">-</option>
-						</select>
-					</div>
+                    <div class="col-md-5">
+                        <div ng-repeat="filter in ctrl.availableFilters">
+                            <label class="medium-size" for="{{filter.id}}">{{filter.name}}</label>
+                            <select id="{{filter.id}}" class="filter-select form-control"
+                                    ng-model="filter.selected" ng-change="ctrl.modifyFilter(filter)"
+                                    ng-options="option as option.name for option in filter.organisationUnitGroups
+                                        | orderBy:'name' track by option.id">
+                                <option value="">-</option>
+                            </select>
+                        </div>
+                    </div>
 					<div class="col-md-7">
 						<div class="container-fluid">
 							<div class="row container-fluid">
