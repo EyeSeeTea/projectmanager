@@ -147,6 +147,7 @@
 	"METATADA_VERSION": "Versión de Metadatos",
     "OPENING_DATE": "Fecha apertura",
     "CLOSED_DATE": "Fecha cierre",
+    "SHOW_CLOSED": "Mostrar cerrados",
 	
 	"_______________ Directive ":" DataSet_____________",
 	"DATASET":"Formulario",
