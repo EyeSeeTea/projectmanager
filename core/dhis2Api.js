@@ -358,7 +358,12 @@ Dhis2Api.factory("TrackedEntityInstances",['$resource', 'commonvariable', functi
 }]);
 
 Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resource, commonvariable) {
-	return $resource( commonvariable.url + "enrollments/:uid" );
+	return $resource( commonvariable.url + "enrollments/:uid", {}, {
+		get: {
+			method: 'GET',
+			params: {skipPaging: true}
+		}
+	});
 }]);
 
 Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource, commonvariable) {
