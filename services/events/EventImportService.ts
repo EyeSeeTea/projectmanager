@@ -94,7 +94,7 @@ export class EventImportService {
         const deletedEvents = content.events.filter( event => event.deleted);
         const events = new Object();
         events[this.EventHelper.EVENTS] = deletedEvents;
-        const params = { strategy: 'UPDATE'}
+        const params = { strategy: 'UPDATE' }
         return this.zipObject(this.EventHelper.EVENTS, events)
             .then( (data) => this.uploadFile(this.EventHelper.EVENTS, data, params) );
     }
@@ -103,7 +103,7 @@ export class EventImportService {
         const activeEvents = content.events.filter( event => !event.deleted);
         const events = new Object();
         events[this.EventHelper.EVENTS] = activeEvents;
-        const params = { strategy: 'CREATE_AND_UPDATE'}
+        const params = { strategy: 'CREATE_AND_UPDATE' }
         return this.zipObject(this.EventHelper.EVENTS, events)
             .then( (data) => this.uploadFile(this.EventHelper.EVENTS, data, params) );
     }
@@ -111,7 +111,7 @@ export class EventImportService {
     private getAndUploadEnrollments (content: EventDataWrapper) {
         const enrollments = new Object();
         enrollments[this.EventHelper.ENROLLMENTS] = content[this.EventHelper.ENROLLMENTS];
-        const params = { strategy: 'CREATE_AND_UPDATE'}
+        const params = { strategy: 'CREATE_AND_UPDATE' }
         return this.zipObject(this.EventHelper.ENROLLMENTS, enrollments)
             .then( (data) => this.uploadFile(this.EventHelper.ENROLLMENTS, data, params) );
     }
