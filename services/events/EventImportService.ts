@@ -36,10 +36,11 @@ export class EventImportService {
         var deferred = this.$q.defer();
         this.readEventZipFile(file).then( 
             (eventFile: EventDataWrapper) => {
-                return this.getAndUploadEventFileElement(eventFile, this.EventHelper.TEIS)
+                return this.getAndUploadTeis(eventFile)
                     .then( () => this.getAndUploadEnrollmentsAsActive(eventFile) )
-                    .then( () => this.getAndUploadEventFileElement(eventFile, this.EventHelper.EVENTS) )
-                    .then( () => this.getAndUploadEventFileElement(eventFile, this.EventHelper.ENROLLMENTS) )
+                    .then( () => this.getAndUploadDeletedEvents(eventFile) )
+                    .then( () => this.getAndUploadActiveEvents(eventFile) )
+                    .then( () => this.getAndUploadEnrollments(eventFile) )
                     .then(
                         () => deferred.resolve("Done"),
                         (error) => deferred.reject(error)
@@ -67,9 +68,12 @@ export class EventImportService {
         });
     }
 
-    private getAndUploadEventFileElement (content: EventDataWrapper, element: string) {
-        return this.zipFileElement(content, element)
-            .then( (data) => this.uploadFile(element, data) );
+    private getAndUploadTeis (content: EventDataWrapper) {
+        const teis = new Object();
+        teis[this.EventHelper.TEIS] = content[this.EventHelper.TEIS];
+        const params = { strategy: 'CREATE_AND_UPDATE'}
+        return this.zipObject(this.EventHelper.TEIS, teis)
+            .then( (data) => this.uploadFile(this.EventHelper.TEIS, data, params) );
     }
 
     private getAndUploadEnrollmentsAsActive (content: EventDataWrapper) {
@@ -78,28 +82,52 @@ export class EventImportService {
             copy.status = "ACTIVE";
             return copy;
         });
-        return this.getAndUploadEventFileElement( 
-            new EventDataWrapper(null, activeEnrollments, null), 
-            this.EventHelper.ENROLLMENTS);
+
+        const enrollments = new Object();
+        enrollments[this.EventHelper.ENROLLMENTS] = activeEnrollments;
+        const params = { strategy: 'CREATE_AND_UPDATE' }
+        return this.zipObject(this.EventHelper.ENROLLMENTS, enrollments)
+            .then( (data) => this.uploadFile(this.EventHelper.ENROLLMENTS, data, params) );
     }
 
-    private zipFileElement (content, element: string) {
-        var object = new Object();
-        object[element] = content[element];
+    private getAndUploadDeletedEvents (content: EventDataWrapper) {
+        const deletedEvents = content.events.filter( event => event.deleted);
+        const events = new Object();
+        events[this.EventHelper.EVENTS] = deletedEvents;
+        const params = { strategy: 'UPDATE'}
+        return this.zipObject(this.EventHelper.EVENTS, events)
+            .then( (data) => this.uploadFile(this.EventHelper.EVENTS, data, params) );
+    }
 
+    private getAndUploadActiveEvents (content: EventDataWrapper) {
+        const activeEvents = content.events.filter( event => !event.deleted);
+        const events = new Object();
+        events[this.EventHelper.EVENTS] = activeEvents;
+        const params = { strategy: 'CREATE_AND_UPDATE'}
+        return this.zipObject(this.EventHelper.EVENTS, events)
+            .then( (data) => this.uploadFile(this.EventHelper.EVENTS, data, params) );
+    }
+
+    private getAndUploadEnrollments (content: EventDataWrapper) {
+        const enrollments = new Object();
+        enrollments[this.EventHelper.ENROLLMENTS] = content[this.EventHelper.ENROLLMENTS];
+        const params = { strategy: 'CREATE_AND_UPDATE'}
+        return this.zipObject(this.EventHelper.ENROLLMENTS, enrollments)
+            .then( (data) => this.uploadFile(this.EventHelper.ENROLLMENTS, data, params) );
+    }
+
+    private zipObject (name: string, object) {
         return  (new JSZip())
-            .file(element, JSON.stringify(object))
+            .file(name, JSON.stringify(object))
             .generateAsync({type: "uint8array", compression: "DEFLATE"});
     }
 
-    private uploadFile (endpoint: string, file) {
+    private uploadFile (endpoint: string, file, params) {
         if (file != undefined) {
             return this.$http({
                 method: 'POST',
                 url: this.commonvariable.url + endpoint,
-                params: {
-                    strategy: 'CREATE_AND_UPDATE'
-                },
+                params: params,
                 data: new Uint8Array(file),
                 headers: {'Content-Type': 'application/json'},
                 transformRequest: {}
