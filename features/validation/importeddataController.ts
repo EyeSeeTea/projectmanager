@@ -19,6 +19,7 @@
 import * as angular from 'angular';
 import { CommonVariable, Orgunit, ProgressStatus } from '../../model/model';
 import { UserService, ValidationService } from '../../services/services.module';
+import { dataExport } from '../dataexport/dataexportController';
 
 export class ImportedDataComponent implements ng.IComponentOptions {
     public template: string;
@@ -35,7 +36,7 @@ export class ImportedDataComponent implements ng.IComponentOptions {
 
 export class ImportedDataController {
 
-    static $inject = ["$q", "commonvariable", "ValidationService", "DataSetEntryForm", "UserService", "DataExport"];
+    static $inject = ["$q", "commonvariable",  "ValidationService", "DataSetEntryForm", "UserService", "DataExport"];
 
     private datasets: any[] = [];
     private showProjectsTable: boolean = false;
@@ -47,6 +48,12 @@ export class ImportedDataController {
     private zeroShow;
     private isMedco: boolean;
     private showMissions: boolean;
+    private idSelectedProject= null;
+    private idSelectedDataset = null;
+    private idSelectedSiteId = null;
+    private selectedPeriod = null;
+    private selectedDataset = null;
+    private selectedSite = null;
 
     private orderByField = 'siteName';
     private orderByFieldProject = 'missionName';
@@ -76,6 +83,7 @@ export class ImportedDataController {
     private validationDataStatus = ProgressStatus.initialWithoutProgress;
 
     constructor(
+        
         private $q: ng.IQService,
         private commonvariable: CommonVariable,
         private ValidationService: ValidationService,
@@ -86,7 +94,7 @@ export class ImportedDataController {
     ) {
         this.fillDatastore().then(() => this.readDatastore());
     }
-
+   
     filterMission(filter) {
        
         this.missionFilter.missionID = this.filter.selected;
@@ -111,8 +119,18 @@ export class ImportedDataController {
         this.searchText.project = project.id;
         this.showDetails = true;
         this.showPreview=false;
-        
+        this.setSelected(project.id);
+        var datasets="validation#datasets";
+        var element_to_scroll_to = document.getElementById('datasets');
+        element_to_scroll_to.scrollIntoView();
+       
     }
+
+    
+    setSelected (idSelectedProject) {
+        this.idSelectedProject = idSelectedProject;
+        
+     };
 /*
     show_details_mission(mission) {
         this.missionFilter.missionID = mission.id;
@@ -160,8 +178,20 @@ export class ImportedDataController {
                 this.previewDataset(dataValues, dataset.lastPushDateSaved);
             })
         })
+        var element_to_scroll_to = document.getElementById('preview');
+        element_to_scroll_to.scrollIntoView();
+        this.setSelectedDataset(dataset);
+        
     }
 
+    setSelectedDataset (dataset) {
+        this.idSelectedDataset = dataset.dataSet;
+        this.idSelectedSiteId = dataset.siteId;
+        this.selectedPeriod = dataset.period;
+        this.selectedDataset=dataset.dataSetName;
+        this.selectedSite=dataset.siteName;
+
+     };
     private previewDataset(dataValues, lastPushDateSaved) {
         angular.forEach(dataValues, datavalue => {
             //console.log(datavalue);

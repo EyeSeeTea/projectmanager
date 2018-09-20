@@ -50,3 +50,10 @@
 .overdue { 
     background-color: red;
 }
+
+.selected { 
+    background-color: rgb(137, 228, 240);
+}
+.striped {
+    background-color: gray;
+}

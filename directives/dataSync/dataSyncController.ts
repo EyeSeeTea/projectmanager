@@ -156,7 +156,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 
 			RemoteApiService.executeRemoteQuery({
 				method: 'GET',
-				resource: '/system/info',
+				resource: 'system/info',
 
 			}).then(
 				remoteInfo => {

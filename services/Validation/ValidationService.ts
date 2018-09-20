@@ -133,7 +133,9 @@ export class ValidationService {
             return total3.then(
                 () => {
                     if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
-                        return this.readDatasetValues(dataSet.id, service.id, new Date(lastPushDateSaved)).then(
+                       
+                       //new Date((new Date(1530866294000).toString()).split("GMT")[0]+"GMT +0000")
+                        return this.readDatasetValues(dataSet.id, service.id, new Date(new Date(lastPushDateSaved).toLocaleString())).then(
                             dataValues => {
                                 if (dataValues != undefined) {
                                     return this.updateDatastoreValues(dataValues, mission, project.id, service, dataSet, lastDatePush, lastPushDateSaved);

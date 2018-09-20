@@ -59,8 +59,8 @@
 	"CHECKING_REMOTE_STATUS": "Vérification de l'état du serveur distant",
 	"NO_LOCAL_VERSION": "Pas de version locale",
 	"NO_REMOTE_VERSION": "Pas de version distante",
-	"SYNC_METADATA": "Synchroniser les métadonnées",
-	"AUTOMATIC_SYNC": "Synchronisation automatique",
+	"SYNC_METADATA": "Synchroniser Configuration",
+	"AUTOMATIC_SYNC": "Synchronisation automatique de doneés",
 	"MANUAL_IMPORT": "Importation manuelle",
 	"UP_TO_DATE": "À jour",
 	"UPDATES_AVAILABLE": "Mises à jour disponibles",
@@ -188,6 +188,7 @@
 	"AUTHENTICATION_FAILED": "Les informations d'identification du serveur distant ne sont pas correctes.",
 	"NO_LOCAL_METADATA_VERSION": "Le serveur local n'a pas la version de métadonnées",
 	"NO_REMOTE_METADATA_VERSION": "Le serveur distant n'a pas la version de métadonnées",
+	
 
 	"________________Service ": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Les informations d'identification de l'utilisateur ne sont pas correctes",

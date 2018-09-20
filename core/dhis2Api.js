@@ -41,6 +41,8 @@ dhis2.settings.baseUrl = auxBaseUrl;
 
 var isOnline = urlBase.indexOf("//hmisocba.msf.es") >= 0;
 
+var isOnline =true;
+
 // Get and save DHIS version
 var version = "";
 $.ajax({ url: urlApi + "system/info", dataType: "json", async: "false", method: "GET" }).done( function (info) {
