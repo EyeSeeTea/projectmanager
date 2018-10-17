@@ -20,7 +20,7 @@
 var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
 
 // Specify the target api version of DHIS2
-var apiVersion = 28;
+var apiVersion = 29;
 
 var urlBase = window.location.href.split('api/apps/')[0];
 var urlApi = urlBase + 'api/' + apiVersion + "/";
@@ -118,7 +118,7 @@ Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,
 }]);
 
 Dhis2Api.factory("DataMart",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url + "system/tasks/ANALYTICSTABLE_UPDATE",
+	return $resource( commonvariable.url + "system/tasks/ANALYTICS_TABLE",
    {lastId:'@lastId'},
   { get: { method: "GET"} });
 

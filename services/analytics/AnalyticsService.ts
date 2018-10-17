@@ -157,10 +157,11 @@ export class AnalyticsService {
         var inputParameters = {};
         var previousMessage = "";
         var checkStatus = this.$interval(() => {
-            var result = this.DataMart.query(inputParameters);
+            var result = this.DataMart.get(inputParameters);
             result.$promise.then(
                 data => {
-                    var dataElement = data[0];
+                   // var dataElement = data[0];
+                    var dataElement = data[Object.keys(data)[0]][0];
                     if (dataElement != undefined) {
                         inputParameters = { lastId: dataElement.uid };
                         if (dataElement.completed == true) {

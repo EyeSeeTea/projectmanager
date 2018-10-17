@@ -103,7 +103,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 
 			$scope.dataExportStatus.visible = true;
 			
-			let api_url = commonvariable.url + "/dataValueSets.json?";
+			let api_url = commonvariable.url + "dataValueSets.json?";
 		
 			const boundDates: BoundDates = getBoundDates();
 			const fileName: string = getFilename();
