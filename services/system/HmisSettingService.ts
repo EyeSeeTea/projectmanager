@@ -39,7 +39,7 @@ export class HmisSettingService {
         return this.SqlService.executeSqlQuery(this.HMIS_SETTINGS).then(result => {
             // We expect that the table has two columns: name (charvar[255]) and value (text)
             var settingsObject = {};
-            result.rows.forEach( row => settingsObject[row[0]] = row[1] );
+            result.listGrid.rows.forEach( row => settingsObject[row[0]] = row[1] );
             return settingsObject;
         })
     }
