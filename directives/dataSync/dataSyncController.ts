@@ -151,7 +151,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 		$scope.submit_sync = function () {
 			var sync_result = null;
 			$scope.resultVisible = true;
-			let api_url = commonvariable.url + "/synchronization/dataPush";
+			let api_url = commonvariable.url + "synchronization/dataPush";
 			var remoteVersion = "";
 
 			RemoteApiService.executeRemoteQuery({
