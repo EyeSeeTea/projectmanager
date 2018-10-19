@@ -150,10 +150,17 @@ export class AnalyticsService {
      */
     refreshAnalytics(params) {
         var deferred = this.$q.defer();
-
+        var analytics_id;
         //Analytics.post(params,'');
-        this.Analytics.post();
-
+        var resp = this.Analytics.post();
+        resp.$promise.then(
+            data =>{
+            analytics_id=data.response.id;
+            console.log(analytics_id);
+            }
+        );
+        
+       
         var inputParameters = {};
         var previousMessage = "";
         var checkStatus = this.$interval(() => {
@@ -161,12 +168,13 @@ export class AnalyticsService {
             result.$promise.then(
                 data => {
                    // var dataElement = data[0];
-                    var dataElement = data[Object.keys(data)[0]][0];
+                   // var dataElement = data[Object.keys(data)[0]][0];
+                    var dataElement= data[analytics_id][0];
                     if (dataElement != undefined) {
                         inputParameters = { lastId: dataElement.uid };
                         if (dataElement.completed == true) {
                             this.$interval.cancel(checkStatus);
-                            deferred.notify(dataElement.message);
+                            deferred.notify(dataElement);
                             deferred.resolve("Done update analytics");
                         }
                         if (previousMessage != dataElement.message) {

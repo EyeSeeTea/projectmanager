@@ -1,8 +1,9 @@
 {
-	"version":"1.6.1-dev",
+	"version":"1.6.2-dev",
 	"name":"HMIS Management",
 	"description":"General management of HMIS: data and metadata import/export, password reset,...",
 	"launch_path":"index.html",
+	"appType": "APP", 
 	"icons":{"16":null,
 	"48":"img/icons/Logo_48.png",
 	"128":null
