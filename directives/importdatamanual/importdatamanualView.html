@@ -25,7 +25,7 @@
 
 <div class="row">
 	<div class="col-md-6">
-		<label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
+		<label for="file_search"> {{ 'SELECT_FILE' | translate }}</label>
 		<input type="file" class="form-control" ng-file-select="onFileSelect($files)" name="file_search" required=""/>
 	</div>
 	 
@@ -33,6 +33,14 @@
       <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>
     </div>
 </div>
+<div class="row">
+		<div class="col-md-6">
+			<div class="form_group">
+				<button class="btn btn-primary"  ng-click='showImportDialog()'>{{ 'IMPORT' | translate }}</button>
+				<button class="btn btn-primary"  ng-click='previewFiles()'>{{ 'PREVIEW' | translate }}</button>
+			</div>
+		</div>
+	</div>
   
 <br/>
 <div class="row" ng-show="errorVisible">
@@ -42,67 +50,73 @@
 </div>
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-6" ng-show="importingData">
+			<h3>Importing Data</h3>
 		<d2-progressbar-dynamic status="dataImportStatus"></d2-progressbar-dynamic>
 	</div>
 </div>
+<div class="row">
+		<div class="col-md-6" ng-show="refreshingData">
+			<h3>Refreshing Data</h3>
+			<d2-progressbar-dynamic status="analyticsStatus"></d2-progressbar-dynamic>
+		</div>
+	</div>
 
+<div id="summary" ng-show="summaryDisplayed">
+		<h3>{{ 'IMPORT_SUMMARY' | translate }}</h3>
+		<h4>{{periods}}</h4>
+		
+		<h4>{{ 'IMPORT_COUNT' | translate }}</h4>
+		<div id="importCount"></div>
+	
+		<div ng-show="conflicts">
+			<h4>{{ 'CONFLICTS' | translate }}</h4>
+			<div>
+				<button class="btn btn-primary btn-xs" ng-class="{true: 'active'}[showConflicts]"
+						ng-click="showConflicts = !showConflicts">{{ 'DETAILS' | translate}}</button>
+			</div>
+			<table id="typeSummary" ng-show="showConflicts">
+				<thead>
+				<tr>
+					<td>{{ 'ELEMENT' | translate }}</td>
+					<td>{{ 'DESCRIPTION' | translate }}</td>
+				</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+	
+
+
+	<br/>
+	<div ng-show="analyticsLog.length > 0">
+			<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
+		
+			<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
+				<tbody>
+				<tr ng-repeat="notification in analyticsLog | orderBy:'-time'">
+					<td>{{notification.time}}</td>
+					<td>: {{notification.message}}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
 <div class="row" ng-show="importFailed">
 	<div class="col-md-6">
 		<d2-messages type="danger" textmessage="{{ 'IMPORT_FAILED' | translate }}"></d2-messages>
 	</div>
 </div>
 
-<br/>
-<div class="row">
-	<div class="col-md-6">
-		<div class="form_group">
-			<button class="btn btn-primary"  ng-click='showImportDialog()'>{{ 'IMPORT' | translate }}</button>
-			<button class="btn btn-primary"  ng-click='previewFiles()'>{{ 'PREVIEW' | translate }}</button>
+<div class="row" ng-show="fileIsNotZip">
+		<div class="col-md-6">
+			<d2-messages type="danger" textmessage="{{ 'The file is not zip' | translate }}"></d2-messages>
 		</div>
 	</div>
-</div>
-<br/>
-<div id="summary" ng-show="summaryDisplayed">
-	<h3>{{ 'IMPORT_SUMMARY' | translate }}</h3>
-	
-	<h4>{{ 'IMPORT_COUNT' | translate }}</h4>
-	<div id="importCount"></div>
-
-	<div ng-show="conflicts">
-		<h4>{{ 'CONFLICTS' | translate }}</h4>
-		<div>
-			<button class="btn btn-primary btn-xs" ng-class="{true: 'active'}[showConflicts]"
-					ng-click="showConflicts = !showConflicts">{{ 'DETAILS' | translate}}</button>
-		</div>
-		<table id="typeSummary" ng-show="showConflicts">
-			<thead>
-			<tr>
-				<td>{{ 'ELEMENT' | translate }}</td>
-				<td>{{ 'DESCRIPTION' | translate }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
-	</div>
-
-</div>
 
 <br/>
-
-<div ng-show="analyticsLog.length > 0">
-	<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
-
-	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
-		<tbody>
-		<tr ng-repeat="notification in analyticsLog | orderBy:'-time'">
-			<td>{{notification.time}}</td>
-			<td>: {{notification.message}}</td>
-		</tr>
-		</tbody>
-	</table>
-</div>
 
 <d2-dataimportpreview ng-if="previewDataImport" import-file="dataFile" is-compress="isCompress"></d2-dataimportpreview>
 

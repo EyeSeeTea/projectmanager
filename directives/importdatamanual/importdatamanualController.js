@@ -35,9 +35,23 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 		value: 100,
 		active: true
 	};
+	$scope.analyticsStatus = {
+		visible: false,
+		type: "info",
+		value: 100,
+		active: true
+	};
 		
 	$scope.undefinedFile = false;
 	var projectVersion = "";
+	var lastUpdated_settings ="";
+	var projectName_settings="";
+	var projectId_settings="";
+	var endDate_settings ="";
+	var dataStoreKey = 'aggregatedexport';
+	var data_import=true;
+	var refreshingData=false;
+	var importingData=false;
 	//var serverVersion ="";
 	var $file;//single file 
 	$scope.errorVisible = false;
@@ -57,12 +71,23 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 		$("#importConfirmation").modal("hide");
 		$scope.errorVersiones ="";
 		$scope.dataImportStatus.visible = true;
+		$scope.analyticsStatus.visible = false;
+		$scope.importingData=true;
 		$scope.importFailed = false;
+		$scope.fileIsNotZip=false;
 
 		var compress = getExtension($file.name) == "zip";
 
 		// Only manage compressed files
-		if (!compress) return;
+		if (!compress) 
+		{ console.log("File should be a zip file");
+		$scope.dataImportStatus.visible = false;
+		$scope.importingData=false;
+		$scope.fileIsNotZip = true;
+		$scope.importFailed = false;
+	return;
+	}
+		
 
 		//var zip = new JSZip(e.target.result);
 		SystemService.getServerVersion()
@@ -82,6 +107,12 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 							return settingsEntry.async("text").then(
 								data => {
 									projectVersion = JSON.parse(data).version;
+									lastUpdated_settings =  JSON.parse(data).lastUpdated;
+									endDate_settings =  JSON.parse(data).end;
+									projectId_settings =  JSON.parse(data).projectId;
+									projectName_settings =  JSON.parse(data).projectName;
+									
+									
 									if (projectVersion == serverVersion) {
 										return Promise.resolve(zip);
 									} else {
@@ -96,13 +127,42 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 				}
 			)
 			.then( zip => {
+
+				var namespace="ServersImportDates";
+				var dataStoreKey="prueba";
+				var log;
+				
+				
+
 				zip.forEach(function (relativePath, zipEntry) {
 					if (zipEntry.name.indexOf('.json') > -1) {
-						zipEntry.async("text").then( data => upload(data) )
+						console.log("json");
+						zipEntry.async("text").then( data =>{
+							
+							if (data_import) {upload(data)} else {console.log("No imported data")} 
+						
+						})
 					} else if (zipEntry.name.indexOf('project.txt') > -1) {
 						zipEntry.async("string").then(
 							data => {
 
+								DataStoreService.getNamespaceKeyValue(namespace, data).then( d => {
+					
+									console.log("log");
+									console.log(d);
+									log=d;
+
+									//data_import=false;
+								console.log("lastUpdated_settings");
+								console.log(lastUpdated_settings);
+								console.log("lastUpdated DataSTORE");
+								console.log(log.lastUpdated);
+									
+								
+
+								if (lastUpdated_settings>log.lastUpdated) { data_import=false;
+								console.log("lastUpdated_settings>log.lastUpdated");
+								}
 								//var projects2 = data.replace(/['"]+/g, '');
 								var projects = data.split(";");
 								var dateExport = zipEntry.name.split("_");
@@ -138,7 +198,10 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 											});
 									}
 								}
-							})
+							});
+							}
+						
+						)
 					}
 				})
 			})
@@ -149,6 +212,7 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 					$scope.errorInFile = error;
 					$scope.dataImportStatus.visible = false;
 					$scope.importFailed = true;
+					$scope.importingData=false;
 					console.log($scope.errorInFile);
 				}
 			)
@@ -160,6 +224,7 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 	}
 
 	function upload(fileContent) {
+		
 		return zipDataValuesFile(fileContent).then( zip => {
 			$http({
 				method: 'POST',
@@ -169,27 +234,36 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 				transformRequest: {}
 			}).then(
 				httpResponse => {
-					AnalyticsService.refreshAllAnalytics()
-						.then(
-							success => {
-								$scope.dataImportStatus.type = 'success';
-								$scope.dataImportStatus.active = false;
-							},
-							error => {
-								$scope.dataImportStatus.type = 'danger';
-								$scope.dataImportStatus.active = false;
-								console.log(error);
-							},
-							notification => $scope.analyticsLog.push(notification)
-						);
+					
 					$scope.generateSummary(httpResponse.data);
 					$scope.summaryDisplayed = true;
 					logDataimport($file.name, httpResponse.data);
+					$scope.dataImportStatus.type = 'success';
+					$scope.dataImportStatus.active = false;
+					$scope.analyticsStatus.visible = true;
+					$scope.refreshingData=true;
+					AnalyticsService.refreshAllAnalytics()
+						.then(
+							success => {
+								$scope.analyticsStatus.type = 'success';
+								$scope.analyticsStatus.active = false;
+							},
+							error => {
+								$scope.analyticsStatus.type = 'danger';
+								$scope.analyticsStatus.active = false;
+								console.log(error);
+							},
+							notification => $scope.analyticsLog.push(notification)
+							//notification => console.log(notification)
+						);
+					
 
 					console.log("File upload SUCCESS");
 				},
+			
 				error => {
 					$scope.dataImportStatus.visible = false;
+					$scope.importingData=false;
 					$scope.importFailed = true;
 
 					console.log("File upload FAILED");//error
@@ -231,7 +305,7 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 
 	$scope.generateSummary = function (data) {
 		var gt218 = commonvariable.version > "2.18";
-
+		gt218=true; // QUITAR
 		for (var dataGroup in data) {
 			if ((dataGroup == 'dataValueCount' && !gt218) || (dataGroup == 'importCount' && gt218)) {
 				for (var dataElement in data[dataGroup]) {
@@ -261,6 +335,20 @@ var importdatamanualController = ["$scope", '$interval', '$http', '$filter', "co
 				//data: DataImportService.getFormattedSummary(rawData)
 			};
 			DataStoreService.updateNamespaceKeyArray(namespace, me.organisationUnits[0].id, dataimportLog);
+			namespace="ServersImportDates";
+			var dataStoreKey=me.organisationUnits[0].id;
+			var log={
+				projectId: projectId_settings,
+				projectName: projectName_settings,
+				lastUpdated: lastUpdated_settings,
+				filename: filename,
+				endDate: endDate_settings
+
+			}
+
+			DataStoreService.setNamespaceKeyValue(namespace, dataStoreKey, log);
+				$scope.periods="Imported data from "+projectName_settings + " from "+  lastUpdated_settings + " to "+endDate_settings; 
+		
 		})
 	};
 

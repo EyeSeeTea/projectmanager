@@ -20,65 +20,60 @@
 import { TrackerDataExportLog, ServiceWithPrograms } from '../../model/model';
 import { DataStoreService, EventExportService, EventService, ProgramService, SystemService, UserService } from '../../services/services.module';
 
-export class TrackerExportLatestComponent implements ng.IComponentOptions {
+export class trackerOnlineSyncComponent implements ng.IComponentOptions {
     public controller: any;
     public template: string;
     public css: string;
 
     constructor() {
-        this.controller = TrackerExportLatestController;
-        this.template = require('./trackerExportLatestView.html');
-        this.css = require('./trackerExportLatestCss.css');
+        this.controller = trackerOnlineSyncController;
+        this.template = require('./trackerOnlineSyncView.html');
+        this.css = require('./trackerOnlineSyncCss.css');
     }
 }
 
-class TrackerExportLatestController {
+class trackerOnlineSyncController {
 
     params = { date: null, maxDate: null, filename: ""};
-    dateOptions={};
     services = null;
     allServices = { lastExported: "", selected: false};
     exporting = false;
+    jobId="hM8gvQULb71"; //ejg2w529PyN
     dateopened = false;
-    projectName="";
-    projectId="";
     exportError;
-    dataStoreKey: string = 'trackerexport';
+    dataStoreKey: string = 'trackeronlinesync';
 
     static $inject = ['$filter', 'ProgramService', 'UserService', 'EventExportService', 'EventService', 'DataStoreService', 'SystemService'];
 
     constructor(private $filter, private ProgramService: ProgramService, private UserService: UserService, 
                 private EventExportService: EventExportService, private EventService: EventService, 
                 private DataStoreService: DataStoreService, private SystemService: SystemService) {}
+   
+   
 
-    $onInit() {
-        this.UserService.getCurrentUserOrgunits()
-        .then((ou)=>
-        {
-           this.projectName=ou[0].name;
-            this.projectId=ou[0].id;
-            console.log("ou");
-            console.log(ou[0].name);})
-            .then(()=>this.ProgramService.getProgramsUnderUserHierarchyByService())
+    submit () {
+        this.exporting = true;
         
-            .then( data => {
-                this.services = data;
-                this.clickAllServices();
-            })
-            .then( () => this.updateLastExportInfo() )
-            .then( () => this.setLatestExportAsDefault() );
-    }
-
+        this.exportError = undefined;
+        const startDate: Date = this.params.date;
+        var serverDate: Date;
+        console.log(this.jobId);
+        return this.ProgramService.programSync(this.jobId)
+            .then( result => console.log(result) )
+            
+            .then( () => console.log("Everything done") )
+            .catch( error => this.exportError = error )
+            .finally( () => this.exporting = false )
+           
+    };
+/*
     updateLastExportInfo () {
         return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
-            console.log(log[this.projectId]);
-            var log2=log[this.projectId];
-            if (log2 != undefined) {
+            if (log != undefined) {
                 this.services.map( service => {
-                    service.lastExported = log2[service.code];
+                    service.lastExported = log[service.code];
                 });
             }
-        
             return "Done";
         });
     }
@@ -86,26 +81,16 @@ class TrackerExportLatestController {
     setLatestExportAsDefault () {
         const latest = this.services.reduce( (previous, current) => {
             if (previous.lastExported === undefined || current.lastExported === undefined) {
-                return {lastExported: ""};
+                return {lastExported: undefined};
             } else if (previous.lastExported.end < current.lastExported.end) {
                 return previous;
             } else {
                 return current;
             }
-        }, {lastExported: {"end":null}});
+        }, {lastExported: {end:null}});
         this.allServices.lastExported = latest.lastExported;
         this.params.date  = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
         this.params.maxDate = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
-        var d=   new Date(latest.lastExported.end) ; // Maximal selectable date
-var month= d.getMonth()+1;
-       
-        this.dateOptions = {
-           
-            maxDate : d
-           
-          };
-          console.log("this.dateOptions");
-          console.log(this.dateOptions);
     }
     
     openLastUpdated ($event) {
@@ -135,9 +120,9 @@ var month= d.getMonth()+1;
             .then( date => serverDate = date )
             .then( () => this.EventService.updateEventData() )
             .then( () => this.UserService.getCurrentUserOrgunits() )
-            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), serverDate, orgunits, this.getSelectedPrograms()) )
+            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), orgunits, this.getSelectedPrograms()) )
             .then( eventsZipFile => saveAs(eventsZipFile, this.params.filename + '.zip') )
-            .then( () => this.logExport(startDate, serverDate, this.projectId, this.projectName) )
+            .then( () => this.logExport(startDate, serverDate) )
             .then( () => this.updateLastExportInfo() )
             .then( () => console.log("Everything done") )
             .catch( error => this.exportError = error )
@@ -146,12 +131,12 @@ var month= d.getMonth()+1;
             .then( () => this.setLatestExportAsDefault() )
     };
 
-    logExport (start: Date, end: Date, projectId, projectName) {
+    logExport (start: Date, end: Date) {
         return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
-            const current = new TrackerDataExportLog(this.params.filename, start, end, projectName);
-            log = log || [];
+            const current = new TrackerDataExportLog(this.params.filename, start, end);
+            log = log || {};
             this.getSelectedServices().map( service => {
-                log[projectId][service.code] = current;
+                log[service.code] = current;
             });
             return this.DataStoreService.setKeyValue(this.dataStoreKey, log);
         });
@@ -167,20 +152,17 @@ var month= d.getMonth()+1;
             return array.concat(service.programs);
         }, []);
     }
-
+*/
+/*
     evaluateAllServices () {
         if(this.services != undefined) {
             this.allServices.selected = this.services.reduce( (state, current) => {
                 return state && current.selected;
             }, true);
-            // Commented because of some problems with refresh times
-            /**
-            this.params.maxDate = this.services
-                .filter( service => service.selected && service.lastExported != undefined )
-                .map( service => service.lastExported.end )
-                .reduce((a, b) => a < b ? a : b , undefined);
-            */
+
+            
+            
         }
     }
-
+*/
 }

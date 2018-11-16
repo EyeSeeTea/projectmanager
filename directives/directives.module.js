@@ -19,6 +19,7 @@ import {datasyncDirective} from  './datasync/datasyncController';
 
 import {importdatamanualDirective} from  './importdatamanual/importdatamanualController';
 
+import {trackerOnlineSyncComponent} from './trackeronlinesync/trackerOnlineSyncController';
 import {trackerExportDetailedDirective} from './trackerexportdetailed/trackerExportDetailedController';
 import { TrackerExportLatestComponent } from './trackerexportlatest/trackerExportLatestController';
 var formatPeriodFilter = require('./filters/formatPeriod');
@@ -38,6 +39,7 @@ var directivesModule = angular.module('Directives', ['Dhis2Api', 'Services'])
     .directive('maxDate', maxDateDirective)
     .component('projectSelector', new ProjectSelectorComponent())
     .directive('trackerExportDetailed', trackerExportDetailedDirective)
+    .component('trackerOnlineSync', new trackerOnlineSyncComponent())
     .component('trackerExportLatest', new TrackerExportLatestComponent())
     .directive('aggregateDataExportManual', dataexportmanualDirective)
     .directive('aggregateDataSync', datasyncDirective)

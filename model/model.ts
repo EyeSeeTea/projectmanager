@@ -61,14 +61,31 @@ export class Program {
     ){}
 }
 
+export class Job {
+    constructor(
+        public id: string,
+        public name: string
+        
+    ){}
+}
+
+
 export class TrackerDataExportLog {
     constructor(
         public filename: string,
         public start: Date,
-        public end: Date
+        public end: Date,
+        public projectName: string
     ){}
 }
-
+export class AggregatedDataExportLog {
+    constructor(
+        public filename: string,
+        public lastUpdated: Date,
+        public end: Date
+        
+    ){}
+}
 export class ProgressStatus {
     constructor(
         public visible: boolean,

@@ -23,10 +23,12 @@
     <div class="row" ng-show="form.$submitted">
 	  	<div class="col-md-12">
 			<d2-messages type="danger" ng-show="form.file_name.$error.required" textmessage="{{ 'VALIDATION_FILE_NAME' | translate }}"></d2-messages>
-			<d2-messages type="danger" ng-show="form.start_date.$error.required" textmessage="{{ 'VALIDATION_START_DATE' | translate }}"></d2-messages>
-			<d2-messages type="danger" ng-show="form.end_date.$error.required" textmessage="{{ 'VALIDATION_END_DATE' | translate }}"></d2-messages>
+			<d2-messages type="danger" ng-show="form.lastUpdated.$error.date || form.lastUpdated.$error.required" textmessage="{{ 'VALIDATION_START_DATE' | translate }}"></d2-messages>
+			<d2-messages type="danger" ng-show="form.lastUpdated.$error.max-date" textmessage="{{ 'VALIDATION_MAX_DATE' | translate }}: {{fecha_maxima | date:'dd/MM/yyyy'}}"></d2-messages>
 		</div>
 	</div>
+
+
 
 
 	<div class="row">
@@ -38,18 +40,22 @@
 		</div>
 	</div>
 	<br/>
+	<p><b>{{ 'LAST_EXPORT_FROM' | translate }}:</b> {{lastUpdated2 | date:'dd/MM/yyyy HH:mm': time_zone}} <b>{{ 'LAST_EXPORT_TO' | translate }} </b> {{end_date | date:'dd/MM/yyyy HH:mm': time_zone}} <b>for project</b> {{projectName}}</p>
+	
 	<div class="row">
 		<div class="col-md-3">
-			<label for="start_date">{{'EXPORT_INIT_DATE' | translate}}</label>
-			 <p class="input-group">
-				<input id="start_date" name="start_date" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="start_date"
-					   ng-disabled="demographicsSelected" ng-required="!demographicsSelected" is-open="openedstart" min-date="minDate"
-					   date-disabled="disabled(date, mode)" close-text="Close" />
+			<label for="lastUpdated">{{'EXPORT_LASTUPDATED' | translate}}</label>
+		  
+			<p class="input-group">
+				<input id="lastUpdated" name="lastUpdated" type="text" class="form-control"  uib-datepicker-popup="dd/MM/yyyy HH:mm"   ng-model="lastUpdated"
+					    is-open="openedstart"  readonly="true" datepicker-options="dateOptions"
+					   date-disabled="disabled(date, mode)" close-text="Close" required="" />
 				<span class="input-group-btn">
 				  <button type="button" class="btn btn-default" ng-click="openstart($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 				</span>
 			  </p>
 		</div>
+			<!-- 
 		<div class="col-md-3 right-border">
 			<label for="end_date">{{'EXPORT_END_DATE' | translate}}</label>
 			 <p class="input-group">
@@ -61,6 +67,7 @@
 				</span>
 			  </p>
 		</div>
+	
 		<div class="col-md-3">
 			<label for="demYear">
 				<input id="demographics" type="checkbox" ng-model="demographicsSelected" aria-label="...">
@@ -69,10 +76,13 @@
 			<select id="demYear" class="form-control" ng-model="demographicsYear" ng-disabled="!demographicsSelected"
 					ng-options="year for year in availableYears">></select>
 		</div>
+	-->
 	</div>
 	<br/>
+	<!-- 
 	<d2-treeorganisationunit  treetype="multiple" size='300px'></d2-treeorganisationunit>
 	<br/>
+	-->
 	<div class="row">
 		<div class="col-md-6">
 			<d2-progressbar-dynamic status="dataExportStatus"></d2-progressbar-dynamic>

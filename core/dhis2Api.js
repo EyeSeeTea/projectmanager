@@ -23,7 +23,7 @@ var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
 var apiVersion = 29;
 
 var urlBase = window.location.href.split('api/apps/')[0];
-var urlApi = urlBase + 'api/' + apiVersion + "/";
+var urlApi = urlBase + 'api/'; /* + apiVersion + "/";*/
 
 //Auxiliary variable to parse the url
 var urlAuxLink = document.createElement('a');
@@ -370,6 +370,14 @@ Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resour
 Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "programs/:uid" );
 }]);
+
+Dhis2Api.factory("JobExecute",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "jobConfigurations/:uid/execute" );
+}]);
+Dhis2Api.factory("Jobs",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "jobConfigurations/:uid" );
+}]);
+
 
 Dhis2Api.factory("Ping", ['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "system/ping",

@@ -21,16 +21,16 @@ import { UserService } from '../../services/services.module';
 export const dataExport = ['$scope', 'commonvariable', 'UserService', function ($scope, commonvariable, UserService: UserService) {
     
     $scope.activeTab = 2;
-    $scope.isMFP = false;
+    $scope.onlineSyncPermission = false;
     
     $scope.setActiveTab = function (item) {
         $scope.activeTab = item;
     };
        
-    UserService.currentUserHasRole("Medical Focal Point")
-        .then( isMFP => {
-            if (isMFP) {
-                $scope.isMfp = isMFP;
+    UserService.currentUserHasRole("Online Data Sync")
+        .then( onlineSyncPermission => {
+            if (onlineSyncPermission) {
+                $scope.onlineSyncPermission = onlineSyncPermission;
                 $scope.setActiveTab(1);
             }
         });

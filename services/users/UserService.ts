@@ -50,7 +50,22 @@ export class UserService {
     getCurrentUserTree(): ng.IPromise<CurrentUser> {
         const currentUserFieldsTree = {
             fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
-                "organisationUnits[id,level,name,children],organisationUnitGroups[id]," + 
+                "organisationUnits[id,level,name,children[id,name, level,organisationUnitGroups[id], children[id, name,level,organisationUnitGroups[id],children[id, name, level,organisationUnitGroups[id], children[id,name, level,children[id,name]]]]]],organisationUnitGroups[id]," + 
+                "dataViewOrganisationUnits[id,name,level,children[id,name, level,organisationUnitGroups[id], children[id, name,level,organisationUnitGroups[id],children[id, name, level,organisationUnitGroups[id], children[id,name, level,children[id,name]]]]]]"
+        };
+        if (this.currentUserTree != null) {
+            return this.$q.when(this.currentUserTree);
+        } else {
+            return this.meUser.get(currentUserFieldsTree).$promise.then(me => {
+                this.currentUserTree = me;
+                return this.currentUserTree;
+            });
+        }
+    }
+    getCurrentUserProjects(): ng.IPromise<CurrentUser> {
+        const currentUserFieldsTree = {
+            fields: "id,name,userRoles[id,name],userCredentials[username,userRoles[id,name]],userGroups[id,name]" +
+                "organisationUnits[id,level,name,children[id,name, level,organisationUnitGroups[id], children[id, name,level,organisationUnitGroups[id],children[id, name, level,organisationUnitGroups[id], children[id,name, level,children[id,name]]]]]],organisationUnitGroups[id]," + 
                 "dataViewOrganisationUnits[id,name,level,children[id,name, level,organisationUnitGroups[id], children[id, name,level,organisationUnitGroups[id],children[id, name, level,organisationUnitGroups[id], children[id,name, level,children[id,name]]]]]]"
         };
         if (this.currentUserTree != null) {

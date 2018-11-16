@@ -16,8 +16,9 @@
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
-import { CommonVariable, EventDataWrapper, Program } from '../../model/model';
+import { CommonVariable, EventDataWrapper, Program, TrackedEntityInstanceList } from '../../model/model';
 import { EventHelper, ProgramService } from '../services.module';
+var EncUTF8 = require('crypto-js/enc-utf8');
 
 export class EventImportService {
 
@@ -50,21 +51,62 @@ export class EventImportService {
         );
         return deferred.promise;
     };
+    importEventFile2 (file) {
+       
+        // It is required to wrap the return into a deferred object. If not, the following promises are not notified
+        var deferred = this.$q.defer();
+        this.readEventZipFile(file).then( 
+            (eventFile) => {
+                console.log("EventFile");
+                console.log(eventFile);
+                return this.getAndUploadTeis2(eventFile.content)
+                
+                   // .then( () => this.getAndUploadEnrollmentsAsActive(eventFile) )
+                  //  .then( () => this.getAndUploadDeletedEvents(eventFile) )
+                  //  .then( () => this.getAndUploadActiveEvents(eventFile) )
+                  //  .then( () => this.getAndUploadEnrollments(eventFile) )
+                    .then(
+                        (data) => deferred.resolve({"data":data, "settings":eventFile.settings}),
+                        (error) => deferred.reject(error)
+                );
+            },
+            (error) => deferred.reject("The file does not contain event data.")
+        );
+        return deferred.promise;
+    };
+
 
     private readZipFile (file): Promise<JSZip> {
         return (new JSZip()).loadAsync(file)
     }
 
-    private readEventZipFile (file): Promise<EventDataWrapper> {
+     readEventZipFile (file): Promise<any> {
         return this.readZipFile(file).then( (content) => {
-            var encryptedFile = content.file(this.EventHelper.EVENTS);
-
+            var encryptedFile = content.file(this.EventHelper.TEIS);
+            var settings=content.file("settings");
+            var settingsResult;
+            var contentResult;
             if (encryptedFile == undefined) {
                 return this.$q.reject("No events file");
             } 
-
-            return encryptedFile.async("string")
-                .then(encrpyted => this.EventHelper.decryptObject(encrpyted));
+          
+          return  settings.async("string").then(e=>{
+            settingsResult=JSON.parse(e.toString(EncUTF8));
+            }).then(() => {
+                console.log("settings");
+                console.log(settingsResult);
+               return encryptedFile.async("string")
+            }).then (enc =>{
+                contentResult= JSON.parse(enc.toString(EncUTF8))
+            }).then(()=>{
+                console.log("contentResult");
+                console.log(contentResult);
+                return {"settings": settingsResult, "content":contentResult};
+            })
+            
+             
+            
+                //.then(encrpyted => this.EventHelper.decryptObject(encrpyted));
         });
     }
 
@@ -76,6 +118,21 @@ export class EventImportService {
             .then( (data) => this.uploadFile(this.EventHelper.TEIS, data, params) );
     }
 
+    private getAndUploadTeis2 (content) {
+        var teis = new Object();
+        console.log("content");
+        console.log(content);
+        teis = content;
+        const params = { strategy: 'SYNC'}
+        console.log("Teis");
+        console.log(teis);
+        return this.zipObject(this.EventHelper.TEIS, teis)
+            .then( (data) => this.uploadFile(this.EventHelper.TEIS, data, params)
+            .then( (result) => { 
+               
+            return result})
+         );
+    }
     private getAndUploadEnrollmentsAsActive (content: EventDataWrapper) {
         const activeEnrollments = content.enrollments.map( (enrollment) => {
             let copy = Object.assign({}, enrollment);
@@ -117,6 +174,8 @@ export class EventImportService {
     }
 
     private zipObject (name: string, object) {
+        console.log("stringfy");
+        console.log(JSON.stringify(object));
         return  (new JSZip())
             .file(name, JSON.stringify(object))
             .generateAsync({type: "uint8array", compression: "DEFLATE"});
@@ -129,7 +188,7 @@ export class EventImportService {
                 url: this.commonvariable.url + endpoint,
                 params: params,
                 data: new Uint8Array(file),
-                headers: {'Content-Type': 'application/json'},
+               // headers: {'Content-Type': 'application/json'},
                 transformRequest: {}
             });
         } else {
@@ -140,10 +199,41 @@ export class EventImportService {
     previewEventFile (file) {
         // It is required to wrap the return into a deferred object. If not, the following promises are not notified
         var deferred = this.$q.defer();
+        var enrollmentsAll =[];
+        var settings;
+        var eventsAll =[];
         this.readEventZipFile(file)
-            .then((eventFile) => this.classifyEventsByProgramAndStage(eventFile.events))
-            .then((programs) => this.addNameToProgramsAndStages(programs))
-            .then((summary) => deferred.resolve(summary))
+            .then((eventFile) =>
+            {
+                
+            eventFile.content.trackedEntityInstances.forEach(tei => {
+               settings=eventFile.settings; 
+                enrollmentsAll.push(tei.enrollments)
+                
+            });
+          
+
+            enrollmentsAll.forEach(enrollment => {
+                enrollment.forEach(element => {
+                    element.events.forEach(element2 => {
+                    
+                        eventsAll.push(element2);
+                    });
+                    
+                });
+               
+            });
+            
+            console.log("eventsAll");
+            console.log(eventsAll);
+
+         return        this.classifyEventsByProgramAndStage(eventsAll)
+        }
+        )
+            .then((programs) => 
+            
+            this.addNameToProgramsAndStages(programs))
+            .then((summary) => deferred.resolve({"settings":settings,"summary": summary}))
             .catch((error) => deferred.reject(error));
         return deferred.promise;
     }

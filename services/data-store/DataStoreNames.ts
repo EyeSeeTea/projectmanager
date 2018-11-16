@@ -21,6 +21,6 @@ export class DataStoreNames {
     readonly AVAILABLE_DATA = "availableData";
     readonly PROJECT_SERVERS = "projectServers";
     readonly SERVER_PUSH_DATES = "ServersPushDates";
-
+    readonly SERVER_IMPORT_DATES = "ServersImportDates";
     readonly DEFAULT_ARRAY_KEY = "values";
 }

@@ -21,20 +21,37 @@ import { EventImportService } from '../../services/services.module';
 
 export class TrackerDataImport {
 
-    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "EventHelper"];
+    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "DataStoreService","EventHelper"];
 
     progressStatus = {};
+    analyticsStatus = {};
+    refreshingData=false;
+    importingData=false;
     undefinedFile: boolean = false;
-    summary: any;
+    summary;
     analyticsLog: any[];
-
+    import_result=false;
+    importGap=false;
+    message="";
+    d="";
+    imported="";
+    deleted="";
+    updated="";
+    ignored="";
+    projectName="";
+    projectId="";
+    lastUpdated="";
+    endDate="";
+    lastUpdatedDataStore="";
+    endDateDataStore="";
     importFailed: boolean;
     previewDataImport: boolean;
+    analyticsShow=false;
 
     $file;//single file
 
     constructor(private $q: ng.IQService, private EventImportService: EventImportService, private AnalyticsService, 
-                private DemographicsService) {}
+                private DemographicsService, private DataStoreService) {}
 
     showImportDialog() {
 
@@ -48,27 +65,96 @@ export class TrackerDataImport {
 
         $("#importConfirmation").modal("hide");
         
-        this.progressStatus = ProgressStatus.initialWithoutProgress;
-
+       
         this.summary = undefined;
         this.analyticsLog = [];
+        this.EventImportService.readEventZipFile(this.$file).then( 
+            (eventFile) => {
+            var namespace="ServersTrackerImportDates";
+            var dataStoreKey=eventFile["settings"].projectId;
 
-        this.EventImportService.importEventFile(this.$file)
-            .then(() => this.AnalyticsService.refreshEventAnalytics())
-            .then(
-                success => this.progressStatus = ProgressStatus.doneSuccessful,
-                error => this.progressStatus = ProgressStatus.doneWithFailure,
-                notification => this.analyticsLog.push(notification)
-            );        
-    };
+            
+            this.projectName=eventFile["settings"].projectName;       
+            this.lastUpdated= eventFile["settings"].lastUpdated;
+            this.endDate=eventFile["settings"].endDate;
 
+            this.DataStoreService.getNamespaceKeyValue(namespace, dataStoreKey)
+            .then(data=>{
+                
+                this.lastUpdatedDataStore= data.lastUpdated;
+                this.endDateDataStore=data.endDate;
+if (this.lastUpdated>data.endDate) { this.importGap=true;} 
+return this.importGap
+            })
+           
+            .then(d => {
+
+                if (!this.importGap) {
+                    this.importingData=true;
+        this.progressStatus = ProgressStatus.initialWithoutProgress;
+                    this.EventImportService.importEventFile2(this.$file)
+                        .then((result) => {
+                        console.log("resultado3");
+                        console.log(result);
+                        this.import_result=true;
+                        this.message=result["data"].data.message;
+                        this.imported=result["data"].data.response.imported;
+                        this.updated=result["data"].data.response.updated;
+                        this.deleted=result["data"].data.response.deleted;
+                        this.ignored=result["data"].data.response.ignored;
+                        this.progressStatus = ProgressStatus.doneSuccessful;
+                        //this.progressStatus = ProgressStatus.doneWithFailure
+                        var namespace="ServersTrackerImportDates";
+                        
+                    console.log(this.$file.name);
+                        var dataStoreKey=result["settings"].projectId;
+                        this.projectName=result["settings"].projectName;
+                        this.lastUpdated= result["settings"].lastUpdated;
+                        this.endDate=result["settings"].endDate; 
+                        var log={
+                            projectId: result["settings"].projectId,
+                            projectName:  result["settings"].projectName,
+                            lastUpdated:  result["settings"].lastUpdated,
+                            filename:this.$file.name,
+                            endDate:  result["settings"].endDate
+            
+                        }
+                    
+                      
+            
+                        this.DataStoreService.setNamespaceKeyValue(namespace, dataStoreKey, log);
+                        this.refreshingData=true;
+                        this.analyticsStatus = ProgressStatus.initialWithoutProgress;
+                        this.analyticsShow=true;
+                        })
+                        .then(() => this.AnalyticsService.refreshEventAnalytics())
+                        .then(
+                            success => this.analyticsStatus = ProgressStatus.doneSuccessful,
+                            error => this.analyticsStatus = ProgressStatus.doneWithFailure,
+                            notification => this.analyticsLog.push(notification)
+                        );        
+                };
+
+            });
+        });
+    }
     public showFileContentSummary() {
+       this.refreshingData=false;
+       this.import_result=false;
+       this.analyticsShow=false;
+    this.importingData=false;
         this.varValidation();
         if (!this.undefinedFile) {
+            this.importingData=false;
             this.progressStatus = ProgressStatus.initialWithoutProgress;
             this.summary = undefined;
-            this.EventImportService.previewEventFile(this.$file).then( summary => {
-                this.summary = summary;
+            this.EventImportService.previewEventFile(this.$file).then( result => {
+                this.summary = result["summary"];
+                this.projectName=result["settings"].projectName;
+                this.projectId=result["settings"].projectId;
+                this.lastUpdated= result["settings"].lastUpdated;
+                this.endDate=result["settings"].endDate; 
+		
                 this.progressStatus = ProgressStatus.hidden;
             });
         }

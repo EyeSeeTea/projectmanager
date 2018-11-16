@@ -19,11 +19,17 @@
 
 <h2>{{ 'TRACKER_DATA_IMPORT' | translate }}</h2>
 
-<div class="row" ng-show="undefinedFile">
+<div class="row" ng-show="ctrl.undefinedFile">
     <div class="col-md-12">
         <d2-messages type="danger" textmessage="{{ 'VALIDATION_FILE' | translate }}"></d2-messages>
     </div>
 </div>
+
+<div class="row" ng-show="ctrl.importGap">
+        <div class="col-md-12">
+            <d2-messages type="danger" textmessage="{{ 'The file contains data from ' | translate }} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}} and the last export ended on {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}: There is a gap in the dates and there could be missing data. Please ask the {{ctrl.projectName}} project to export data from {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}} onwards."></d2-messages>
+        </div>
+    </div>
 
 <div class="row">
     <div class="col-md-6">
@@ -47,6 +53,9 @@
 </div>
 <br/>
 <div id="file_summary" class="col-md-8" ng-show="ctrl.summary">
+       
+       <p>This file contains data from {{ctrl.projectName}} from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}</p> 
+		
     <table class="table table-bordered table-condensed">
         <thead>
             <tr>
@@ -64,15 +73,45 @@
         </tbody>
     </table>
 </div>
-<br/>
-<div class="col-md-6">
+
+<div class="col-md-6" ng-show="ctrl.importingData" >
+    	<h3>Importing Data</h3>
     <d2-progressbar-dynamic status="ctrl.progressStatus"></d2-progressbar-dynamic>
 </div>
 
 <br/>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 <br/>
 
-<div id="summary" ng-show="ctrl.analyticsLog.length > 0">
+		<div class="col-md-6" ng-show="ctrl.refreshingData">
+			<h3>Refreshing Data</h3>
+			<d2-progressbar-dynamic status="ctrl.analyticsStatus"></d2-progressbar-dynamic>
+		</div>
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div id="summary" ng-show="ctrl.import_result">
+        <h3>{{ 'Import Summary' | translate }}</h3>
+
+<p>Imported data from {{ctrl.projectName}} from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}</p> 
+		
+<p>Updated: {{ctrl.updated}}</p>
+<p>Imported: {{ctrl.imported}}</p>
+<p>Deleted: {{ctrl.deleted}}</p>
+<p>Ignored: {{ctrl.ignored}}</p>
+
+        </div>
+<div id="summary" ng-show="ctrl.analyticsShow">
     <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 
     <table data-toggle="table" id="notificationTable" class="notificationTable" style="">
@@ -104,3 +143,8 @@
         </div>
     </div>
 </div>
+
+
+
+
+

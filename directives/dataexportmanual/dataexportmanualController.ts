@@ -15,7 +15,7 @@
  
    You should have received a copy of the GNU General Public License
    along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-
+   import { AggregatedDataExportLog, Orgunit } from '../../model/model';
 export const dataexportmanualDirective = [function () {
 	return {
 		restrict: 'E',
@@ -26,11 +26,15 @@ export const dataexportmanualDirective = [function () {
 	}
 }];
 
-var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "SystemService","Info", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", 'UserService', '$timeout',
-	function ($scope, $q: ng.IQService, $filter, commonvariable, SystemService, Info, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, UserService, $timeout) {
+var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "SystemService","Info", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", "DataStoreNames",'UserService', '$timeout',
+	function ($scope, $q: ng.IQService, $filter, commonvariable, SystemService, Info, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, DataStoreNames, UserService, $timeout) {
 
 		let version:string ="";
- 		var start_date;
+		 var start_date;
+		 var lastUpdated;
+		 var dataStoreKey:string = 'aggregatedexport';
+		 var projectName;
+		 var projectId;
 		var end_date;			
 		$scope.demographicsSelected = false;
 		let currentYear: number = (new Date()).getFullYear();
@@ -69,6 +73,58 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 			value: 100,
 			active: true
 		};
+
+	
+		UserService.getCurrentUser()
+			.then(user => {
+				
+				projectId = user.organisationUnits[0].id;
+				projectName = user.organisationUnits[0].name;
+				DataStoreService.getKeyValue(dataStoreKey).then( log => {
+					console.log(log[projectId])
+				//$scope.lastUpdated=	log[projectId].lastUpdated;
+				$scope.time_zone=new Date().toString().match(/([-\+][0-9]+)\s/)[1];
+				$scope.tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+				$scope.projectName=projectName;
+
+				if(log[projectId]!=undefined) {
+				$scope.end_date=log[projectId].endDate;
+				$scope.lastUpdated2=log[projectId].lastUpdated;
+				
+				
+							
+				var new_lastupdated=new Date($scope.end_date).toLocaleString('es-ES', { hour12: false });
+							
+				var from = new_lastupdated.split("/");
+				var dia=parseInt(from[0]);
+				var month=parseInt(from[1]);
+				var year = parseInt(from[2].split(" ")[0]);
+				var hora = parseInt(from[2].split(" ")[1].split(":")[0]);
+				var minutos = parseInt(from[2].split(" ")[1].split(":")[1]);
+				
+
+
+				$scope.lastUpdated = new Date(year, month - 1, dia, hora, minutos);
+				//$scope.lastUpdated=new Date(log[projectId].endDate).toISOString;
+				
+				$scope.fecha_maxima=new Date(year, month - 1, dia);
+			}
+				/*
+				$scope.$watch("lastUpdated", function(newValue, oldValue) {
+					console.log("I've changed : ", newValue);
+					$scope.dt = null;
+					$scope.dt = newValue;
+				
+				});
+				*/
+         $scope.dateOptions = {
+           
+            maxDate: $scope.fecha_maxima,
+			
+          };
+				});
+			});
+	
 
 		class RESTUtil {
 
@@ -113,15 +169,17 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 				.then(getVersion)
 				.then(getDatasets)
 				.then(dataSets => {
-					let settings: Settings=getSettings();
+				
 					const dataset_filter = dataSets.reduce(function (list, dataset) {
 						return list + "dataSet=" + dataset.id + "&";
 					}, "");
-
+/*
 					const orgUnits_filter = orgUnits.reduce(function (list, orgunit) {
 						return list + "&orgUnit=" + orgunit.id;
 					}, "");
-
+					*/
+					const orgUnits_filter = "&orgUnit=" + projectId;
+/*
 					const projects = orgUnits.reduce(function (list, orgunit) {
 						if (orgunit.level == 4 && list.indexOf(orgunit.id) == -1) { return list + orgunit.id + ";" }
 						if (orgunit.level == 5 && list.indexOf(orgunit.parent.id) == -1) { return list + orgunit.parent.id + ";" }
@@ -129,36 +187,72 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 						else { return list; }
 					}, "");
 
-
+*/
 					
 				
+					//api_url = api_url + dataset_filter +
+					//	"startDate=" + boundDates.start + "&endDate=" + boundDates.end +
+					//	orgUnits_filter + "&children=true";
+
 					api_url = api_url + dataset_filter +
-						"startDate=" + boundDates.start + "&endDate=" + boundDates.end +
+						"lastUpdated=" + boundDates.lastUpdated  +
 						orgUnits_filter + "&children=true";
+
 
 					let restUtil = new RESTUtil();
 					SystemService.getServerDateWithTimezone()
 						.then(serverTime => {
-				
+							end_date=serverTime;
+							let settings: Settings=getSettings();
 							var serverDate = new Date(serverTime).getTime()
 							restUtil.requestGetData(api_url,
 								data => {
 									let zip = new JSZip();
 									zip.file('System_settings.txt', JSON.stringify(settings));
 									zip.file(fileName + '.json', JSON.stringify(data));
-									zip.file("OrgUnits_" + serverDate + '_project.txt', projects);
+									zip.file("OrgUnits_" + serverDate + '_project.txt', projectId);
 									
 									zip.generateAsync({ type: "blob", compression: "DEFLATE" })
 										.then(function (content) {
 											saveAs(content, fileName + '.json.zip');
 										});
 									$timeout(updateprocess, 5);
+										$scope.lastUpdated=lastUpdated;
+										$scope.end_date=end_date;
+										logExport(fileName,lastUpdated, end_date, projectId, projectName)
 								},
 								() => { });
 
 						});
 				});
 		};
+
+		var logExport  = function (fileName, lastUpdated: Date, end_date: Date, projectId, projectName) {
+		
+				DataStoreService.getKeyValue(dataStoreKey).then( log => {
+					
+					//this.getSelectedServices().map( service => {
+				//		log[service.code] = current;
+				//	});
+
+				var projects_array = projectId.split(";");
+
+				
+				projects_array.forEach(project => {
+
+					var current = {"filename": fileName, "lastUpdated": lastUpdated, "endDate": end_date, "ProjectName": projectName};
+					//var log = {};
+					 log[project] = current;
+					
+				console.log(log);
+					DataStoreService.setKeyValue(dataStoreKey, log);	
+					
+				});
+			//	log["project"] = current;
+			//		return DataStoreService.setKeyValue(dataStoreKey, log);
+				//});
+			})}
+
 
 		var updateDemographicIfNeeded = function () {
 			if ($scope.demographicsSelected) {
@@ -190,17 +284,27 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 
 		var getBoundDates = function (): BoundDates {
 			if ($scope.demographicsSelected) {
-				new BoundDates("", "");
+				new BoundDates("");
 				return new BoundDates(
-					$scope.demographicsYear + "-01-01",
-					$scope.demographicsYear + "-12-31");
+					$scope.demographicsYear + "-01-01");
+				//	$scope.demographicsYear + "-12-31");
 			} else {
-				 start_date = $scope.start_date.setDate($scope.start_date.getDate() -7); 
-				 end_date = $scope.end_date.setDate($scope.end_date.getDate() +7); 
+				// start_date = $scope.start_date.setDate($scope.start_date.getDate() -7); 
+				// end_date = $scope.end_date.setDate($scope.end_date.getDate() +7); 
+				 
+			//var today = new Date();
+			//var dd = (today.getDate() < 10 ? '0' + today.getDate() : today.getDate());
+			//var mm = (today.getMonth() < 9 ? '0' + (today.getMonth() + 1) : today.getMonth());
+			//var yyyy = today.getFullYear();
+
+			//end_date = yyyy+ "-" + mm+ "-"+ dd ; 
+				lastUpdated = $scope.lastUpdated;
+				console.log("lastUpdated");
+				console.log(lastUpdated);
 				return new BoundDates(
 					
-					$filter('date')(start_date, 'yyyy-MM-dd'),
-					$filter('date')(end_date, 'yyyy-MM-dd'));
+					new Date(lastUpdated).toISOString());
+					//$filter('date')(end_date, 'yyyy-MM-dd'));
 			}
 		};
 		var getSettings = function (): Settings {
@@ -208,8 +312,10 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 				return new Settings(
 			
 			 version,
-			$filter('date')(start_date, 'yyyy-MM-dd'),
-			$filter('date')(end_date, 'yyyy-MM-dd')
+			 projectName,
+			 projectId,
+			lastUpdated,
+			end_date
 		)
 		}
 	var getVersion = function() {
@@ -224,14 +330,16 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 
 class BoundDates {
 	constructor(
-		public start: string,
-		public end: string
+		public lastUpdated: string
+	//	public end: string
 	) { }
 };
 class Settings {
 	constructor(
 		public version: string,
-		public start: string,
+		public projectName: string,
+		public projectId: string,
+		public lastUpdated: string,
 		public end: string
 		
 	) { }

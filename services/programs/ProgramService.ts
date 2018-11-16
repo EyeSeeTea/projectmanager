@@ -18,17 +18,18 @@
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
 
 import { UserService } from '../../services/services.module';
-import { AttributeValue, Orgunit, Program, ServiceWithPrograms } from '../../model/model';
+import { AttributeValue, Orgunit, Program, Job, ServiceWithPrograms } from '../../model/model';
 
 export class ProgramService {
 
-    static $inject = ['UserService', 'Organisationunit', 'OrganisationUnitGroup', 'Programs'];
+    static $inject = ['UserService', 'Organisationunit', 'OrganisationUnitGroup', 'Programs', 'JobExecute'];
 
     constructor(
         private UserService: UserService,
         private Organisationunit,
         private OrganisationUnitGroup,
-        private Programs
+        private Programs,
+        private JobExecute
     ){}
 
     readonly serviceCodeId = "pG4YeQyynJh";
@@ -96,7 +97,10 @@ export class ProgramService {
         var fields = "id,displayName~rename(name),programStages[id,displayName~rename(name)]";
         return this.Programs.get({uid: programId, fields: fields}).$promise;
     }
+    programSync(jobId: string): ng.IPromise<Job>{
     
+        return this.JobExecute.get({uid: jobId}).$promise;
+    }
 }
 
 class OrgunitWithPrograms {

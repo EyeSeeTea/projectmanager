@@ -37,8 +37,8 @@
         <div class="col-md-12">
             <label>{{ 'EXPORT_TRACKER_FROM' | translate }}</label>
             <p class="col-md-4 input-group">
-                <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
-                       ng-required="true" close-text="Close" name="date" datepicker-options="datePickerDateOptions" required/>
+                <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
+                       ng-required="true" close-text="Close" name="date" datepicker-options="$ctrl.dateOptions"  required/>
                 <!--<input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
                        ng-required="true" close-text="Close" name="date" datepicker-options="datePickerDateOptions" max-date="$ctrl.params.maxDate" required/>
                 -->
@@ -55,7 +55,7 @@
                 <ul class="list-group service-list">
                     <li class="list-group-item service-header">
                         <span>{{ 'SERVICE' | translate }}</span>
-                        <span class="pull-right">{{ 'LAST_EXPORT' | translate }}</span>
+                        <span class="pull-right">{{ 'LAST_EXPORT' | translate }} for {{$ctrl.projectName}}</span>
                     </li>
                     <li class="list-group-item service-sub-header service-item" ng-show="$ctrl.services.length == 0">
                         <span>{{ 'NO_SERVICES_AVAILABLE' | translate }}</span>
@@ -63,13 +63,13 @@
                     <li class="list-group-item service-sub-header service-item" ng-click="$ctrl.clickAllServices()" ng-show="$ctrl.services.length != 0">
                         <input type="checkbox" ng-model="$ctrl.allServices.selected">
                         <span>{{ 'ALL_SERVICES' | translate }}</span>
-                        <span class="pull-right">{{$ctrl.allServices.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
+                        <span class="pull-right">{{$ctrl.allServices.lastExported.end | date:'dd/MM/yyyy'}}</span>
                     </li>
                     <li ng-repeat="service in $ctrl.services | orderBy:'name'" ng-show="$ctrl.services"
                         class="list-group-item service-item" ng-click="$ctrl.clickService(service)">
                         <input type="checkbox" ng-model="service.selected">
                         <span>{{service.name}}</span>
-                        <span class="pull-right">{{service.lastExported.end | date:'dd/MM/yyyy @ HH:mm:ss'}}</span>
+                        <span class="pull-right">{{service.lastExported.end | date:'dd/MM/yyyy'}}</span>
                     </li>
                     <li class="list-group-item" ng-hide="$ctrl.services">
                         <span class='glyphicon glyphicon-repeat animation-rotation'></span>

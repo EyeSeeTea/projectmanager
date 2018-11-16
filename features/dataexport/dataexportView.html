@@ -22,7 +22,7 @@
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
-            <li ng-class="{'active': activeTab == 1}" ng-if="isMfp" role="presentation"><a ng-click="setActiveTab(1)" href="">{{ 'SYNC' | translate }}</a></li>
+            <li ng-class="{'active': activeTab == 1}" ng-if="onlineSyncPermission" role="presentation"><a ng-click="setActiveTab(1)" href="">{{ 'SYNC' | translate }}</a></li>
             <li ng-class="{'active': activeTab == 2}" role="presentation"><a ng-click="setActiveTab(2)" href="">{{ 'MANUAL'  | translate }}</a></li>
         </ul>
     </div>

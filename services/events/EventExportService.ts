@@ -48,7 +48,30 @@ export class EventExportService {
      */
     exportEventsWithDependenciesInZip (startDate: string, endDate: string, orgunits: Orgunit[], programs?: Program[]) {
         return this.exportEventsWithDependencies(startDate, endDate, orgunits, programs)
-            .then(wrapper => this.EventHelper.encryptObject(wrapper))
+            .then(wrapper => 
+                
+                { 
+                    //console.log(wrapper.enrollments);
+                   // console.log(wrapper.events);
+                   // console.log(wrapper.trackedEntityInstances);
+                    var ev=wrapper.events;
+                    var enr=wrapper.enrollments;
+                    var enrollments2;
+                    ev.forEach(ev=>{
+                         console.log(ev)
+                    
+                    
+                    })
+                    enr.forEach(el=>{
+                            console.log(el)
+                        //enrollments2[el.enrollment]=el;
+                        
+                        })
+
+//console.log(enrollments2);
+
+
+                    this.EventHelper.encryptObject(wrapper)})
             .then(file => this.compressFileByElementType(file));
     };
 
@@ -59,13 +82,14 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
-    exportEventsFromLastWithDependenciesInZip (lastUpdated: string, orgunits: Orgunit[], programs?: Program[]) {
-        return this.exportEventsFromLastWithDependencies(lastUpdated, orgunits, programs)
-            .then(wrapper => this.EventHelper.encryptObject(wrapper))
-            .then(file => this.compressFileByElementType(file));
+    exportEventsFromLastWithDependenciesInZip (lastUpdated: string, endDate, orgunits: Orgunit[], programs?: Program[]) {
+        return this.exportEventsFromLastWithDependencies2(lastUpdated, orgunits, programs)
+           // .then(wrapper => this.EventHelper.encryptObject(wrapper))
+            .then(file => this.compressFileByElementType2(file, lastUpdated, endDate, orgunits, programs));
     };
 
     /**
+     * 
      * Exports all events and dependencies (trackedEntityInstances and enrollments) between startDate and endDate for the
      * given array of orgunits and their descendants and, optionally, for the given array of programs. Returns a promise
      * that resolves to an object with the structure:
@@ -91,8 +115,34 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
+    exportEventsFromLastWithDependencies2 (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
+        const orgunitProgramCombo = this.getOrgunitProgramCombo(orgunits, programs);
+      
+        return this.$q.all([
+            this.getTrackedEntityInstancesFromLastWithDependecies(lastUpdated,  orgunitProgramCombo)
+            
+        ])
+        .then(([teisWithDependencies]) => {
+            let dataWrapper = teisWithDependencies;
+            console.log("dataWrapper");
+            console.log(dataWrapper);
+            return dataWrapper;
+        });
+     
+    };
+/**
+     * Exports all events and dependencies (trackedEntityInstances and enrollments) from lastUpdated for the
+     * given array of orgunits and their descendants and, optionally, for the given array of programs. Returns a promise
+     * that resolves to an object with the structure:
+     * {events: [<array_of_events], trackedEntityInstances: [<array_of_teis>], enrollments: [<array_of_enrollments>]}
+     * @param lastUpdated Date to start the event query
+     * @param orgunits Array of orgunits
+     * @param programs Array of programs (optional)
+     * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
+     */
     exportEventsFromLastWithDependencies (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
         const orgunitProgramCombo = this.getOrgunitProgramCombo(orgunits, programs);
+            
         return this.$q.all([
             this.getEventsFromLast(lastUpdated, orgunits, programs),
             this.getTrackedEntityInstancesFromLast(lastUpdated, orgunitProgramCombo),
@@ -102,8 +152,8 @@ export class EventExportService {
                 let dataWrapper = new EventDataWrapper(events.events, enrolls.enrollments, teis.trackedEntityInstances);
                 return this.addMissingTrackedEntitiesAndEnrollments(dataWrapper);
             });
+             
     };
-
     /**
      * Exports all events between startDate and endDate for the given array of orgunits and their descendants and, optionally,
      * for the given array of programs. Returns a promise that resolves to an object with the structure:
@@ -147,6 +197,29 @@ export class EventExportService {
      * @param orgunitProgramCombo Combo of orgunit/program
      * @returns {*} Promise that resolves to a TrackedEntityInstanceList object
      */
+    getTrackedEntityInstancesFromLastWithDependecies (lastUpdated: string, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
+        const commonParams = {
+            lastUpdatedStartDate: lastUpdated,
+            ouMode: 'DESCENDANTS'
+        };
+        let teiPromises = orgunitProgramCombo.map( (combination) => {
+            const params = angular.extend({}, commonParams, {ou: combination.orgUnit, program: combination.program, fields: "*", includeDeleted: "true"});
+            return this.TrackedEntityInstances.get(params).$promise;
+        });
+
+        return this.$q.all(teiPromises).then(
+            (teisArray: TrackedEntityInstanceList[]) => teisArray.reduce( (totalTeis: TrackedEntityInstanceList, currentTei: TrackedEntityInstanceList) => {
+                    return new TrackedEntityInstanceList(totalTeis.trackedEntityInstances.concat(currentTei.trackedEntityInstances));
+                }, TrackedEntityInstanceList.empty)
+        )
+    }
+/**
+     * Exports all trackedEntityInstances for the given orgunitProgramCombo. It includes orgunit descendants. Returns a promise that
+     * resolves to a TrackedEntityInstanceList
+     * @param lastUpdated Data to start the trackedEntityInstanceQuery
+     * @param orgunitProgramCombo Combo of orgunit/program
+     * @returns {*} Promise that resolves to a TrackedEntityInstanceList object
+     */
     getTrackedEntityInstancesFromLast (lastUpdated: string, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
         const commonParams = {
             lastUpdated: lastUpdated,
@@ -163,6 +236,7 @@ export class EventExportService {
                 }, TrackedEntityInstanceList.empty)
         )
     }
+
 
     /**
      * Exports all enrollments for the given orgunitProgramCombo. It includes orgunit descendants. Returns a promise that
@@ -302,6 +376,27 @@ export class EventExportService {
         zip.file(this.EventHelper.EVENTS, file);
         return zip.generateAsync({type: "blob", compression: "DEFLATE"});
     }
+    private compressFileByElementType2 (file, lastUpdated, endDate, orgunits, programs) {
+       
+        let zip: JSZip = new JSZip();
+        var asString = JSON.stringify(file);
+        
+        console.log("asString");
+        console.log(asString);
+        var settings={};
+        settings["projectName"]=orgunits[0].name;
+        settings["projectId"]=orgunits[0].id;
+        settings["lastUpdated"]=lastUpdated;
+        settings["endDate"]=endDate;
+        settings["programs"]=programs;
+        console.log("settings");
+        console.log(settings);
+        
+        zip.file(this.EventHelper.TEIS, asString);
+        zip.file("settings", JSON.stringify(settings));
+        return zip.generateAsync({type: "blob", compression: "DEFLATE"});
+    }
+
 
     // Util functions
     private getOrgunitProgramCombo (orgunits: Orgunit[], programs: Program[]): OrgunitProgramComboItem[] {

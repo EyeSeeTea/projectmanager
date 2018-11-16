@@ -67,11 +67,15 @@
 	"REMOTE": "Remote",
 	
 	"_______________ Data":" Import and Export_____________",
+	
 	"DATA_IMPORT": "Import data",
 	"IMPORT": "Import",
 	"DATA_EXPORT": "Export data",
 	"EXPORT": "Export",
 	"EXPORT_INIT_DATE": "Start date",
+	"EXPORT_LASTUPDATED": "Export data registered or updated after",
+	"LAST_EXPORT_FROM": "Last exported data from",
+	"LAST_EXPORT_TO": " to", 
 	"EXPORT_END_DATE": "End date",
 	"DATA_EXPORT_ZIP":"Compressed?",
 	"IMPORT_SUMMARY":"IMPORT SUMMARY",
@@ -98,6 +102,7 @@
 	
 
 	"____________Tracker Data Export":"__________",
+	"AUTOMATIC_TRACKER_SYNC": "Online Sync",
 	"TRACKER_DATA_EXPORT": "Export individual data",
 	"LATEST_VALUES": "Latest values",
 	"BY_PERIOD": "By period",

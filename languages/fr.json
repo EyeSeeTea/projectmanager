@@ -98,6 +98,7 @@
 
 
 	"____________Tracker Data Export":"__________",
+	"AUTOMATIC_TRACKER_SYNC": "Online Sync",
 	"TRACKER_DATA_EXPORT": "Exporter des données individuelles",
 	"LATEST_VALUES": "Dernières valeurs",
 	"BY_PERIOD": "Par période",
