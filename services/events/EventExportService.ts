@@ -46,6 +46,7 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
+    /**
     exportEventsWithDependenciesInZip (startDate: string, endDate: string, orgunits: Orgunit[], programs?: Program[]) {
         return this.exportEventsWithDependencies(startDate, endDate, orgunits, programs)
             .then(wrapper => 
@@ -74,7 +75,7 @@ export class EventExportService {
                     this.EventHelper.encryptObject(wrapper)})
             .then(file => this.compressFileByElementType(file));
     };
-
+*/
     /**
      * Same that exportEventsFromLastWithDependencies, but returns a compressed file.
      * @param lastUpdated Date to start the event query
@@ -82,10 +83,10 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
-    exportEventsFromLastWithDependenciesInZip (lastUpdated: string, endDate, orgunits: Orgunit[], programs?: Program[]) {
+    exportEventsFromLastWithDependenciesInZip (lastUpdated: string, endDate, serverName, orgunits: Orgunit[], programs?: Program[]) {
         return this.exportEventsFromLastWithDependencies2(lastUpdated, orgunits, programs)
            // .then(wrapper => this.EventHelper.encryptObject(wrapper))
-            .then(file => this.compressFileByElementType2(file, lastUpdated, endDate, orgunits, programs));
+            .then(file => this.compressFileByElementType2(file, lastUpdated, endDate, serverName, orgunits, programs));
     };
 
     /**
@@ -100,11 +101,12 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
+    /**
     exportEventsWithDependencies (startDate: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
         return this.getEvents(startDate, endDate, orgunits, programs)
             .then(events => this.addRelatedTrackedEntitiesAndEnrollments(events))
     };
-
+*/
     /**
      * Exports all events and dependencies (trackedEntityInstances and enrollments) from lastUpdated for the
      * given array of orgunits and their descendants and, optionally, for the given array of programs. Returns a promise
@@ -140,6 +142,7 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
+    /**
     exportEventsFromLastWithDependencies (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
         const orgunitProgramCombo = this.getOrgunitProgramCombo(orgunits, programs);
             
@@ -154,6 +157,7 @@ export class EventExportService {
             });
              
     };
+    */
     /**
      * Exports all events between startDate and endDate for the given array of orgunits and their descendants and, optionally,
      * for the given array of programs. Returns a promise that resolves to an object with the structure:
@@ -200,10 +204,11 @@ export class EventExportService {
     getTrackedEntityInstancesFromLastWithDependecies (lastUpdated: string, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
         const commonParams = {
             lastUpdatedStartDate: lastUpdated,
-            ouMode: 'DESCENDANTS'
+            ouMode: 'ACCESSIBLE'
         };
         let teiPromises = orgunitProgramCombo.map( (combination) => {
-            const params = angular.extend({}, commonParams, {ou: combination.orgUnit, program: combination.program, fields: "*", includeDeleted: "true"});
+            //ou: combination.orgUnit,
+            const params = angular.extend({}, commonParams, { program: combination.program, fields: "*", includeDeleted: "true"});
             return this.TrackedEntityInstances.get(params).$promise;
         });
 
@@ -223,10 +228,11 @@ export class EventExportService {
     getTrackedEntityInstancesFromLast (lastUpdated: string, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
         const commonParams = {
             lastUpdated: lastUpdated,
-            ouMode: 'DESCENDANTS'
+            ouMode: 'ACCESSIBLE'
         };
         let teiPromises = orgunitProgramCombo.map( (combination) => {
-            const params = angular.extend({}, commonParams, {ou: combination.orgUnit, program: combination.program});
+            //ou: combination.orgUnit, 
+            const params = angular.extend({}, commonParams, {program: combination.program});
             return this.TrackedEntityInstances.get(params).$promise;
         });
 
@@ -297,7 +303,8 @@ export class EventExportService {
      * @param events Object of type EventList
      * @returns {*} Promise that resolves to an updated EventDataWrapper
      */
-    private addRelatedTrackedEntitiesAndEnrollments (events: EventList): ng.IPromise<EventDataWrapper> {
+    /**
+     *     private addRelatedTrackedEntitiesAndEnrollments (events: EventList): ng.IPromise<EventDataWrapper> {
         let dataWrapper = new EventDataWrapper(events.events, [], []);
 
         var teisArray = this.extractEventsPropertyToArray(events, 'trackedEntityInstance');
@@ -305,13 +312,14 @@ export class EventExportService {
 
         return this.addTrackedEntitiesAndEnrollments(dataWrapper, teisArray, enrollsArray);
     }
-
+*/
     /**
      * This method adds to the EventDataWrapper passed as parameter the trackedEntityInstances and enrollments that are 
      * related to the contained events and are not present in the EventDataWrapper.
      * @param dataWrapper Target EventDataWrapper
      * @returns {*} Promise that resolves to an updated EventDataWrapper
      */
+    /**
     private addMissingTrackedEntitiesAndEnrollments (dataWrapper: EventDataWrapper): ng.IPromise<EventDataWrapper> {
         const relatedTeis = this.extractEventsPropertyToArray(new EventList(dataWrapper.events), 'trackedEntityInstance');
         const relatedEnrolls = this.extractEventsPropertyToArray(new EventList(dataWrapper.events), 'enrollment');
@@ -324,7 +332,8 @@ export class EventExportService {
 
         return this.addTrackedEntitiesAndEnrollments(dataWrapper, missingTeis, missingEnrolls);
     }
-
+    */
+/** 
     private addTrackedEntitiesAndEnrollments (dataWrapper: EventDataWrapper, teisArray: string[], enrollsArray: string[]): ng.IPromise<EventDataWrapper> {
         return this.getTrackedEntityInstancesByUid(teisArray)
             .then( (trackedEntityInstances) => {
@@ -336,13 +345,14 @@ export class EventExportService {
                 return dataWrapper;
             });
     }
-
+*/
     /**
      * This methods queries for a list of trackedEntityInstances
      * @param teisUids Array of trackedEntityInstances uids (e.g.: ['ajdfkj','kkjefk']
      * @returns {*} A promise that resolves to an object like {trackedEntityInstances: [...]}
      */
-    private getTrackedEntityInstancesByUid (teisUids: string[]): ng.IPromise<TrackedEntityInstanceList> {
+   /**
+     private getTrackedEntityInstancesByUid (teisUids: string[]): ng.IPromise<TrackedEntityInstanceList> {
         let teiPromises = teisUids.map( (tei) => this.TrackedEntityInstances.get({uid: tei}).$promise );
 
         return this.$q.all(teiPromises)
@@ -353,12 +363,13 @@ export class EventExportService {
                 }, {trackedEntityInstances: []});
             })
     }
-
+*/
     /**
      * This methods queries for a list of enrollments
      * @param enrollUids Array of enrollments uids (e.g.: ['ajdfkj','kkjefk']
      * @returns {*} A promise that resolves to an object like {enrollments: [...]}
      */
+    /**
     private getEnrollmentsByUid (enrollUids: string[]): ng.IPromise<EnrollmentList> {
         let enrollPromises = enrollUids.map( (enrollment) => this.Enrollments.get({uid: enrollment}).$promise );
 
@@ -370,13 +381,13 @@ export class EventExportService {
                 }, {enrollments: []});
             })
     }
-    
+   */
     private compressFileByElementType (file) {
         let zip: JSZip = new JSZip();
         zip.file(this.EventHelper.EVENTS, file);
         return zip.generateAsync({type: "blob", compression: "DEFLATE"});
     }
-    private compressFileByElementType2 (file, lastUpdated, endDate, orgunits, programs) {
+    private compressFileByElementType2 (file, lastUpdated, endDate, serverName, orgunits, programs) {
        
         let zip: JSZip = new JSZip();
         var asString = JSON.stringify(file);
@@ -384,13 +395,13 @@ export class EventExportService {
         console.log("asString");
         console.log(asString);
         var settings={};
+        settings["serverName"]=serverName;
         settings["projectName"]=orgunits[0].name;
         settings["projectId"]=orgunits[0].id;
         settings["lastUpdated"]=lastUpdated;
         settings["endDate"]=endDate;
         settings["programs"]=programs;
-        console.log("settings");
-        console.log(settings);
+     
         
         zip.file(this.EventHelper.TEIS, asString);
         zip.file("settings", JSON.stringify(settings));

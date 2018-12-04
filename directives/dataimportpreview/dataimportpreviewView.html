@@ -25,12 +25,23 @@
 			<d2-progressbar-dynamic status="importPreviewStatus"></d2-progressbar-dynamic>
 		</div>
 	</div>
+	
+	<div class="row" ng-show="importSettings">
+			<div class="col-md-12">
+			<p>This file contains data registered or updated from {{projectName_settings}} from {{lastUpdated_settings | date:'dd/MM/yyyy HH:mm' }} to {{endDate_settings | date:'dd/MM/yyyy HH:mm'}}</p>		
+		  </div>
+	  </div>
 
 	<div class="row" ng-show="msjEmptyFile">
 	  	<div class="col-md-12">
 			<d2-messages type="danger" textmessage="{{ 'EMPTY_IMPORT_FILE' | translate }}"></d2-messages>
 		</div>
 	</div>
+	<div class="row" ng-show="fileIsNotZip">
+			<div class="col-md-6">
+				<d2-messages type="danger" textmessage="{{ 'The file is not zip' | translate }}"></d2-messages>
+			</div>
+		</div>
 	
 	<div class="row" ng-show="importLoaded">
 		<div class="col-md-4">

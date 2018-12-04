@@ -57,8 +57,8 @@ export class EventImportService {
         var deferred = this.$q.defer();
         this.readEventZipFile(file).then( 
             (eventFile) => {
-                console.log("EventFile");
-                console.log(eventFile);
+                //console.log("EventFile");
+                //console.log(eventFile);
                 return this.getAndUploadTeis2(eventFile.content)
                 
                    // .then( () => this.getAndUploadEnrollmentsAsActive(eventFile) )
@@ -120,12 +120,12 @@ export class EventImportService {
 
     private getAndUploadTeis2 (content) {
         var teis = new Object();
-        console.log("content");
-        console.log(content);
+        //console.log("content");
+        //console.log(content);
         teis = content;
         const params = { strategy: 'SYNC'}
-        console.log("Teis");
-        console.log(teis);
+        //console.log("Teis");
+        //console.log(teis);
         return this.zipObject(this.EventHelper.TEIS, teis)
             .then( (data) => this.uploadFile(this.EventHelper.TEIS, data, params)
             .then( (result) => { 

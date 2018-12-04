@@ -22,6 +22,7 @@ export const dataExport = ['$scope', 'commonvariable', 'UserService', function (
     
     $scope.activeTab = 2;
     $scope.onlineSyncPermission = false;
+    $scope.isOnline = commonvariable.isOnline
     
     $scope.setActiveTab = function (item) {
         $scope.activeTab = item;

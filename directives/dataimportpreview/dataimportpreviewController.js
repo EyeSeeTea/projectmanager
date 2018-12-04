@@ -39,31 +39,66 @@ var dataImportPreviewController =  ['$scope', "Organisationunit", function($scop
 		active: true
 	};
 	$scope.msjEmptyFile = false;
-	
+	$scope.importSettings=false;
 	// Read import file
 	var fileContent;
 	var fileReader = new FileReader();
 	
+	//$scope.isCompress = $scope.importFile.name.indexOf(".zip")>-1;
 	if ($scope.isCompress) {
 		fileReader.readAsArrayBuffer($scope.importFile);
 	} else {
-	    fileReader.readAsText($scope.importFile);
+	  $scope.fileIsNotZip = true;
+		//  fileReader.readAsText($scope.importFile);
 	}
 	
     fileReader.onload = function(e) {
 
-    	fileContent = e.target.result;
+		fileContent = e.target.result;
+		
+		JSZip.loadAsync(fileContent)
 
-		new JSZip.external.Promise(
-			function (resolve, reject) {
-				if ($scope.isCompress) {
-					resolve(JSZip.loadAsync(fileContent).then(function(data){
-						return data.file(/.json$/)[0].async("string");
-					}));
-				} else {
-					resolve(fileContent);
-				}
-			})
+			
+					.then(function (zip) {
+
+						var settingsEntry = undefined;
+						zip.forEach(function (relativePath, zipEntry) {
+							if (zipEntry.name.indexOf('settings.txt') > -1) {
+								settingsEntry = zipEntry;
+							}
+						})
+
+						if (settingsEntry) {
+							return settingsEntry.async("text").then(
+								data => {
+									
+									$scope.projectVersion = JSON.parse(data).version;
+									$scope.lastUpdated_settings =  JSON.parse(data).lastUpdated;
+									$scope.endDate_settings =  JSON.parse(data).end;
+									$scope.projectId_settings =  JSON.parse(data).projectId;
+									$scope.projectName_settings =  JSON.parse(data).projectName;
+									
+									
+									$scope.importSettings=true;
+									
+										return Promise.resolve(zip);
+									
+								}
+							)
+						} else {
+							return Promise.reject("NO_SETTINGS_FILE");
+						}
+					}).then(
+						data => {
+									
+								return data.file(/.json$/)[0].async("string");
+
+					
+
+					})
+
+
+					
 			.then(function (fileData) {
 				var dataValues = JSON.parse(fileData).dataValues;
 				var data = {};

@@ -18,10 +18,14 @@
 
 import { ProgressStatus } from '../../model/model';
 import { EventImportService } from '../../services/services.module';
+//import { UserService } from '../../services/users/UserService';
+import { DataStoreNames } from '../../services/data-store/DataStoreNames';
+import { pbkdf2Sync } from 'crypto';
 
 export class TrackerDataImport {
+ 
 
-    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "DataStoreService","EventHelper"];
+    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "DataStoreService","UserService","EventHelper"];
 
     progressStatus = {};
     analyticsStatus = {};
@@ -32,6 +36,7 @@ export class TrackerDataImport {
     analyticsLog: any[];
     import_result=false;
     importGap=false;
+    importOUTDATED=false;
     message="";
     d="";
     imported="";
@@ -40,6 +45,7 @@ export class TrackerDataImport {
     ignored="";
     projectName="";
     projectId="";
+    serverName="";
     lastUpdated="";
     endDate="";
     lastUpdatedDataStore="";
@@ -49,22 +55,71 @@ export class TrackerDataImport {
     analyticsShow=false;
 
     $file;//single file
+    projects=[];
+    
 
     constructor(private $q: ng.IQService, private EventImportService: EventImportService, private AnalyticsService, 
-                private DemographicsService, private DataStoreService) {}
+                private DemographicsService, private DataStoreService, private UserService) {
+                    this.init();
+                }
+    
+               async init(){
+                var namespace="ServersTrackerImportDates";
+                var p2=[];
+                var p3=[];
+                var project;
+                var p= await this.getUserProjects();
+                var keys= await this.DataStoreService.getNamespaceKeys(namespace);
 
+                for( project in p)  {
+                
+                    if (keys.indexOf(p[project].id)>-1) {
+                                var data= await this.getImportDate(p[project].id);
+     
+                                    var d; 
+                 
+                                        for ( d in data) {
+                                           // console.log("data2");
+                                           // console.log(data); 
+                                           // console.log("d2");
+                                           // console.log(data[d]);
+                                            //if (p3[project]==undefined) { p3[project]=[];}
+                                            p3["name"]=p[project]["name"];
+                                            p3["id"]=p[project]["id"];
+                                           if (Object.keys(data).length>1) {p3["serverName"]=data[d].serverName;}
+                                          
+                                            p3["lastImportDate"]=data[d].endDate
+                                            p2.push(p3);
+                                            p3=[];
+    
+                                    }
+                     }
+     
+                };
+      
+               
+                this.projects=p.concat(p2);
+                this.projects=this.projects.filter(p => p.lastImportDate!=undefined);
+                //console.log(this.projects)
+                                                }  
+                
+               
     showImportDialog() {
 
         this.varValidation();
+
         if (!this.undefinedFile){
             $("#importConfirmation").modal();
         }
     };
 
+   
+
     sendFiles() {
 
         $("#importConfirmation").modal("hide");
-        
+        this.importOUTDATED=false;
+        this.importGap=false;
        
         this.summary = undefined;
         this.analyticsLog = [];
@@ -72,30 +127,33 @@ export class TrackerDataImport {
             (eventFile) => {
             var namespace="ServersTrackerImportDates";
             var dataStoreKey=eventFile["settings"].projectId;
-
-            
+            var serverName=eventFile["settings"].serverName;
             this.projectName=eventFile["settings"].projectName;       
             this.lastUpdated= eventFile["settings"].lastUpdated;
             this.endDate=eventFile["settings"].endDate;
 
             this.DataStoreService.getNamespaceKeyValue(namespace, dataStoreKey)
             .then(data=>{
-                
-                this.lastUpdatedDataStore= data.lastUpdated;
-                this.endDateDataStore=data.endDate;
-if (this.lastUpdated>data.endDate) { this.importGap=true;} 
-return this.importGap
-            })
+                if (data!=undefined) {
+                  if(  data[serverName]!=undefined) { 
+                this.lastUpdatedDataStore= data[serverName].lastUpdated;
+                this.endDateDataStore=data[serverName].endDate;
+            if (this.lastUpdated>data[serverName].endDate) { this.importGap=true;} 
+            if (this.endDate<data[serverName].endDate) { this.importOUTDATED=true;} 
+                    return this.importGap
+                }
+                } else {return this.importGap}
+}
+        )
            
             .then(d => {
 
-                if (!this.importGap) {
+                if (!this.importGap && !this.importOUTDATED) {
                     this.importingData=true;
         this.progressStatus = ProgressStatus.initialWithoutProgress;
                     this.EventImportService.importEventFile2(this.$file)
                         .then((result) => {
-                        console.log("resultado3");
-                        console.log(result);
+                        
                         this.import_result=true;
                         this.message=result["data"].data.message;
                         this.imported=result["data"].data.response.imported;
@@ -106,26 +164,34 @@ return this.importGap
                         //this.progressStatus = ProgressStatus.doneWithFailure
                         var namespace="ServersTrackerImportDates";
                         
-                    console.log(this.$file.name);
+                    
                         var dataStoreKey=result["settings"].projectId;
+                        this.serverName=result["settings"].serverName;
                         this.projectName=result["settings"].projectName;
                         this.lastUpdated= result["settings"].lastUpdated;
                         this.endDate=result["settings"].endDate; 
-                        var log={
-                            projectId: result["settings"].projectId,
-                            projectName:  result["settings"].projectName,
-                            lastUpdated:  result["settings"].lastUpdated,
-                            filename:this.$file.name,
-                            endDate:  result["settings"].endDate
-            
-                        }
-                    
+                        this.DataStoreService.getNamespaceKeyValue(namespace, dataStoreKey).then(log => {
+
+                            if (log==undefined) { log={};}
+                       
+                            log[serverName]={
+                                projectId: result["settings"].projectId,
+                                projectName:  result["settings"].projectName,
+                                serverName:  result["settings"].serverName,
+                                lastUpdated:  result["settings"].lastUpdated,
+                                filename:this.$file.name,
+                                endDate:  result["settings"].endDate
+                
+                            }
+                        
+                          
+                
+                            this.DataStoreService.setNamespaceKeyValue(namespace, dataStoreKey, log);
+                            this.refreshingData=true;
+                            this.analyticsStatus = ProgressStatus.initialWithoutProgress;
+                            this.analyticsShow=true;
+                        })
                       
-            
-                        this.DataStoreService.setNamespaceKeyValue(namespace, dataStoreKey, log);
-                        this.refreshingData=true;
-                        this.analyticsStatus = ProgressStatus.initialWithoutProgress;
-                        this.analyticsShow=true;
                         })
                         .then(() => this.AnalyticsService.refreshEventAnalytics())
                         .then(
@@ -143,6 +209,8 @@ return this.importGap
        this.import_result=false;
        this.analyticsShow=false;
     this.importingData=false;
+    this.importOUTDATED=false;
+    this.importGap=false;
         this.varValidation();
         if (!this.undefinedFile) {
             this.importingData=false;
@@ -151,6 +219,7 @@ return this.importGap
             this.EventImportService.previewEventFile(this.$file).then( result => {
                 this.summary = result["summary"];
                 this.projectName=result["settings"].projectName;
+                this.serverName=result["settings"].serverName;
                 this.projectId=result["settings"].projectId;
                 this.lastUpdated= result["settings"].lastUpdated;
                 this.endDate=result["settings"].endDate; 
@@ -161,7 +230,7 @@ return this.importGap
     };
 
     onFileSelect($files) {
-        for (var i = 0; i < $files.length; i++) {
+             for (var i = 0; i < $files.length; i++) {
             this.$file = $files[i];//set a single file
             this.undefinedFile = false;
             this.importFailed = false;
@@ -172,4 +241,76 @@ return this.importGap
     private varValidation() {
         this.undefinedFile = (this.$file == undefined);
     }
+public getImportDate(projectId) {
+        var projects = [];
+        var namespace="ServersTrackerImportDates";
+        var servers=[];
+        var d;
+   
+        return this.DataStoreService.getNamespaceKeyValue(namespace, projectId)
+        .then(datos=>{
+            //console.log("datos");
+            //console.log(datos.toJSON());
+           
+           if (datos!=undefined) {
+            for(d in datos.toJSON()) {
+                //console.log("d");
+                //console.log(d);
+                servers[d]={"serverName": d, "endDate":datos[d].endDate}
+            }
+            return servers;
+        
+       
+    } else {return null}
+
+        }
+           )
+        
+        
+        
+    }
+
+    private getUserProjects() {
+        return this.UserService.getCurrentUserTree().then(me => {
+            
+            /* Buscamos las misiones que tiene asignadas el usuario */
+            var missions = [];
+            var projects = [];
+            missions = me.dataViewOrganisationUnits;
+           
+            projects=this.addProjects(missions);
+           // console.log("projects");
+           // console.log(projects);
+
+            return projects;
+        })
+
+    };
+
+    private addProjects(ous) {
+        var projects=[];
+     
+     ous.forEach(element => {
+         //projects.push(element)
+       if (element.name!="OC")  {
+         element.children.forEach(element2 => {
+            if (element2.level==4) { projects.push(element2);} 
+            if (element2.name!="OC")  {
+            element2.children.forEach(element3 => {
+                if (element3.level==4) { projects.push(element3);}   
+                element3.children.forEach(element4 =>{
+                   if (element4.level==4) { projects.push(element4);} 
+                })
+
+            });
+        }            
+        });
+
+    } 
+     });
+     
+    return projects;
+    }
+
 }
+

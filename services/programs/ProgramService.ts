@@ -22,14 +22,17 @@ import { AttributeValue, Orgunit, Program, Job, ServiceWithPrograms } from '../.
 
 export class ProgramService {
 
-    static $inject = ['UserService', 'Organisationunit', 'OrganisationUnitGroup', 'Programs', 'JobExecute'];
+    static $inject = ['UserService', 'Organisationunit', 'OrganisationUnitGroup', 'Programs', 'Jobs','JobConfigurations', 'JobExecute'];
 
     constructor(
         private UserService: UserService,
         private Organisationunit,
         private OrganisationUnitGroup,
         private Programs,
+        private Jobs,
+        private JobConfigurations,
         private JobExecute
+        
     ){}
 
     readonly serviceCodeId = "pG4YeQyynJh";
@@ -101,6 +104,16 @@ export class ProgramService {
     
         return this.JobExecute.get({uid: jobId}).$promise;
     }
+    getJobId(name: string): ng.IPromise<any>{
+    name="displayName:like:"+name;
+        return this.JobConfigurations.get({name: "", filter: name}).$promise;
+    }
+
+    jobs(jobId: string): ng.IPromise<any>{
+        
+        return this.Jobs.get({uid: jobId}).$promise;
+        }
+    
 }
 
 class OrgunitWithPrograms {

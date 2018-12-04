@@ -18,11 +18,11 @@
 
 <h2>{{ 'TRACKER_DATA_EXPORT' | translate }}</h2>
 
-<div class="row">
+<div id="tab" class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
-            <li ng-class="{'active': ctrl.activeTab == 1}" role="presentation"><a ng-click="ctrl.setActiveTab(1)" href="">{{ 'AUTOMATIC_TRACKER_SYNC' | translate }}</a></li>
-            <li ng-class="{'active': ctrl.activeTab == 2}" role="presentation"><a ng-click="ctrl.setActiveTab(2)" href="">{{ 'LATEST_VALUES' | translate }}</a></li>
+            <li ng-show="ctrl.isSuperUser && !ctrl.isOnline" ng-class="{'active': ctrl.activeTab == 2}" role="presentation"><a ng-click="ctrl.setActiveTab(2)" href="">{{ 'AUTOMATIC_TRACKER_SYNC' | translate }}</a></li>
+            <li ng-class="{'active': ctrl.activeTab == 1}" role="presentation"><a ng-click="ctrl.setActiveTab(1)" href="">{{ 'LATEST_VALUES' | translate }}</a></li>
             <li ng-show="false" ng-class="{'active': ctrl.activeTab == 3}" role="presentation"><a ng-click="ctrl.setActiveTab(3)" href="">{{ 'BY_PERIOD' | translate }}</a></li>
         </ul>
     </div>
@@ -30,10 +30,10 @@
 
 <div class="row" >
     <div class="col-md-12">
-            <div ng-if="ctrl.activeTab === 1">
+            <div ng-if="ctrl.activeTab === 2">
                     <tracker-online-sync></tracker-online-sync>
                 </div>
-        <div ng-if="ctrl.activeTab === 2">
+        <div ng-if="ctrl.activeTab === 1">
             <tracker-export-latest></tracker-export-latest>
         </div>
         <div ng-if="ctrl.activeTab === 3">

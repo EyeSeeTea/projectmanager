@@ -41,6 +41,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
         const adminGroup = 'LjRqO9XzQPs';
 		var projectId = null;
 		var projectName = null;
+		var serverName = null;
 		$scope.sync_result = null;
 		$scope.sync_result_date = "";
 		$scope.resultVisible = false;
@@ -55,6 +56,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 
 		UserService.getCurrentUser()
 			.then(user => {
+				
 				$scope.isOnline = commonvariable.isOnline
 				projectId = user.organisationUnits[0].id;
 				projectName = user.organisationUnits[0].name;
@@ -72,7 +74,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 			});
 
 
-		function writeRegisterInRemoteServer(projectId, serverDate, lastSyncDate) {
+		function writeRegisterInRemoteServer(projectId, serverDate, serverName, lastSyncDate) {
 
 			lastDatePush = serverDate.getTime();
 			console.log(serverDate);
@@ -91,6 +93,13 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 						register.lastPushDateSaved = dates.data.lastPushDateSaved
 					}
 				})
+				.then(() => ServerPushDatesRemoteDataStoreService.getKeyValue(projectId ))
+				.then(currentValue => 
+					{
+						if (currentValue==undefined) {currentValue={}}
+						currentValue[serverName]= register;
+					return ServerPushDatesRemoteDataStoreService.setKeyValue(projectId ,currentValue) ;
+					})
 				.then(() => ServerPushDatesRemoteDataStoreService.setKeyValue(projectId + "_date", register))
 				.then(() => ServerPushDatesRemoteDataStoreService.getKeyValue(projectId + "_values"))
 				.then((currentValues) => {
@@ -121,6 +130,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 				};
 				UserService.getCurrentUser()
 					.then(user => {
+						
 						projectId = user.organisationUnits[0].id;
 						projectName = user.organisationUnits[0].name;
 						getMedco(projectId).then(
@@ -193,6 +203,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 
 										UserService.getCurrentUser()
 											.then(user => {
+												serverName=user.userCredentials.username.split("-")[1];
 												projectId = user.organisationUnits[0].id;
 												projectName = user.organisationUnits[0].name;
 												return RemoteApiService.isRemoteServerAvailable();
@@ -214,7 +225,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
                                                                 processDataPushResponse(data, projectId, projectName).then(() => {
                                                                     $scope.validationDataStatus = ProgressStatus.doneSuccessful;
                                                                 })
-																writeRegisterInRemoteServer(projectId, serverTime, lastSyncDate);
+																writeRegisterInRemoteServer(projectId, serverTime, serverName, lastSyncDate);
 															},
                                                             data_error => $scope.syncError = data_error
                                                         );

@@ -40,6 +40,7 @@ class TrackerExportLatestController {
     allServices = { lastExported: "", selected: false};
     exporting = false;
     dateopened = false;
+    serverName="";
     projectName="";
     projectId="";
     exportError;
@@ -52,13 +53,22 @@ class TrackerExportLatestController {
                 private DataStoreService: DataStoreService, private SystemService: SystemService) {}
 
     $onInit() {
-        this.UserService.getCurrentUserOrgunits()
+
+        this.UserService.getCurrentUser().then (user=> {
+             this.serverName=user.userCredentials.username.split("-")[1];
+            } ).then(()=>{
+                
+                return    this.UserService.getCurrentUserOrgunits()
+            
+            })
+
         .then((ou)=>
         {
            this.projectName=ou[0].name;
             this.projectId=ou[0].id;
-            console.log("ou");
-            console.log(ou[0].name);})
+            //console.log("ou");
+            //console.log(ou[0].name);
+        })
             .then(()=>this.ProgramService.getProgramsUnderUserHierarchyByService())
         
             .then( data => {
@@ -71,12 +81,16 @@ class TrackerExportLatestController {
 
     updateLastExportInfo () {
         return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
-            console.log(log[this.projectId]);
+            console.log(log[this.projectId][this.serverName]);
             var log2=log[this.projectId];
+            
             if (log2 != undefined) {
+                if  (log2[this.serverName]!=undefined){
                 this.services.map( service => {
-                    service.lastExported = log2[service.code];
+                    service.lastExported = log2[this.serverName][service.code];
+                
                 });
+            }
             }
         
             return "Done";
@@ -86,26 +100,24 @@ class TrackerExportLatestController {
     setLatestExportAsDefault () {
         const latest = this.services.reduce( (previous, current) => {
             if (previous.lastExported === undefined || current.lastExported === undefined) {
-                return {lastExported: ""};
+                return {lastExported: {"end":"2018-01-01"}};
             } else if (previous.lastExported.end < current.lastExported.end) {
                 return previous;
             } else {
                 return current;
             }
-        }, {lastExported: {"end":null}});
+        });
+        //console.log("latest.lastExported");
+        //console.log(latest.lastExported);
         this.allServices.lastExported = latest.lastExported;
         this.params.date  = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
         this.params.maxDate = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
         var d=   new Date(latest.lastExported.end) ; // Maximal selectable date
-var month= d.getMonth()+1;
+        var month= d.getMonth()+1;
        
-        this.dateOptions = {
-           
-            maxDate : d
-           
-          };
-          console.log("this.dateOptions");
-          console.log(this.dateOptions);
+        this.dateOptions = {maxDate : d};
+         // console.log("this.dateOptions");
+         // console.log(this.dateOptions);
     }
     
     openLastUpdated ($event) {
@@ -131,13 +143,17 @@ var month= d.getMonth()+1;
         this.exportError = undefined;
         const startDate: Date = this.params.date;
         var serverDate: Date;
-        return this.SystemService.getServerDateWithTimezone()
+        var serverName;
+        return this.UserService.getCurrentUser()
+        .then(user=> serverName=user.userCredentials.username.split("-")[1]
+        )
+        .then(()=> this.SystemService.getServerDateWithTimezone())
             .then( date => serverDate = date )
             .then( () => this.EventService.updateEventData() )
             .then( () => this.UserService.getCurrentUserOrgunits() )
-            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), serverDate, orgunits, this.getSelectedPrograms()) )
+            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), serverDate, serverName, orgunits, this.getSelectedPrograms()) )
             .then( eventsZipFile => saveAs(eventsZipFile, this.params.filename + '.zip') )
-            .then( () => this.logExport(startDate, serverDate, this.projectId, this.projectName) )
+            .then( () => this.logExport(startDate, serverDate, serverName, this.projectId, this.projectName) )
             .then( () => this.updateLastExportInfo() )
             .then( () => console.log("Everything done") )
             .catch( error => this.exportError = error )
@@ -146,12 +162,14 @@ var month= d.getMonth()+1;
             .then( () => this.setLatestExportAsDefault() )
     };
 
-    logExport (start: Date, end: Date, projectId, projectName) {
+    logExport (start: Date, end: Date, serverName, projectId, projectName) {
         return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
-            const current = new TrackerDataExportLog(this.params.filename, start, end, projectName);
+            const current = new TrackerDataExportLog(this.params.filename, start, end, serverName, projectName);
             log = log || [];
+            if (log[projectId]==undefined) {  log[projectId]={};}
+            if (log[projectId][serverName]==undefined) { log[projectId][serverName]={}}
             this.getSelectedServices().map( service => {
-                log[projectId][service.code] = current;
+                log[projectId][serverName][service.code] = current;
             });
             return this.DataStoreService.setKeyValue(this.dataStoreKey, log);
         });

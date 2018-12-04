@@ -368,12 +368,19 @@ Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resour
 }]);
 
 Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource, commonvariable) {
-	return $resource( commonvariable.url + "programs/:uid" );
+	return $resource( commonvariable.url + "programs/:uid");
 }]);
 
 Dhis2Api.factory("JobExecute",['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "jobConfigurations/:uid/execute" );
 }]);
+
+
+
+Dhis2Api.factory("JobConfigurations",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "jobConfigurations/:name" );
+}]);
+
 Dhis2Api.factory("Jobs",['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "jobConfigurations/:uid" );
 }]);

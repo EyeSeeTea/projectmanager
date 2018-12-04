@@ -29,7 +29,7 @@ require('./node_modules/angular-css/angular-css.min');
 require('./node_modules/bootstrap/dist/js/bootstrap.min');
 require('./node_modules/bootstrap/dist/css/bootstrap.min.css');
 require('./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls');
-
+require('./node_modules/babel-polyfill');
 require('./include/angular.treeview/angular.treeview');
 require('./include/angular.treeview/css/angular.treeview.css');
 

@@ -18,9 +18,12 @@
 
 <form name="trackeronlinesync" ng-submit="trackeronlinesync.$valid && $ctrl.submit()" novalidate>
         <div class="form_group">
-                <button type="submit" id="submit" class="btn btn-primary" ng-disabled="$ctrl.services.length == 0 || $ctrl.exporting || $ctrl.getSelectedServices().length == 0">
+                <button type="submit" id="submit" class="btn btn-primary" >
                     {{ 'AUTOMATIC_TRACKER_SYNC' | translate }}
                 </button>
-                <span ng-show="$ctrl.exporting" class='glyphicon glyphicon-repeat animation-rotation'></span>
+                     <span ng-show="$ctrl.exporting" class='glyphicon glyphicon-repeat animation-rotation'></span>
             </div>
+            <br>
+            <p > Last Sync: {{$ctrl.lastExecuted  | date:'dd/MM/yyyy HH:mm'}}</p>
+            <p ng-if="$ctrl.syncFinished">Result: {{$ctrl.lastExecutedStatus}}</p>
 </form>

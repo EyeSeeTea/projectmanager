@@ -62,10 +62,11 @@ var trackerExportDetailedController = ["$scope",'$filter', 'commonvariable', 'Ev
         const start: string = $filter('date')($scope.start_date,'yyyy-MM-dd');
         const end: string = $filter('date')($scope.end_date,'yyyy-MM-dd');
         const orgUnits: Orgunit[] = commonvariable.OrganisationUnitList;
-
+/*
         EventService.updateEventData()
             .then( () => EventExportService.exportEventsWithDependenciesInZip(start, end, orgUnits))
             .then( (eventsZipFile) => saveAs(eventsZipFile, $scope.file_name + '.zip') )
             .finally( () => $scope.exporting = false );
+            */
     }
 }];

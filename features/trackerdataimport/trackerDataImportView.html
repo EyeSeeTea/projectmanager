@@ -25,13 +25,10 @@
     </div>
 </div>
 
-<div class="row" ng-show="ctrl.importGap">
-        <div class="col-md-12">
-            <d2-messages type="danger" textmessage="{{ 'The file contains data from ' | translate }} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}} and the last export ended on {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}: There is a gap in the dates and there could be missing data. Please ask the {{ctrl.projectName}} project to export data from {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}} onwards."></d2-messages>
-        </div>
-    </div>
 
-<div class="row">
+
+    
+<div class="row" ng-init="ctrl.init()">
     <div class="col-md-6">
         <label for="file_search"> {{ 'SELECT_FILE' | translate }} </label>
         <input type="file" class="form-control" ng-file-select="ctrl.onFileSelect($files)" name="file_search" required=""/>
@@ -51,10 +48,41 @@
         </button>
     </div>
 </div>
+<div class="row" ng-show="ctrl.importGap">
+    <div class="col-md-12">
+        <d2-messages type="danger" textmessage="{{ 'The file contains registered or updated data from ' | translate }} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}} and the last export ended on {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}: There is a gap in the dates and there could be missing data. Please ask the {{ctrl.projectName}} project to export data from {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}} onwards."></d2-messages>
+    </div>
+</div>
+<div class="row" ng-show="ctrl.importOUTDATED">
+    <div class="col-md-12">
+        <d2-messages type="danger" textmessage="This file contains data from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}. The last imported data was until {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}. The data in this file could be outdated. The file cannot be imported."></d2-messages>
+    </div>
+</div>
 <br/>
+<table class="table table-bordered table-condensed table-hover" >
+        <thead>
+            <tr>
+                <th class="orgunit">{{ 'Project' | translate}}</th>
+                
+                <th>{{ 'Last Export Date' | translate }}</th>
+               
+            </tr>
+        </thead>
+        <tbody >
+            
+            <tr class="table-row" ng-repeat="project in ctrl.projects" >
+                <td  class="project">{{ project.name }} <span ng-if="project.serverName">({{project.serverName}})</span></td>
+              
+              <td >{{ project.lastImportDate | date:'yyyy-MM-dd HH:mm' }}</td>
+               
+            </tr>
+        </tbody>
+    </table>
+    
+   
 <div id="file_summary" class="col-md-8" ng-show="ctrl.summary">
        
-       <p>This file contains data from {{ctrl.projectName}} from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}</p> 
+       <p>This file contains data from {{ctrl.projectName}} registered or updated from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}</p> 
 		
     <table class="table table-bordered table-condensed">
         <thead>
@@ -145,6 +173,8 @@
 </div>
 
 
+    
+ 
 
 
 

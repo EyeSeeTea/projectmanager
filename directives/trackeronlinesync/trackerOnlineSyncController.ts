@@ -20,6 +20,8 @@
 import { TrackerDataExportLog, ServiceWithPrograms } from '../../model/model';
 import { DataStoreService, EventExportService, EventService, ProgramService, SystemService, UserService } from '../../services/services.module';
 
+import * as angular from 'angular';
+
 export class trackerOnlineSyncComponent implements ng.IComponentOptions {
     public controller: any;
     public template: string;
@@ -34,135 +36,51 @@ export class trackerOnlineSyncComponent implements ng.IComponentOptions {
 
 class trackerOnlineSyncController {
 
-    params = { date: null, maxDate: null, filename: ""};
-    services = null;
-    allServices = { lastExported: "", selected: false};
+ 
+
+  
     exporting = false;
-    jobId="hM8gvQULb71"; //ejg2w529PyN
-    dateopened = false;
+    syncFinished=false;
+   // jobId="hM8gvQULb71"; //ejg2w529PyN
+    
     exportError;
     dataStoreKey: string = 'trackeronlinesync';
+    lastExecutedStatus="";
+    lastExecuted="";
+    jobId=null;
 
-    static $inject = ['$filter', 'ProgramService', 'UserService', 'EventExportService', 'EventService', 'DataStoreService', 'SystemService'];
+    static $inject = ['$filter', 'ProgramService', 'UserService',   'DataStoreService', 'SystemService'];
 
     constructor(private $filter, private ProgramService: ProgramService, private UserService: UserService, 
-                private EventExportService: EventExportService, private EventService: EventService, 
-                private DataStoreService: DataStoreService, private SystemService: SystemService) {}
+                
+                private DataStoreService: DataStoreService, private SystemService: SystemService) {this.init();}
    
    
-
-    submit () {
-        this.exporting = true;
-        
-        this.exportError = undefined;
-        const startDate: Date = this.params.date;
-        var serverDate: Date;
-        console.log(this.jobId);
-        return this.ProgramService.programSync(this.jobId)
-            .then( result => console.log(result) )
+async init() {
+    console.log("jobId");
+    this.jobId=await this.ProgramService.getJobId("individual");
+    this.jobId=this.jobId.jobConfigurations[0].id;
+   
+    var result2 =await this.ProgramService.jobs(this.jobId);
+    this.lastExecutedStatus=result2.lastExecutedStatus;
+    this.lastExecuted=result2.lastExecuted;
+    var element = angular.element($('#submit'));
+    element.scope().$apply();
+}
+    async submit () {
+       this.exporting = true;
+       this.exportError = undefined;
+       var result =await this.ProgramService.programSync(this.jobId);
+       var result2 =await this.ProgramService.jobs(this.jobId);
+       this.lastExecutedStatus=result2.lastExecutedStatus;
+       this.lastExecuted=result2.lastExecuted;
+       //console.log(result2);
+        this.exporting = false;
+        this.syncFinished=true;
+        var element = angular.element($('#submit'));
+        element.scope().$apply();
             
-            .then( () => console.log("Everything done") )
-            .catch( error => this.exportError = error )
-            .finally( () => this.exporting = false )
            
     };
-/*
-    updateLastExportInfo () {
-        return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
-            if (log != undefined) {
-                this.services.map( service => {
-                    service.lastExported = log[service.code];
-                });
-            }
-            return "Done";
-        });
-    }
 
-    setLatestExportAsDefault () {
-        const latest = this.services.reduce( (previous, current) => {
-            if (previous.lastExported === undefined || current.lastExported === undefined) {
-                return {lastExported: undefined};
-            } else if (previous.lastExported.end < current.lastExported.end) {
-                return previous;
-            } else {
-                return current;
-            }
-        }, {lastExported: {end:null}});
-        this.allServices.lastExported = latest.lastExported;
-        this.params.date  = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
-        this.params.maxDate = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
-    }
-    
-    openLastUpdated ($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        this.dateopened = true;
-    };
-
-    clickService (service) {
-        service.selected = !service.selected;
-        this.evaluateAllServices();
-    }
-    
-    clickAllServices () {
-        this.allServices.selected = !this.allServices.selected;
-        this.services.map( service => {
-            service.selected = this.allServices.selected;
-        });
-    };
-    
-    submit () {
-        this.exporting = true;
-        this.exportError = undefined;
-        const startDate: Date = this.params.date;
-        var serverDate: Date;
-        return this.SystemService.getServerDateWithTimezone()
-            .then( date => serverDate = date )
-            .then( () => this.EventService.updateEventData() )
-            .then( () => this.UserService.getCurrentUserOrgunits() )
-            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), orgunits, this.getSelectedPrograms()) )
-            .then( eventsZipFile => saveAs(eventsZipFile, this.params.filename + '.zip') )
-            .then( () => this.logExport(startDate, serverDate) )
-            .then( () => this.updateLastExportInfo() )
-            .then( () => console.log("Everything done") )
-            .catch( error => this.exportError = error )
-            .finally( () => this.exporting = false )
-            // It is necessary to introduce this delay because of maxDate validator.
-            .then( () => this.setLatestExportAsDefault() )
-    };
-
-    logExport (start: Date, end: Date) {
-        return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
-            const current = new TrackerDataExportLog(this.params.filename, start, end);
-            log = log || {};
-            this.getSelectedServices().map( service => {
-                log[service.code] = current;
-            });
-            return this.DataStoreService.setKeyValue(this.dataStoreKey, log);
-        });
-    }
-
-    getSelectedServices () {
-        return !this.services ? [] :
-            this.services.filter( service => service.selected );
-    };
-
-    getSelectedPrograms () {
-        return this.getSelectedServices().reduce( (array, service) => {
-            return array.concat(service.programs);
-        }, []);
-    }
-*/
-/*
-    evaluateAllServices () {
-        if(this.services != undefined) {
-            this.allServices.selected = this.services.reduce( (state, current) => {
-                return state && current.selected;
-            }, true);
-
-            
-            
-        }
-    }
-*/
 }

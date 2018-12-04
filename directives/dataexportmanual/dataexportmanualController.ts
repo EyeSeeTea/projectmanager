@@ -26,16 +26,18 @@ export const dataexportmanualDirective = [function () {
 	}
 }];
 
-var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "SystemService","Info", "DataSetsUID", "DataExport", "DemographicsService", "RemoteApiService", "DataStoreService", "DataStoreNames",'UserService', '$timeout',
-	function ($scope, $q: ng.IQService, $filter, commonvariable, SystemService, Info, DataSetsUID, DataExport, DemographicsService, RemoteApiService, DataStoreService, DataStoreNames, UserService, $timeout) {
+var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "SystemService","Info", "DataSetsUID", "DataExport", "DemographicsService", "ServerPushDatesDataStoreService","RemoteApiService", "DataStoreService", "DataStoreNames",'UserService', '$timeout',
+	function ($scope, $q: ng.IQService, $filter, commonvariable, SystemService, Info, DataSetsUID, DataExport, DemographicsService,ServerPushDatesDataStoreService, RemoteApiService, DataStoreService, DataStoreNames, UserService, $timeout) {
 
 		let version:string ="";
 		 var start_date;
 		 var lastUpdated;
 		 var dataStoreKey:string = 'aggregatedexport';
 		 var projectName;
+		 var serverName// for project with 2 servers ; 
 		 var projectId;
-		var end_date;			
+		var end_date;	
+		var lastSyncDate;		
 		$scope.demographicsSelected = false;
 		let currentYear: number = (new Date()).getFullYear();
 		$scope.availableYears = [currentYear - 3, currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
@@ -73,28 +75,54 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 			value: 100,
 			active: true
 		};
-
-	
+		
 		UserService.getCurrentUser()
 			.then(user => {
-				
+				//console.log(user.userCredentials.username.split("-")[1]);
+				serverName=user.userCredentials.username.split("-")[1];
 				projectId = user.organisationUnits[0].id;
 				projectName = user.organisationUnits[0].name;
-				DataStoreService.getKeyValue(dataStoreKey).then( log => {
-					console.log(log[projectId])
+			
+			})
+			.then (()=>{
+			ServerPushDatesDataStoreService.getKeyValue(projectId + "_date").then(
+				lastSyncDateResponse =>
+				{ lastSyncDate=new Date(lastSyncDateResponse.lastDatePush).toISOString();
+				//console.log("lastSyncDate");
+				//console.log(lastSyncDate)
+			}
+			)
+			.then(()=>{	DataStoreService.getKeyValue(dataStoreKey).then( log => {
+					if (log==undefined) {DataStoreService.setKeyValue(dataStoreKey)}
+					if (log[projectId][serverName] ==undefined) {
+						log[projectId][serverName]={};
+						log[projectId][serverName].lastUpdated="2018-01-01 00:00";
+						log[projectId][serverName].endDate="2018-01-01 00:00";
+						}
+				
 				//$scope.lastUpdated=	log[projectId].lastUpdated;
 				$scope.time_zone=new Date().toString().match(/([-\+][0-9]+)\s/)[1];
 				$scope.tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
 				$scope.projectName=projectName;
+				//console.log("serverName");
+				//console.log(log[projectId][serverName]);
 
-				if(log[projectId]!=undefined) {
-				$scope.end_date=log[projectId].endDate;
-				$scope.lastUpdated2=log[projectId].lastUpdated;
+				if(log[projectId][serverName]!=undefined) {
 				
 				
-							
+					if (log[projectId][serverName].endDate>lastSyncDate) {
+						$scope.end_date=log[projectId][serverName].endDate
+					} else {
+						$scope.end_date=lastSyncDate
+
+					}
+				
+					//$scope.end_date=log[projectId][serverName].endDate;
+					
+
+
+				$scope.lastUpdated2=log[projectId][serverName].lastUpdated;
 				var new_lastupdated=new Date($scope.end_date).toLocaleString('es-ES', { hour12: false });
-							
 				var from = new_lastupdated.split("/");
 				var dia=parseInt(from[0]);
 				var month=parseInt(from[1]);
@@ -108,7 +136,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 				//$scope.lastUpdated=new Date(log[projectId].endDate).toISOString;
 				
 				$scope.fecha_maxima=new Date(year, month - 1, dia);
-			}
+				}
 				/*
 				$scope.$watch("lastUpdated", function(newValue, oldValue) {
 					console.log("I've changed : ", newValue);
@@ -117,14 +145,14 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 				
 				});
 				*/
-         $scope.dateOptions = {
+       				  $scope.dateOptions = {
            
-            maxDate: $scope.fecha_maxima,
+         			   maxDate: $scope.fecha_maxima,
 			
-          };
+         				 };
 				});
 			});
-	
+		});
 
 		class RESTUtil {
 
@@ -219,7 +247,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 									$timeout(updateprocess, 5);
 										$scope.lastUpdated=lastUpdated;
 										$scope.end_date=end_date;
-										logExport(fileName,lastUpdated, end_date, projectId, projectName)
+										logExport(fileName,lastUpdated, end_date, projectId, projectName, serverName)
 								},
 								() => { });
 
@@ -227,7 +255,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 				});
 		};
 
-		var logExport  = function (fileName, lastUpdated: Date, end_date: Date, projectId, projectName) {
+		var logExport  = function (fileName, lastUpdated: Date, end_date: Date, projectId, projectName, serverName) {
 		
 				DataStoreService.getKeyValue(dataStoreKey).then( log => {
 					
@@ -239,8 +267,8 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 
 				
 				projects_array.forEach(project => {
-
-					var current = {"filename": fileName, "lastUpdated": lastUpdated, "endDate": end_date, "ProjectName": projectName};
+					var current={};
+					 current[serverName] = {"filename": fileName, "lastUpdated": lastUpdated, "endDate": end_date, "ProjectName": projectName};
 					//var log = {};
 					 log[project] = current;
 					
@@ -299,8 +327,8 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 
 			//end_date = yyyy+ "-" + mm+ "-"+ dd ; 
 				lastUpdated = $scope.lastUpdated;
-				console.log("lastUpdated");
-				console.log(lastUpdated);
+				//console.log("lastUpdated");
+				//console.log(lastUpdated);
 				return new BoundDates(
 					
 					new Date(lastUpdated).toISOString());
@@ -311,12 +339,13 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 								
 				return new Settings(
 			
-			 version,
-			 projectName,
-			 projectId,
-			lastUpdated,
-			end_date
-		)
+				version,
+				serverName,
+				projectName,
+				projectId,
+				lastUpdated,
+				end_date
+			)
 		}
 	var getVersion = function() {
 
@@ -337,6 +366,7 @@ class BoundDates {
 class Settings {
 	constructor(
 		public version: string,
+		public serverName: string,
 		public projectName: string,
 		public projectId: string,
 		public lastUpdated: string,

@@ -75,6 +75,7 @@ export class TrackerDataExportLog {
         public filename: string,
         public start: Date,
         public end: Date,
+        public serverName:string,
         public projectName: string
     ){}
 }
@@ -169,7 +170,7 @@ export class CurrentUser {
     constructor(
         public id: string,
         public name: string,
-        public userCredentials: {usernameid: string, userRoles: IdName[]},
+        public userCredentials: {username:string,usernameid: string, userRoles: IdName[]},
         public userGroups: IdName[],
         public organisationUnits: OrgunitExtended[],
         public dataViewOrganisationUnits: {id: string, level: number, children:{id: string, level: number, children: string[]}[]}[]

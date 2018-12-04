@@ -1,3 +1,4 @@
+import { UserService } from '../../services/users/UserService';
 
 /* 
  Copyright (c) 2015.
@@ -16,13 +17,25 @@
 
  You should have received a copy of the GNU General Public License
  along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
-
+ import * as angular from 'angular';
+//import { CommonVariable } from '../../model/model';
 export class TrackerDataExport {
-    
+    isSuperUser ="";
+    isOnline=null;
     activeTab: number = 1;
+    static $inject =["UserService", "commonvariable"];
+    constructor(private UserService, private commonvariable){
 
-    constructor(){}
-
+        this.init();
+    }
+async init() {
+ this.isOnline = this.commonvariable.isOnline
+  this.isSuperUser= await this.UserService.currentUserHasRole("Superuser");
+  console.log("super");
+  console.log(this.isSuperUser);
+  var element = angular.element($('#tab'));
+element.scope().$apply();
+}
     setActiveTab = function (item) {
         this.activeTab = item;
     };

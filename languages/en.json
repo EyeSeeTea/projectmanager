@@ -74,7 +74,7 @@
 	"EXPORT": "Export",
 	"EXPORT_INIT_DATE": "Start date",
 	"EXPORT_LASTUPDATED": "Export data registered or updated after",
-	"LAST_EXPORT_FROM": "Last exported data from",
+	"LAST_EXPORT_FROM": "Last exported data registered or updated until",
 	"LAST_EXPORT_TO": " to", 
 	"EXPORT_END_DATE": "End date",
 	"DATA_EXPORT_ZIP":"Compressed?",
