@@ -85,7 +85,7 @@ export class EventExportService {
      */
     exportEventsFromLastWithDependenciesInZip (lastUpdated: string, endDate, serverName, orgunits: Orgunit[], programs?: Program[]) {
         return this.exportEventsFromLastWithDependencies2(lastUpdated, orgunits, programs)
-           // .then(wrapper => this.EventHelper.encryptObject(wrapper))
+           .then(wrapper => this.EventHelper.encryptObject(wrapper))
             .then(file => this.compressFileByElementType2(file, lastUpdated, endDate, serverName, orgunits, programs));
     };
 

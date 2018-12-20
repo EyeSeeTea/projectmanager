@@ -93,20 +93,31 @@ export class EventImportService {
           return  settings.async("string").then(e=>{
             settingsResult=JSON.parse(e.toString(EncUTF8));
             }).then(() => {
-                console.log("settings");
-                console.log(settingsResult);
+               // console.log("settings");
+               // console.log(settingsResult);
                return encryptedFile.async("string")
             }).then (enc =>{
                 contentResult= JSON.parse(enc.toString(EncUTF8))
             }).then(()=>{
-                console.log("contentResult");
-                console.log(contentResult);
-                return {"settings": settingsResult, "content":contentResult};
+                //console.log("contentResult");
+                //console.log(contentResult);
+
+                return   this.EventHelper.decryptObject(contentResult);
+                
+                
             })
             
              
             
-                //.then(encrpyted => this.EventHelper.decryptObject(encrpyted));
+               .then(decrpyted => 
+                {
+
+                //    console.log("decrpyted");
+               // console.log(decrpyted);
+                return {"settings": settingsResult, "content":decrpyted};
+              
+                }
+            );
         });
     }
 
@@ -174,8 +185,8 @@ export class EventImportService {
     }
 
     private zipObject (name: string, object) {
-        console.log("stringfy");
-        console.log(JSON.stringify(object));
+        //console.log("stringfy");
+        //console.log(JSON.stringify(object));
         return  (new JSZip())
             .file(name, JSON.stringify(object))
             .generateAsync({type: "uint8array", compression: "DEFLATE"});
@@ -224,8 +235,8 @@ export class EventImportService {
                
             });
             
-            console.log("eventsAll");
-            console.log(eventsAll);
+           // console.log("eventsAll");
+           // console.log(eventsAll);
 
          return        this.classifyEventsByProgramAndStage(eventsAll)
         }

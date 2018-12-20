@@ -79,10 +79,7 @@ export class TrackerDataImport {
                                     var d; 
                  
                                         for ( d in data) {
-                                           // console.log("data2");
-                                           // console.log(data); 
-                                           // console.log("d2");
-                                           // console.log(data[d]);
+                                            
                                             //if (p3[project]==undefined) { p3[project]=[];}
                                             p3["name"]=p[project]["name"];
                                             p3["id"]=p[project]["id"];
