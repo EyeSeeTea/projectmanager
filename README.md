@@ -1,4 +1,4 @@
-# Project Manager
+# HMIS Management
 
 Web application (Dhis2 App) that simplifies the exchange of data and metadata between different DHIS2 platforms, and other administrative tasks, such as running the analityc process and approving data for aggregated data sets.
 
@@ -6,25 +6,32 @@ DHIS2, a flexible, web-based open source information system to collect and analy
 
 ## Sections
 
-* Data Approval: Replicates the data approval function of DHIS2
-* Run Analytics: Replicates the run analytics function
-* Import / export Meta-Data (Import / Export Project or Dictionary): Exports all Metadata in the system in the smallest format
-* Import / export data: Expors data by selected org. unit and period
-* Active / recover user: When a system imports metadata, user's passwords are not included in the exchange files. The Project Manager activates the imported users, which means, assign them a new password
+* Import  Meta-Data: Import metadata mofications
+* Import / export data: Manual and automatic
+* Import / export individual data.
+* Validation: data validation.
+* Refresh data: Replicates the run analytics function
+* Reset project users' password.
 * Available data: show a table with the number of values introduced by orgunit and period.
+* Metadata monitor: show a table with the status of each project.
 
 ## Build
 
-Bower is used as dependency manager. In order to have all dependencies available you must execute 
+NPM is used as dependency manager. In order to have all dependencies available you must execute 
 
 ```
-# bower install
+# npm install
 ```
 in the app directory.
 
-## Feedback
+Then build the app with
+```
+# npm run build-dev     //Development version
+# npm run build-prod    //Production version
+```
+This will create a `/dist` folder with the app.
 
-We’d like to hear your thoughts on the app in general, improvements, new features or any of the technologies being used. Just drop as a line at <a href="hello@eyeseetea.com">hello@eyeseetea.com</a> and let us know! If you prefer, you can also create a new issue on our GitHub repository. Note that you will have to register and be logged in to GitHub to create a new issue.
+Then package the content in `/dist` folder to install the app in the DHIS2 instance.
 
 ## License
 

@@ -71,6 +71,7 @@ class MenuController {
             
 
 
+
             const isHMISOfficer = me.userCredentials.userRoles.some(role => role.name == 'HMIS Officer')
             const isSuperUser = me.userCredentials.userRoles.some(role => role.name == 'Superuser')
             const isOnlineDataSync = me.userCredentials.userRoles.some(role => role.name == 'Online Data Sync')
@@ -86,7 +87,7 @@ class MenuController {
             this.showDataExport =  isSuperUser || this.isAdministrator || (isMFP && this.isOffline);
             
             this.showValidationRequest =  isMFP && this.isOnline;
-            
+
             
             this.showTrackerExport =  isSuperUser || this.isAdministrator || (isMFP && hasTrackerRoles && this.isOffline);
             this.showTrackerImport =  isSuperUser || this.isAdministrator || isMedco || (isMFP && hasTrackerRoles && this.isOffline);
