@@ -34,16 +34,20 @@ export class TrackerExportLatestComponent implements ng.IComponentOptions {
 
 class TrackerExportLatestController {
 
-    params = { date: null, maxDate: null, filename: ""};
+    params = { date: null, endDate: null, maxDate: null, filename: ""};
     dateOptions={};
+    dateEndOptions={};
     services = null;
     allServices = { lastExported: "", selected: false};
     exporting = false;
     dateopened = false;
+    endDateopened = false;
     serverName="";
     projectName="";
     projectId="";
     exportError;
+    endDateEnable=false;
+    enableDate=false;
     dataStoreKey: string = 'trackerexport';
 
     static $inject = ['$filter', 'ProgramService', 'UserService', 'EventExportService', 'EventService', 'DataStoreService', 'SystemService'];
@@ -64,7 +68,7 @@ class TrackerExportLatestController {
 
         .then((ou)=>
         {
-           this.projectName=ou[0].name;
+            this.projectName=ou[0].name;
             this.projectId=ou[0].id;
             //console.log("ou");
             //console.log(ou[0].name);
@@ -76,12 +80,15 @@ class TrackerExportLatestController {
                 this.clickAllServices();
             })
             .then( () => this.updateLastExportInfo() )
-            .then( () => this.setLatestExportAsDefault() );
+           .then( ()=> this.SystemService.getServerDateWithTimezone())
+           
+            
+            .then( serverDate=> this.setLatestExportAsDefault(serverDate) );
     }
 
     updateLastExportInfo () {
         return this.DataStoreService.getKeyValue(this.dataStoreKey).then( log => {
-            console.log(log[this.projectId][this.serverName]);
+            //console.log(log[this.projectId][this.serverName]);
             var log2=log[this.projectId];
             
             if (log2 != undefined) {
@@ -91,22 +98,26 @@ class TrackerExportLatestController {
                 
                 });
             }
-            }
+            } 
         
             return "Done";
         });
     }
 
-    setLatestExportAsDefault () {
-        const latest = this.services.reduce( (previous, current) => {
+    setLatestExportAsDefault (serverDate)  {
+        
+        var latest = this.services.reduce( (previous, current) => {
             if (previous.lastExported === undefined || current.lastExported === undefined) {
-                return {lastExported: {"end":"2018-01-01"}};
+                return {lastExported: {"end":"2019-01-01"}};
             } else if (previous.lastExported.end < current.lastExported.end) {
                 return previous;
             } else {
                 return current;
             }
         });
+        if (latest.lastExported==undefined) { 
+         latest = {"lastExported": {"end":"2019-01-01"}};
+        }
         //console.log("latest.lastExported");
         //console.log(latest.lastExported);
         this.allServices.lastExported = latest.lastExported;
@@ -114,8 +125,11 @@ class TrackerExportLatestController {
         this.params.maxDate = latest.lastExported !== undefined ? new Date(latest.lastExported.end) : '';
         var d=   new Date(latest.lastExported.end) ; // Maximal selectable date
         var month= d.getMonth()+1;
-       
+        //this.params.endDate= new Date();
+
+        this.params.endDate = serverDate;
         this.dateOptions = {maxDate : d};
+        this.dateEndOptions = {maxDate : this.params.endDate};
          // console.log("this.dateOptions");
          // console.log(this.dateOptions);
     }
@@ -126,6 +140,11 @@ class TrackerExportLatestController {
         this.dateopened = true;
     };
 
+    openEndDate ($event) {
+       // $event.preventDefault();
+       // $event.stopPropagation();
+        this.endDateopened = true;
+    };
     clickService (service) {
         service.selected = !service.selected;
         this.evaluateAllServices();
@@ -138,10 +157,16 @@ class TrackerExportLatestController {
         });
     };
     
+    enableEndDate (value) {
+       
+       this.endDateEnable= this.enableDate;
+
+    }
     submit () {
         this.exporting = true;
         this.exportError = undefined;
         const startDate: Date = this.params.date;
+        const endDate: Date = this.params.endDate;
         var serverDate: Date;
         var serverName;
         return this.UserService.getCurrentUser()
@@ -151,15 +176,15 @@ class TrackerExportLatestController {
             .then( date => serverDate = date )
             .then( () => this.EventService.updateEventData() )
             .then( () => this.UserService.getCurrentUserOrgunits() )
-            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), serverDate, serverName, orgunits, this.getSelectedPrograms()) )
+            .then( orgunits => this.EventExportService.exportEventsFromLastWithDependenciesInZip(startDate.toISOString(), endDate, serverName, orgunits, this.getSelectedPrograms()) )
             .then( eventsZipFile => saveAs(eventsZipFile, this.params.filename + '.zip') )
-            .then( () => this.logExport(startDate, serverDate, serverName, this.projectId, this.projectName) )
+            .then( () => this.logExport(startDate, endDate, serverName, this.projectId, this.projectName) )
             .then( () => this.updateLastExportInfo() )
             .then( () => console.log("Everything done") )
             .catch( error => this.exportError = error )
             .finally( () => this.exporting = false )
             // It is necessary to introduce this delay because of maxDate validator.
-            .then( () => this.setLatestExportAsDefault() )
+            .then( () => this.setLatestExportAsDefault(endDate) )
     };
 
     logExport (start: Date, end: Date, serverName, projectId, projectName) {

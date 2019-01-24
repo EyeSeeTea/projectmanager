@@ -216,9 +216,9 @@ export class EventImportService {
         this.readEventZipFile(file)
             .then((eventFile) =>
             {
-                
+                settings=eventFile.settings;  
             eventFile.content.trackedEntityInstances.forEach(tei => {
-               settings=eventFile.settings; 
+              
                 enrollmentsAll.push(tei.enrollments)
                 
             });

@@ -22,7 +22,8 @@
     "IMPORTED": "Importados",
     "UPDATED": "Actualizados",
     "DELETED": "Borrados",
-    "IGNORED": "Ignorados",
+	"IGNORED": "Ignorados",
+	"HOME": "Inicio",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Aprobar datos",
@@ -69,9 +70,23 @@
 
 	
 	"_______________ Data":" Import and Export_____________",
-	"DATA_IMPORT": "Importar datos",
+
+		"FILE_CONTAINS_DATA": "El archivo contiene datos desde",
+	"TO": "a",
+	"LAST_IMPORTED_UNTIL": "Los últimos datos importados (manualmente o automáticamente) fueron hasta",
+	"THERE_IS_GAP": "Hay un hueco en las fechas y podrían faltar datos. El arhivo no puede ser importado.",
+	"DATA_OUTDATED": "Los datos de este fichero podrían estar desactualizados. El arhivo no puede ser importado.",
+	"NOT_ZIP": "El archivo no es un zip",
+	"IMPORTING_DATA": "Importando Datos",
+	"REFRESHING_DATA": "Actualizando Datos",
+	"IMPORTED_DATA": "Datos importados de",
+	"FROM": "de",
+	"OVERDUE": "Fondo rojo: los datos no se han importado o sincronizado desde hace más de 30 días", 
+
+
+	"DATA_IMPORT": "Importar datos agregados",
 	"IMPORT": "Importar",
-	"DATA_EXPORT": "Exportar datos",
+	"DATA_EXPORT": "Exportar datos agregados",
 	"EXPORT": "Exportar",
 	"EXPORT_INIT_DATE": "Fecha de inicio",
 	"EXPORT_END_DATE": "Fecha de fin",
@@ -100,6 +115,18 @@
 
 
 	"____________Tracker Data Export":"__________",
+
+	"FILE_CONTAINS_DATA_REGISTERED_FROM": "El archivo contiene datos registrados o actualizados datos desde",
+	"EXPORT_ENDED": " y la última exportación es hasta", 
+	"THERE_IS_GAP_TRACKER": "Hay un hueco en las fechas y podrían faltar datos. Por favor pide al proyecto",
+	"PROJECT_EXPORT_FROM": " que exporte los datos desde",
+	"ONWARDS": "en adelante",
+	"LAST_IMPORTED_TRACKER_UNTIL": "Los últimos datos importados fueron hasta",
+	"PROJECT_BASE": "Proyecto (base)",
+	"PROGRAMS": "Programas",
+	"LAST_EXPORT_DATE": "Ultima fecha de exportación",
+
+
 	"AUTOMATIC_TRACKER_SYNC": "Sincronización Online",
 	"TRACKER_DATA_EXPORT": "Exportar datos individuales",
 	"LATEST_VALUES": "Últimos valores",
@@ -211,7 +238,7 @@
     "SYNC_SUCCESS": "Proceso de envío completado con éxito",
 
 		"________________Validation ": " Validation ___________",
-	"VALIDATION": "Validación",
+	"VALIDATION": "Validación de datos agregados",
 	"CELL": "Célula",
 	"ALL": "Todas",
 	"SHOW_EMPTY": "Mostrar Vacías",

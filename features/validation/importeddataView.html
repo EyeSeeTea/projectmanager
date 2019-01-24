@@ -88,7 +88,11 @@
             <td>
                 {{ project.name }}
             </td>
-            <td ng-class="{ overdue: project.overdueSync == true }">
+            <td ng-if="project.overdueSync" ng-class="{ overdue: project.overdueSync == true }" title="{{ 'OVERDUE' | translate}}">
+                {{ project.lastDatePush | date:'yyyy-MM-dd HH:mm:ss Z' }}
+            </td>
+            <td ng-if="!project.overdueSync"  >
+              
                 {{ project.lastDatePush | date:'yyyy-MM-dd HH:mm:ss Z' }}
             </td>
             <td>
@@ -117,7 +121,7 @@
             <th></th>
         </tr>
 
-        <tr ng-repeat="dataset in ctrl.datasets  | filter:ctrl.searchText | orderBy:ctrl.orderByField:ctrl.reverseSort" ng-click="ctrl.show_details_dataset(dataset);"  ng-class="{selected: dataset.dataSet === ctrl.idSelectedDataset && dataset.siteId === ctrl.idSelectedSiteId && dataset.period === ctrl.selectedPeriod }">
+        <tr ng-repeat="dataset in ctrl.datasets  | filter:ctrl.searchText | orderBy:ctrl.orderByField:ctrl.reverseSort" ng-click="ctrl.show_details_dataset(dataset);"  ng-class="{selected: dataset.dataSet === ctrl.idSelectedDataset && dataset.serviceName===ctrl.selectedServiceName && dataset.siteName === ctrl.selectedSite && dataset.period === ctrl.selectedPeriod }">
 
             <td>
                 {{ dataset.siteName }}

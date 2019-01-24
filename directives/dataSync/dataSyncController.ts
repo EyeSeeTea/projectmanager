@@ -77,7 +77,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 		function writeRegisterInRemoteServer(projectId, serverDate, serverName, lastSyncDate) {
 
 			lastDatePush = serverDate.getTime();
-			console.log(serverDate);
+			//console.log(serverDate);
 			register = {
 				lastDatePush: lastDatePush,
 				lastPushDateSaved: new Date(lastSyncDate).getTime()  //lastSyncDate es la fecha "keyLastSuccessfulDataSynch"
@@ -219,7 +219,7 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 												let restUtil = new RESTUtil();
 												SystemService.getServerLastSyncDate().then(
 													lastSyncDate => {
-														console.log(lastSyncDate);
+														//console.log(lastSyncDate);
 														restUtil.requestPostData(api_url,
 															data => {
                                                                 processDataPushResponse(data, projectId, projectName).then(() => {

@@ -22,7 +22,8 @@
     "IMPORTED": "Importés",
     "UPDATED": "Actualisés",
     "DELETED": "Supprimés",
-    "IGNORED": "Ignorés",
+	"IGNORED": "Ignorés",
+	"HOME": "Accueil",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Valider les données",
@@ -67,6 +68,20 @@
 	"REMOTE": "Distant",
 	
 	"_______________ Data":" Import and Export_____________",
+
+	"FILE_CONTAINS_DATA": "Le fichier contient des données depuis",
+	"TO": "jusqu'au",
+	"LAST_IMPORTED_UNTIL": "Le dernier données importées (manuellement ou automatiquement) était du",
+	"THERE_IS_GAP": "Il y a une lacune dans les dates et peut être des données manquantes. Le fichier ne peut pas être importé.",
+	"DATA_OUTDATED": "Les données du fichier ont des dates dépassées. Le fichier ne peut pas être importé.",
+	"NOT_ZIP": "Le fichier n'est pas du type zip",
+	"IMPORTING_DATA": "Importation des données en cours",
+	"REFRESHING_DATA": "Mise à jour des données en cours",
+	"IMPORTED_DATA": "Données importées despuis",
+	"FROM": "depuis",
+	"OVERDUE": "Fond rouge: les données n'ont pas été importées ou synchronisées pendant plus de 30 jours", 
+
+
 	"DATA_IMPORT": "Importer des données",
 	"IMPORT": "Importer",
 	"DATA_EXPORT": "Exporter des données",
@@ -98,6 +113,17 @@
 
 
 	"____________Tracker Data Export":"__________",
+
+	"FILE_CONTAINS_DATA_REGISTERED_FROM": "Le fichier contient des données enregistrées ou actualisées depuis",
+	"EXPORT_ENDED": " et la dernière exportation est du", 
+	"THERE_IS_GAP_TRACKER": "Il y a une lacune dans les dates et peut être des données manquantes. Le fichier ne peut pas être importé. S'il vous plait, demandez au projet",
+	"PROJECT_EXPORT_FROM": "d'exporter les données a partir du",
+	"ONWARDS": "",
+	"LAST_IMPORTED_TRACKER_UNTIL": "Les dernières données importées était du",
+	"PROJECT_BASE": "Projet (base)",
+	"PROGRAMS": "Programmes",
+	"LAST_EXPORT_DATE": "Dernière date d'exportation",
+
 	"AUTOMATIC_TRACKER_SYNC": "Online Sync",
 	"TRACKER_DATA_EXPORT": "Exporter des données individuelles",
 	"LATEST_VALUES": "Dernières valeurs",

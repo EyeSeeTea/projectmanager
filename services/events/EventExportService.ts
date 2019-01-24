@@ -126,8 +126,8 @@ export class EventExportService {
         ])
         .then(([teisWithDependencies]) => {
             let dataWrapper = teisWithDependencies;
-            console.log("dataWrapper");
-            console.log(dataWrapper);
+            //console.log("dataWrapper");
+            //console.log(dataWrapper);
             return dataWrapper;
         });
      
@@ -392,8 +392,8 @@ export class EventExportService {
         let zip: JSZip = new JSZip();
         var asString = JSON.stringify(file);
         
-        console.log("asString");
-        console.log(asString);
+        //console.log("asString");
+        //console.log(asString);
         var settings={};
         settings["serverName"]=serverName;
         settings["projectName"]=orgunits[0].name;

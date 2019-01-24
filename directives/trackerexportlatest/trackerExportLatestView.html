@@ -27,30 +27,56 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <label for="filename_latest"> {{ 'FILE_NAME' | translate }} </label>
             <input id="filename_latest" type="text" class="form-control" ng-model="$ctrl.params.filename" name="filename" required/>
         </div>
     </div>
     <br/>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-4">
             <label>{{ 'EXPORT_TRACKER_FROM' | translate }}</label>
-            <p class="col-md-4 input-group">
+            <p class="input-group">
                 <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
-                       ng-required="true" close-text="Close" name="date" datepicker-options="$ctrl.dateOptions"  required/>
-                <!--<input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
+                readonly="true"  ng-required="true" close-text="Close" name="date" datepicker-options="$ctrl.dateOptions"  required/>
+                       <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="$ctrl.openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </p>
+                </div>
+                <div class="col-md-4">
+                       <label  ng-if="$ctrl.endDateEnable">{{ ' To ' | translate }}</label>   
+                       <p class="input-group">  
+                 <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="$ctrl.params.endDate" is-open="$ctrl.endDateopened"
+                      ng-if="$ctrl.endDateEnable" readonly="true"  ng-required="false" close-text="Close" name="endDate" datepicker-options="$ctrl.dateEndOptions"  />
+                  <!--    ng-disabled="!$ctrl.endDateEnable"  -->
+                       <!--<input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy @ HH:mm:ss" ng-model="$ctrl.params.date" is-open="$ctrl.dateopened"
                        ng-required="true" close-text="Close" name="date" datepicker-options="datePickerDateOptions" max-date="$ctrl.params.maxDate" required/>
                 -->
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="$ctrl.openLastUpdated($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    <button  ng-if="$ctrl.endDateEnable" type="button" class="btn btn-default" ng-click="$ctrl.openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
+              
+                    <br ng-if="!$ctrl.endDateEnable" />
+                    <br ng-if="!$ctrl.endDateEnable" />
+                    <label ng-if="$ctrl.endDateEnable" for="enableEndDate">{{'Hide end date' | translate}}:</label>
+                    <label ng-if="!$ctrl.endDateEnable" for="enableEndDate">{{'Show end date' | translate}}:</label>
+
+                        <input type="checkbox" ng-change="$ctrl.enableEndDate(value)" ng-model="$ctrl.enableDate">
+
+                    
+
+
+
+
+                </div>
+
             </p>
         </div>
     </div>
     <br/>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="panel panel-default">
                 <ul class="list-group service-list">
                     <li class="list-group-item service-header">
@@ -87,7 +113,7 @@
     </div>
     <br/>
     <div class="row" ng-show="$ctrl.exportError">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <d2-messages type="danger" textmessage="{{ $ctrl.exportError | translate }}"></d2-messages>
         </div>
     </div>

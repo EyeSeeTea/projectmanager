@@ -5,3 +5,7 @@
 #file_summary th {
     background-color: lightgrey;
 }
+.capitalize {
+    text-transform: capitalize;
+ }
+ 

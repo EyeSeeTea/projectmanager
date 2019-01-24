@@ -23,7 +23,7 @@ export const dataExport = ['$scope', 'commonvariable', 'UserService', function (
     $scope.activeTab = 2;
     $scope.onlineSyncPermission = false;
     $scope.isOnline = commonvariable.isOnline
-    
+    $scope.manualExportPermission= 
     $scope.setActiveTab = function (item) {
         $scope.activeTab = item;
     };
@@ -35,5 +35,21 @@ export const dataExport = ['$scope', 'commonvariable', 'UserService', function (
                 $scope.setActiveTab(1);
             }
         });
+
+        UserService.getCurrentUser().then(me => {
+            const isMedco = me.userCredentials.userRoles.some(role => role.name == 'MedCo');
+            const isTESACO = me.userCredentials.userRoles.some(role => role.name == 'TesaCo');
+            const isMFP = me.userCredentials.userRoles.some(role => role.name == 'Medical Focal Point')
+            const hasTrackerRoles = me.userCredentials.userRoles.some(role => /Individual Data/i.test(role.name));
+            const isHMISOfficer = me.userCredentials.userRoles.some(role => role.name == 'HMIS Officer')
+            const isSuperUser = me.userCredentials.userRoles.some(role => role.name == 'Superuser')
+ 
+            this.isAdministrator = me.userGroups.some(group => group.name == 'Administrators');
+            this.isHMISOfficerGroup = me.userGroups.some(group => group.name == 'HMIS Officers');
+       
+            $scope.manualExportPermission= (isMFP && !$scope.isOnline) || isSuperUser;
+            $scope.showValidationRequest =  isMFP && $scope.isOnline;
+        });
+
     
 }];

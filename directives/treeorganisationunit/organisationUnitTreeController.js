@@ -47,7 +47,7 @@ var treeorganisationunitController = ['$scope','$q','TreeOrganisationunit',"comm
             TreeOrganisationunit.get({uid:value.id})
                      .$promise.then(function(data){
                         $scope.treeOrganisationUnitList.push(data);
-                        console.log(kvalue+" , "+numOU)
+                        //console.log(kvalue+" , "+numOU)
                         if(kvalue==numOU){
                             $scope.loadingTree=false;
                      }

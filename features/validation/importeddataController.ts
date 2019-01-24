@@ -54,6 +54,7 @@ export class ImportedDataController {
     private selectedPeriod = null;
     private selectedDataset = null;
     private selectedSite = null;
+    private selectedServiceName = null;
 
     private orderByField = 'siteName';
     private orderByFieldProject = 'missionName';
@@ -168,6 +169,7 @@ export class ImportedDataController {
     }
 
     show_details_dataset(dataset) {
+        //console.log(dataset);
           this.showPreview=true;
         this.DataSetEntryForm.get({ dataSetId: dataset.dataSet }).$promise.then(dataSetHtml => {
             var codeHtml = dataSetHtml.codeHtml;
@@ -190,6 +192,7 @@ export class ImportedDataController {
         this.selectedPeriod = dataset.period;
         this.selectedDataset=dataset.dataSetName;
         this.selectedSite=dataset.siteName;
+        this.selectedServiceName=dataset.serviceName;
 
      };
     private previewDataset(dataValues, lastPushDateSaved) {

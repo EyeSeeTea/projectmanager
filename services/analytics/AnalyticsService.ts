@@ -156,7 +156,7 @@ export class AnalyticsService {
         resp.$promise.then(
             data =>{
             analytics_id=data.response.id;
-            console.log(analytics_id);
+          //  console.log(analytics_id);
             }
         );
         

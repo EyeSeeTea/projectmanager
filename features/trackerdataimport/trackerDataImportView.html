@@ -50,28 +50,29 @@
 </div>
 <div class="row" ng-show="ctrl.importGap">
     <div class="col-md-12">
-        <d2-messages type="danger" textmessage="{{ 'The file contains registered or updated data from ' | translate }} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}} and the last export ended on {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}: There is a gap in the dates and there could be missing data. Please ask the {{ctrl.projectName}} project to export data from {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}} onwards."></d2-messages>
+        <d2-messages type="danger" textmessage="{{ 'FILE_CONTAINS_DATA_REGISTERED_FROM' | translate }} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} {{ 'TO' | translate }} {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}} {{'EXPORT_ENDED' | translate}} {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}: {{'THERE_IS_GAP_TRACKER' | translate}} {{ctrl.projectName}} {{'PROJECT_EXPORT_FROM' | translate}} {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}} {{'ONWARDS' | translate}}."></d2-messages>
     </div>
 </div>
 <div class="row" ng-show="ctrl.importOUTDATED">
     <div class="col-md-12">
-        <d2-messages type="danger" textmessage="This file contains data from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}. The last imported data was until {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}. The data in this file could be outdated. The file cannot be imported."></d2-messages>
+        <d2-messages type="danger" textmessage="{{'FILE_CONTAINS_DATA' | translate}} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm' }} {{'TO' | translate}} {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}. {{'LAST_IMPORTED_TRACKER_UNTIL' | translate}} {{ctrl.endDateDataStore | date:'dd/MM/yyyy HH:mm'}}. {{'DATA_OUTDATED' | translate}}"></d2-messages>
     </div>
 </div>
 <br/>
 <table class="table table-bordered table-condensed table-hover" >
         <thead>
             <tr>
-                <th class="orgunit">{{ 'Project' | translate}}</th>
-                
-                <th>{{ 'Last Export Date' | translate }}</th>
+                <th class="orgunit">{{ 'PROJECT_BASE' | translate}}</th>
+                <th>{{ 'PROGRAMS' | translate }}</th>
+                <th>{{ 'LAST_EXPORT_DATE' | translate }}</th>
                
             </tr>
         </thead>
         <tbody >
             
             <tr class="table-row" ng-repeat="project in ctrl.projects" >
-                <td  class="project">{{ project.name }} <span ng-if="project.serverName">({{project.serverName}})</span></td>
+                <td  class="project">{{ project.name }} <span ng-if="project.serverName">(Base: <span class="capitalize">{{project.serverName}}</span></span><span ng-if="project.serverName">)</span></span></td>
+                <td  class="project">{{ project.programs }}</td>
               
               <td >{{ project.lastImportDate | date:'yyyy-MM-dd HH:mm' }}</td>
                
@@ -82,7 +83,7 @@
    
 <div id="file_summary" class="col-md-8" ng-show="ctrl.summary">
        
-       <p>This file contains data from {{ctrl.projectName}} registered or updated from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}</p> 
+       <p>{{'FILE_CONTAINS_DATA_REGISTERED_FROM' | translate}} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} {{'TO' | translate}} {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}} {{'FROM' | translate}} {{ctrl.projectName}}</p> 
 		
     <table class="table table-bordered table-condensed">
         <thead>
@@ -103,7 +104,7 @@
 </div>
 
 <div class="col-md-6" ng-show="ctrl.importingData" >
-    	<h3>Importing Data</h3>
+    	<h3>{{ "IMPORTING_DATA" | translate }}</h3>
     <d2-progressbar-dynamic status="ctrl.progressStatus"></d2-progressbar-dynamic>
 </div>
 
@@ -117,7 +118,7 @@
 <br/>
 
 		<div class="col-md-6" ng-show="ctrl.refreshingData">
-			<h3>Refreshing Data</h3>
+			<h3>{{ "REFRESHING_DATA" | translate }}</h3>
 			<d2-progressbar-dynamic status="ctrl.analyticsStatus"></d2-progressbar-dynamic>
 		</div>
 
@@ -129,14 +130,14 @@
 <br/>
 <br/>
 <div id="summary" ng-show="ctrl.import_result">
-        <h3>{{ 'Import Summary' | translate }}</h3>
+        <h3>{{ 'IMPORT_SUMMARY' | translate }}</h3>
 
-<p>Imported data from {{ctrl.projectName}} from {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} to {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}</p> 
+<p>{{ 'IMPORTED_DATA' | translate }} {{'FROM' | translate}} {{ctrl.projectName}} {{'FROM' | translate}} {{ctrl.lastUpdated | date:'dd/MM/yyyy HH:mm'}} {{'TO' | translate}} {{ctrl.endDate | date:'dd/MM/yyyy HH:mm'}}</p> 
 		
-<p>Updated: {{ctrl.updated}}</p>
-<p>Imported: {{ctrl.imported}}</p>
-<p>Deleted: {{ctrl.deleted}}</p>
-<p>Ignored: {{ctrl.ignored}}</p>
+<p>{{'UPDATED' | translate}}: {{ctrl.updated}}</p>
+<p>{{'IMPORTED' | translate}}: {{ctrl.imported}}</p>
+<p>{{'DELETED' | translate}}: {{ctrl.deleted}}</p>
+<p>{{'IGNORED' | translate}}:: {{ctrl.ignored}}</p>
 
         </div>
 <div id="summary" ng-show="ctrl.analyticsShow">

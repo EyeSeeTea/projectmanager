@@ -25,7 +25,7 @@ import { pbkdf2Sync } from 'crypto';
 export class TrackerDataImport {
  
 
-    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "DataStoreService","UserService","EventHelper"];
+    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "DataStoreService","ProgramService","UserService","EventHelper"];
 
     progressStatus = {};
     analyticsStatus = {};
@@ -56,10 +56,10 @@ export class TrackerDataImport {
 
     $file;//single file
     projects=[];
-    
+    programsNames=[];
 
     constructor(private $q: ng.IQService, private EventImportService: EventImportService, private AnalyticsService, 
-                private DemographicsService, private DataStoreService, private UserService) {
+                private DemographicsService, private DataStoreService, private ProgramService, private UserService) {
                     this.init();
                 }
     
@@ -70,7 +70,9 @@ export class TrackerDataImport {
                 var project;
                 var p= await this.getUserProjects();
                 var keys= await this.DataStoreService.getNamespaceKeys(namespace);
-
+              //  if ( keys==undefined) { await this.DataStoreService.setNamespaceKeys(namespace,{});
+            
+           // }
                 for( project in p)  {
                 
                     if (keys.indexOf(p[project].id)>-1) {
@@ -83,13 +85,37 @@ export class TrackerDataImport {
                                             //if (p3[project]==undefined) { p3[project]=[];}
                                             p3["name"]=p[project]["name"];
                                             p3["id"]=p[project]["id"];
+                                            
                                            if (Object.keys(data).length>1) {p3["serverName"]=data[d].serverName;}
                                           
-                                            p3["lastImportDate"]=data[d].endDate
+                                            p3["lastImportDate"]=data[d].endDate;
+                                            var programsDataStore=data[d].programs;
+                                            
+                                           if (programsDataStore!=undefined) {
+                                           
+                                            for ( var index in programsDataStore)  { 
+                                               
+                                               if (this.programsNames[index]==undefined) {
+                                                var prog= await this.ProgramService.getProgramAndStages(programsDataStore[index]); 
+                                                this.programsNames[index]=prog.name;
+                                                programsDataStore[index]=prog.name;
+                                            }
+                                                else { 
+
+                                                    programsDataStore[index]=this.programsNames[index];
+                                                }
+                                               
+                                               
+                                            
+                                        }
+                                    }
+                                            p3["programs"]=JSON.stringify(programsDataStore);
+                                            if (p3["programs"]!=undefined) {  p3["programs"]=p3["programs"].replace(new RegExp('"', 'g') ,"").replace(new RegExp("\\[", 'g'),"").replace(new RegExp("\\]", 'g'),"").replace(new RegExp(",", 'g'),", ")}
+                                            
                                             p2.push(p3);
                                             p3=[];
     
-                                    }
+                                    
                      }
      
                 };
@@ -99,7 +125,7 @@ export class TrackerDataImport {
                 this.projects=this.projects.filter(p => p.lastImportDate!=undefined);
                 //console.log(this.projects)
                                                 }  
-                
+                                            }    
                
     showImportDialog() {
 
@@ -147,7 +173,7 @@ export class TrackerDataImport {
 
                 if (!this.importGap && !this.importOUTDATED) {
                     this.importingData=true;
-        this.progressStatus = ProgressStatus.initialWithoutProgress;
+                    this.progressStatus = ProgressStatus.initialWithoutProgress;
                     this.EventImportService.importEventFile2(this.$file)
                         .then((result) => {
                         
@@ -160,8 +186,7 @@ export class TrackerDataImport {
                         this.progressStatus = ProgressStatus.doneSuccessful;
                         //this.progressStatus = ProgressStatus.doneWithFailure
                         var namespace="ServersTrackerImportDates";
-                        
-                    
+                                            
                         var dataStoreKey=result["settings"].projectId;
                         this.serverName=result["settings"].serverName;
                         this.projectName=result["settings"].projectName;
@@ -170,12 +195,15 @@ export class TrackerDataImport {
                         this.DataStoreService.getNamespaceKeyValue(namespace, dataStoreKey).then(log => {
 
                             if (log==undefined) { log={};}
-                       
+                            var programs=result["settings"].programs.map(p=>p.id);
+
+
                             log[serverName]={
                                 projectId: result["settings"].projectId,
                                 projectName:  result["settings"].projectName,
                                 serverName:  result["settings"].serverName,
                                 lastUpdated:  result["settings"].lastUpdated,
+                                programs: programs,
                                 filename:this.$file.name,
                                 endDate:  result["settings"].endDate
                 
@@ -202,25 +230,26 @@ export class TrackerDataImport {
         });
     }
     public showFileContentSummary() {
-       this.refreshingData=false;
-       this.import_result=false;
-       this.analyticsShow=false;
-    this.importingData=false;
-    this.importOUTDATED=false;
-    this.importGap=false;
+        this.refreshingData=false;
+        this.import_result=false;
+        this.analyticsShow=false;
+        this.importingData=false;
+        this.importOUTDATED=false;
+        this.importGap=false;
         this.varValidation();
         if (!this.undefinedFile) {
             this.importingData=false;
             this.progressStatus = ProgressStatus.initialWithoutProgress;
             this.summary = undefined;
             this.EventImportService.previewEventFile(this.$file).then( result => {
+               //console.log("result");
+                //console.log(result);
                 this.summary = result["summary"];
                 this.projectName=result["settings"].projectName;
                 this.serverName=result["settings"].serverName;
                 this.projectId=result["settings"].projectId;
                 this.lastUpdated= result["settings"].lastUpdated;
                 this.endDate=result["settings"].endDate; 
-		
                 this.progressStatus = ProgressStatus.hidden;
             });
         }
@@ -238,7 +267,7 @@ export class TrackerDataImport {
     private varValidation() {
         this.undefinedFile = (this.$file == undefined);
     }
-public getImportDate(projectId) {
+    public getImportDate(projectId) {
         var projects = [];
         var namespace="ServersTrackerImportDates";
         var servers=[];
@@ -253,7 +282,7 @@ public getImportDate(projectId) {
             for(d in datos.toJSON()) {
                 //console.log("d");
                 //console.log(d);
-                servers[d]={"serverName": d, "endDate":datos[d].endDate}
+                servers[d]={"serverName": d, "endDate":datos[d].endDate, "programs":datos[d].programs}
             }
             return servers;
         
@@ -290,6 +319,7 @@ public getImportDate(projectId) {
      ous.forEach(element => {
          //projects.push(element)
        if (element.name!="OC")  {
+        if (element.level==4) { projects.push(element);} 
          element.children.forEach(element2 => {
             if (element2.level==4) { projects.push(element2);} 
             if (element2.name!="OC")  {

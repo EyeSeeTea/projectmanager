@@ -1,5 +1,5 @@
 {
-	"version":"1.7.0-dev",
+	"version":"1.9.0",
 	"name":"HMIS Management",
 	"description":"General management of HMIS: data and metadata import/export, password reset,...",
 	"launch_path":"index.html",

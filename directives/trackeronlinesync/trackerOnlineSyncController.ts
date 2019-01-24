@@ -57,8 +57,8 @@ class trackerOnlineSyncController {
    
    
 async init() {
-    console.log("jobId");
-    this.jobId=await this.ProgramService.getJobId("individual");
+    //console.log("jobId");
+    this.jobId=await this.ProgramService.getJobId("Individual Online Sync");
     this.jobId=this.jobId.jobConfigurations[0].id;
    
     var result2 =await this.ProgramService.jobs(this.jobId);

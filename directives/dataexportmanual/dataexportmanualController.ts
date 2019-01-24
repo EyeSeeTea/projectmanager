@@ -93,7 +93,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 			}
 			)
 			.then(()=>{	DataStoreService.getKeyValue(dataStoreKey).then( log => {
-					if (log==undefined) {DataStoreService.setKeyValue(dataStoreKey)}
+					if (log==undefined) {DataStoreService.setKeyValue(dataStoreKey, {})}
 					if (log[projectId][serverName] ==undefined) {
 						log[projectId][serverName]={};
 						log[projectId][serverName].lastUpdated="2018-01-01 00:00";
@@ -137,14 +137,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 				
 				$scope.fecha_maxima=new Date(year, month - 1, dia);
 				}
-				/*
-				$scope.$watch("lastUpdated", function(newValue, oldValue) {
-					console.log("I've changed : ", newValue);
-					$scope.dt = null;
-					$scope.dt = newValue;
 				
-				});
-				*/
        				  $scope.dateOptions = {
            
          			   maxDate: $scope.fecha_maxima,
@@ -272,7 +265,7 @@ var dataexportmanualController = ["$scope", "$q", "$filter", "commonvariable", "
 					//var log = {};
 					 log[project] = current;
 					
-				console.log(log);
+				//console.log(log);
 					DataStoreService.setKeyValue(dataStoreKey, log);	
 					
 				});

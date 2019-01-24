@@ -31,8 +31,8 @@ export class TrackerDataExport {
 async init() {
  this.isOnline = this.commonvariable.isOnline
   this.isSuperUser= await this.UserService.currentUserHasRole("Superuser");
-  console.log("super");
-  console.log(this.isSuperUser);
+  //console.log("super");
+  //console.log(this.isSuperUser);
   var element = angular.element($('#tab'));
 element.scope().$apply();
 }

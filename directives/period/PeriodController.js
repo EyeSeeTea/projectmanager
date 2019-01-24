@@ -59,7 +59,7 @@ var $translate = $filter('translate');
 		if(weekPeriod[0] != 'NaN/NaN/NaN' && weekPeriod[1] != 'NaN/NaN/NaN'){
 			$scope.formData.dueDate = 'W' + week + ' ' + weekPeriod[0] + " to "+ weekPeriod[1];
 			commonvariable.Period=year + 'W' + week;
-			console.log(commonvariable.Period);
+			//console.log(commonvariable.Period);
 			//$scope.semanas=week;
 		}
 

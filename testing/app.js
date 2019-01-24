@@ -156,7 +156,7 @@ Dhis2Api.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items
 		  $scope.$watch(
                     function(OrganisationUnit) {
                     	   	if($scope.OrganisationUnit.currentNode && $scope.currentid!=$scope.OrganisationUnit.currentNode.id && typeof($scope.OrganisationUnit.currentNode.children)=="undefined"){
-                    	   		console.log($scope.OrganisationUnit.multiSelectNode);
+                    	   	//	console.log($scope.OrganisationUnit.multiSelectNode);
                     	   		$scope.currentid=$scope.OrganisationUnit.currentNode.id;
 								TreeOrganisationunit.get({uid:$scope.OrganisationUnit.currentNode.id})
 								.$promise.then(function(data){

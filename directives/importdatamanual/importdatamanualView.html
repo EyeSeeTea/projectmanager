@@ -29,6 +29,7 @@
       <div ng-show="form.file_name.$error.required">{{ 'VALIDATION_FILE_NAME' | translate }}</div>
     </div>
 </div>
+<br />
 <div class="row">
 		<div class="col-md-6">
 			<div class="form_group">
@@ -46,13 +47,12 @@
   </div>
   <div class="row" ng-show="gapDates">
 		  <div class="col-md-12">
-				<d2-messages type="danger" textmessage="This file contains data from {{lastUpdated_settings | date:'dd/MM/yyyy HH:mm'}} to {{endDate_settings | date:'dd/MM/yyyy HH:mm'}}. The last imported data (manually or automatically) was until {{lastSyncOrExport | date:'dd/MM/yyyy HH:mm'}}.There is a gap in the dates and possibly missing data. The file cannot be imported."></d2-messages>
+				<d2-messages type="danger" textmessage="{{ 'FILE_CONTAINS_DATA' | translate }} {{lastUpdated_settings | date:'dd/MM/yyyy HH:mm'}} {{ 'TO' | translate }} {{endDate_settings | date:'dd/MM/yyyy HH:mm'}}. {{ 'LAST_IMPORTED_UNTIL' | translate }} {{lastSyncOrExport | date:'dd/MM/yyyy HH:mm'}}. {{ 'THERE_IS_GAP' | translate }}"></d2-messages>
 			</div>
   </div>
   <div class="row" ng-show="outdatedDates">
 		<div class="col-md-12">
-		  <d2-messages type="danger" textmessage="This file contains data from {{lastUpdated_settings | date:'dd/MM/yyyy HH:mm'}} to {{endDate_settings | date:'dd/MM/yyyy HH:mm'}}. The last imported data (manually or automatically) was until {{lastSyncOrExport | date:'dd/MM/yyyy HH:mm'}}. The data in this file could be outdated. The file cannot be imported."></d2-messages>
-	  </div>
+		  <d2-messages type="danger" textmessage="{{ 'FILE_CONTAINS_DATA' | translate }} {{lastUpdated_settings | date:'dd/MM/yyyy HH:mm'}} {{ 'TO' | translate }} {{endDate_settings | date:'dd/MM/yyyy HH:mm'}}. {{ 'LAST_IMPORTED_UNTIL' | translate }} {{lastSyncOrExport | date:'dd/MM/yyyy HH:mm'}}. {{ 'DATA_OUTDATED' | translate }}"></d2-messages>	  </div>
 </div>
 					
 
@@ -71,7 +71,7 @@
 	  
 	  <div class="row" ng-show="fileIsNotZip">
 			  <div class="col-md-6">
-				  <d2-messages type="danger" textmessage="{{ 'The file is not zip' | translate }}"></d2-messages>
+				  <d2-messages type="danger" textmessage="{{ 'NOT_ZIP' | translate }}"></d2-messages>
 			  </div>
 		  </div>
 <div class="row" ng-show="errorVisible">
@@ -82,20 +82,20 @@
 
 <div class="row">
 	<div class="col-md-6" ng-show="importingData">
-			<h3>Importing Data</h3>
+			<h3>{{ "IMPORTING_DATA" | translate }}</h3>
 		<d2-progressbar-dynamic status="dataImportStatus"></d2-progressbar-dynamic>
 	</div>
 </div>
 <div class="row">
 		<div class="col-md-6" ng-show="refreshingData">
-			<h3>Refreshing Data</h3>
+			<h3>{{ "REFRESHING_DATA" | translate }}</h3>
 			<d2-progressbar-dynamic status="analyticsStatus"></d2-progressbar-dynamic>
 		</div>
 	</div>
 
 <div id="summary" ng-show="summaryDisplayed">
 		<h3>{{ 'IMPORT_SUMMARY' | translate }}</h3>
-		<h4>Imported data from {{projectName}} from {{lastUpdated | date:'dd/MM/yyyy HH:mm'}} to {{endDate | date:'dd/MM/yyyy HH:mm'}} </h4>
+		<h4>{{ 'IMPORTED_DATA' | translate }} {{projectName}} {{ 'FROM' | translate }} {{lastUpdated | date:'dd/MM/yyyy HH:mm'}} {{ 'TO' | translate }} {{endDate | date:'dd/MM/yyyy HH:mm'}} </h4>
 		
 	
 		<h4>{{ 'IMPORT_COUNT' | translate }}</h4>

@@ -44,7 +44,7 @@ export class ServerPushDatesDataStoreService extends AbstractDataStoreService {
                         if (currentValue[this.defaultArrayKey][dataValue].period == value.period && 
                                 currentValue[this.defaultArrayKey][dataValue].service == value.service && 
                                 currentValue[this.defaultArrayKey][dataValue].dataSet == value.dataSet) {
-                            console.log(currentValue[this.defaultArrayKey]);
+                            //console.log(currentValue[this.defaultArrayKey]);
                         
                             console.log("Borrado: " + value.period + " del dataset " + value.dataSet + " del Site " + value.siteName);
                             currentValue[this.defaultArrayKey].splice(dataValue,1);

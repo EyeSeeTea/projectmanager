@@ -40,7 +40,7 @@ dhis2.settings = dhis2.settings || {};
 dhis2.settings.baseUrl = auxBaseUrl;
 
 var isOnline = urlBase.indexOf("msf.es") >= 0;
-
+//isOnline=true;
 
 // Get and save DHIS version
 var version = "";

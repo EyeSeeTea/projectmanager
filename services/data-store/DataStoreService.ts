@@ -193,7 +193,7 @@ export class DataStoreService {
                         if (currentValue[this.defaultArrayKey][dataValue].period == value.period && 
                                 currentValue[this.defaultArrayKey][dataValue].service == value.service && 
                                 currentValue[this.defaultArrayKey][dataValue].dataSet == value.dataSet) {
-                            console.log(currentValue[this.defaultArrayKey]);
+                            //console.log(currentValue[this.defaultArrayKey]);
                        
                             console.log("Borrado: " + value.period + " del dataset " + value.dataSet + " del Site " + value.siteName);
                             currentValue[this.defaultArrayKey].splice(dataValue,1);
@@ -240,12 +240,12 @@ export class DataStoreService {
 
         return this.DataStore.get({ namespace: namespace, key: key }).$promise.then(
             data => {
-                console.log("Namespace");
-                console.log(data);
+               // console.log("Namespace");
+               // console.log(data);
 
                 for (var value in data.values) {
-                    console.log("Value");
-                    console.log(value);
+                   // console.log("Value");
+                    //console.log(value);
 
                     if (data.values[value].orgUnit == orgUnit && data.values[value].dataSet == dataSet) {
                         return new Date(data.lastValidationDate);

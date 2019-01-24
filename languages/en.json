@@ -22,7 +22,8 @@
     "IMPORTED": "Imported",
     "UPDATED": "Updated",
     "DELETED": "Deleted",
-    "IGNORED": "Ignored",
+	"IGNORED": "Ignored",
+	"HOME": "Home",
 
 	"_______________ Data ":" Approval_____________",
 	"DATA_APPROVAL": "Validate Data",
@@ -68,14 +69,28 @@
 	
 	"_______________ Data":" Import and Export_____________",
 	
-	"DATA_IMPORT": "Import data",
+	"FILE_CONTAINS_DATA": "This file contains data from",
+	"TO": "to",
+	"LAST_IMPORTED_UNTIL": "The last imported data (manually or automatically) was until",
+	"THERE_IS_GAP": "There is a gap in the dates and possibly missing data. The file cannot be imported.",
+	"DATA_OUTDATED": "The data in this file could be outdated. The file cannot be imported.",
+	"NOT_ZIP": "The file is not zip",
+	"IMPORTING_DATA": "Importing Data",
+	"REFRESHING_DATA": "Refreshing Data",
+	"IMPORTED_DATA": "Imported data from",
+	"FROM": "from",
+	"OVERDUE": "Red background: Data has not been imported or synchronized for more than 30 days", 
+
+
+
+	"DATA_IMPORT": "Import aggregated data",
 	"IMPORT": "Import",
-	"DATA_EXPORT": "Export data",
+	"DATA_EXPORT": "Export aggregated data",
 	"EXPORT": "Export",
 	"EXPORT_INIT_DATE": "Start date",
 	"EXPORT_LASTUPDATED": "Export data registered or updated after",
 	"LAST_EXPORT_FROM": "Last exported data registered or updated until",
-	"LAST_EXPORT_TO": " to", 
+	"LAST_EXPORT_TO": " to ", 
 	"EXPORT_END_DATE": "End date",
 	"DATA_EXPORT_ZIP":"Compressed?",
 	"IMPORT_SUMMARY":"IMPORT SUMMARY",
@@ -102,6 +117,19 @@
 	
 
 	"____________Tracker Data Export":"__________",
+
+
+	"FILE_CONTAINS_DATA_REGISTERED_FROM": "The file contains registered or updated data from",
+	"EXPORT_ENDED": "and the last export ended on", 
+	"THERE_IS_GAP_TRACKER": "There is a gap in the dates and there could be missing data. Please ask the",
+	"PROJECT_EXPORT_FROM": "project to export data from",
+	"ONWARDS": "onwards",
+	"LAST_IMPORTED_TRACKER_UNTIL": "The last imported data was until",
+	"PROJECT_BASE": "Project (base)",
+	"PROGRAMS": "Programs",
+	"LAST_EXPORT_DATE": "Last Export Date",
+
+
 	"AUTOMATIC_TRACKER_SYNC": "Online Sync",
 	"TRACKER_DATA_EXPORT": "Export individual data",
 	"LATEST_VALUES": "Latest values",
@@ -213,7 +241,7 @@
     "SYNC_SUCCESS": "Import process completed successfully",
 
 		"________________Validation ": " Validation ___________",
-	"VALIDATION": "Validation",
+	"VALIDATION": "Aggregated Data Validation",
 	"CELL": "Cell",
 	"ALL": "All",
 	"SHOW_EMPTY": "Show Empty",

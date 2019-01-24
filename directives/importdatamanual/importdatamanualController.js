@@ -197,8 +197,8 @@ var importdatamanualController = ["$scope","$interval","$http","$filter","common
                   var dateExport = projectEntry.name.split("_");
                   dateExport = parseInt(dateExport[1]);
                  
-                  console.log("endDate_settings");
-                  console.log(endDate_settings);
+                 // console.log("endDate_settings");
+                 // console.log(endDate_settings);
                   var register = {
                     lastDatePush: dateExport,
                     lastPushDateSaved: parseInt(
@@ -325,7 +325,7 @@ var importdatamanualController = ["$scope","$interval","$http","$filter","common
           transformRequest: {}
         }).then(
           httpResponse => {
-			  console.log(httpResponse.data.status);
+			 // console.log(httpResponse.data.status);
 			  if (httpResponse.data.status!="ERROR" ) {
 			  $scope.generateSummary(httpResponse.data);
             $scope.summaryDisplayed = true;

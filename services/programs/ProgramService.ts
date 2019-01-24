@@ -51,7 +51,7 @@ export class ProgramService {
         const queryParams = {
             filter: orgunits.map( orgunit => 'path:like:' + orgunit.id ),
             rootJunction: 'OR',
-            fields: 'programs[id,attributeValues]'
+            fields: 'programs[id,name,attributeValues]'
         };
 
         return this.Organisationunit.get(queryParams).$promise.then( data => {
