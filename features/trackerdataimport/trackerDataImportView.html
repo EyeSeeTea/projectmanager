@@ -106,6 +106,7 @@
 <div class="col-md-6" ng-show="ctrl.importingData" >
     	<h3>{{ "IMPORTING_DATA" | translate }}</h3>
     <d2-progressbar-dynamic status="ctrl.progressStatus"></d2-progressbar-dynamic>
+    <p>{{ "IMPORTING_DATA" | translate }} ({{ctrl.numTei[0]}}/{{ctrl.numberTeis[0]}}): {{ ctrl.percent[0]}}%</p>
 </div>
 
 <br/>

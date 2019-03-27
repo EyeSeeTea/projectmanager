@@ -21,11 +21,13 @@ import { EventImportService } from '../../services/services.module';
 //import { UserService } from '../../services/users/UserService';
 import { DataStoreNames } from '../../services/data-store/DataStoreNames';
 import { pbkdf2Sync } from 'crypto';
+//import { EventImportService } from '../../services/events/EventImportService';
+import { dataExport } from '../dataexport/dataexportController';
 
 export class TrackerDataImport {
  
 
-    static $inject = ["$q", "EventImportService", "AnalyticsService", "DemographicsService", "DataStoreService","ProgramService","UserService","EventHelper"];
+    static $inject = ["$q","$rootScope", "EventImportService", "AnalyticsService", "DemographicsService", "DataStoreService","ProgramService","UserService","EventHelper"];
 
     progressStatus = {};
     analyticsStatus = {};
@@ -53,12 +55,14 @@ export class TrackerDataImport {
     importFailed: boolean;
     previewDataImport: boolean;
     analyticsShow=false;
-
+    numberTeis=[0];
+    numTei=[0];
+    percent=[0];
     $file;//single file
     projects=[];
     programsNames=[];
 
-    constructor(private $q: ng.IQService, private EventImportService: EventImportService, private AnalyticsService, 
+    constructor(private $q: ng.IQService, private $rootScope, private EventImportService: EventImportService, private AnalyticsService, 
                 private DemographicsService, private DataStoreService, private ProgramService, private UserService) {
                     this.init();
                 }
@@ -139,7 +143,21 @@ export class TrackerDataImport {
    
 
     sendFiles() {
+        var num=this.numberTeis;
+        var numTei=this.numTei;
+        var percent=this.percent;
+        this.$rootScope.$on('numberTeisOk', function(event,data) {
+            
+            num[0]=data;
+         });
 
+          this.$rootScope.$on('numTeiOk', function(event,data) {
+            
+            numTei[0]=parseInt(data)+1;
+            percent[0]=Math.round(data/num[0]*100);
+            //console.log("Porcentaje"+ percent[0]);
+          });
+       
         $("#importConfirmation").modal("hide");
         this.importOUTDATED=false;
         this.importGap=false;
@@ -178,11 +196,11 @@ export class TrackerDataImport {
                         .then((result) => {
                         
                         this.import_result=true;
-                        this.message=result["data"].data.message;
-                        this.imported=result["data"].data.response.imported;
-                        this.updated=result["data"].data.response.updated;
-                        this.deleted=result["data"].data.response.deleted;
-                        this.ignored=result["data"].data.response.ignored;
+                        //this.message=result["data"].message;
+                        this.imported=result["data"].imported;
+                        this.updated=result["data"].updated;
+                        this.deleted=result["data"].deleted;
+                        this.ignored=result["data"].ignored;
                         this.progressStatus = ProgressStatus.doneSuccessful;
                         //this.progressStatus = ProgressStatus.doneWithFailure
                         var namespace="ServersTrackerImportDates";
@@ -205,7 +223,8 @@ export class TrackerDataImport {
                                 lastUpdated:  result["settings"].lastUpdated,
                                 programs: programs,
                                 filename:this.$file.name,
-                                endDate:  result["settings"].endDate
+                                endDate:  result["settings"].endDate,
+                                result: result
                 
                             }
                         
