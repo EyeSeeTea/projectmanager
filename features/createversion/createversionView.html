@@ -1,0 +1,34 @@
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+   
+
+<div class="row">
+    <h2 class="col-md-8">{{ 'CREATE_VERSION' | translate}}</h2>
+
+     
+</div>
+<form name="createVersionForm" ng-submit="ctrl.submit_version()">
+<div class="row container">
+    <div class="form_group">
+        <br />
+        <button type="submit"  id="submit_version" class="btn btn-primary">{{ 'Create Version' | translate }}</button>
+    </div>
+</div>
+</form>
+<p class="white-space-pre-line">{{ctrl.result}}</p>
+

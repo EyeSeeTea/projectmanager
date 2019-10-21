@@ -231,18 +231,18 @@ export class TrackerDataImport {
                           
                 
                             this.DataStoreService.setNamespaceKeyValue(namespace, dataStoreKey, log);
-                            this.refreshingData=true;
-                            this.analyticsStatus = ProgressStatus.initialWithoutProgress;
-                            this.analyticsShow=true;
+                           // this.refreshingData=true;
+                           // this.analyticsStatus = ProgressStatus.initialWithoutProgress;
+                           // this.analyticsShow=true;
                         })
                       
-                        })
-                        .then(() => this.AnalyticsService.refreshEventAnalytics())
-                        .then(
-                            success => this.analyticsStatus = ProgressStatus.doneSuccessful,
-                            error => this.analyticsStatus = ProgressStatus.doneWithFailure,
-                            notification => this.analyticsLog.push(notification)
-                        );        
+                        });
+                       // .then(() => this.AnalyticsService.refreshEventAnalytics())
+                       // .then(
+                       //     success => this.analyticsStatus = ProgressStatus.doneSuccessful,
+                       //     error => this.analyticsStatus = ProgressStatus.doneWithFailure,
+                       //     notification => this.analyticsLog.push(notification)
+                       // );        
                 };
 
             });

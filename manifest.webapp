@@ -1,7 +1,7 @@
 {
-	"version":"1.9.2",
+	"version":"1.9.4",
 	"name":"HMIS Management",
-	"description":"General management of HMIS: data and metadata import/export, password reset,...",
+	"description":"General management of HMIS: data and metadata import/export, password reset,...Commented Analytics in Import ",
 	"launch_path":"index.html",
 	"appType": "APP", 
 	"icons":{"16":null,

@@ -118,8 +118,10 @@
 <br/>
 <br/>
 
-		<div class="col-md-6" ng-show="ctrl.refreshingData">
-			<h3>{{ "REFRESHING_DATA" | translate }}</h3>
+		<div class="col-md-6" ng-show="false" > 
+            <!-- ng-show="ctrl.refreshingData"> -->
+
+			<h3 ng-show="false">{{ "REFRESHING_DATA" | translate }}</h3>
 			<d2-progressbar-dynamic status="ctrl.analyticsStatus"></d2-progressbar-dynamic>
 		</div>
 
@@ -139,9 +141,14 @@
 <p>{{'IMPORTED' | translate}}: {{ctrl.imported}}</p>
 <p>{{'DELETED' | translate}}: {{ctrl.deleted}}</p>
 <p>{{'IGNORED' | translate}}:: {{ctrl.ignored}}</p>
-
+<br />
+<h5>{{ 'REFRESHING_MESSAGE' | translate }}</h5>
         </div>
-<div id="summary" ng-show="ctrl.analyticsShow">
+
+<div id="summary" ng-show="false">
+
+<!-- ng-show="ctrl.analyticsShow"> -->
+
     <h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 
     <table data-toggle="table" id="notificationTable" class="notificationTable" style="">

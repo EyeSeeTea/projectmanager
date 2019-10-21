@@ -102,6 +102,12 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 		controller: "metadatamonitorController as ctrl",
 		css: require("./features/metadatamonitor/metadatamonitorCss.css")
 	});
+	$routeProvider.when('/createversion', {
+		template: require("./features/createversion/createversionView.html"),
+		controller: "createversionController as ctrl",
+		css: require("./features/createversion/createversionCss.css")
+	});
+
 	$routeProvider.otherwise({
 		redirectTo: '/'
 	});

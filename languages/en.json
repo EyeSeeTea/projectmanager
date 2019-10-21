@@ -114,7 +114,7 @@
 	"SYNC": "Online Sync",
 	"DIFFERENT_VERSIONS": "Different HMIS versions. Please ask the project to update",
 	"NO_SETTINGS_FILE": "The file has not the right format. Probably it was exported with a previous version. Please ask the project to update",
-	
+	"REFRESHING_MESSAGE": "The data imported will be available in the tables and charts in the next 24h. If it is urgent please contact hmis@barcelona.msf.org",
 
 	"____________Tracker Data Export":"__________",
 
@@ -249,7 +249,9 @@
 	"PROJECT": "Project",
 	"DATASETS": "Datasets",
 	"SITE": "Site",
-	"VALIDATE": "Validate"
+	"VALIDATE": "Validate",
+
+	"CREATE_VERSION": "Create Version"
 
 
 }

@@ -112,6 +112,7 @@
 	"SYNC": "Sincronización online",
 	"DIFFERENT_VERSIONS": "Versiones diferentes. Por favor solicita al proyecto que actualice",
 	"NO_SETTINGS_FILE": "El fichero no tiene el formato correcto. Probablemente fue exportado con una versión antigua. Por favor solicita al proyecto que actualice",
+	"REFRESHING_MESSAGE": "Los datos importados estarán disponibles en las tablas y gráficos en las próximas 24h. Si es urgente por favor contacta con hmis@barcelona.msf.org",
 
 
 	"____________Tracker Data Export":"__________",
@@ -246,5 +247,7 @@
 	"PROJECT": "Proyecto",
 	"DATASETS": "Formularios",
 	"SITE": "Sitio",
-	"VALIDATE": "Validar"
+	"VALIDATE": "Validar",
+
+	"CREATE_VERSION": "Crear Versión"
 }

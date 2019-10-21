@@ -116,7 +116,7 @@ class ProjectStatusRecord {
         const isOnlineUid = 'XhHO0xvfh9T';
         if (this.attributeValues) {
             return this.attributeValues.some( (val: AttributeValue) => {
-                return val.attribute.id == isOnlineUid;
+               return (val.attribute.id == isOnlineUid && val.value == "true");
             });    
         } else {
             return false;

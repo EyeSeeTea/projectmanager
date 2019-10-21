@@ -396,6 +396,7 @@ Dhis2Api.factory("Info", ['$resource', 'commonvariable', function ($resource, co
 }]);
 
 
+
 Dhis2Api.factory("systemsetting", ['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "systemSettings");
 }]);
