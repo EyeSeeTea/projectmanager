@@ -86,7 +86,7 @@
 		<d2-progressbar-dynamic status="dataImportStatus"></d2-progressbar-dynamic>
 	</div>
 </div>
-<div class="row">
+<div ng-show="false" class="row"> <!-- remove "false"  -->
 		<div class="col-md-6" ng-show="refreshingData">
 			<h3>{{ "REFRESHING_DATA" | translate }}</h3>
 			<d2-progressbar-dynamic status="analyticsStatus"></d2-progressbar-dynamic>
@@ -117,14 +117,19 @@
 				<tbody>
 				</tbody>
 			</table>
+
 		</div>
+	<h5>{{ 'REFRESHING_MESSAGE' | translate }}</h5>
 	
 	</div>
 	
 
 
 	<br/>
-	<div ng-show="analyticsDisplayed">
+	<div ng-show="false"> 
+	
+	<!-- <div ng-show="analyticsDisplayed"> -->
+
 			<h3>{{ 'ANALYTICS_MESSAGGE' | translate }}</h3>
 		
 			<table data-toggle="table" id="notificationTable" class="notificationTable" style="">

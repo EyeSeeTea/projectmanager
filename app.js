@@ -102,6 +102,12 @@ appManagerMSF.config(['$routeProvider', function($routeProvider) {
 		controller: "metadatamonitorController as ctrl",
 		css: require("./features/metadatamonitor/metadatamonitorCss.css")
 	});
+	$routeProvider.when('/createversion', {
+		template: require("./features/createversion/createversionView.html"),
+		controller: "createversionController as ctrl",
+		css: require("./features/createversion/createversionCss.css")
+	});
+
 	$routeProvider.otherwise({
 		redirectTo: '/'
 	});
@@ -127,7 +133,7 @@ appManagerMSF.config(['$translateProvider', 'urlApi', function ($translateProvid
 	  
 	  $translateProvider.fallbackLanguage(['en']);
 
-	  jQuery.ajax({ url: urlApi + 'userSettings/keyUiLocale/', contentType: 'text/plain', method: 'GET', dataType: 'text', async: false}).done(function (uiLocale) {
+	  jQuery.ajax({ url: urlApi + 'userSettings/keyUiLocale/', contentType: 'text/plain', method: 'GET', dataType: 'text', async: true}).done(function (uiLocale) {
 		  if (uiLocale == ''){
 			  $translateProvider.determinePreferredLanguage();
 		  }

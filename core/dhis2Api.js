@@ -44,7 +44,7 @@ var isOnline = urlBase.indexOf("msf.es") >= 0;
 
 // Get and save DHIS version
 var version = "";
-$.ajax({ url: urlApi + "system/info", dataType: "json", async: "false", method: "GET" }).done( function (info) {
+$.ajax({ url: urlApi + "system/info", dataType: "json", async: "true", method: "GET" }).done( function (info) {
 	version = info.version;
 });
 
@@ -267,7 +267,6 @@ Dhis2Api.factory("DataElementGroupsUID",['$resource','commonvariable', function 
 	{},
   { get: { method: "GET"} });
 }]);
-
 Dhis2Api.factory("DataStore",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataStore/:namespace/:key",
 		{
@@ -395,6 +394,7 @@ Dhis2Api.factory("Ping", ['$resource', 'commonvariable', function ($resource, co
 Dhis2Api.factory("Info", ['$resource', 'commonvariable', function ($resource, commonvariable) {
 	return $resource( commonvariable.url + "system/info");
 }]);
+
 
 
 Dhis2Api.factory("systemsetting", ['$resource', 'commonvariable', function ($resource, commonvariable) {

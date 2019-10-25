@@ -84,7 +84,7 @@ export class EventExportService {
      * @returns {*} Promise that resolves to a zip object with containing three zip files: events, trackedEntityInstances and enrollments
      */
     exportEventsFromLastWithDependenciesInZip (lastUpdated: string, endDate, serverName, orgunits: Orgunit[], programs?: Program[]) {
-        return this.exportEventsFromLastWithDependencies2(lastUpdated, orgunits, programs)
+        return this.exportEventsFromLastWithDependencies2(lastUpdated, endDate, orgunits, programs)
            .then(wrapper => this.EventHelper.encryptObject(wrapper))
             .then(file => this.compressFileByElementType2(file, lastUpdated, endDate, serverName, orgunits, programs));
     };
@@ -117,11 +117,11 @@ export class EventExportService {
      * @param programs Array of programs (optional)
      * @returns {*} Promise that resolves to an object containing events, trackedEntityInstances and enrollments
      */
-    exportEventsFromLastWithDependencies2 (lastUpdated: string, orgunits: Orgunit[], programs: Program[]) {
+    exportEventsFromLastWithDependencies2 (lastUpdated: string, endDate: string, orgunits: Orgunit[], programs: Program[]) {
         const orgunitProgramCombo = this.getOrgunitProgramCombo(orgunits, programs);
       
         return this.$q.all([
-            this.getTrackedEntityInstancesFromLastWithDependecies(lastUpdated,  orgunitProgramCombo)
+            this.getTrackedEntityInstancesFromLastWithDependecies(lastUpdated, endDate, orgunitProgramCombo)
             
         ])
         .then(([teisWithDependencies]) => {
@@ -201,10 +201,12 @@ export class EventExportService {
      * @param orgunitProgramCombo Combo of orgunit/program
      * @returns {*} Promise that resolves to a TrackedEntityInstanceList object
      */
-    getTrackedEntityInstancesFromLastWithDependecies (lastUpdated: string, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
+    getTrackedEntityInstancesFromLastWithDependecies (lastUpdated: string,endDate, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
         const commonParams = {
             lastUpdatedStartDate: lastUpdated,
-            ouMode: 'ACCESSIBLE'
+            paging: false,
+            ouMode: 'ACCESSIBLE',
+            lastUpdatedEndDate:  endDate
         };
         let teiPromises = orgunitProgramCombo.map( (combination) => {
             //ou: combination.orgUnit,

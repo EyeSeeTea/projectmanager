@@ -44,6 +44,7 @@ class MenuController {
     showTrackerImport: boolean = false;
     showValidation: boolean = false;
     showMetadataMonitor: boolean = false;
+    showCreateVersion: boolean = false;
     showProject: boolean=false;
     showCapital: boolean=false;
     isOffline:boolean=false;
@@ -94,6 +95,9 @@ class MenuController {
             this.showCapital =  isSuperUser || this.showDataImport  || this.showTrackerImport || this.showValidation;
             this.showProject =   isSuperUser || this.showDataExport || this.showTrackerExport || this.showMetadataImport || this.showValidationRequest;
             this.showMetadataMonitor =  isSuperUser || this.isAdministrator || isHMISOfficer || this.isHMISOfficerGroup;
+            this.showCreateVersion =  isSuperUser;
+
+
         });
     }
 }

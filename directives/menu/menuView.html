@@ -40,6 +40,11 @@
     
     <!--<li data-toggle="pill" ng-if="$ctrl.isAdministrator"><a href="#/hmisadoption">{{'HMIS_ADOPTION' | translate}}</a></li>-->
     <li data-toggle="pill" ng-if="$ctrl.showMetadataMonitor"><a href="#/metadatamonitor">{{'METADATA_MONITOR' | translate}}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showMetadataMonitor"><a href="#/createversion">{{'CREATE_VERSION' | translate}}</a></li>
+    
+    
+    
+    
     <li></li>
     <li ng-click="$ctrl.goHome()" ng-if="$ctrl.isOnline"><a>
         <span class="glyphicon glyphicon-home"></span> {{ 'HOME' | translate}}

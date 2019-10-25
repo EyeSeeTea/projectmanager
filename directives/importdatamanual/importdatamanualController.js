@@ -332,9 +332,10 @@ var importdatamanualController = ["$scope","$interval","$http","$filter","common
             logDataimport($file.name, httpResponse.data);
             $scope.dataImportStatus.type = "success";
             $scope.dataImportStatus.active = false;
-			$scope.analyticsStatus.visible = true;
-			$scope.analyticsDisplayed=true;
-            $scope.refreshingData = true;
+			      //$scope.analyticsStatus.visible = true;
+			      //$scope.analyticsDisplayed=true;
+            //$scope.refreshingData = true;
+            /*
             AnalyticsService.refreshAllAnalytics().then(
               success => {
                 $scope.analyticsStatus.type = "success";
@@ -348,6 +349,7 @@ var importdatamanualController = ["$scope","$interval","$http","$filter","common
               notification => $scope.analyticsLog.push(notification)
               //notification => console.log(notification)
             );
+            */
 
 			console.log("File upload SUCCESS");
 		} else {

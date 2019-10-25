@@ -100,17 +100,24 @@ export class ValidationService {
                 child.siteName = site.name;
                 child.siteId = site.id;
             });
+            //Se puede añadir los sites a los servicios, para que despues incluya
+            //los datasets de los sites
+            //site.siteName=site.name;
+            //site.siteId=site.id;
+            //services=services.concat(site);
             services = services.concat(site.children);
         });
         return services;
     }
-
+    //aqui deberia recibir los sites o hacer un sitesValues
     private servicesValues(mission, project, services, lastDatePush, lastPushDateSaved) {
         return services.reduce((total2, service) => {
             return total2.then(
                 () => {
                     return this.getDatasets(service.id).then(
                         dataSets => {
+                            //concatenar los datasets de site y proyecto
+                            //this.getDatasets(project.id)
                             return this.dataSetsValues(dataSets, service, mission, project, lastDatePush, lastPushDateSaved);
                         });
                 }
@@ -256,6 +263,7 @@ export class ValidationService {
                     return this.ServerPushDatesDataStoreService.getKeyValue(project.id + "_values").then(
                         data => {
                             if (data != undefined) {
+                                //aqui lee todos los datasets del dataStore (con el service incluido)
                                 this.datasets = this.datasets.concat(data.values);
 
                                 project['datasets'] = data.values.length;

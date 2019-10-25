@@ -1,0 +1,28 @@
+.mission {
+    background-color: lightgray;
+}
+
+.project {
+    text-indent: 1em;
+}
+
+.table-row td {
+    padding: 2px 15px !important;
+    font-size: 0.9em;
+}
+
+.online-project {
+    background-color: #d8e7f1;
+}
+
+.closed {
+    background-color: #f1c2c2;
+}
+
+.show-closed-label {
+    padding-top: 35px;
+}
+
+p.white-space-pre-line {
+    white-space: pre-line;
+}
