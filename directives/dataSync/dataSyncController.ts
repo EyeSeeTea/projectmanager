@@ -97,7 +97,8 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
 				.then(currentValue => 
 					{
 						if (currentValue==undefined) {currentValue={}}
-						currentValue[serverName]= register;
+						currentValue[serverName]= register; //no deberia enviar el data otra vez porque se concatena
+						//https://hmisocba.msf.es/dhis-web-datastore/index.html#/edit/ServersPushDates/x72kWOI4Ylg
 					return ServerPushDatesRemoteDataStoreService.setKeyValue(projectId ,currentValue) ;
 					})
 				.then(() => ServerPushDatesRemoteDataStoreService.setKeyValue(projectId + "_date", register))
