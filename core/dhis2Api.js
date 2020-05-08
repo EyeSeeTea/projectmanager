@@ -323,9 +323,9 @@ Dhis2Api.factory("RemoteInstanceUrl", ['$resource', 'commonvariable', function (
 	return $resource( commonvariable.url + "systemSettings/keyRemoteInstanceUrl", {}, {
 		get: {
 			method: 'GET',
-			transformResponse: function (response) {
+			/*transformResponse: function (response) {
 				return {html: response};
-			}
+		}*/
 		}
 	});
 }]);

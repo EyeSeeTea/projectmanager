@@ -57,15 +57,15 @@ export class RemoteApiService {
         return this.RemoteInstanceUrl.get().$promise
             .then( remoteUrl => {
                 
-                if (remoteUrl.html == "") {
+                if (remoteUrl.keyRemoteInstanceUrl == "") {
                     return this.$q.reject(this.REMOTE_NOT_CONFIGURED);
                 }
                 return this.DataStoreService.getKeyValue(this.remoteSettingsNamespace).then(
                    settings => {
                        if (settings[this.remoteUserProperty]){
                            this.remoteSettings = {
-                               url: remoteUrl.html,
-                               api: remoteUrl.html + '/api',
+                               url: remoteUrl.keyRemoteInstanceUrl,
+                               api: remoteUrl.keyRemoteInstanceUrl + '/api',
                                loggerAuth: 'Basic ' + btoa(settings[this.remoteUserProperty].username + ":" + settings[this.remoteUserProperty].password)
                            }
                         } else {
