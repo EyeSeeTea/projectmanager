@@ -51,7 +51,7 @@ export class MetadataSyncService {
             .then(() => this.updateVersionDiff());
     }
 
-    private metadataSyncDiffRecursive(versionArray: MetadataVersion[]) {
+    private metadataSyncDiffRecursive(versionArray) {
         if (versionArray.length == 0) {
             return this.$q.resolve("No version diff");
         }
@@ -201,7 +201,7 @@ export class MetadataSyncService {
      * Get the difference between local and remote server.
      * @returns {*} An array with the version objects that are different.
      */
-    getVersionDifference(): ng.IPromise<MetadataVersion[]> {
+    getVersionDifference() {
         return this.$q( resolve => resolve(this.versionDiff ? this.versionDiff : this.updateVersionDiff()))
     }
 
@@ -214,6 +214,7 @@ export class MetadataSyncService {
             .then( localVersion  => this.RemoteApiService.getMetadataVersionDiff(localVersion) )
             .then( result => {
                 this.versionDiff = result.data == "" ? [] : result.data.metadataversions;
+                //ordenar metadataVersions
                 return this.versionDiff;
             });
     }

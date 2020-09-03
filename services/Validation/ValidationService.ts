@@ -63,6 +63,7 @@ export class ValidationService {
         var lastDatePush = null;
         var sites = [];
         var services = [];
+        var orgUnits=[];
         return this.ServerPushDatesDataStoreService.getKeyValue(project.id + "_date").then(
             data => {
                 lastDatePush = null;
@@ -72,6 +73,10 @@ export class ValidationService {
                     if (lastPushDateSaved != lastDatePush) {
                         sites = this.getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
                         services = this.getSiteServices(sites);
+                       //orgUnits=sites.concat(services);
+                        // crear array orgUnits que incluya services y sites para buscar sus dataasets
+                        // en los datasets a nivel de site poner service = N/A
+                        // en los dataSets a nivel de proyecto poner site y service = N/A
                         return this.servicesValues(mission.id, project, services, lastDatePush, lastPushDateSaved);
                     }
                 } else { console.log("No hay datos importados"); }
@@ -88,7 +93,16 @@ export class ValidationService {
     private getProjectSites(project) {
         var sites = [];
         /* Ponemos juntos todos los sites para luego buscar todos los services */
+        
         sites = sites.concat(project.children);
+      /*
+        Añadir esto para los datasets a nivel de site
+        angular.forEach(sites, function (site) {
+            site.siteName = "N/A";
+            site.siteId = "N/A";
+        
+        });
+        */
         return sites;
     }
 
@@ -145,6 +159,7 @@ export class ValidationService {
                         return this.readDatasetValues(dataSet.id, service.id, new Date(new Date(lastPushDateSaved).toLocaleString())).then(
                             dataValues => {
                                 if (dataValues != undefined) {
+                                    //Añadir en la llamada el site (id y name)
                                     return this.updateDatastoreValues(dataValues, mission, project.id, service, dataSet, lastDatePush, lastPushDateSaved);
                                 }
                             });
@@ -156,10 +171,10 @@ export class ValidationService {
 
 
 
-    private readDatasetValues(datasetId, service, lastUpdated) {
+    private readDatasetValues(datasetId, orgUnitId, lastUpdated) {
         return this.DataExport.get({
             dataSet: datasetId,
-            orgUnit: service,
+            orgUnit: orgUnitId,
             lastUpdated: lastUpdated,
             includeDeleted: true
         }).$promise

@@ -133,14 +133,23 @@ appManagerMSF.config(['$translateProvider', 'urlApi', function ($translateProvid
 	  
 	  $translateProvider.fallbackLanguage(['en']);
 
-	  jQuery.ajax({ url: urlApi + 'userSettings/keyUiLocale/', contentType: 'text/plain', method: 'GET', dataType: 'text', async: true}).done(function (uiLocale) {
+	  jQuery.ajax({ 
+      url: urlApi + 'userSettings/keyUiLocale/', 
+	  contentType: 'text/plain', 
+	  method: 'GET', 
+	  dataType: 'text', 
+	  async: false})
+	  .done(function (uiLocale) {
 		  if (uiLocale == ''){
+			  console.log("no hay language");
 			  $translateProvider.determinePreferredLanguage();
 		  }
 		  else{
+			  console.log("assign locale =>" + uiLocale);
 			  $translateProvider.use(uiLocale);
 		  }
       }).fail(function () {
+		  console.log("fail language");
     	  $translateProvider.determinePreferredLanguage();
 	  });
 }]);
