@@ -73,11 +73,24 @@ export class ValidationService {
                     if (lastPushDateSaved != lastDatePush) {
                         sites = this.getProjectSites(project); // Si lo pongo fuera no tiene valor cuando entra aqui
                         services = this.getSiteServices(sites);
-                       //orgUnits=sites.concat(services);
+                       orgUnits=sites.concat(services);
+                       var project2=project;
+                       project2.siteName=""; // N/A
+                       project2.siteId=""; // N/A
+                       project2.serviceName=""; //N/A
+                       //var name=project.name;
+                       //project2.name="N/A";
+                       project2.serviceId=""; //N/A
+                       orgUnits=orgUnits.concat(project2);
+                      // project.name=name;
+                       //console.log("Org Units");
+                       //console.log(orgUnits);
                         // crear array orgUnits que incluya services y sites para buscar sus dataasets
                         // en los datasets a nivel de site poner service = N/A
                         // en los dataSets a nivel de proyecto poner site y service = N/A
-                        return this.servicesValues(mission.id, project, services, lastDatePush, lastPushDateSaved);
+                       // return this.servicesValues(mission.id, project, services, lastDatePush, lastPushDateSaved);
+                        return this.orgUnitsValues(mission.id, project, orgUnits, lastDatePush, lastPushDateSaved);
+                  
                     }
                 } else { console.log("No hay datos importados"); }
             }
@@ -95,14 +108,14 @@ export class ValidationService {
         /* Ponemos juntos todos los sites para luego buscar todos los services */
         
         sites = sites.concat(project.children);
-      /*
-        Añadir esto para los datasets a nivel de site
+      
+        //Añadir esto para los datasets a nivel de site
         angular.forEach(sites, function (site) {
-            site.siteName = "N/A";
-            site.siteId = "N/A";
+            site.siteName = site.name;
+            site.siteId = site.id;
         
         });
-        */
+        
         return sites;
     }
 
@@ -113,54 +126,91 @@ export class ValidationService {
             angular.forEach(site.children, function (child) {
                 child.siteName = site.name;
                 child.siteId = site.id;
+                child.serviceName=child.name;
+                child.serviceId=child.id;
             });
             //Se puede añadir los sites a los servicios, para que despues incluya
             //los datasets de los sites
             //site.siteName=site.name;
             //site.siteId=site.id;
             //services=services.concat(site);
+            
             services = services.concat(site.children);
         });
         return services;
     }
     //aqui deberia recibir los sites o hacer un sitesValues
-    private servicesValues(mission, project, services, lastDatePush, lastPushDateSaved) {
-        return services.reduce((total2, service) => {
+    private orgUnitsValues(mission, project, orgUnits, lastDatePush, lastPushDateSaved) {
+        return orgUnits.reduce((total2, orgUnit) => {
             return total2.then(
                 () => {
-                    return this.getDatasets(service.id).then(
+                    return this.getDatasets(orgUnit.id).then(
                         dataSets => {
                             //concatenar los datasets de site y proyecto
                             //this.getDatasets(project.id)
-                            return this.dataSetsValues(dataSets, service, mission, project, lastDatePush, lastPushDateSaved);
+                           return this.getDatasets(project.id).then(
+                          
+                           dataSetsProject => {
+                            var dataSetsIncludeProject=dataSetsProject.concat(dataSets);
+                            //console.log("DataSets");
+                           //IncludeProject); // NO se usa
+                            return this.dataSetsValues(dataSets, orgUnit, mission, project, lastDatePush, lastPushDateSaved);
+                           })
                         });
                 }
             );
         }, this.$q.when("Done total 2"));
     }
 
+   private getDatasets(orgUnit) {
+    var filters = { filter: [
+        'id:eq:' + orgUnit
+        //'dataSets.attributeValues.attribute.code:neq:HIDE_IN_VALIDATION'
+   // NO Filtrar por api, obtener todo y despues filtar los dataSets
+   
+]};
 
-    private getDatasets(orgUnit) {
-        var filter = { filter: 'id:eq:' + orgUnit };
-        return this.Organisationunit.get(filter).$promise.then(
+return this.Organisationunit.get(filters).$promise.then(
             data => {
-                return data.organisationUnits[0].dataSets;
-            });
+                var dataSets=data.organisationUnits[0].dataSets;
+                //var dataSets_filtered = data.organisationUnits[0].dataSets.filter(filter_datasets);
+                var filtered = [];
+                var include=true;
+            for (var i = 0; i < dataSets.length; i++) {
+                include=true;
+                for (var i2 = 0; i2 < dataSets[i].attributeValues.length; i2++)
+            {
+                if (dataSets[i].attributeValues[i2].attribute.code == "HIDE_IN_VALIDATION" &&
+                dataSets[i].attributeValues[i2].value == "true"
+                ) { include=false;  
+                //console.log("dataset");
+                //console.log( dataSets[i]);
+                }
+            }  
+               if (include) {filtered.push(dataSets[i]);}
+            }
+            return filtered;
+            }
+    
+                
+            );
     }
 
+  
 
-    private dataSetsValues(dataSets, service, mission, project, lastDatePush, lastPushDateSaved) {
+    private dataSetsValues(dataSets, orgUnit, mission, project, lastDatePush, lastPushDateSaved) {
         return dataSets.reduce((total3, dataSet) => {
             return total3.then(
                 () => {
                     if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
                        
                        //new Date((new Date(1530866294000).toString()).split("GMT")[0]+"GMT +0000")
-                        return this.readDatasetValues(dataSet.id, service.id, new Date(new Date(lastPushDateSaved).toLocaleString())).then(
+                        return this.readDatasetValues(dataSet.id, orgUnit.id, new Date(new Date(lastPushDateSaved).toLocaleString())).then(
                             dataValues => {
+                                
                                 if (dataValues != undefined) {
                                     //Añadir en la llamada el site (id y name)
-                                    return this.updateDatastoreValues(dataValues, mission, project.id, service, dataSet, lastDatePush, lastPushDateSaved);
+                                    return this.updateDatastoreValues(dataValues, mission, project.id, orgUnit, dataSet, lastDatePush, lastPushDateSaved);
                                 }
                             });
                     }
@@ -172,6 +222,12 @@ export class ValidationService {
 
 
     private readDatasetValues(datasetId, orgUnitId, lastUpdated) {
+     //  console.log("READ DATASET VALUES")
+     //   console.log("DATASETID");
+     //   console.log(datasetId);
+     //   console.log("ORGUNIT");
+      //  console.log(orgUnitId);
+        
         return this.DataExport.get({
             dataSet: datasetId,
             orgUnit: orgUnitId,
@@ -200,8 +256,8 @@ export class ValidationService {
                 project: project,
                 siteName: service.siteName,
                 siteId: service.siteId,
-                service: service.id,
-                serviceName: service.name,
+                service: service.serviceId,
+                serviceName: service.serviceName, // TODO: ServiceName?
                 dataSet: dataSet.id,
                 dataSetName: dataSet.name,
                 lastDatePush: lastDatePush,
@@ -280,7 +336,7 @@ export class ValidationService {
                             if (data != undefined) {
                                 //aqui lee todos los datasets del dataStore (con el service incluido)
                                 this.datasets = this.datasets.concat(data.values);
-
+                                //FILTRAR HIDE_IN_VALIDATION
                                 project['datasets'] = data.values.length;
                                 this.projects.push(project);
 

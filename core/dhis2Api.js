@@ -95,7 +95,7 @@ Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function 
 Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnits", 
         {
-            fields: 'name,id,level,parent,children, dataSets[id, name], organisationunits[id, parent],[organisationUnitGroups[id]',
+            fields: 'name,id,level,parent,children, dataSets[id, name,attributeValues[value,attribute[id,code]]], organisationunits[id, parent],[organisationUnitGroups[id]',
             paging: false
         },
         { get: { method: "GET"} }
@@ -292,7 +292,7 @@ Dhis2Api.factory("SqlView",['$resource', 'commonvariable', function($resource, c
 }]);
 
 Dhis2Api.factory("SqlViewData",['$resource', 'commonvariable', function($resource, commonvariable) {
-	return $resource( commonvariable.url + "sqlViews/:id/data.json",
+	return $resource( commonvariable.url + "sqlViews/:id/data.json?paging=false",
 		{id:'@id'});
 }]);
 

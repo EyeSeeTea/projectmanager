@@ -72,7 +72,7 @@ export class MetadataImport {
 		this.remoteMetadataVersion = version;
 	}
 
-	setVersionDiff(versionDiff: MetadataVersion[]) {
+	setVersionDiff(versionDiff) {
 		this.versionDiffNumber = versionDiff.length;
 	}
 

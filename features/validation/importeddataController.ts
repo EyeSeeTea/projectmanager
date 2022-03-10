@@ -176,7 +176,14 @@ export class ImportedDataController {
             codeHtml = codeHtml.replace(/id="tabs"/g, 'id="tabs-' + dataset.dataSet + '"');
             $("#dataset").html(codeHtml);
             this.formatDatasets(dataset);
-            this.readDatasetValuesPreview(dataset.dataSet, dataset.service, dataset.period).then(dataValues => {
+            console.log("DATASET");
+            console.log(dataset);
+            var organisationUnit=dataset.service;
+            if (dataset.service==undefined) {organisationUnit=dataset.siteId}
+            if (dataset.service==undefined && dataset.siteId==undefined) {organisationUnit=dataset.project}
+            if (dataset.service=="" && dataset.siteId=="") {organisationUnit=dataset.project}
+            
+            this.readDatasetValuesPreview(dataset.dataSet, organisationUnit, dataset.period).then(dataValues => {
                 this.previewDataset(dataValues, dataset.lastPushDateSaved);
             })
         })
@@ -191,8 +198,10 @@ export class ImportedDataController {
         this.idSelectedSiteId = dataset.siteId;
         this.selectedPeriod = dataset.period;
         this.selectedDataset=dataset.dataSetName;
-        this.selectedSite=dataset.siteName;
-        this.selectedServiceName=dataset.serviceName;
+        this.selectedSite="";
+        this.selectedServiceName="";
+        if (dataset.siteName!="") {this.selectedSite=dataset.siteName} // N
+        if (dataset.serviceName!="") {this.selectedServiceName=dataset.serviceName} //N/A
 
      };
     private previewDataset(dataValues, lastPushDateSaved) {

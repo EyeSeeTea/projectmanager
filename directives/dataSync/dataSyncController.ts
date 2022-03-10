@@ -31,10 +31,10 @@ export const datasyncDirective = [function () {
 }];
 
 
-var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService", "Organisationunit", "MessageService", 
+var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyncService", "Organisationunit", "MessageService", 
 							"RemoteApiService", 'UserService', 'SystemService', 
 							'ServerPushDatesDataStoreService', 'ServerPushDatesRemoteDataStoreService',
-	function ($scope, $q: ng.IQService, commonvariable: CommonVariable, MetadataSyncService: MetadataSyncService, Organisationunit, 
+	function ($scope,$http, $q: ng.IQService, commonvariable: CommonVariable, MetadataSyncService: MetadataSyncService, Organisationunit, 
 			MessageService: MessageService, RemoteApiService: RemoteApiService, UserService: UserService, SystemService: SystemService, 
 			ServerPushDatesDataStoreService: ServerPushDatesDataStoreService, ServerPushDatesRemoteDataStoreService: ServerPushDatesRemoteDataStoreService) {		
 
@@ -267,20 +267,41 @@ var datasyncController = ["$scope", "$q", "commonvariable", "MetadataSyncService
                     }
                     MessageService.sendRemoteMessage(message);
                 }
+				return updateLastSuccesfullDataSynch($scope.sync_result_date).then(
+data =>{
+//Send message to medcos
+return getMedco(projectId).then(
+	medcos => {
+		var message = {
+			subject: "Data Sync - " + projectName,
+			text: "Data Sync: Date - " + new Date($scope.sync_result_date) + ". Result: " + JSON.stringify($scope.importCount),
+			users: medcos
+		}
+		return MessageService.sendRemoteMessage(message);
+	});
+}
 
-                //Send message to medcos
-                return getMedco(projectId).then(
-                    medcos => {
-                        var message = {
-                            subject: "Data Sync - " + projectName,
-                            text: "Data Sync: Date - " + new Date($scope.sync_result_date) + ". Result: " + JSON.stringify($scope.importCount),
-                            users: medcos
-                        }
-                        return MessageService.sendRemoteMessage(message);
-                    });
+				)
+                
             }
-        }
-
+		}
+		function sumarDias(fecha, dias){
+			fecha.setDate(fecha.getDate() + dias);
+			return fecha;
+		  }
+		function updateLastSuccesfullDataSynch(date) {
+			
+			date=sumarDias(new Date(),-1).toISOString().split('Z')[0];
+			console.log("Updated keyLastSuccessfulDataSynch:"+ date);
+			return $http({
+				method: 'POST',
+				url: commonvariable.url + "systemSettings",
+				data: {"keyLastSuccessfulDataSynch": date} ,
+				headers: {'Content-Type': 'application/json'},
+				
+			})
+	
+		}
 		function getMedco(projectId) {
 			var medco = [];
 			return getMission(projectId).then(mission => {

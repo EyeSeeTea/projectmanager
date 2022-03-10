@@ -89,9 +89,11 @@ export class AvailableData {
 		if (this.datastoredRead == false) {
             const _periodStructurePromise = this.SqlService.executeSqlCode("SELECT iso, monthly, quarterly FROM _periodstructure");
 			return this.$q.all([this.ValidationService.fillDatastore(), _periodStructurePromise]).then( response  => {
-                
-                const _periodStructure = this.formatPeriodStructure(response[1].rows);
-			    return this.ValidationService.readDatastore().then( data => {
+				
+                const _periodStructure = this.formatPeriodStructure(response[1].listGrid.rows);
+				//console.log("Period Structure");
+				//console.log(_periodStructure);
+				return this.ValidationService.readDatastore().then( data => {
                     angular.forEach(data.datasets, dataset => {
 
                         if (!(this.valuesDatastore[dataset.missionId] instanceof Array)) { this.valuesDatastore[dataset.missionId] = [] }
@@ -104,12 +106,15 @@ export class AvailableData {
                         const _periodRow = _periodStructure[dataset.period];
 
                         this.fillValuesDatastore(dataset, dataset.period, "");
-                        if (_periodRow.monthly) {
+						if (_periodRow) {
+
+						if (_periodRow.monthly ) {
                             this.fillValuesDatastore(dataset, _periodRow.monthly, "months");
                         }
-                        if (_periodRow.quarterly) {
+                        if (_periodRow.quarterly ) {
                             this.fillValuesDatastore(dataset, _periodRow.quarterly, "quarters");
-                        }
+						}
+					}
                     });
                     this.datastoredRead = true;
 				})
@@ -139,13 +144,15 @@ export class AvailableData {
     *
     */ 
     formatPeriodStructure (rows: string[][]) {
-        let _str = {};
-        rows.forEach( period => {
+		let _str = {};
+		rows.forEach( period => {
             _str[period[0]] = {
                 monthly: period[1],
                 quarterly: period[2]
             }
-        });
+		}
+		
+		);
         return _str;
     }
 
@@ -219,7 +226,8 @@ export class AvailableData {
 						const parentRows = this.AnalyticsService.formatAnalyticsResult(parentResult, this.orgunitsInfo, [], this.valuesDatastore);
 						const childrenRows = this.AnalyticsService.formatAnalyticsResult(childrenResult, this.orgunitsInfo, [dataViewOrgUnit.id], this.valuesDatastore);
 						this.tableRows = this.tableRows.concat(parentRows).concat(childrenRows);
-
+						//console.log("TableRows");
+						//console.log(this.tableRows);
 
 						// Make visible orgunits under dataViewOrgunit
 						this.orgunitsInfo[dataViewOrgUnit.id].clicked = true;

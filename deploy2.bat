@@ -1,0 +1,1 @@
+xcopy /y /s "d:\temp" "C:\Program Files (x86)\DHIS2\DHIS\apps\HMIS_Management"

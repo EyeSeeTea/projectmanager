@@ -214,6 +214,8 @@ export class MetadataSyncService {
             .then( localVersion  => this.RemoteApiService.getMetadataVersionDiff(localVersion) )
             .then( result => {
                 this.versionDiff = result.data == "" ? [] : result.data.metadataversions;
+               // console.log("versiones");
+               // console.log(this.versionDiff);
                 //ordenar metadataVersions
                 return this.versionDiff;
             });

@@ -62,8 +62,10 @@ export class AnalyticsService {
         var parameters: AnalyticsParameters = {
             dimension: [
                 "ou:" + orgunits,
-                "pe:" + period.id
+                "pe:" + period.id,
+                "fGoEwhKl0WS:T0qg4AAHiby"
             ],
+            
             aggregationType: "COUNT",
             hierarchyMeta: "TRUE",
             displayProperty: "NAME"
@@ -134,7 +136,7 @@ export class AnalyticsService {
             noValidatedPeriod = false;
             if (valuesDatastore[row[0]] != undefined) { noValidatedPeriod = valuesDatastore[row[0]]["'" + row[1] + "'"]}
 
-            orgunits[row[0]].data[row[1]] = { value: row[2], noValidatedPeriod: noValidatedPeriod };
+            orgunits[row[0]].data[row[1]] = { value: row[3], noValidatedPeriod: noValidatedPeriod };
 
         });
 
