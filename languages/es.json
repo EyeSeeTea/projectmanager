@@ -112,7 +112,7 @@
 	"SYNC": "Sincronización online",
 	"DIFFERENT_VERSIONS": "Versiones diferentes. Por favor solicita al proyecto que actualice",
 	"NO_SETTINGS_FILE": "El fichero no tiene el formato correcto. Probablemente fue exportado con una versión antigua. Por favor solicita al proyecto que actualice",
-	"REFRESHING_MESSAGE": "Los datos importados estarán disponibles en las tablas y gráficos en las próximas 24h. Si es urgente por favor contacta con hmis@barcelona.msf.org",
+	"REFRESHING_MESSAGE": "Los datos importados estarán disponibles en las tablas y gráficos en las próximas 24h. Si es urgente por favor contacta con ZenitHelp.Apps4Ops@barcelona.msf.org",
 
 
 	"____________Tracker Data Export":"__________",
@@ -223,7 +223,7 @@
 
 	"________________Service ": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Las credenciales de usuario no son correctas",
-	"NOT_IN_WHITELIST": "Por favor, envia un correo a hmis@barcelona.msf.org y pide que incluyan '{{urlbase}}' en la lista blanca ",
+	"NOT_IN_WHITELIST": "Por favor, envia un correo a ZenitHelp.Apps4Ops@barcelona.msf.org y pide que incluyan '{{urlbase}}' en la lista blanca ",
 	"NO_LOGGER_USER": "El usuario no está disponible",
 	"INVALID_LOGGER_USER": "Las credenciales de usario son inválidas",
 

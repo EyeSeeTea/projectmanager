@@ -114,7 +114,7 @@
 	"SYNC": "Online Sync",
 	"DIFFERENT_VERSIONS": "Different HMIS versions. Please ask the project to update",
 	"NO_SETTINGS_FILE": "The file has not the right format. Probably it was exported with a previous version. Please ask the project to update",
-	"REFRESHING_MESSAGE": "The data imported will be available in the tables and charts in the next 24h. If it is urgent please contact hmis@barcelona.msf.org",
+	"REFRESHING_MESSAGE": "The data imported will be available in the tables and charts in the next 24h. If it is urgent please contact ZenitHelp.Apps4Ops@barcelona.msf.org",
 
 	"____________Tracker Data Export":"__________",
 
@@ -224,7 +224,7 @@
 
 	"________________Service": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Logger user credentials are not correct.",
-	"NOT_IN_WHITELIST": "Please, email hmis@barcelona.msf.org and ask to include '{{urlbase}}' in the whitelist.",
+	"NOT_IN_WHITELIST": "Please, email ZenitHelp.Apps4Ops@barcelona.msf.org and ask to include '{{urlbase}}' in the whitelist.",
 	"NO_LOGGER_USER": "Logger user is not available.",
 	"INVALID_LOGGER_USER": "Logger user credentials are invalid.",
 

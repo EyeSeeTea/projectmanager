@@ -210,7 +210,7 @@ export class EventExportService {
         };
         let teiPromises = orgunitProgramCombo.map( (combination) => {
             //ou: combination.orgUnit,
-            const params = angular.extend({}, commonParams, { program: combination.program, fields: "*", includeDeleted: "true"});
+            const params = angular.extend({}, commonParams, { program: combination.program, fields: ":all", includeDeleted: "true"});
             return this.TrackedEntityInstances.get(params).$promise;
         });
 

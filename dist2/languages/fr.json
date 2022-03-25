@@ -110,7 +110,7 @@
 	"SYNC": "Synchronisation en ligne",
 	"DIFFERENT_VERSIONS": "Différentes versions du HMIS. Veuillez demander au projet de mettre à jour",
 	"NO_SETTINGS_FILE": "Le fichier n'a pas le bon format. Probablement il a été exporté avec une version précédente. Veuillez demander au projet de mettre à jour",
-	"REFRESHING_MESSAGE": "Les données importées seront disponibles dans les tableaux et les graphiques dans les prochaines 24h. Si urgent veuillez contacter hmis@barcelona.msf.org",
+	"REFRESHING_MESSAGE": "Les données importées seront disponibles dans les tableaux et les graphiques dans les prochaines 24h. Si urgent veuillez contacter ZenitHelp.Apps4Ops@barcelona.msf.org",
 
 
 	"____________Tracker Data Export":"__________",
@@ -220,7 +220,7 @@
 
 	"________________Service ": " Remote API___________",
 	"LOGGER_USER_NOT_AUTHORIZED": "Les informations d'identification de l'utilisateur ne sont pas correctes",
-	"NOT_IN_WHITELIST": "S'il vous plaît, email hmis@barcelona.msf.org et demander à inclure '{{urlbase}}' dans la liste blanche",
+	"NOT_IN_WHITELIST": "S'il vous plaît, email ZenitHelp.Apps4Ops@barcelona.msf.org et demander à inclure '{{urlbase}}' dans la liste blanche",
 	"NO_LOGGER_USER": "Utilisateur n'est pas disponible",
 	"INVALID_LOGGER_USER": "Les informations d'identification de l'utilisateur sont incorrectes.",
 
