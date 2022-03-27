@@ -1,23 +1,24 @@
 {
-	"version":"1.0",
-	"name":"Project Manager",
-	"description":"Project Manager",
+	"version":"2.0.7",
+	"name":"HMIS Management",
+	"description":"General management of HMIS: data and metadata import/export, password reset,...Commented Analytics in Import ",
 	"launch_path":"index.html",
+	"appType": "APP", 
 	"icons":{"16":null,
-	"48":"img/icons/Logo_48.jpg",
+	"48":"img/icons/Logo_48.png",
 	"128":null
 	},
 	"developer":{
 	"url":"",
-	"name":"Helder Castrillon, Marko Garcia, Adrian Quintana, Jose Garcia",
-	"company":"Hisp Colombia - EyeSeeTea Ltd.",
-	"email":"heldersoft@gmail.com, josemp10@gmail.com"
+	"name":"Helder Castrillon, Jose Garcia, Marko Garcia, Adrian Quintana",
+	"company":"EyeSeeTea Ltd. - Hisp Colombia",
+	"email":"josemp10@gmail.com, heldersoft@gmail.com"
 	},
 	"installs_allowed_from":null,
 	"default_locale":"en",
 	"activities": {
 	  "dhis": {
-	  "href": "../dhis"
-		}
+	  	"href": "*"
+	  }
 	}
 }

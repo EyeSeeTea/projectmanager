@@ -1,0 +1,118 @@
+
+/* 
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+
+.level1 {
+	background-color: #D26868;
+}
+
+.level2 {
+	background-color: #E19A9A;
+}
+
+.level3 {
+	background-color: #E8B3B3;
+}
+
+.level4 {
+	background-color: #F0CDCD;
+}
+
+.level5 {
+	background-color: #F8E6E6;
+}
+
+.level6 {
+	background-color: #FFFFFF;
+}
+
+.relativelevel1 {
+	text-indent: 1em;
+}
+
+.relativelevel2 {
+	text-indent: 2em;
+}
+
+.relativelevel3 {
+	text-indent: 3em;
+}
+
+.relativelevel4 {
+	text-indent: 4em;
+}
+
+.relativelevel5 {
+	text-indent: 5em;
+}
+
+.relativelevel6 {
+	text-indent: 6em;
+}
+
+.glyphicon {
+	font-size: 0.8em;
+}
+
+tr:hover {
+	cursor: pointer;
+}
+
+th.orgunit {
+	width: 40%;
+}
+
+.children-loading-icon {
+	-webkit-animation: rotation infinite linear 0.5s;
+	-moz-animation: rotation infinite linear 0.5s;
+	-o-animation: rotation infinite linear 0.5s;
+	animation: rotation infinite linear 0.5s;
+	text-indent: 0;
+}
+.noValidatedPeriod { 
+    background-color: rgba(230, 136, 81, 0.356);
+}
+
+.weeks4 {
+	background-color: #F0CDCD;
+}
+
+.weeks5 {
+	background-color: #E19A9A;
+}
+
+.period-selector-label {
+	display: inline-block;
+    vertical-align: top;
+}
+
+.medium-size {
+	font-size: medium
+}
+
+#periodSelectorTable tr {
+	height: 2em
+}
+
+#periodSelectorTable label {
+	font-size: small
+}
+
+.filter-select {
+	max-width: -webkit-fill-available;
+}

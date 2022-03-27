@@ -1,15 +1,53 @@
+
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+
 <ul class="nav nav-pills nav-stacked">
-  <li></li>
-  <li class="navbar-brand">{{ 'TITLE_CAPITAL' | translate }}</li>
-  <li><a href="#/metadataexport">{{ 'METADATA_EXPORT' | translate }}</a></li>
-  <li><a href="#/dataimport">{{ 'DATA_IMPORT' | translate }}</a></li>
-  <!-- <li><a href="#/dataapproval">{{ 'DATA_APPROVAL' | translate }}</a></li>  -->
-  <li class="navbar-brand">{{ 'TITLE_PROJECT' | translate }}</li>
-  <li><a href="#/metadataimport">{{ 'METADATA_IMPORT' | translate }}</a></li>
-  <li><a href="#/dataexport">{{ 'DATA_EXPORT' | translate }}</a></li>
-  <!-- <li><a href="#/resetpasswd">{{ 'RESET_PASSWD' | translate }}</a></li> -->
-  <br>
-  <br>
-  <li><a href="#/analytics">{{ 'ANALYTICS' | translate }}</a></li>
-  <li><a href="#/availabledata">{{ 'AVAILABLE_DATA' | translate }}</a></li>
+    <li></li>
+    <li class="navbar-brand" ng-if="$ctrl.showCapital">{{ 'TITLE_CAPITAL' | translate }}</li>
+    <!--<li data-toggle="pill"><a href="#/metadataexport">{{ 'METADATA_EXPORT' | translate }}</a></li>-->
+    <li data-toggle="pill" ng-if="$ctrl.showDataImport"><a href="#/dataimport">{{ 'DATA_IMPORT' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showTrackerImport"><a href="#/trackerdataimport">{{ 'TRACKER_DATA_IMPORT' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showValidation"><a href="#/validation">{{ 'VALIDATION' | translate }}</a></li>
+    <!-- <li><a href="#/dataapproval">{{ 'DATA_APPROVAL' | translate }}</a></li> -->
+    <li class="navbar-brand" ng-if="$ctrl.showProject">{{ 'TITLE_PROJECT' | translate }}</li>
+    <li data-toggle="pill" ng-if="$ctrl.showMetadataImport"><a href="#/metadataimport">{{ 'METADATA_IMPORT' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showDataExport"><a href="#/dataexport">{{ 'DATA_EXPORT' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showValidationRequest"><a href="#/dataexport">{{ 'VALIDATION_REQUEST' | translate }}</a></li>
+   
+    <li data-toggle="pill" ng-if="$ctrl.showTrackerExport"><a href="#/trackerdataexport">{{ 'TRACKER_DATA_EXPORT' | translate }}</a></li>
+    <li class="navbar-brand">{{ 'TITLE_COMMON' | translate }}</li>
+    <li data-toggle="pill" ng-if="$ctrl.isOffline"><a href="#/analytics">{{ 'ANALYTICS' | translate }}</a></li>
+    
+    <li data-toggle="pill"><a href="#/availabledata">{{ 'AVAILABLE_DATA' | translate }}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.isOffline"><a href="#/resetpasswd">{{ 'RESET_PASSWD' | translate }}</a></li>
+    
+    <!--<li data-toggle="pill" ng-if="$ctrl.isAdministrator"><a href="#/hmisadoption">{{'HMIS_ADOPTION' | translate}}</a></li>-->
+    <li data-toggle="pill" ng-if="$ctrl.showMetadataMonitor"><a href="#/metadatamonitor">{{'METADATA_MONITOR' | translate}}</a></li>
+    <li data-toggle="pill" ng-if="$ctrl.showMetadataMonitor"><a href="#/createversion">{{'CREATE_VERSION' | translate}}</a></li>
+    
+    
+    
+    
+    <li></li>
+    <li ng-click="$ctrl.goHome()" ng-if="$ctrl.isOnline"><a>
+        <span class="glyphicon glyphicon-home"></span> {{ 'HOME' | translate}}
+    </a>
+</li>
 </ul>

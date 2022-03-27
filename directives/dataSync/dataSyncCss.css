@@ -1,0 +1,19 @@
+.right-border {
+    border-right: dashed 2px;
+}
+
+.margin-20 {
+    margin: 20px;
+}
+
+.margin-left-30 {
+    margin-left: 30px;
+}
+
+#importSummary table {
+    margin-left: 80px;
+}
+
+#importSummary table td {
+    padding: 0 5px;
+}

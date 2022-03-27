@@ -1,22 +1,29 @@
-/*
- *	Architeture 
- * 	Helder Yesid Castrillón
- * 	Hisp Colombia 2014
- * 
- * Core Module for using WebApi of dhis2
- * It is the persistence in the FrontEnd
- * 
- * */
-var Dhis2Api = angular.module("Dhis2Api", ['ngResource', 'door3.css']);
 
-var urlBase = $.parseJSON( $.ajax({
-	type: "GET",
-	dataType: "json",
-	url: 'manifest.webapp',
-	async: false
-}).responseText).activities.dhis.href + '/';
+/* 
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+	   
+var Dhis2Api = angular.module("Dhis2Api", ['ngResource']);
 
-var urlApi = urlBase + '/api/';
+// Specify the target api version of DHIS2
+var apiVersion = 29;
+
+var urlBase = window.location.href.split('api/apps/')[0];
+var urlApi = urlBase + 'api/'; /* + apiVersion + "/";*/
 
 //Auxiliary variable to parse the url
 var urlAuxLink = document.createElement('a');
@@ -32,11 +39,23 @@ window.dhis2 = window.dhis2 || {};
 dhis2.settings = dhis2.settings || {};
 dhis2.settings.baseUrl = auxBaseUrl;
 
+var isOnline = urlBase.indexOf("msf.es") >= 0;
+//isOnline=true;
+
+// Get and save DHIS version
+var version = "";
+$.ajax({ url: urlApi + "system/info", dataType: "json", async: "true", method: "GET" }).done( function (info) {
+	version = info.version;
+});
+
 //Create all common variables of the apps 
 Dhis2Api.factory("commonvariable", function () {
 	var Vari={
 			url: urlApi,
 			urlbase: urlBase,
+			isOnline: isOnline,
+			version: version,
+			apiVersion: apiVersion,
 			OrganisationUnit:"",
 			OrganisationUnitList:[],
 			Period:"",
@@ -68,19 +87,19 @@ Dhis2Api.factory("TreeOrganisationunit",['$resource','commonvariable', function 
 	return $resource(commonvariable.url+"organisationUnits/:uid", 
    {
 	uid:'@uid',
-    fields:'name,id,children[name,id]'
+    fields:'name,id, level, children[name,id, level, parent[id,parent]]'
    }, 
   { get: { method: "GET"} });
 }]);
 
 Dhis2Api.factory("Organisationunit",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"organisationUnits", 
-   {
-		fields:'name,id,level,parent',
-		pageSize:'10',
-		page:1
-   }, 
-  { get: { method: "GET"} });
+        {
+            fields: 'name,id,level,parent,children, dataSets[id, name,attributeValues[value,attribute[id,code]]], organisationunits[id, parent],[organisationUnitGroups[id]',
+            paging: false
+        },
+        { get: { method: "GET"} }
+    );
 }]);
 
 Dhis2Api.factory("OrganisationunitLevel",['$resource','commonvariable', function ($resource,commonvariable) {
@@ -99,9 +118,10 @@ Dhis2Api.factory("Analytics",['$resource','commonvariable', function ($resource,
 }]);
 
 Dhis2Api.factory("DataMart",['$resource','commonvariable', function ($resource,commonvariable) {
-	return $resource( commonvariable.url+"system/tasks/DATAMART", 
-   {lastId:'@lastId'}, 
+	return $resource( commonvariable.url + "system/tasks/ANALYTICS_TABLE",
+   {lastId:'@lastId'},
   { get: { method: "GET"} });
+
 }]);
 
 Dhis2Api.factory("DatasetDAppr",['$resource','commonvariable', function ($resource,commonvariable) {
@@ -142,10 +162,21 @@ Dhis2Api.factory("AnaliticsDAppr",['$resource','commonvariable', function ($reso
   { get: { method: "GET"} });
 }]);
 
+Dhis2Api.factory("AnalyticsEngine",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"analytics.json",
+		{});
+}]);
+
 Dhis2Api.factory("DataSetsUID",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataSets.json?fields=id&paging=false", 
 	{},
   { get: { method: "GET"} });
+}]);
+
+Dhis2Api.factory("DataElement",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataElements.json?fields=id&paging=false",
+		{},
+		{ get: { method: "GET"} });
 }]);
 
 Dhis2Api.factory("DataExport",['$resource','commonvariable', function ($resource,commonvariable) {
@@ -168,6 +199,7 @@ Dhis2Api.factory("MetaDataExportZip",['$resource','commonvariable', function ($r
 	{},
   { get: { method: "GET"} });
 }]);
+
 Dhis2Api.factory("DataSetForm",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.urlbase+"dhis-web-reporting/generateDataSetReport.action", 
 	{ds:'@id',
@@ -189,8 +221,187 @@ Dhis2Api.factory("DataSetEntryForm",['$resource','commonvariable', function ($re
 	});
 }]);
 
+Dhis2Api.factory("UsersByUserRole",['$resource','commonvariable', function ($resource,commonvariable) {
+return $resource( commonvariable.url+"userRoles/:idrole", 
+{
+	idrole:'idrole',
+	fields: 'id, name, users'
+},
+{ get: { method: "GET"} });
+}]);
+
+
+
+
+Dhis2Api.factory("User",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"users/:iduser", 
+	{},
+        {
+            get: {
+                method: "GET",
+                params: {
+                    fields: ':all,userCredentials[id,name,username,userInfo,created,userRoles]',
+                    paging: false
+                }
+            },
+	        put: {
+                method: "PUT",
+                iduser: '@id'
+            }
+        }
+    );
+}]);
+
+Dhis2Api.factory("FilterResource",  ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	
+	return $resource(commonvariable.url + ":resource",
+			{
+			resource:'@resource',
+			filter:'@filter'
+			},
+			{get: {method: "GET"}});
+		
+}]);
 Dhis2Api.factory("DataElementGroupsUID",['$resource','commonvariable', function ($resource,commonvariable) {
 	return $resource( commonvariable.url+"dataElementGroups.json?fields=id&paging=false", 
 	{},
   { get: { method: "GET"} });
 }]);
+Dhis2Api.factory("DataStore",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"dataStore/:namespace/:key",
+		{
+			namespace:'namespace',
+			key:'key'
+		},
+		{ put: { method: "PUT"} });
+}]);
+
+
+Dhis2Api.factory("userDataStore",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"userDataStore/:namespace/:key",
+		{
+			namespace:'namespace',
+			key:'key'
+		},
+		{ put: { method: "PUT"} });
+}]);
+
+Dhis2Api.factory("SqlView",['$resource', 'commonvariable', function($resource, commonvariable) {
+	return $resource( commonvariable.url + "sqlViews/:id",
+		{id:'@id'}, {post: {method: "POST"}});
+}]);
+
+Dhis2Api.factory("SqlViewData",['$resource', 'commonvariable', function($resource, commonvariable) {
+	return $resource( commonvariable.url + "sqlViews/:id/data.json?paging=false",
+		{id:'@id'});
+}]);
+
+Dhis2Api.factory("OrganisationUnitGroupSet",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"organisationUnitGroupSets/:groupsetid",
+		{groupsetid: '@groupsetid'});
+}]);
+
+Dhis2Api.factory("OrganisationUnitGroup",['$resource','commonvariable', function ($resource,commonvariable) {
+	return $resource( commonvariable.url+"organisationUnitGroups",
+		{paging: false}
+	);
+}]);
+
+Dhis2Api.factory("MetadataVersion", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.urlbase + "api/metadata/version");
+}]);
+
+Dhis2Api.factory("MetadataSync", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.urlbase + "api/metadata/sync");
+}]);
+
+Dhis2Api.factory("RemoteAvailability", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "synchronization/availability");
+}]);
+
+Dhis2Api.factory("RemoteInstanceUrl", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "systemSettings/keyRemoteInstanceUrl", {}, {
+		get: {
+			method: 'GET',
+			/*transformResponse: function (response) {
+				return {html: response};
+		}*/
+		}
+	});
+}]);
+
+
+
+Dhis2Api.factory("messageConversations", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "messageConversations",
+	{}, 
+  { post: { method: "POST"} });
+}]);
+
+
+
+
+Dhis2Api.factory("Events",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "events", {}, {
+		get: {
+			method: 'GET',
+			params: {skipPaging: true, includeDeleted: true}
+		}
+	});
+}]);
+
+Dhis2Api.factory("TrackedEntityInstances",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "trackedEntityInstances/:uid",
+		{
+			fields:':all,attributes[attribute,value,created]'
+		} );
+}]);
+
+Dhis2Api.factory("Enrollments",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "enrollments/:uid", {}, {
+		get: {
+			method: 'GET',
+			params: {skipPaging: true}
+		}
+	});
+}]);
+
+Dhis2Api.factory("Programs",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "programs/:uid");
+}]);
+
+Dhis2Api.factory("JobExecute",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "jobConfigurations/:uid/execute" );
+}]);
+
+
+
+Dhis2Api.factory("JobConfigurations",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "jobConfigurations/:name" );
+}]);
+
+Dhis2Api.factory("Jobs",['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "jobConfigurations/:uid" );
+}]);
+
+
+Dhis2Api.factory("Ping", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "system/ping",
+		{},
+		{ get: { method: "GET", transformResponse: (data, headerGetter, status ) => ({data: data, headers: headerGetter(), status: status})	}} );
+}]);
+
+Dhis2Api.factory("Info", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "system/info");
+}]);
+
+
+
+Dhis2Api.factory("systemsetting", ['$resource', 'commonvariable', function ($resource, commonvariable) {
+	return $resource( commonvariable.url + "systemSettings");
+}]);
+
+
+
+
+module.exports = Dhis2Api;

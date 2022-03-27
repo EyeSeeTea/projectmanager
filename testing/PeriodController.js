@@ -72,7 +72,7 @@ Dhis2Api.controller("d2DropDownPeriodController", ['$scope',function ($scope) {
 		$scope.opened = true;
 		$scope.week=weSelected;
 
-		console.log($scope.week)
+		//console.log($scope.week)
 	};
 
 //Calendar functions

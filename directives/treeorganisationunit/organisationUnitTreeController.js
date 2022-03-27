@@ -1,20 +1,41 @@
-Dhis2Api.directive('d2Treeorganisationunit', function(){
+
+/* 
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+
+var treeorganisationunitDirective =  [function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/treeorganisationunit/organisationUnitTreeView.html',
+		template: require('./organisationUnitTreeView.html'),
+		css: require('./organisationUnitTreeCss.css'),
+		controller: treeorganisationunitController,
 		scope: {
 		      treetype: '@',
 		      size:'@'
 		    }
 	}
-	}); 
-Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrganisationunit',"commonvariable","meUser", function ($scope,$q,TreeOrganisationunit,commonvariable,meUser) {
+}]; 
+
+var treeorganisationunitController = ['$scope','$q','TreeOrganisationunit',"commonvariable","UserService", function ($scope,$q,TreeOrganisationunit,commonvariable,UserService) {
 	$scope.currentid="";
      $scope.loadingTree=true;
     
     ///query me api for get OU asigned to user
-    meUser.get()
-     .$promise.then(function(data){
+	UserService.getCurrentUser().then(function(data){
 
         $scope.InitialTree=[];
         $scope.treeOrganisationUnitList=[];
@@ -26,7 +47,7 @@ Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrga
             TreeOrganisationunit.get({uid:value.id})
                      .$promise.then(function(data){
                         $scope.treeOrganisationUnitList.push(data);
-                        console.log(kvalue+" , "+numOU)
+                        //console.log(kvalue+" , "+numOU)
                         if(kvalue==numOU){
                             $scope.loadingTree=false;
                      }
@@ -63,7 +84,7 @@ Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrga
     		}
 
     	 return json;
-    	 }
+    	 };
     
      
   $scope.$watch(
@@ -86,5 +107,6 @@ Dhis2Api.controller("d2TreeorganisationUnitController", ['$scope','$q','TreeOrga
             	   	}
             }
         );
-}]);
+}];
 
+module.exports = treeorganisationunitDirective;

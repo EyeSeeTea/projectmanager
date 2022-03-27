@@ -1,0 +1,44 @@
+<!--
+   Copyright (c) 2015.
+
+   This file is part of Project Manager.
+
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+<h2>{{ 'TRACKER_DATA_EXPORT' | translate }}</h2>
+
+<div id="tab" class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li ng-show="ctrl.isSuperUser && !ctrl.isOnline" ng-class="{'active': ctrl.activeTab == 2}" role="presentation"><a ng-click="ctrl.setActiveTab(2)" href="">{{ 'AUTOMATIC_TRACKER_SYNC' | translate }}</a></li>
+            <li ng-class="{'active': ctrl.activeTab == 1}" role="presentation"><a ng-click="ctrl.setActiveTab(1)" href="">{{ 'LATEST_VALUES' | translate }}</a></li>
+            <li ng-show="false" ng-class="{'active': ctrl.activeTab == 3}" role="presentation"><a ng-click="ctrl.setActiveTab(3)" href="">{{ 'BY_PERIOD' | translate }}</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row" >
+    <div class="col-md-12">
+            <div ng-if="ctrl.activeTab === 2">
+                    <tracker-online-sync></tracker-online-sync>
+                </div>
+        <div ng-if="ctrl.activeTab === 1">
+            <tracker-export-latest></tracker-export-latest>
+        </div>
+        <div ng-if="ctrl.activeTab === 3">
+            <tracker-export-detailed></tracker-export-detailed>
+        </div>
+    </div>
+</div>
+

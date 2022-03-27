@@ -1,0 +1,83 @@
+/*
+   Copyright (c) 2015.
+   This file is part of Project Manager.
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+
+.level1 {
+    background-color: #D26868;
+}
+
+.level2 {
+    background-color: #E19A9A;
+}
+
+.level3 {
+    background-color: #E8B3B3;
+}
+
+.level4 {
+    background-color: #F0CDCD;
+}
+
+.level5 {
+    background-color: #F8E6E6;
+}
+
+.level6 {
+    background-color: #FFFFFF;
+}
+
+.percentage0 {
+    background-color: #FFFFBF;
+}
+.percentage10 {
+    background-color: #D1EAA8;
+}
+.percentage20 {
+    background-color: #D1EAA8;
+}
+.percentage30 {
+    background-color: #BAE09D;
+}
+.percentage40 {
+    background-color: #A3D592;
+}
+.percentage50 {
+    background-color: #8CCB87;
+}
+.percentage60 {
+    background-color: #75C17C;
+}
+.percentage70 {
+    background-color: #5EB671;
+}
+.percentage80 {
+    background-color: #47AC66;
+}
+.percentage90 {
+    background-color: #30A25B;
+}
+.percentage100 {
+    background-color: #1A9850;
+}
+
+.glyphicon {
+    font-size: 0.8em;
+}
+
+tr:hover {
+    cursor: pointer;
+}
+
+th.orgunit {
+    width: 40%;
+}

@@ -1,0 +1,31 @@
+
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+<div class="row" ng-show="status.visible">
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" ng-style="style"
+             ng-class="{'active': status.active,
+                        'progress-bar-striped': status.active,
+                        'progress-bar-info': status.type == 'info',
+                        'progress-bar-success': status.type == 'success',
+                        'progress-bar-danger': status.type == 'danger'}">
+            <span ng-show="status.active">{{ 'IN_PROGRESS' | translate }}</span>
+        </div>
+    </div>
+</div>

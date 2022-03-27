@@ -1,0 +1,91 @@
+
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+<h2>{{ 'AVAILABLE_DATA' | translate}}</h2>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="row form-inline">
+                    <div class="col-md-5">
+                        <div ng-repeat="filter in ctrl.availableFilters">
+                            <label class="medium-size" for="{{filter.id}}">{{filter.name}}</label>
+                            <select id="{{filter.id}}" class="filter-select form-control"
+                                    ng-model="filter.selected" ng-change="ctrl.modifyFilter(filter)"
+                                    ng-options="option as option.name for option in filter.organisationUnitGroups
+                                        | orderBy:'name' track by option.id">
+                                <option value="">-</option>
+                            </select>
+                        </div>
+                    </div>
+					<div class="col-md-7">
+						<div class="container-fluid">
+							<div class="row container-fluid">
+								<div class="container-fluid period-selector-label">
+									<label class="medium-size" for="periodSelector">{{'PERIOD' | translate}}:</label>								
+								</div>
+								<div id="periodSelector" class="container-fluid btn-group" data-toggle="buttons">
+									<table id="periodSelectorTable">
+										<tr ng-repeat="periodGroup in ctrl.availablePeriods">
+											<td><label>{{periodGroup.name | translate}}:</label></td>
+											<td>
+												<label ng-repeat="period in periodGroup.periods" ng-click="ctrl.modifyPeriod(period)"
+														class="btn btn-default {{period.id == ctrl.selectedPeriod.id ? 'active' : ''}}">
+													<input type="radio" name="options" autocomplete="off">
+													{{period.name | translate}}
+												</label>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>		
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<table class="table table-bordered table-condensed table-hover" ng-show="ctrl.tableDisplayed">
+	<thead>
+	<tr>
+		<th class="orgunit">{{ 'ORGANISATIONUNIT_LABEL' | translate}}</th>
+		<th ng-repeat="pe in ctrl.periods" ng-mouseover="positive()" ng-mouseleave="negative()" title="{{ pe.weeks==4 ? '4-Weeks' : '5-Weeks' | translate}}" class="weeks{{ pe.weeks }}">{{ pe.name }}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-repeat="ou in ctrl.tableRows | orderBy:'fullName'" ng-show="ou.relativeLevel == 0 || ctrl.isClicked(ou.parents)"
+		ng-click="!ou.isLastLevel && ctrl.clickOrgunit(ou)">
+		<td id="ou_{{ou.id}}" class="level{{ ou.level }} relativelevel{{ou.relativeLevel}}">
+				<span class="ou-prefix glyphicon {{ou.isLastLevel ? 'glyphicon-chevron-right' :
+						(ctrl.isClicked([ou.id]) ? 'glyphicon-minus' : 'glyphicon-plus') }}"></span>
+			{{ ou.name }} 
+		</td>
+		<td ng-repeat="pe in ctrl.periods" title="{{ou.name}} - {{pe.name}}" class="{{ou.data[pe.id].noValidatedPeriod ? 'noValidatedPeriod':''}}">{{ou.data[pe.id].value | number:0}}</td>
+	</tr>
+	</tbody>
+</table>
+
+<div class="row">
+	<div class="col-md-6">
+		<d2-progressbar-dynamic status="ctrl.availableDataStatus"></d2-progressbar-dynamic>
+	</div>
+</div>

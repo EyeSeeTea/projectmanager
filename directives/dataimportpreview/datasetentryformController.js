@@ -1,7 +1,28 @@
-Dhis2Api.directive('d2DatasetEntryForm', function(){
+
+/* 
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. */
+require('../../services/data/DataImportService');
+
+var datasetEntryFormDirective = [function(){
 	return{
 		restrict: 'E',
-		templateUrl: 'directives/dataimportpreview/datasetentryformView.html',
+		template: require('./datasetentryformView.html'),
+		controller: datasetEntryFormController,
 		scope: {
 			periodId: '=',
 			datavalues: '=',
@@ -9,13 +30,15 @@ Dhis2Api.directive('d2DatasetEntryForm', function(){
 			orgunit: '='
 		}
 	};
-});
+}];
 
-Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm', 'commonvariable', function($scope, DataSetEntryForm, commonvariable){
+var datasetEntryFormController = ['$scope', 'DataSetEntryForm', 'commonvariable', 'DataImportService',
+	function($scope, DataSetEntryForm, commonvariable, DataImportService){
 	
-	var init = function(){
+	function init(){
 		$scope.clickDataset(null);
-		
+
+		$scope.datasets = filterDatasetByPeriod( $scope.datasets, $scope.periodId );
 		
 		var dsNum = $scope.datasets.length;
 		var dsCount = 0;
@@ -46,6 +69,13 @@ Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm'
 				});
 			});
 		}
+	}
+
+	function filterDatasetByPeriod( datasets, periodId ){
+		var periodType = DataImportService.getPeriodType( periodId );
+		return datasets.filter( function( dataset ){
+			return dataset.periodType === periodType;
+		});
 	}
 
 	$scope.formatDatasets = function(){
@@ -83,7 +113,7 @@ Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm'
 	$scope.hideHistory = function(){
 		$scope.datahistory = null;
 		$("#dataValueHistory").modal("hide");
-	}
+	};
 	
 	$scope.fillDatavalues = function(){
 		angular.forEach($scope.datavalues, function(datavalue){
@@ -104,7 +134,9 @@ Dhis2Api.controller('d2DatasetEntryFormController',['$scope', 'DataSetEntryForm'
 	
 	$scope.clickDataset = function(datasetId){
 		$scope.selectedDataset = datasetId;
-	}
+	};
 	
 	init();
-}]);
+}];
+
+module.exports = datasetEntryFormDirective;

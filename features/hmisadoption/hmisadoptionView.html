@@ -1,0 +1,45 @@
+<h2>{{'HMIS_ADOPTION' | translate}}</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-addon" id="last-months-label">{{'SHOW_LAST_MONTHS' | translate}}: </span>
+            <input ng-model="lastMonths" type="text" class="form-control" placeholder="Number of last months..."
+                   aria-describedby="last-months-label" size="4">
+        </div>
+    </div>
+    <button class="btn btn-default" ng-click="loadTable()"><span class="glyphicon glyphicon-refresh"></span></button>
+</div>
+
+<br>
+
+<d2-progressbar></d2-progressbar>
+
+<table ng-show="tableLoaded" class="table table-bordered table-condensed table-hover">
+    <thead>
+    <tr>
+        <th class="orgunit col-md-4">{{ 'ORGANISATIONUNIT_LABEL' | translate}}</th>
+        <th ng-repeat="pe in periods">{{pe}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="orgunit in tableRows" ng-click="clickOrgunit(orgunit)"
+        ng-show="{{ orgunit.relativeLevel == 0 || (orgunit.parents) }}">
+        <td class="level{{ orgunit.level }} col-md-4" style="text-indent: {{orgunit.relativeLevel}}em">{{orgunit.name}}</td>
+        <td ng-repeat="period in orgunit.data" title="users: {{period.others}} || migration: {{period.pentaho}}"
+            class="percentage{{ period.percentageRound10 }}">
+            <span ng-if="isNumber(period.percentage)">{{period.percentage}} %</span></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Loading children modal-->
+<div class="modal" id="loadChildren" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Loading children...</h4>
+            </div>
+        </div>
+    </div>
+</div>

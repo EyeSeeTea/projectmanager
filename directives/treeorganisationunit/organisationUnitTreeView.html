@@ -1,31 +1,46 @@
-<div  ng-controller="d2TreeorganisationUnitController">
-  <label>{{ 'ORGANISATIONUNIT' | translate }}</label> <div ng-show="OrganisationUnit==undefined"> Cargando</div>
-	  <br>
 
-<div class="row">
-<div class="col-md-5">
-<div class="panel panel-default" ng-hide="loadingTree">
-  <div class="panel-heading">
-		<div style="height: {{size}}; overflow-y:scroll; background-color:#FFFFFF; ">
-			<!-- tree angulas Js -->
-			<div
-			  data-angular-treeview="true"
-			  data-tree-id="OrganisationUnit"
-			  data-tree-model="treeOrganisationUnitList"
-			  data-node-id="id"
-			  data-node-label="name"
-			  data-node-children="children" 
-			  data-tree-type="{{treetype}}">
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+
+<div>
+	<label>{{ 'ORGANISATIONUNIT' | translate }}</label>
+	<div ng-show="OrganisationUnit==undefined"> Cargando</div>
+	<br>
+
+	<div class="row">
+		<div class="col-md-5">
+			<div class="panel panel-default" ng-hide="loadingTree">
+				<div class="panel-heading">
+					<div class="treeOrganisationUnitPanel" ng-style="{height: size};">
+						<!-- tree angulas Js -->
+						<div data-angular-treeview="true" data-tree-id="OrganisationUnit" data-tree-model="treeOrganisationUnitList" data-node-id="id"
+						 data-node-label="name" data-node-children="children" data-tree-type="{{treetype}}">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default" ng-show="loadingTree">
+				<progressbar class="progress-striped active" value="100" type="info">{{ 'ORGANISATIONUNIT_LOADING' | translate }}</progressbar>
+				<div>
+
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="panel panel-default" ng-show="loadingTree">
-	<progressbar class="progress-striped active" value="100" type="info">{{ 'ORGANISATIONUNIT_LOADING' | translate }}</progressbar>
-<div>
-
-</div>
-</div>
-</div>
-
-

@@ -1,6 +1,28 @@
-<div class="row" style="background-color:#b40303;">
-<div class="col-md-1"><span>  </span><img src="img/LogoW.png" class="img-responsive" style="height: 40 px;"/></div>
-<div class="col-md-2"></div>
-<div class="col-md-4" style=" top: 12px; font-weight: bold; color: #fff;  font-size: 16px;">{{ 'TITLE_APPS' | translate }}</div>
-<div class="col-md-5"><div d2-menu></div></div>
+
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+
+<div class="col-md-12 row dhis2-header">
+    <div class="col-md-1 logo-banner"><span>  </span><img src="../../img/LogoW.png" style="cursor:pointer" title="View home page" onclick="window.location.href='../../../'" class="img-responsive"/></div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4 app-title" style="cursor:pointer" title="View home page" onclick="window.location.href='../../../'">{{ $ctrl.systemName }}</div>
+    
+    <div class="col-md-5"><div d2-menu></div></div>
+    
 </div>

@@ -1,14 +1,55 @@
-<div ng-controller='d2DataimportpreviewController'>
 
-	<d2-progressBar></d2-progressBar>
+<!--   
+   Copyright (c) 2015.
+ 
+   This file is part of Project Manager.
+ 
+   Project Manager is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Project Manager is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Project Manager.  If not, see <http://www.gnu.org/licenses/>. -->
+
+
+<div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<d2-progressbar-dynamic status="importPreviewStatus"></d2-progressbar-dynamic>
+		</div>
+	</div>
+	
+	<div class="row" ng-show="importSettings">
+			<div class="col-md-12">
+			<p>This file contains data registered or updated from {{projectName_settings}} from {{lastUpdated_settings | date:'dd/MM/yyyy HH:mm' }} to {{endDate_settings | date:'dd/MM/yyyy HH:mm'}}</p>		
+		  </div>
+	  </div>
+
+	<div class="row" ng-show="msjEmptyFile">
+	  	<div class="col-md-12">
+			<d2-messages type="danger" textmessage="{{ 'EMPTY_IMPORT_FILE' | translate }}"></d2-messages>
+		</div>
+	</div>
+	<div class="row" ng-show="fileIsNotZip">
+			<div class="col-md-6">
+				<d2-messages type="danger" textmessage="{{ 'The file is not zip' | translate }}"></d2-messages>
+			</div>
+		</div>
 	
 	<div class="row" ng-show="importLoaded">
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel panel-heading">{{ 'HEALTH_FACILITY' | translate }}</div>
 				<ul class="list-group">
-		    		<a id="{{ siteId }}" class="list-group-item" ng-class="{active: siteSelected == siteId}" 
-		    				ng-repeat="(siteId, site) in dataimportdata" ng-click="clickSite(siteId)">
+		    		<a id="{{ site.id }}" class="list-group-item" ng-class="{active: siteSelected == site.id}"
+		    				ng-repeat="site in dataimportdata | orderObjectBy:'name'" ng-click="clickSite(site.id)">
 		    			{{ site.name }}	
 		    		</a>
 				</ul>
@@ -18,8 +59,8 @@
 			<div class="panel panel-default">
 				<div class="panel panel-heading">{{ 'SERVICE' | translate }}</div>
 				<ul class="list-group">
-		    		<a id="{{ serviceId }}" class="list-group-item" ng-class="{active: serviceSelected == serviceId}" 
-		    				ng-repeat="(serviceId, service) in services" ng-click="clickService(serviceId)">
+		    		<a id="{{ service.id }}" class="list-group-item" ng-class="{active: serviceSelected == service.id}"
+		    				ng-repeat="service in services | orderObjectBy:'name'" ng-click="clickService(service.id)">
 		    			{{ service.name }}	
 		    		</a>
 				</ul>
@@ -29,17 +70,18 @@
 			<div class="panel panel-default">
 				<div class="panel panel-heading">{{ 'PERIOD' | translate }}</div>
 				<ul class="list-group">
-		    		<a id="{{ periodId}}" class="list-group-item" ng-class="{active: periodSelected == periodId}" 
-		    				ng-repeat="(periodId, period) in periods | orderBy:'periodId'" ng-click="clickPeriod(periodId)">
-		    			{{ periodId | d2FormatPeriod }}
+		    		<a id="{{ period.id}}" class="list-group-item" ng-class="{active: periodSelected == period.id}"
+		    				ng-repeat="period in periods | orderObjectBy:'id'" ng-click="clickPeriod(period.id)">
+		    		<!--	{{ period.id | d2FormatPeriod }} -->
+						{{ period.id  }}
 		    		</a>
 				</ul>
 			</div>		
 		</div>
 	</div>
 	
-	<d2-dataset-entry-form ng-repeat="(periodId, period) in periods" ng-if="periodId == periodSelected" 
+	<d2-dataset-entry-form ng-repeat="period in periods" ng-if="period.id == periodSelected"
 		period-id="periodSelected" datavalues="datavalues" datasets="datasets" orgunit="serviceSelected">
-	</d2-d2-dataset-entry-form>
+	</d2-dataset-entry-form>
 
 </div>
