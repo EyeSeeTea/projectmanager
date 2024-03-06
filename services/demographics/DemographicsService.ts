@@ -24,13 +24,15 @@ export class DemographicsService {
     static $inject = ['SqlService'];
 
     // SQL views to execute
-    private readonly DEMOGRAPHICS_FUNCTIONS = 'yScFNRSITtm';
-    private readonly DEMOGRAPHICS_MAIN = 'EA9VVZdAMJ3';
+    private readonly DEMOGRAPHICS_FUNCTIONS = 'RQWlHLHAhnk'; //materialized
+    private readonly DEMOGRAPHICS_MAIN = 'A5MuhFdD9zq'; //materialized
     
     constructor(private SqlService: SqlService){}
 
     updateDemographicData () {
-        return this.SqlService.executeSqlQuery(this.DEMOGRAPHICS_FUNCTIONS)
+        return this.SqlService.refreshSqlQuery(this.DEMOGRAPHICS_FUNCTIONS)
+        .then( () => this.SqlService.executeSqlQuery(this.DEMOGRAPHICS_FUNCTIONS))
+        .then( () => this.SqlService.refreshSqlQuery(this.DEMOGRAPHICS_MAIN))
             .then( () => this.SqlService.executeSqlQuery(this.DEMOGRAPHICS_MAIN))
     }
 

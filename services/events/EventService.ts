@@ -26,8 +26,11 @@ export class EventService {
     constructor(private EventHelper: EventHelper, private SqlService: SqlService){}
 
     updateEventData() {
-        return this.SqlService.executeSqlQuery(this.EventHelper.PROGRAM_RULES_COMMON_FUNCTIONS)
+        return this.SqlService.refreshSqlQuery(this.EventHelper.PROGRAM_RULES_COMMON_FUNCTIONS)
+        .then( () => this.SqlService.executeSqlQuery(this.EventHelper.PROGRAM_RULES_COMMON_FUNCTIONS))
+        .then( () => this.SqlService.refreshSqlQuery(this.EventHelper.PROGRAM_RULES_MENTAL_HEALTH))
             .then( () => this.SqlService.executeSqlQuery(this.EventHelper.PROGRAM_RULES_MENTAL_HEALTH))
+            .then( () => this.SqlService.refreshSqlQuery(this.EventHelper.PROGRAM_RULES_MAIN))
             .then( () => this.SqlService.executeSqlQuery(this.EventHelper.PROGRAM_RULES_MAIN));
     }
 }

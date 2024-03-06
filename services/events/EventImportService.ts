@@ -60,8 +60,8 @@ export class EventImportService {
         var deferred = this.$q.defer();
         this.readEventZipFile(file).then( 
             (eventFile) => {
-               // console.log("EventFile");
-               // console.log(eventFile);
+                console.log("EventFile");
+                console.log(eventFile);
                 return this.getAndUploadTeis2(eventFile.content)
                 
                    // .then( () => this.getAndUploadEnrollmentsAsActive(eventFile) )
@@ -159,11 +159,27 @@ export class EventImportService {
       
          for (var tei in teis)  {
             
-        var tei2={"trackedEntityInstances":[teis[tei]]}
+       
         this.$rootScope.$broadcast('numTeiOk',tei);
         console.log("Importing TEI ("+tei+"/"+numberTeis+"):"+teis[tei].trackedEntityInstance)
+
+       
+    
+        teis[tei].enrollments.forEach(
+            enrollment=>{ 
+                   
+            
+            enrollment.events.forEach(event=>{if (event.notes!=undefined && event.notes.length>0 ) { 
+                //console.log("notas");
+                //console.log(event.notes);
+                event.notes=[];
+            }})
+            
+            });
+       
+
+        var tei2={"trackedEntityInstances":[teis[tei]]}
         var data= await this.zipObject(this.EventHelper.TEIS, tei2);
-        
         var result= await this.uploadFile(this.EventHelper.TEIS, data, params);
 
 
@@ -236,6 +252,7 @@ export class EventImportService {
     }
 
     private uploadFile (endpoint: string, file, params) {
+      
         if (file != undefined) {
             return this.$http({
                 method: 'POST',
@@ -296,11 +313,13 @@ export class EventImportService {
         var settings;
         var eventsAll =[];
         this.readEventZipFile(file)
+        
             .then((eventFile) =>
             {
+               // console.log("llega file");
                 settings=eventFile.settings;  
             eventFile.content.trackedEntityInstances.forEach(tei => {
-              
+              console.log(tei);
                 enrollmentsAll.push(tei.enrollments)
                 
             });
@@ -317,8 +336,8 @@ export class EventImportService {
                
             });
             
-           // console.log("eventsAll");
-           // console.log(eventsAll);
+            console.log("eventsAll");
+            console.log(eventsAll);
 
          return        this.classifyEventsByProgramAndStage(eventsAll)
         }

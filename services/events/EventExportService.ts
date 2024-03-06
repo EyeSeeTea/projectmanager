@@ -204,13 +204,15 @@ export class EventExportService {
     getTrackedEntityInstancesFromLastWithDependecies (lastUpdated: string,endDate, orgunitProgramCombo: OrgunitProgramComboItem[]): ng.IPromise<TrackedEntityInstanceList> {
         const commonParams = {
             lastUpdatedStartDate: lastUpdated,
-            paging: false,
+            //pageSize: 50000, //workaround for paging:false
             ouMode: 'ACCESSIBLE',
+            skipPaging: true,  //workaround for paging:false
             lastUpdatedEndDate:  endDate
+            //paging: false not working in 2.37
         };
         let teiPromises = orgunitProgramCombo.map( (combination) => {
             //ou: combination.orgUnit,
-            const params = angular.extend({}, commonParams, { program: combination.program, fields: ":all", includeDeleted: "true"});
+            const params = angular.extend({}, commonParams, { program: combination.program, fields: "*", includeDeleted: "true"});
             return this.TrackedEntityInstances.get(params).$promise;
         });
 

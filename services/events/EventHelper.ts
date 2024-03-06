@@ -35,9 +35,9 @@ export class EventHelper {
     public readonly EVENTS_ZIP = this.EVENTS + '.zip';
 
     // SQL Views to execute
-    public readonly PROGRAM_RULES_COMMON_FUNCTIONS = 'I8hzoc338oW';
-    public readonly PROGRAM_RULES_MENTAL_HEALTH = 'NEBzjTSyP18';
-    public readonly PROGRAM_RULES_MAIN = 'sEhYspTc8iB';
+    public readonly PROGRAM_RULES_COMMON_FUNCTIONS = 'eFGIF0zsfa4'; //materialized
+    public readonly PROGRAM_RULES_MENTAL_HEALTH = 'AH09Zi3PBlV';//materialized
+    public readonly PROGRAM_RULES_MAIN = 'oGDR9twTWvy';//materialized
 
     // Errors
     public readonly NO_ENCRYPTATION_PASSWORD = "NO_ENCRYPTATION_PASSWORD";

@@ -66,11 +66,11 @@ export class CreateVersion {
 
        // http://localhost:8989/dhis/api/sqlViews?paging=false&filter=displayName:eq:swap_versions&fields=id
 
-       await this.FilterResource.get({resource:'sqlViews', filter:'displayName:eq:swap_versions'})
+       await this.FilterResource.get({resource:'sqlViews', filter:'displayName:eq:swap_versions_materialized'})
              .$promise.then(data =>{ 
              this.swap_versions_id=data.sqlViews[0].id;
        });
-       await this.FilterResource.get({resource:'sqlViews', filter:'displayName:eq:set_resources_public_to_private'})
+       await this.FilterResource.get({resource:'sqlViews', filter:'displayName:eq:set_resources_public_to_private_materialized'})
        .$promise.then(data =>{ 
        this.set_resources_public_to_private_id=data.sqlViews[0].id;
         });
@@ -83,6 +83,7 @@ export class CreateVersion {
 
     console.log("set_resources_public_to_private_id: "+this.set_resources_public_to_private_id);
     console.log("versions_id: "+this.versions_id);
+        await this.SqlService.refreshSqlQuery(this.set_resources_public_to_private_id);
         await this.SqlService.executeSqlQuery(this.set_resources_public_to_private_id);
         this.result = "Executed SqlQuery set_resources_public_to_private. Preparing Version\n";
 
@@ -131,6 +132,7 @@ export class CreateVersion {
 
 
         this.result += "Executed SqlQuery swap_versions \n";
+        await this.SqlService.refreshSqlQuery(this.swap_versions_id);
         await this.SqlService.executeSqlQuery(this.swap_versions_id);
 
 

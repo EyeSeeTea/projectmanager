@@ -203,9 +203,9 @@ return this.Organisationunit.get(filters).$promise.then(
             return total3.then(
                 () => {
                     if (lastPushDateSaved != lastDatePush) { //DESCOMENTAR, comentado para pruebas
-                       
+                       //console.log(lastPushDateSaved);
                        //new Date((new Date(1530866294000).toString()).split("GMT")[0]+"GMT +0000")
-                        return this.readDatasetValues(dataSet.id, orgUnit.id, new Date(new Date(lastPushDateSaved).toLocaleString())).then(
+                        return this.readDatasetValues(dataSet.id, orgUnit.id, new Date(new Date(lastPushDateSaved).toLocaleString('en-EN'))).then(
                             dataValues => {
                                 
                                 if (dataValues != undefined) {

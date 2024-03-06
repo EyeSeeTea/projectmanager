@@ -1,7 +1,7 @@
 {
   "name": "hmis_management",
-  "version": "2.0.7",
-  "description": "HMIS Management app",
+  "version": "2.0.12",
+  "description": "HMIS Management app for DHIS2 2.37.10",
   "main": "app.js",
   "dependencies": {
     "angular": "1.5.8",

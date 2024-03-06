@@ -2,4 +2,6 @@ project_manager.zip
 projectmanager.zip
 node_modules/
 dist/
+dist2/
+
 package-lock.json

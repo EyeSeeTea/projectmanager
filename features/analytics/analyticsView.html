@@ -34,7 +34,7 @@
 	
 	<table data-toggle="table" id="notificationTable" class="notificationTable" style="">
 		<tbody>
-		<tr ng-repeat="notification in ctrl.notifications | orderBy:'-time'">
+		<tr ng-repeat="notification in ctrl.notifications  ">
 			<td>{{notification.time}}</td>
 			<td>: {{notification.message}}</td>
 		</tr>

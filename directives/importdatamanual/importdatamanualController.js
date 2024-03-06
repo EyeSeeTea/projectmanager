@@ -110,6 +110,7 @@ var importdatamanualController = ["$scope","$interval","$http","$filter","common
 	  }
 	  
 	  var isMFP= await UserService.currentUserHasRole("Medical Focal Point");
+    var isMFP = isMFP ||  await UserService.currentUserHasRole("Position: Medical Focal Point");
 	  var user= await UserService.getCurrentUser();
 
 	  var serverName=user.userCredentials.username.split("-")[1];

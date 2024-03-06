@@ -87,7 +87,8 @@ export class AvailableData {
 	showValidationDatastore() {
 
 		if (this.datastoredRead == false) {
-            const _periodStructurePromise = this.SqlService.executeSqlCode("SELECT iso, monthly, quarterly FROM _periodstructure");
+            //const _periodStructurePromise = this.SqlService.executeSqlCode("SELECT iso, monthly, quarterly FROM _periodstructure");
+			const _periodStructurePromise = this.SqlService.executeSqlQuery("LffOWFcjVkZ");
 			return this.$q.all([this.ValidationService.fillDatastore(), _periodStructurePromise]).then( response  => {
 				
                 const _periodStructure = this.formatPeriodStructure(response[1].listGrid.rows);

@@ -19,9 +19,9 @@
 
 export class SqlService {
 
-    static $inject = ['SqlView', 'SqlViewData'];
+    static $inject = ['SqlView', 'SqlViewData','SqlViewRefresh'];
 
-    constructor( private SqlView, private SqlViewData ){}
+    constructor( private SqlView, private SqlViewData, private SqlViewRefresh){}
 
     private createSqlQueryPayload(sqlQuery) {
         // Generate a random name, based on a random integer.
@@ -77,4 +77,9 @@ export class SqlService {
         return this.SqlViewData.get({id:queryId}).$promise;
     }
 
+    refreshSqlQuery(queryId: string) {
+        return this.SqlViewRefresh.get({id:queryId}).$promise;
+    }
+
+    
 }

@@ -256,6 +256,7 @@ export class TrackerDataImport {
         this.importOUTDATED=false;
         this.importGap=false;
         this.varValidation();
+        console.log(this.undefinedFile);
         if (!this.undefinedFile) {
             this.importingData=false;
             this.progressStatus = ProgressStatus.initialWithoutProgress;

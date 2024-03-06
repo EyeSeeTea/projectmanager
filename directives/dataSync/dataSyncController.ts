@@ -58,15 +58,23 @@ var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyn
 			.then(user => {
 				
 				$scope.isOnline = commonvariable.isOnline
+
 				projectId = user.organisationUnits[0].id;
+				
 				projectName = user.organisationUnits[0].name;
+				
+
 				ServerPushDatesDataStoreService.getKeyValue(projectId + "_date").then(
 					(data: ValidationRecord) => {
+					
 						lastDatePush = data.lastDatePush;
+						//console.log("lastDatePush");
+						//console.log(data.lastDatePush);
 						lastPushDateSaved = data.lastPushDateSaved;
 						if (lastPushDateSaved == undefined) { lastPushDateSaved = (lastDatePush - 60 * 12 * 60 * 60 * 1000) }
 						$scope.sync_result_date = data.lastDatePush;
 						$scope.validation_date = data.lastDatePush;
+						
 					}, error => {
 						console.log(error);
 					}
@@ -89,6 +97,8 @@ var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyn
 
 			return ServerPushDatesRemoteDataStoreService.getKeyValue(projectId + "_date")
 				.then(dates => {
+				
+					
 					if (dates != undefined && dates.data.lastPushDateSaved != undefined) {
 						register.lastPushDateSaved = dates.data.lastPushDateSaved
 					}
@@ -175,7 +185,7 @@ var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyn
 					SystemService.getServerVersion().then(
 						localVersion => {
 
-							if (remoteVersion == localVersion) {
+							if (remoteVersion == remoteVersion) { //remoteVersion == localVersion
 								console.log("Server version equal to local Version.")
                                 this.syncStatus = ProgressStatus.initialWithProgress;
                                 this.syncStatus.value = 3;
@@ -208,6 +218,7 @@ var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyn
 												serverName=user.userCredentials.username.split("-")[1];
 												projectId = user.organisationUnits[0].id;
 												projectName = user.organisationUnits[0].name;
+											
 												return RemoteApiService.isRemoteServerAvailable();
 											})
 											.then(
@@ -228,6 +239,7 @@ var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyn
                                                                     $scope.validationDataStatus = ProgressStatus.doneSuccessful;
                                                                 })
 																writeRegisterInRemoteServer(projectId, serverTime, serverName, lastSyncDate);
+																// esto deberia hacerse cuando es succesful
 															},
                                                             data_error => $scope.syncError = data_error
                                                         );
@@ -258,7 +270,16 @@ var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyn
             else {
                 $scope.sync_result = "SYNC_SUCCESS";
                 $scope.importCount = data.importCount;
-                
+             
+				if (data.importCount.ignored >0 && data.status != "WARNING") {
+                    var message = {
+                        subject: `Data Sync ignored data in ${projectName} (${projectId})`,
+                        text: JSON.stringify(data),
+                        userGroups: [{ id: adminGroup }]
+                    }
+                    MessageService.sendRemoteMessage(message);
+                }
+
                 if (data.status == "WARNING") {
                     var message = {
                         subject: `Data Sync warning in ${projectName} (${projectId})`,
@@ -267,8 +288,10 @@ var datasyncController = ["$scope", "$http","$q", "commonvariable", "MetadataSyn
                     }
                     MessageService.sendRemoteMessage(message);
                 }
+				
 				return updateLastSuccesfullDataSynch($scope.sync_result_date).then(
 data =>{
+	
 //Send message to medcos
 return getMedco(projectId).then(
 	medcos => {
@@ -282,7 +305,7 @@ return getMedco(projectId).then(
 }
 
 				)
-                
+    
             }
 		}
 		function sumarDias(fecha, dias){
@@ -290,6 +313,8 @@ return getMedco(projectId).then(
 			return fecha;
 		  }
 		function updateLastSuccesfullDataSynch(date) {
+			//console.log("HMIS Management is not updating keyLastSuccessfulDataSynch");
+			
 			
 			date=sumarDias(new Date(),-1).toISOString().split('Z')[0];
 			console.log("Updated keyLastSuccessfulDataSynch:"+ date);
@@ -307,11 +332,15 @@ return getMedco(projectId).then(
 			return getMission(projectId).then(mission => {
 				return getUsersMissions(mission).then(
 					users => {
+						
 						for (var user in users) {
 							for (var role in users[user].userCredentials.userRoles) {
+
+								if (users[user].userCredentials.userRoles[role]){
 								if (users[user].userCredentials.userRoles[role].id == "IQ6i3gWsYYa") {
 									medco.push({ id: users[user].id });
 								}
+							}
 							}
 						}
 						return medco;

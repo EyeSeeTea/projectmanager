@@ -298,7 +298,15 @@ export class ImportedDataController {
             if (medCo == true) { this.isMedco = true }
             
         });
+        this.UserService.currentUserHasRole("Position: MedCo").then(medCo => {
+            if (medCo == true) { this.isMedco = true }
+            
+        });
         this.UserService.currentUserHasRole("TesaCo").then(value => {
+            if (value == true) { this.showMissions = true }
+        });
+
+        this.UserService.currentUserHasRole("Position: TesaCo").then(value => {
             if (value == true) { this.showMissions = true }
         });
 
@@ -306,6 +314,11 @@ export class ImportedDataController {
          
             if (value == true) { this.showMissions = true }
         });
+        this.UserService.currentUserHasRole("Position: Superuser").then(value => {
+         
+            if (value == true) { this.showMissions = true }
+        });
+
 
         this.ValidationService.readDatastore().then(
             data => {
